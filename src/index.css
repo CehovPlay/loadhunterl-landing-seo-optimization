@@ -1,0 +1,89 @@
+@import "@fontsource-variable/inter";
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  LoadHunter — Landing design tokens (exact, from Figma variables)   */
+/*  File: Web-platform-design / Full HD (1920)                         */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Light palette ------------------------------------------------- */
+  --color-white: #ffffff;
+  --color-bg-light: #fafafa;        /* Background */
+  --color-border-light: #e8e8e8;    /* Border */
+  --color-ink: #454545;             /* Primary text (Carbon) */
+  --color-ink-2: #686b6f;           /* Secondary text */
+  --color-ink-3: #a2a2a2;           /* Tertiary text (Cool Gray) */
+  --color-placeholder: #87949e;     /* Pewter Gray */
+
+  /* Dark gray scale (Darck/Gray) ---------------------------------- */
+  --color-gray-900: #121317;
+  --color-gray-800: #181a1f;
+  --color-gray-750: #1d1f24;
+  --color-gray-700: #222429;
+  --color-gray-600: #2f3136;
+  --color-gray-500: #434447;
+  --color-gray-400: #5e5f62;
+  --color-gray-300: #8c8d8f;
+  --color-gray-200: #a3a4a6;
+  --color-gray-100: #dcdcdd;
+  --color-gray-50: #e8e8e9;
+  --color-dark-text: #f3f3f4;       /* Darck Text Primary */
+
+  /* Hairlines on dark --------------------------------------------- */
+  --color-line: #ffffff1a;          /* base/border */
+  --color-line-strong: #ffffff26;   /* base/input */
+
+  /* Violet / purple ----------------------------------------------- */
+  --color-violet: #6f5197;
+  --color-violet-500: #6200ee;
+  --color-violet-600: #9c66e5;      /* purple 2-600 */
+  --color-violet-300: #c79ffd;      /* purple 2-300 */
+  --color-purple-300: #7551a9;      /* Darck purple-300 */
+  --color-purple-200: #8c6eb7;
+  --color-purple-400: #a186c6;      /* Darck purple 2-400 */
+  --color-violet-tw: #7c3aed;
+
+  /* Status -------------------------------------------------------- */
+  --color-green: #028e75;
+  --color-emerald: #10b981;
+  --color-red: #d1496d;
+  --color-rose: #f43f5e;
+  --color-orange: #ffb352;
+
+  /* Radii (border-radius) ----------------------------------------- */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Type scale (Inter Medium 500) — size / line-height ------------ */
+  --text-subtle: 12px;     --text-subtle--line-height: 14px;
+  --text-small: 14px;      --text-small--line-height: 16px;
+  --text-body: 16px;       --text-body--line-height: 20px;
+  --text-h4: 20px;         --text-h4--line-height: 32px;
+  --text-h3: 24px;         --text-h3--line-height: 32px;
+  --text-h2: 30px;         --text-h2--line-height: 40px;
+  --text-h1: 48px;         --text-h1--line-height: 58px;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    background: var(--color-gray-900);
+    color: var(--color-dark-text);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
