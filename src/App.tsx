@@ -1,8 +1,10 @@
+import { DesignFrame } from "@/components/site/DesignFrame"
 import { Navbar } from "@/sections/Navbar"
 import { Hero } from "@/sections/Hero"
 import { Features } from "@/sections/Features"
 import { DispatchIntro } from "@/sections/DispatchIntro"
-import { Tools } from "@/sections/tools/Tools"
+import { Tools } from "@/sections/Tools"
+import { Orbit } from "@/sections/Orbit"
 import { Ecosystem } from "@/sections/Ecosystem"
 import { WhyLoadHunter } from "@/sections/WhyLoadHunter"
 import { ChaosDiagram } from "@/sections/ChaosDiagram"
@@ -14,23 +16,26 @@ import { Footer } from "@/sections/Footer"
 
 function App() {
   return (
-    <div className="relative min-h-svh bg-gray-900 text-dark-text">
-      <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <DispatchIntro />
-        <Tools />
-        <Ecosystem />
-        <WhyLoadHunter />
-        <ChaosDiagram />
-        <Pricing />
-        <Testimonials />
-        <Faq />
-        <Cta />
-      </main>
-      <Footer />
-    </div>
+    <DesignFrame width={1920}>
+      <div className="relative bg-[#18191f] text-dark-text">
+        <Navbar />
+        <main>
+          <Hero />
+          <Features />
+          <DispatchIntro />
+          <Tools />
+          <Orbit />
+          <Ecosystem />
+          <WhyLoadHunter />
+          <ChaosDiagram />
+          <Pricing />
+          <Testimonials />
+          <Faq />
+          <Cta />
+        </main>
+        <Footer />
+      </div>
+    </DesignFrame>
   )
 }
 

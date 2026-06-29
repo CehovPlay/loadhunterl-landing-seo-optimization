@@ -1,50 +1,43 @@
-import { Container } from "@/components/site/Container"
-import { IconBadge } from "@/components/site/IconBadge"
-import { Star, MessageSquareQuote } from "lucide-react"
+import { Star } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-type Review = {
-  tone: "positive" | "negative"
+type Card = {
   quote: string
   author: string
+  x: number
+  y: number
+  w: number
   featured?: boolean
 }
 
-const REVIEWS: Review[] = [
-  { tone: "positive", quote: "Solid broker. Always answers the phone and pays within 21 days as promised. Had a breakdown on the way to pickup, and they were very understanding.", author: "Anonymous" },
-  { tone: "positive", quote: "One of the best experiences with PLS. High-paying lane, quick detention approval, and zero issues with the paperwork. Definitely adding them to my preferred list.", author: "Anonymous", featured: true },
-  { tone: "negative", quote: "Complete waste of time. They canceled the load 30 minutes before the pickup and didn't even offer a TONU. Their carrier relations department is impossible to reach.", author: "Anonymous" },
-  { tone: "positive", quote: "Ugh, it seems to be a powerful and helpful tool for booking loads, makes everything so easier. Recommend to taste it. And keep quality of the loads as high is possible with this tool.", author: "Nicolae Cojocari" },
-  { tone: "positive", quote: "Huge time saver and makes finding loads a lot easier! Also super attentive developer team that can add features on request.", author: "FleetMax LLC" },
-  { tone: "positive", quote: "Booked a Reefer load, rate was fair, and they paid without a fight after the lumper receipt.", author: "AJ Cargo", featured: true },
-  { tone: "positive", quote: "Great tool for dispatchers who are looking to save their time and book better loads. 1 click to email broker, 1 email to call, open maps with truck location load origin and destination, really useful!", author: "Mason Aleksic" },
+const CARDS: Card[] = [
+  { quote: "This tool is saving so much time and everything is so much more comfortable in daily dispatching routing.", author: "Filip Hristovschi", x: -2, y: 44, w: 300 },
+  { quote: "Top-notch platform for managing logistics. It's user-friendly and simplifies the process of finding and handling loads. Highly recommend for anyone in transportation!", author: "AJ Cargo", x: 39, y: 47, w: 340, featured: true },
+  { quote: "Great tool for dispatchers who are looking to save their time and book better loads. 1 click to email broker, 1 email to call, open maps with truck location load origin and destination, really useful!", author: "Mason Aleksic", x: 85, y: 57, w: 320 },
+  { quote: "Ugh, It Seems To Be A Powerful and helpful Tool for booking loads, makes everything so easier. Recommend To Taste It, And keep quality of the loads as high is possible with this tool", author: "Nicolae Cojocari", x: 18, y: 63, w: 300 },
+  { quote: "Huge time saver and makes finding loads a lot easier! Also super attentive developer team that can add features on request.", author: "FleetMax LLC", x: 61, y: 70, w: 300 },
 ]
 
-function ReviewCard({ r }: { r: Review }) {
+function ReviewCard({ c }: { c: Card }) {
   return (
     <div
+      style={{ left: `${c.x}%`, top: `${c.y}%`, width: c.w }}
       className={cn(
-        "mb-4 break-inside-avoid rounded-xl border p-5",
-        r.featured
-          ? "border-violet-600/40 bg-gradient-to-br from-violet-600/20 to-gray-900"
-          : "border-line bg-gray-800/40",
+        "absolute rounded-[16px] border p-5",
+        c.featured
+          ? "border-violet-600/40 bg-[linear-gradient(160deg,rgba(156,102,229,0.22),#1b1722)]"
+          : "border-[#ffffff12] bg-[#1d1f24]",
       )}
     >
-      <span
-        className={cn(
-          "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-subtle",
-          r.tone === "positive"
-            ? "bg-emerald/15 text-emerald"
-            : "bg-rose/15 text-rose",
-        )}
-      >
-        <span className={cn("size-1.5 rounded-full", r.tone === "positive" ? "bg-emerald" : "bg-rose")} />
-        {r.tone === "positive" ? "Positive" : "Negative"}
+      <span className="inline-flex items-center gap-1.5 rounded-md bg-emerald/15 px-2 py-1 text-[11px] text-emerald">
+        <span className="size-1.5 rounded-full bg-emerald" /> Positive
       </span>
-      <p className="mt-3 text-small leading-relaxed text-gray-200">"{r.quote}"</p>
+      <p className="mt-3 text-[13px] leading-[19px] tracking-[-0.52px] text-[#c5c6c8]">
+        {c.quote}
+      </p>
       <div className="mt-4 flex items-center gap-2">
-        <span className="size-6 rounded-full bg-gray-700" />
-        <span className="text-subtle text-gray-400">{r.author}</span>
+        <span className="size-6 rounded-full bg-[#2f3136]" />
+        <span className="text-[12px] text-[#8c8d8f]">{c.author}</span>
       </div>
     </div>
   )
@@ -52,36 +45,54 @@ function ReviewCard({ r }: { r: Review }) {
 
 export function Testimonials() {
   return (
-    <section id="contact" className="bg-gray-900 py-24">
-      <Container className="text-center">
-        <IconBadge>
-          <MessageSquareQuote className="size-5" />
-        </IconBadge>
-        <h2 className="mx-auto mt-8 text-h2 font-medium tracking-[-0.02em] text-dark-text">
+    <section id="contact" className="relative h-[1180px] overflow-hidden bg-[#18191f]">
+      {/* header */}
+      <div className="flex flex-col items-center pt-[60px]">
+        <span
+          className="flex size-12 items-center justify-center rounded-[14px] border border-[#ffffff1a] bg-[#1d1f24] text-violet-300"
+          style={{ boxShadow: "0px 6px 16px -6px rgba(111,81,151,0.45)" }}
+        >
+          <Star className="size-5" />
+        </span>
+        <h2 className="mt-7 text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-[#e8e8e8]">
           What client says
         </h2>
+        <p className="mt-2 text-[14px] font-medium tracking-[-0.56px] text-[#686b6f]">
+          Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials.
+        </p>
 
-        {/* rating */}
-        <div className="mt-5 inline-flex items-center gap-3 rounded-full border border-line bg-gray-800 px-4 py-2 text-small">
-          <span className="font-medium text-dark-text">Excellent</span>
-          <span className="flex gap-0.5 text-violet-300">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className="size-4 fill-current" />
-            ))}
+        {/* rating row */}
+        <div className="mt-6 flex items-center gap-6 text-[#a3a4a6]">
+          <div className="text-center">
+            <p className="text-[16px] font-medium text-[#e8e8e8]">5,000 +</p>
+            <p className="text-[11px] text-[#686b6f]">Trusted by users</p>
+          </div>
+          <div className="h-8 w-px bg-[#ffffff14]" />
+          <div className="flex items-center gap-2">
+            <span className="flex gap-0.5 text-violet-300">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="size-3.5 fill-current" />
+              ))}
+            </span>
+            <div className="text-[11px]">
+              <p className="text-[13px] font-medium text-[#e8e8e8]">4.7</p>
+              <p className="text-[#686b6f]">from 100 + reviews</p>
+            </div>
+          </div>
+          <div className="h-8 w-px bg-[#ffffff14]" />
+          <span className="text-[13px] font-medium text-[#e8e8e8]">Google Reviews</span>
+          <div className="h-8 w-px bg-[#ffffff14]" />
+          <span className="flex items-center gap-1 text-[13px] font-medium text-[#e8e8e8]">
+            <Star className="size-3.5 fill-emerald text-emerald" /> Trustpilot
           </span>
-          <span className="text-gray-300">4.7</span>
-          <span className="border-l border-line pl-3 font-medium text-dark-text">
-            ★ Trustpilot
-          </span>
+          <span className="flex size-6 items-center justify-center rounded-full bg-[#e0492b] text-[11px] font-bold text-white">G</span>
         </div>
+      </div>
 
-        {/* masonry */}
-        <div className="mt-12 columns-1 gap-4 text-left sm:columns-2 lg:columns-3">
-          {REVIEWS.map((r, i) => (
-            <ReviewCard key={i} r={r} />
-          ))}
-        </div>
-      </Container>
+      {/* scattered cards */}
+      {CARDS.map((c) => (
+        <ReviewCard key={c.author} c={c} />
+      ))}
     </section>
   )
 }
