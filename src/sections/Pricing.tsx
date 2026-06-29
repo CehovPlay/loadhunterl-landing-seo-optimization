@@ -193,6 +193,7 @@ export function Pricing() {
           min={1}
           max={10}
           value={count}
+          aria-label="Number of dispatchers"
           onChange={(e) => setCount(Number(e.target.value))}
           className="h-1.5 w-full cursor-pointer appearance-none rounded-full outline-none [&::-webkit-slider-thumb]:size-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
           style={{ background: `linear-gradient(90deg, #9c66e5 ${(count / 10) * 100}%, #2f3136 ${(count / 10) * 100}%)` }}

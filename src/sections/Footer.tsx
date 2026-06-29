@@ -10,8 +10,9 @@ export function Footer() {
         <form className="flex items-center gap-2">
           <input
             type="email"
+            aria-label="Email address"
             placeholder="Enter your e-mail address"
-            className="h-10 w-[300px] rounded-full border border-[#ffffff14] bg-[#1d1f24] px-4 text-[13px] text-[#e8e8e8] placeholder:text-[#686b6f] focus:border-[#ffffff26] focus:outline-none"
+            className="h-10 w-[300px] rounded-full border border-[#ffffff14] bg-[#1d1f24] px-4 text-[13px] text-[#e8e8e8] placeholder:text-[#686b6f] focus:border-[#ffffff26]"
           />
           <button className="h-10 rounded-full bg-violet-600 px-5 text-[13px] font-medium text-white transition-opacity hover:opacity-90">
             Subscribe
@@ -26,10 +27,15 @@ export function Footer() {
           <a href="#" className="hover:text-[#e8e8e8]">Terms of Service</a>
         </div>
         <div className="flex gap-2">
-          {[Globe, AtSign, Send].map((Icon, i) => (
+          {[
+            { Icon: Globe, label: "Website" },
+            { Icon: AtSign, label: "X (Twitter)" },
+            { Icon: Send, label: "Telegram" },
+          ].map(({ Icon, label }) => (
             <a
-              key={i}
+              key={label}
               href="#"
+              aria-label={label}
               className="flex size-8 items-center justify-center rounded-md border border-[#ffffff14] bg-[#1d1f24] text-[#8c8d8f] hover:text-[#e8e8e8]"
             >
               <Icon className="size-3.5" />
