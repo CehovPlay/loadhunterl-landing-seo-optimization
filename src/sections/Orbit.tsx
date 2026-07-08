@@ -101,13 +101,15 @@ export function Orbit() {
         ))}
       </svg>
 
-      {/* centre mark — 120px node, PNG render 191px (1x) incl. soft shadow */}
+      {/* centre mark — 120px node, PNG render 191px (1x); the disc sits in the
+          top of the render (soft shadow below), so we anchor by the GLYPH
+          centroid (95, 59.5 at 1x) which is dead-centre of the disc */}
       <img
         src="/figma/orbit-center.png"
         alt=""
         aria-hidden
         className="absolute max-w-none"
-        style={{ left: CX - 95.5, top: CY - 95.5, width: 191 }}
+        style={{ left: CX - 95, top: CY - 59.5, width: 191 }}
       />
 
       {/* orbiting badges */}

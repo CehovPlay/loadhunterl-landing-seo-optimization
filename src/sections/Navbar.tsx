@@ -27,15 +27,21 @@ export function Navbar() {
   const [scale, setScale] = useState(1)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
+    // rAF poll instead of scroll events: immune to smooth-scroll libraries
+    // and stale listeners; ~free (one comparison per frame)
+    let raf = 0
+    const tick = () => {
+      setScrolled(window.scrollY > 60)
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+
     const onResize = () =>
       setScale(document.documentElement.clientWidth / 1920)
-    onScroll()
     onResize()
-    window.addEventListener("scroll", onScroll, { passive: true })
     window.addEventListener("resize", onResize)
     return () => {
-      window.removeEventListener("scroll", onScroll)
+      cancelAnimationFrame(raf)
       window.removeEventListener("resize", onResize)
     }
   }, [])
@@ -44,11 +50,13 @@ export function Navbar() {
     <>
       {/* Default full-width bar (page top) */}
       <header
-        className="absolute inset-x-0 top-0 z-50 flex items-center px-[120px] py-[16px] transition-[opacity,transform] duration-500 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)]"
+        className="absolute inset-x-0 top-0 z-50 flex items-center px-[120px] py-[16px]"
         style={{
           opacity: scrolled ? 0 : 1,
-          transform: scrolled ? "translateY(-12px)" : "translateY(0)",
+          transform: scrolled ? "translateY(-40px) scale(0.96)" : "translateY(0) scale(1)",
           pointerEvents: scrolled ? "none" : "auto",
+          transition:
+            "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
         <div className="relative flex flex-1 items-center justify-between rounded-[2000px] py-[6px] pl-[6px] pr-[12px]">
@@ -118,11 +126,15 @@ export function Navbar() {
           style={{ transformOrigin: "top center", transform: `scale(${scale})` }}
         >
           <div
-            className="relative mt-[16px] flex items-center gap-[60px] rounded-[2000px] py-[6px] pl-[6px] pr-[10px] transition-[opacity,transform] duration-500 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)]"
+            className="relative mt-[16px] flex items-center gap-[60px] rounded-[2000px] py-[6px] pl-[6px] pr-[10px]"
             style={{
               opacity: scrolled ? 1 : 0,
-              transform: scrolled ? "translateY(0)" : "translateY(-16px)",
+              transform: scrolled
+                ? "translateY(0) scale(1)"
+                : "translateY(-48px) scale(0.9)",
               pointerEvents: scrolled ? "auto" : "none",
+              transition:
+                "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)",
             }}
           >
             <div

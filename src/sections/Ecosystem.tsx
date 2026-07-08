@@ -139,14 +139,28 @@ export function Ecosystem() {
   return (
     <section id="offers" className="relative h-[377px] bg-gray-800">
       <div className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-[12px] bg-[#e9e9eb]">
-        {/* left column */}
-        <div className="absolute left-[60px] top-[60px] size-[64px]">
-          {/* eco-icon with the glyph re-centered inside the circle
-              (user request; original Figma export had it ~7px high) */}
+        {/* left column — icon rebuilt from the original Figma vector layers:
+            everything (grid, ring, glyph) is centered by construction */}
+        <div
+          className="absolute left-[60px] top-[60px] size-[64px] overflow-hidden rounded-[16px]"
+          style={{ boxShadow: "0px 6px 16px -6px rgba(146,92,255,0.48)" }}
+        >
           <img
-            src="/figma/eco/eco-icon-centered.png"
+            src="/figma/eco/icon-plate.png"
             alt=""
-            className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+            className="absolute inset-0 size-full"
+          />
+          <img
+            src="/figma/eco/icon-glyph.svg"
+            alt=""
+            className="absolute inset-0 size-full"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 rounded-[16px]"
+            style={{
+              boxShadow:
+                "inset 0px 0px 1px 0px #925cff, inset 0px 0px 3px 0px rgba(146,92,255,0.24), inset 0px 0px 12px 0px rgba(146,92,255,0.12)",
+            }}
           />
         </div>
         <h2 className="absolute left-[60px] top-[184px] w-[526px] text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-ink">
