@@ -1,25 +1,29 @@
 import diagram from "/figma/misc/chaos-diagram.png"
 
+/**
+ * Figma: heading Frame 1618875000 (914:23227) @ (418,13136), inner text 760 @ x=580;
+ * diagram Group 2085665202 (914:23232) 1680x551 @ (120,13302).
+ * Section spans page y 13136–14097 (h=961).
+ */
 export function ChaosDiagram() {
   return (
-    <section className="relative flex flex-col items-center overflow-hidden bg-[#18191f] pb-[180px] pt-[80px]">
-      <h2 className="text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-[#e8e8e8]">
+    <section className="relative h-[961px] bg-gray-800">
+      <h2 className="absolute left-[580px] top-0 w-[760px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
         From chaos to AI-Powered dispatch
       </h2>
-      <p className="mt-4 max-w-[640px] text-center text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#8c8d8f]">
-        Stop refreshing load boards, rewriting emails, and calculating profits by
-        hand. LoadHunter automates the busywork so your team can find better
+      <p className="absolute left-[580px] top-[78px] w-[760px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+        Stop refreshing load boards, rewriting emails, and calculating profits
+        by hand. LoadHunter automates the busywork so your team can find better
         loads, respond faster, and book with confidence.
       </p>
 
-      <div className="relative mt-[80px] w-full max-w-[1400px]">
-        <img src={diagram} alt="" className="w-full" />
-        <div className="-mt-6 flex justify-center">
-          <span className="rounded-[12px] border border-[#ffffff1f] bg-[#1d1f24] px-6 py-3.5 text-[16px] font-medium tracking-[-0.64px] text-[#e8e8e8] shadow-lg shadow-black/40">
-            Logistics is moving to AI. Don't get left behind.
-          </span>
-        </div>
-      </div>
+      {/* rings + icons + pill — decorative 2x export */}
+      <img
+        src={diagram}
+        alt=""
+        aria-hidden
+        className="absolute left-[120px] top-[166px] w-[1681px] max-w-none"
+      />
     </section>
   )
 }

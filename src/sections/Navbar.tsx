@@ -1,6 +1,3 @@
-import { Logo } from "@/components/site/Logo"
-import { Container } from "@/components/site/Container"
-
 const LINKS = [
   { label: "Why us", href: "#why" },
   { label: "Features", href: "#features" },
@@ -13,27 +10,67 @@ const LINKS = [
 
 export function Navbar() {
   return (
-    <header className="absolute inset-x-0 top-0 z-50 pt-5">
-      <Container className="flex items-center justify-between">
-        <a
-          href="#"
-          className="inline-flex items-center rounded-full border border-line bg-gray-800/80 px-4 py-2.5 backdrop-blur-md"
-        >
-          <Logo />
-        </a>
+    <header className="absolute inset-x-0 top-0 z-50 flex items-center px-[120px] py-[16px]">
+      <div className="relative flex flex-1 items-center justify-between rounded-[2000px] py-[6px] pl-[6px] pr-[12px]">
+        {/* pill backdrop */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-[2000px] bg-[rgba(54,56,61,0.5)] backdrop-blur-[7px]"
+        />
 
-        <nav className="hidden items-center gap-1 rounded-full border border-line bg-gray-800/80 px-1.5 py-1.5 backdrop-blur-md lg:flex">
-          {LINKS.map((l) => (
+        {/* logo */}
+        <div className="relative flex w-[212px] items-center">
+          <a
+            href="#"
+            className="flex h-[34px] items-center gap-[8px] rounded-[99px] border border-white py-[4px] pl-[4px] pr-[8px] backdrop-blur-[10px]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
+              boxShadow:
+                "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
+            }}
+          >
+            <img
+              src="/figma/logo-icon.svg"
+              alt=""
+              className="h-[26.173px] w-[27.679px]"
+            />
+            <img
+              src="/figma/logo-text.svg"
+              alt="loadhunter"
+              className="h-[15.736px] w-[97.034px]"
+            />
+          </a>
+        </div>
+
+        {/* nav links */}
+        <nav
+          className="relative flex items-center justify-center gap-[2px] rounded-[99px] backdrop-blur-[10px]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.05))",
+            boxShadow:
+              "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
+          }}
+        >
+          {LINKS.map((l, i) => (
             <a
               key={l.label}
               href={l.href}
-              className="rounded-full px-3.5 py-2 text-small text-gray-200 transition-colors hover:bg-white/5 hover:text-dark-text"
+              className={
+                "flex h-[28px] items-center justify-center px-[20px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white" +
+                (i === 0 ? " rounded-l-[99px]" : "") +
+                (i === LINKS.length - 1 ? " rounded-r-[99px]" : "")
+              }
             >
               {l.label}
             </a>
           ))}
         </nav>
-      </Container>
+
+        {/* inner shadow ring */}
+        <div className="pointer-events-none absolute inset-0 rounded-[2000px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]" />
+      </div>
     </header>
   )
 }

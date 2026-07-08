@@ -17,7 +17,7 @@ import { Footer } from "@/sections/Footer"
 function App() {
   return (
     <DesignFrame width={1920}>
-      <div className="relative bg-[#18191f] text-dark-text">
+      <div className="relative bg-gray-800 text-dark-text">
         <Navbar />
         <main>
           <Hero />

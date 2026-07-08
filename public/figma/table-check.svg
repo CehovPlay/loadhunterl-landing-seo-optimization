@@ -1,0 +1,37 @@
+<svg width="53" height="46" viewBox="0 0 53 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="53" height="46" fill="#323232"/>
+<g id="Adaptives">
+<path d="M-3586 -12693.4C-3586 -12694.5 -3585.1 -12695.4 -3584 -12695.4H4170C4171.1 -12695.4 4172 -12694.5 4172 -12693.4V7126.59C4172 7127.7 4171.1 7128.59 4170 7128.59H-3584C-3585.1 7128.59 -3586 7127.7 -3586 7126.59V-12693.4Z" fill="#444444"/>
+<path d="M-3584 -12695.4V-12694.4H4170V-12695.4V-12696.4H-3584V-12695.4ZM4172 -12693.4H4171V7126.59H4172H4173V-12693.4H4172ZM4170 7128.59V7127.59H-3584V7128.59V7129.59H4170V7128.59ZM-3586 7126.59H-3585V-12693.4H-3586H-3587V7126.59H-3586ZM-3584 7128.59V7127.59C-3584.55 7127.59 -3585 7127.15 -3585 7126.59H-3586H-3587C-3587 7128.25 -3585.66 7129.59 -3584 7129.59V7128.59ZM4172 7126.59H4171C4171 7127.15 4170.55 7127.59 4170 7127.59V7128.59V7129.59C4171.66 7129.59 4173 7128.25 4173 7126.59H4172ZM4170 -12695.4V-12694.4C4170.55 -12694.4 4171 -12694 4171 -12693.4H4172H4173C4173 -12695.1 4171.66 -12696.4 4170 -12696.4V-12695.4ZM-3584 -12695.4V-12696.4C-3585.66 -12696.4 -3587 -12695.1 -3587 -12693.4H-3586H-3585C-3585 -12694 -3584.55 -12694.4 -3584 -12694.4V-12695.4Z" fill="white" fill-opacity="0.1"/>
+<g id="Full HD (1920)">
+<rect width="1920" height="19624" transform="translate(-806 -12595.4)" fill="#181A1F"/>
+<foreignObject x="-590" y="-319.406" width="1484" height="940"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(100px);clip-path:url(#bgblur_0_843_169638_clip_path);height:100%;width:100%"></div></foreignObject><g id="Timeline container" data-figma-bg-blur-radius="200">
+<path d="M-390 -95.4063C-390 -106.72 -390 -112.377 -386.485 -115.892C-382.971 -119.406 -377.314 -119.406 -366 -119.406H670C681.314 -119.406 686.971 -119.406 690.485 -115.892C694 -112.377 694 -106.72 694 -95.4062V396.594C694 407.907 694 413.564 690.485 417.079C686.971 420.594 681.314 420.594 670 420.594H-366C-377.314 420.594 -382.971 420.594 -386.485 417.079C-390 413.564 -390 407.907 -390 396.594V-95.4063Z" fill="url(#paint0_radial_843_169638)" fill-opacity="0.6"/>
+<g id="Row container">
+<g id="Row container_2">
+<g id="Vector (Stroke)" filter="url(#filter1_d_843_169638)">
+<path d="M37.289 14.3126C37.6772 13.899 38.3103 13.8954 38.7031 14.3044C39.0956 14.7136 39.099 15.3807 38.7109 15.7946L25.7441 29.622C23.7868 31.7091 20.5881 31.7091 18.6308 29.622L14.289 24.9919C13.9008 24.578 13.904 23.9098 14.2968 23.5007C14.6896 23.0918 15.3227 23.0962 15.7109 23.51L20.0536 28.14C21.228 29.3923 23.1469 29.3923 24.3212 28.14L37.289 14.3126Z" fill="white"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="bgblur_0_843_169638_clip_path" transform="translate(590 319.406)"><path d="M-390 -95.4063C-390 -106.72 -390 -112.377 -386.485 -115.892C-382.971 -119.406 -377.314 -119.406 -366 -119.406H670C681.314 -119.406 686.971 -119.406 690.485 -115.892C694 -112.377 694 -106.72 694 -95.4062V396.594C694 407.907 694 413.564 690.485 417.079C686.971 420.594 681.314 420.594 670 420.594H-366C-377.314 420.594 -382.971 420.594 -386.485 417.079C-390 413.564 -390 407.907 -390 396.594V-95.4063Z"/>
+</clipPath><filter id="filter1_d_843_169638" x="0" y="0" width="53" height="45.1875" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="7"/>
+<feComposite in2="hardAlpha" operator="out"/>
+<feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_843_169638"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_843_169638" result="shape"/>
+</filter>
+<radialGradient id="paint0_radial_843_169638" cx="0" cy="0" r="1" gradientTransform="matrix(530.063 434 217.981 799.735 -222.883 -119.406)" gradientUnits="userSpaceOnUse">
+<stop stop-color="#353246"/>
+<stop offset="1" stop-color="#353246" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

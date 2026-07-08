@@ -1,72 +1,36 @@
-import { LogoMark } from "@/components/site/Logo"
-import shotLoadhunter from "/figma/eco/loadhunter.png"
-import shotTms from "/figma/eco/hunttms.png"
-import shotPay from "/figma/eco/huntpay.png"
-
-const PRODUCTS = [
-  {
-    suffix: "hunter",
-    body: "LoadHunter Extension is an AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.).",
-    shot: shotLoadhunter,
-  },
-  {
-    suffix: "TMS",
-    body: "Comprehensive transport management system providing a single platform to manage all aspects.",
-    shot: shotTms,
-  },
-  {
-    suffix: "PAY",
-    body: "Comprehensive transport management system providing a single platform to manage all aspects.",
-    shot: shotPay,
-  },
-]
-
+/**
+ * Figma: Frame 2147238581 (914:26048) — light card 1680x1000 @ (120, 11018).
+ * The card floats over the orbit section (which ends at y=11641) and hangs
+ * 377px into the dark region below; this section provides those 377px and
+ * pulls the card up with a negative offset.
+ * Right column (product showcase, 1034x1000) is a single 2x export.
+ */
 export function Ecosystem() {
   return (
-    <section id="offers" className="bg-[#fafafa] px-[120px] py-[60px]">
-      <div className="mx-auto grid max-w-[1680px] grid-cols-[560px_1fr] gap-10 rounded-[24px] border border-[#e8e8e8] bg-white p-10">
-        {/* heading */}
-        <div>
-          <span
-            className="flex size-12 items-center justify-center rounded-[14px] bg-[#f3f0fb] text-violet-600"
-            style={{ boxShadow: "inset 0px 0px 1px 0px #6f5197, inset 0px 0px 12px 0px rgba(111,81,151,0.12)" }}
-          >
-            <LogoMark className="size-5" />
-          </span>
-          <h2 className="mt-6 text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-[#454545]">
-            Our ecosystem products
-          </h2>
-          <p className="mt-3 max-w-[300px] text-[14px] leading-[20px] tracking-[-0.56px] text-[#686b6f]">
-            Everything you need to find, evaluate, and book loads — faster,
-            smarter, and in one place.
-          </p>
+    <section id="offers" className="relative h-[377px] bg-gray-800">
+      <div className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-[12px] bg-[#e9e9eb]">
+        {/* left column */}
+        <div className="absolute left-[60px] top-[60px] size-[64px]">
+          <img
+            src="/figma/feat-icon-2x.png"
+            alt=""
+            className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+          />
         </div>
+        <h2 className="absolute left-[60px] top-[184px] w-[526px] text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-ink">
+          Our ecosystem products
+        </h2>
+        <p className="absolute left-[60px] top-[266px] w-[566px] text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-ink">
+          Everything you need to find, evaluate, and book loads — faster,
+          smarter, and in one place.
+        </p>
 
-        {/* products */}
-        <div className="divide-y divide-[#e8e8e8]">
-          {PRODUCTS.map((p) => (
-            <div
-              key={p.suffix}
-              className="grid grid-cols-[300px_1fr] items-center gap-8 py-6 first:pt-0 last:pb-0"
-            >
-              <div>
-                <div className="flex items-center gap-2 text-[16px] font-medium tracking-[-0.64px] text-[#454545]">
-                  <LogoMark className="size-4 text-[#454545]" />
-                  <span>
-                    <span className="text-[#9a9a9a]">{p.suffix === "hunter" ? "load" : "hunt"}</span>
-                    <span>{p.suffix}</span>
-                  </span>
-                </div>
-                <p className="mt-2 text-[12px] leading-[18px] tracking-[-0.48px] text-[#686b6f]">
-                  {p.body}
-                </p>
-              </div>
-              <div className="overflow-hidden rounded-[10px] border border-[#e8e8e8]">
-                <img src={p.shot} alt="" className="w-full" />
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* right column — product showcase export */}
+        <img
+          src="/figma/eco-right.png"
+          alt="LoadHunter ecosystem products: loadhunter extension, huntTMS, huntPAY"
+          className="absolute left-[646px] top-0 w-[1034px] max-w-none"
+        />
       </div>
     </section>
   )
