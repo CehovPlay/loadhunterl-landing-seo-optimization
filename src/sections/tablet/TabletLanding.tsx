@@ -9,12 +9,14 @@ export function TabletLanding() {
   return (
     <div className="relative bg-gray-800 text-dark-text">
       <TabletNavbar />
+      {/* TabletBottom stays inside <main>: the reveal system only scans
+          main/footer subtrees, and its own FooterSection is a scoped <footer> */}
       <main>
         <TabletHero />
         <TabletFeatures />
         <TabletMain />
+        <TabletBottom />
       </main>
-      <TabletBottom />
     </div>
   )
 }

@@ -3,9 +3,12 @@
  * Stacked: testimonials (Frame 2147238672 @ y0), FAQ (Frame 2147238594 @
  * y926), CTA (Group 2085665213 @ y2482, automation panel baked @ y2438),
  * footer (Frame 2147238693 @ y3218, orbit graphic baked @ y3442).
- * Static testimonial cards per the design (no marquee): the strip shows the
- * violet "AJ Cargo" card centered with two clipped neighbours.
+ * The testimonial collage (cards at x −464..856, 30px gaps) marquees leftward
+ * with period 1350 (collage width + gap), like the desktop strip; the initial
+ * frame matches the design (violet "AJ Cargo" card centered).
  */
+import { useEffect, useRef } from "react"
+import gsap from "gsap"
 
 const CARD_SHADOW_INSET = "inset 0px -1px 1px 0px rgba(0,0,0,0.25)"
 const PILL_SHADOW =
@@ -90,6 +93,7 @@ function ReviewCard({ r }: { r: Review }) {
   const color = r.violet ? "rgba(111,81,151,1)" : "rgba(53,50,70,1)"
   return (
     <div
+      data-card
       className={
         "absolute flex w-[240px] flex-col gap-[12px] rounded-[12px] p-[12px] " +
         (r.violet
@@ -294,7 +298,24 @@ function SectionIcon({ top }: { top: number }) {
   )
 }
 
+const REVIEW_PERIOD = 1350 // collage width 1320 + 30 gap
+
 export function PhoneTail() {
+  const reviewsTrack = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const track = reviewsTrack.current
+    if (!track) return
+    const tween = gsap.to(track, {
+      x: -REVIEW_PERIOD, // one collage period → seamless wrap
+      duration: 39, // ≈ desktop testimonials speed (34.6 px/s)
+      ease: "none",
+      repeat: -1,
+    })
+    return () => {
+      tween.kill()
+    }
+  }, [])
+
   return (
     <footer className="relative overflow-hidden bg-gray-800" style={{ height: 4030 }}>
       {/* ================= Testimonials (y 0..806) ================= */}
@@ -337,11 +358,25 @@ export function PhoneTail() {
           </div>
         </div>
 
-        {/* static card strip (design shows the violet card centered) */}
+        {/* card marquee (initial frame shows the violet card centered) */}
         <div className="absolute left-0 top-[346px] h-[460px] w-full overflow-hidden">
-          {REVIEWS.map((r) => (
-            <ReviewCard key={r.name} r={r} />
-          ))}
+          <div
+            ref={reviewsTrack}
+            data-marquee-track
+            className="absolute inset-0 will-change-transform"
+          >
+            {[0, 1, 2].map((copy) =>
+              REVIEWS.map((r) => (
+                <div
+                  key={`${copy}-${r.name}`}
+                  className="absolute top-0 h-full"
+                  style={{ left: (copy - 1) * REVIEW_PERIOD }}
+                >
+                  <ReviewCard r={r} />
+                </div>
+              )),
+            )}
+          </div>
         </div>
       </div>
 

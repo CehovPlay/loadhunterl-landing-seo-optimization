@@ -1,7 +1,12 @@
+import { useEffect, useRef } from "react"
+import gsap from "gsap"
+
 /**
  * Figma: Tablet (768) features — Frame 2147238647 (916:70049, 768x1363 @ y=1324),
  * section owns y 1324..2703 (h 1379): last 16px is the dark head of the next block.
- *   partners strip: logo group export (768x59 visible crop) @ y20; fades 120/156 over h96
+ *   partners strip: logo group export (768x59 visible crop) @ y20; fades 120/156 over h96.
+ *   The export tiles seamlessly with period 728 (verified pixel-exact), so the
+ *   marquee lays three copies 728 apart and drifts one period left→right.
  *   header @ y136: icon 64, +40 title 30/40, +20 subtitle 14/16
  *   cards @ y356, x40: 3x 688x309, gap 20 — image 362(361)x309 flush right (exported 2x)
  */
@@ -35,15 +40,40 @@ const CARDS = [
   },
 ]
 
+const STRIP_PERIOD = 728
+
 export function TabletFeatures() {
+  const trackRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const tween = gsap.to(track, {
+      x: STRIP_PERIOD, // one tile period → seamless wrap
+      duration: 30, // ≈ desktop marquee speed (24 px/s)
+      ease: "none",
+      repeat: -1,
+    })
+    return () => {
+      tween.kill()
+    }
+  }, [])
+
   return (
     <section id="why" className="relative overflow-hidden bg-bg-light" style={{ height: 1379 }}>
-      {/* partners strip */}
-      <img
-        src="/figma/tablet/partners-strip.png"
-        alt=""
-        className="absolute left-0 top-[20px] h-[59px] w-[768px] max-w-none"
-      />
+      {/* partners strip — marquee of the tiling export */}
+      <div className="absolute left-0 top-0 h-[96px] w-[768px] overflow-hidden">
+        <div ref={trackRef} data-marquee-track className="absolute inset-0 will-change-transform">
+          {[-STRIP_PERIOD, 0, STRIP_PERIOD].map((x) => (
+            <img
+              key={x}
+              src="/figma/tablet/partners-strip.png"
+              alt=""
+              className="absolute top-[20px] h-[59px] w-[768px] max-w-none"
+              style={{ left: x }}
+            />
+          ))}
+        </div>
+      </div>
       {/* edge fades */}
       <div className="pointer-events-none absolute left-0 top-0 h-[96px] w-[120px] bg-gradient-to-r from-[#fafafa] to-[rgba(250,250,250,0)]" />
       <div className="pointer-events-none absolute right-0 top-0 h-[96px] w-[156px] bg-gradient-to-l from-[#fafafa] to-[rgba(250,250,250,0)]" />

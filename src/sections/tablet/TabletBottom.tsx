@@ -12,7 +12,9 @@
  * "30 H2" token (30/40, tracking −1.2).
  */
 
+import { useEffect, useRef } from "react"
 import type { CSSProperties } from "react"
+import gsap from "gsap"
 
 const PILL_SHADOW =
   "0px 1px 0px rgba(0,0,0,0.05), 0px 4px 4px rgba(0,0,0,0.05), 0px 10px 10px rgba(0,0,0,0.1)"
@@ -668,6 +670,7 @@ const REVIEWS: Review[] = [
 function ReviewCard({ r }: { r: Review }) {
   return (
     <div
+      data-card
       className={
         "absolute w-[375px] overflow-hidden rounded-[12px] p-[40px] " +
         (r.violet ? "shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)]" : "")
@@ -714,7 +717,24 @@ function ReviewCard({ r }: { r: Review }) {
   )
 }
 
+const REVIEW_PERIOD = 1245 // collage width 1205 (x −218..987) + 40 gap
+
 function TestimonialsSection({ top }: { top: number }) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const tween = gsap.to(track, {
+      x: -REVIEW_PERIOD, // one collage period → seamless wrap
+      duration: 36, // ≈ desktop testimonials speed (34.6 px/s)
+      ease: "none",
+      repeat: -1,
+    })
+    return () => {
+      tween.kill()
+    }
+  }, [])
+
   return (
     <>
       <Heading
@@ -730,20 +750,34 @@ function TestimonialsSection({ top }: { top: number }) {
         className="absolute left-[62.5px] w-[643.5px] max-w-none"
         style={{ top: top + 252 }}
       />
-      {/* static cards band (clips the side cards) */}
+      {/* card marquee band (initial frame matches the design) */}
       <div
         className="absolute left-0 h-[524px] w-[768px] overflow-hidden"
         style={{ top: top + 374 }}
       >
-        {REVIEWS.map((r) => (
-          <ReviewCard key={r.name} r={r} />
-        ))}
-        <img
-          src="/figma/tablet/cursor.svg"
-          alt=""
-          aria-hidden
-          className="absolute left-[421.5px] top-[195px] h-[32px] w-[27px] max-w-none"
-        />
+        <div
+          ref={trackRef}
+          data-marquee-track
+          className="absolute inset-0 will-change-transform"
+        >
+          {[0, 1, 2].map((copy) => (
+            <div
+              key={copy}
+              className="absolute top-0 h-full"
+              style={{ left: (copy - 1) * REVIEW_PERIOD }}
+            >
+              {REVIEWS.map((r) => (
+                <ReviewCard key={r.name} r={r} />
+              ))}
+              <img
+                src="/figma/tablet/cursor.svg"
+                alt=""
+                aria-hidden
+                className="absolute left-[421.5px] top-[195px] h-[32px] w-[27px] max-w-none"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </>
   )

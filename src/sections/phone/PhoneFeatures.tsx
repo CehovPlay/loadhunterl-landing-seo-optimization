@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react"
+import gsap from "gsap"
+
 /**
  * Figma: Frame 2147238647 (916:71594) — 390x1479 @ y1061, light section.
  * Partners logos 112x56 @ y20 (step 182); header icon @ (163,110);
@@ -10,12 +13,15 @@
  * visible) and each file's viewBox actually frames its NEIGHBOUR's art:
  * trucksmarter.svg → 123loadboard art, truckstop.svg → truckSmarter art,
  * dat.svg → truckstop art. Wrappers clip the bleed to the natural box.
+ * Figma places the triplet at x −26/156/338 (step 182); the marquee cycles
+ * that pattern with period 546 and drifts left→right like the desktop strip.
  */
 const PARTNERS = [
-  { src: "/figma/partner-trucksmarter.svg", x: -26, mt: 14, h: 27.07 },
-  { src: "/figma/partner-truckstop.svg", x: 156, mt: 18, h: 19.911 },
-  { src: "/figma/partner-dat.svg", x: 338, mt: 16, h: 24.17 },
+  { src: "/figma/partner-trucksmarter.svg", mt: 14, h: 27.07 },
+  { src: "/figma/partner-truckstop.svg", mt: 18, h: 19.911 },
+  { src: "/figma/partner-dat.svg", mt: 16, h: 24.17 },
 ]
+const PARTNER_PERIOD = 546 // 3 logos x 182px step
 
 const CARDS = [
   {
@@ -48,26 +54,52 @@ const CARDS = [
 ]
 
 export function PhoneFeatures() {
+  // pre-extend one period to the left: the track drifts right and wraps
+  const xs: number[] = []
+  for (let x = -26 - PARTNER_PERIOD; x <= 390; x += 182) xs.push(x)
+
+  const trackRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const tween = gsap.to(track, {
+      x: PARTNER_PERIOD, // one full pattern period → seamless wrap
+      duration: 23, // ≈ desktop marquee speed (24 px/s)
+      ease: "none",
+      repeat: -1,
+    })
+    return () => {
+      tween.kill()
+    }
+  }, [])
+
   return (
     <section
       className="relative overflow-hidden bg-bg-light"
       style={{ height: 1479 }}
     >
-      {/* partners row */}
-      {PARTNERS.map((p) => (
-        <div
-          key={p.src}
-          className="absolute w-[112px] overflow-hidden"
-          style={{ left: p.x, top: 20 + p.mt, height: p.h }}
-        >
-          <img
-            src={p.src}
-            alt=""
-            className="max-w-none"
-            style={{ width: 112, height: p.h }}
-          />
+      {/* partners marquee row */}
+      <div className="absolute inset-x-0 top-0 h-[96px] overflow-hidden">
+        <div ref={trackRef} data-marquee-track className="absolute inset-0 will-change-transform">
+          {xs.map((x) => {
+            const p = PARTNERS[((((x + 26) / 182) % 3) + 3) % 3]
+            return (
+              <div
+                key={x}
+                className="absolute w-[112px] overflow-hidden"
+                style={{ left: x, top: 20 + p.mt, height: p.h }}
+              >
+                <img
+                  src={p.src}
+                  alt=""
+                  className="max-w-none"
+                  style={{ width: 112, height: p.h }}
+                />
+              </div>
+            )
+          })}
         </div>
-      ))}
+      </div>
 
       {/* header icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div className="absolute left-[163px] top-[110px] size-[64px]">
