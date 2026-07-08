@@ -4,6 +4,7 @@
  * automation panel 1129x627 @ x=671 (exported cta-right.png @2x, which also
  * carries the "image 61" blurred glow spanning the full 867px height).
  */
+import { CtaBeams } from "@/components/site/CtaBeams"
 
 export function Cta() {
   return (
@@ -15,6 +16,9 @@ export function Cta() {
         aria-hidden
         className="absolute left-[671px] top-0 h-[867px] w-[1129px] max-w-none"
       />
+
+      {/* looping beams along the baked dashed connectors */}
+      <CtaBeams />
 
       {/* left — violet gradient card */}
       <div
