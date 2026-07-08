@@ -27,9 +27,17 @@ npm run typecheck  # tsc only
 
 ## How it's built
 
-### Fixed 1920px design canvas
+### Fixed design canvases (desktop / tablet / phone)
 
-The entire page renders on a fixed 1920px-wide canvas that scales uniformly to the viewport (`src/components/site/DesignFrame.tsx`). Sections are absolutely pixel-positioned to match the Figma frame exactly — page height is precisely 19 624px, same as the artboard. This keeps hand-built HTML and exported Figma imagery pixel-identical at every screen size.
+The page renders on a fixed-width canvas that scales uniformly to the viewport (`src/components/site/DesignFrame.tsx`), so hand-built HTML and exported Figma imagery stay pixel-identical at every screen size. Three canvases match the Figma adaptive frames and switch by viewport width (`useBreakpoint`):
+
+| Canvas | Viewport | Figma frame | Sections |
+|---|---|---|---|
+| Desktop 1920 | ≥ 1024px | Full HD, 19 624px tall | `src/sections/*` |
+| Tablet 768 | 640–1023px | Tablet, 19 032px tall | `src/sections/tablet/*` |
+| Phone 390 | < 640px | Phone, 15 597px tall | `src/sections/phone/*` |
+
+Sections are absolutely pixel-positioned; page heights match the artboards exactly.
 
 ### Sections
 
@@ -61,14 +69,19 @@ Text, tables, buttons and lists are real HTML with exact Figma geometry; purely 
 
 - `src/lib/reveal.ts` — cascading scroll-reveal: headings, paragraphs, buttons, images and cards fade/rise in staggered batches (`ScrollTrigger.batch`) as they enter the viewport; runs once per element and respects `prefers-reduced-motion`
 - Testimonials marquee drifts right-to-left; hovering a card smoothly eases the drift to a stop and lights the card with the design's violet hover state
+- Partners logo strip drifts left-to-right in a seamless loop
+- Orbit section: 15 badge pills orbit the centre mark clockwise on three dotted rings (~3–4 min per revolution), counter-rotating to stay upright
 
 ## Project layout
 
 ```
-public/figma/        2x asset exports from the Figma file (per-section subfolders)
+public/figma/        2x asset exports from the Figma file
+                     (per-section subfolders + phone/ and tablet/ variants)
 src/
-  components/site/   DesignFrame (1920px canvas scaler)
+  components/site/   DesignFrame (canvas scaler), useBreakpoint
   lib/reveal.ts      scroll-reveal system (GSAP ScrollTrigger)
-  sections/          one component per landing section, pixel-positioned
+  sections/          desktop sections (1920 canvas), pixel-positioned
+  sections/tablet/   tablet sections (768 canvas)
+  sections/phone/    phone sections (390 canvas)
   index.css          Tailwind 4 theme: Figma color/typography/radius/shadow tokens
 ```
