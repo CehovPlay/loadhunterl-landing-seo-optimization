@@ -162,22 +162,33 @@ export function CtaAutomation() {
       >
         <LineDefs side="l" lines={LEFT} />
         {LEFT.map((l, i) => (
-          <path key={i} d={l.d} stroke={`url(#cta-l${i})`} strokeDasharray="2 4" />
+          <path key={i} d={l.d} stroke={`url(#cta-l${i})`} strokeDasharray="2 4" strokeLinecap="round" strokeLinejoin="round" />
         ))}
         <g transform="translate(779 0)">
           <LineDefs side="r" lines={RIGHT} />
           {RIGHT.map((l, i) => (
-            <path key={i} d={l.d} stroke={`url(#cta-r${i})`} strokeDasharray="2 4" />
+            <path key={i} d={l.d} stroke={`url(#cta-r${i})`} strokeDasharray="2 4" strokeLinecap="round" strokeLinejoin="round" />
           ))}
         </g>
+        <defs>
+          {/* the rect stroke lives only near the left/right edges, as in Figma */}
+          <linearGradient id="cta-rect" gradientUnits="userSpaceOnUse" x1={778} y1={314} x2={338} y2={314}>
+            <stop stopColor="#A2A2A2" />
+            <stop offset="0.15" stopColor="#A2A2A2" stopOpacity="0" />
+            <stop offset="0.9" stopColor="#A2A2A2" stopOpacity="0" />
+            <stop offset="1" stopColor="#A2A2A2" />
+          </linearGradient>
+        </defs>
         <rect
-          x={338.5}
-          y={202.5}
-          width={439}
-          height={222}
-          rx={49.5}
-          stroke="#a2a2a2"
+          x={338}
+          y={202}
+          width={440}
+          height={223}
+          rx={50}
+          stroke="url(#cta-rect)"
           strokeDasharray="2 4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
 
@@ -216,7 +227,7 @@ export function CtaAutomation() {
 
       {/* centre: icon + copy */}
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-[24px] pl-px pt-px">
-        <div className="flex size-[52px] items-center justify-center rounded-full bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] shadow-[0px_7.98px_7.98px_0px_rgba(0,0,0,0.05),0px_19.949px_19.949px_0px_rgba(0,0,0,0.1)]">
+        <div className="flex size-[52px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] shadow-[0px_7.98px_7.98px_0px_rgba(0,0,0,0.05),0px_19.949px_19.949px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px]">
           <img src="/figma/cta/icon-center.svg" alt="" data-no-reveal className="h-[33.92px] w-[35.86px]" />
         </div>
         <div className="flex flex-col items-center gap-[12px]">
@@ -233,7 +244,7 @@ export function CtaAutomation() {
       {BALLS.map((b) => (
         <div
           key={b.icon}
-          className="absolute flex size-[62px] items-center justify-center rounded-full bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)]"
+          className="absolute flex size-[62px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] backdrop-blur-[10px]"
           style={{ left: b.x, top: b.cy - 31 }}
         >
           <img src={b.icon} alt="" data-no-reveal style={{ width: b.w, height: b.h }} />
