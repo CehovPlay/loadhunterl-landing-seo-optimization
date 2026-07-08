@@ -43,25 +43,31 @@ export function initReveal() {
     if (card && card !== el) return
     // inside the marquee track but not a card (spacers)
     if (!card && el.closest("[data-marquee-track]")) return
+    // already ABOVE the viewport (e.g. browser restored a mid-page scroll
+    // position on reload): it will never "enter" — leave it visible
+    if (el.getBoundingClientRect().bottom < 0) return
     items.push(el)
   })
 
   gsap.set(items, { autoAlpha: 0, y: 28 })
 
+  const show = (batch: Element[]) =>
+    gsap.to(batch, {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.9,
+      ease: "power3.out",
+      stagger: { amount: Math.min(0.6, batch.length * 0.09), from: "start" },
+      overwrite: true,
+    })
+
+  // fixed cascade window: many elements => tighter steps, so even the
+  // densest section (pricing, ~90 nodes) settles in ~1.5s
   ScrollTrigger.batch(items, {
     start: "top 92%",
     once: true,
-    onEnter: (batch) =>
-      gsap.to(batch, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        // fixed cascade window: many elements => tighter steps, so even the
-        // densest section (pricing, ~90 nodes) settles in ~1.5s
-        stagger: { amount: Math.min(0.6, batch.length * 0.09), from: "start" },
-        overwrite: true,
-      }),
+    onEnter: show,
+    onEnterBack: show,
   })
 
   // safety: reveal anything ScrollTrigger might have missed (e.g. after

@@ -4,6 +4,7 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { initReveal } from "@/lib/reveal"
 import { DesignFrame } from "@/components/site/DesignFrame"
+import { useBreakpoint } from "@/components/site/useBreakpoint"
 import { Navbar } from "@/sections/Navbar"
 import { Hero } from "@/sections/Hero"
 import { Features } from "@/sections/Features"
@@ -18,8 +19,10 @@ import { Testimonials } from "@/sections/Testimonials"
 import { Faq } from "@/sections/Faq"
 import { Cta } from "@/sections/Cta"
 import { Footer } from "@/sections/Footer"
+import { PhoneLanding } from "@/sections/phone/PhoneLanding"
+import { TabletLanding } from "@/sections/tablet/TabletLanding"
 
-function useLenis() {
+function useLenis(breakpoint: string) {
   useEffect(() => {
     const lenis = new Lenis()
 
@@ -53,31 +56,53 @@ function useLenis() {
       gsap.ticker.remove(update)
       lenis.destroy()
     }
-  }, [])
+    // re-init on canvas switch: the whole section tree is remounted
+  }, [breakpoint])
+}
+
+function DesktopLanding() {
+  return (
+    <div className="relative bg-gray-800 text-dark-text">
+      <Navbar />
+      <main>
+        <Hero />
+        <Features />
+        <DispatchIntro />
+        <Tools />
+        <Orbit />
+        <Ecosystem />
+        <WhyLoadHunter />
+        <ChaosDiagram />
+        <Pricing />
+        <Testimonials />
+        <Faq />
+        <Cta />
+      </main>
+      <Footer />
+    </div>
+  )
 }
 
 function App() {
-  useLenis()
+  const bp = useBreakpoint()
+  useLenis(bp)
+  if (bp === "phone") {
+    return (
+      <DesignFrame width={390}>
+        <PhoneLanding />
+      </DesignFrame>
+    )
+  }
+  if (bp === "tablet") {
+    return (
+      <DesignFrame width={768}>
+        <TabletLanding />
+      </DesignFrame>
+    )
+  }
   return (
     <DesignFrame width={1920}>
-      <div className="relative bg-gray-800 text-dark-text">
-        <Navbar />
-        <main>
-          <Hero />
-          <Features />
-          <DispatchIntro />
-          <Tools />
-          <Orbit />
-          <Ecosystem />
-          <WhyLoadHunter />
-          <ChaosDiagram />
-          <Pricing />
-          <Testimonials />
-          <Faq />
-          <Cta />
-        </main>
-        <Footer />
-      </div>
+      <DesktopLanding />
     </DesignFrame>
   )
 }

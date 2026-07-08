@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react"
+import gsap from "gsap"
+
 const CARDS = [
   {
     title: "All needs in one place",
@@ -41,15 +44,37 @@ function PartnerLogo({ x, idx }: { x: number; idx: number }) {
 }
 
 export function Features() {
-  // Figma x positions: -20, 282, 584, 886, 1188, 1490, 1792 (step 302)
-  const xs = [-20, 282, 584, 886, 1188, 1490, 1792]
+  // Figma x positions: step 302, pattern of 4 logos (period 1208). The track
+  // drifts left→right by one period and wraps, so we pre-extend one period
+  // to the left of the design's -20..2094 range.
+  const xs: number[] = []
+  for (let x = -20 - 1208; x <= 2094; x += 302) xs.push(x)
+
+  const trackRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const tween = gsap.to(track, {
+      x: 1208, // one full pattern period → seamless wrap
+      duration: 50,
+      ease: "none",
+      repeat: -1,
+    })
+    return () => {
+      tween.kill()
+    }
+  }, [])
+
   return (
     <section id="why" className="relative w-full bg-bg-light">
-      {/* Partners block, 136px */}
+      {/* Partners block, 136px — slow left→right marquee */}
       <div className="relative h-[136px] w-full overflow-hidden">
-        {xs.map((x, i) => (
-          <PartnerLogo key={x} x={x} idx={i} />
-        ))}
+        <div ref={trackRef} data-marquee-track className="absolute inset-0 will-change-transform">
+          {xs.map((x) => {
+            const idx = (((x + 20) / 302) % 4 + 4) % 4
+            return <PartnerLogo key={x} x={x} idx={idx} />
+          })}
+        </div>
         {/* edge fades */}
         <div className="pointer-events-none absolute left-0 top-0 h-[136px] w-[189px] bg-gradient-to-r from-[#fafafa] to-[rgba(250,250,250,0)]" />
         <div className="pointer-events-none absolute right-0 top-0 h-[136px] w-[189px] bg-gradient-to-l from-[#fafafa] to-[rgba(250,250,250,0)]" />
