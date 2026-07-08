@@ -1,7 +1,6 @@
-import { useEffect } from "react"
+import { useLayoutEffect } from "react"
 import Lenis from "lenis"
 import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { initReveal } from "@/lib/reveal"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useBreakpoint } from "@/components/site/useBreakpoint"
@@ -23,16 +22,15 @@ import { PhoneLanding } from "@/sections/phone/PhoneLanding"
 import { TabletLanding } from "@/sections/tablet/TabletLanding"
 
 function useLenis(breakpoint: string) {
-  useEffect(() => {
+  // layout effect: reveal must hide elements BEFORE the first paint,
+  // otherwise in-view text flashes and then disappears into the cascade
+  useLayoutEffect(() => {
     const lenis = new Lenis()
 
     // drive Lenis from GSAP's ticker so both share one rAF loop
     const update = (time: number) => lenis.raf(time * 1000)
     gsap.ticker.add(update)
     gsap.ticker.lagSmoothing(0)
-
-    // keep ScrollTrigger in sync with Lenis' smoothed scroll
-    lenis.on("scroll", ScrollTrigger.update)
 
     // cascade scroll-reveal for text blocks and visuals
     const teardownReveal = initReveal()

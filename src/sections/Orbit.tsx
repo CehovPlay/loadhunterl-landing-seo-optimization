@@ -126,7 +126,7 @@ export function Orbit() {
             >
               <div data-upright={-b.angle} className="size-0">
                 <div
-                  className="flex h-[42px] -translate-x-1/2 -translate-y-1/2 items-center whitespace-nowrap rounded-[99px] border border-white px-[12px] backdrop-blur-[10px]"
+                  className="flex h-[42px] w-max -translate-x-1/2 -translate-y-1/2 items-center whitespace-nowrap rounded-[99px] border border-white px-[12px] backdrop-blur-[10px]"
                   style={{
                     backgroundImage:
                       "linear-gradient(to bottom, #ffffff, rgba(255,255,255,0.5))",
