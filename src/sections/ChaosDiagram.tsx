@@ -1,4 +1,5 @@
 import diagram from "/figma/misc/chaos-diagram.png"
+import { ChaosBeams } from "@/components/site/ChaosBeams"
 
 /**
  * Figma: heading Frame 1618875000 (914:23227) @ (418,13136), inner text 760 @ x=580;
@@ -17,14 +18,19 @@ export function ChaosDiagram() {
         loads, respond faster, and book with confidence.
       </p>
 
-      {/* rings + icons + pill — decorative 2x export */}
-      <img
-        src={diagram}
-        alt=""
-        aria-hidden
-        data-parallax="0.04"
-        className="absolute left-[120px] top-[166px] w-[1681px] max-w-none"
-      />
+      {/* diagram + beams share one parallax box so they stay pixel-aligned */}
+      <div data-parallax="0.04" className="absolute inset-0">
+        {/* rings + icons + pill — decorative 2x export */}
+        <img
+          src={diagram}
+          alt=""
+          aria-hidden
+          className="absolute left-[120px] top-[166px] w-[1681px] max-w-none"
+        />
+
+        {/* looping violet beams flying out of the centre logo along the arcs */}
+        <ChaosBeams />
+      </div>
     </section>
   )
 }
