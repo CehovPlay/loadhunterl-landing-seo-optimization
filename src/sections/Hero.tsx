@@ -20,16 +20,17 @@ export function Hero() {
         className="pointer-events-none absolute left-[-22px] top-[-22px] w-[1138px] max-w-none"
       />
 
-      {/* Right — product mockup; the wrapper 3D-tilts after the mouse while
-          the images keep their own parallax channel (yPercent) */}
+      {/* Right — product mockup. Parallax + 3D tilt live on the WRAPPER so the
+          dashboard and its settings popup move as one composited unit (giving
+          them independent parallax drifts them apart — the popup detaches). */}
       <div
         data-tilt="4"
+        data-parallax="0.05"
         className="absolute left-[897px] top-[80px] h-[960px] w-[1023px]"
       >
         <img
           src={heroDashboard}
           alt="LoadHunter dashboard"
-          data-parallax="0.05"
           className="absolute left-0 top-[48px] w-[1023px] max-w-none"
         />
 
@@ -38,7 +39,6 @@ export function Hero() {
           src="/figma/hero-settings-popup.png"
           alt=""
           aria-hidden
-          data-parallax="0.05"
           className="absolute left-[303px] top-0 w-[720px] max-w-none"
         />
       </div>

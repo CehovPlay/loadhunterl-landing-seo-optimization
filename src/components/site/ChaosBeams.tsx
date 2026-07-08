@@ -96,7 +96,7 @@ export function ChaosBeams() {
     <svg
       ref={svgRef}
       aria-hidden
-      className="pointer-events-none absolute left-[276px] top-[469px]"
+      className="pointer-events-none absolute left-[280px] top-[475px]"
       width={1361}
       height={208}
       viewBox="0 0 1361 208"
