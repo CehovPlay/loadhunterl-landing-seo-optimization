@@ -75,8 +75,11 @@
   * {
     border-color: var(--color-line);
   }
-  html {
-    scroll-behavior: smooth;
+  html.lenis {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
   body {
     margin: 0;

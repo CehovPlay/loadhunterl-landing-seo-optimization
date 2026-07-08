@@ -50,8 +50,9 @@ export function Hero() {
 
         <div className="flex flex-col items-start gap-[60px]">
           {/* H1 gradient */}
+          {/* px/py + negative margins widen the paint box so bg-clip-text doesn't crop glyph edges */}
           <h1
-            className="whitespace-nowrap bg-clip-text text-[83px] font-medium leading-[80px] tracking-[-3.32px] text-transparent"
+            className="-mx-[10px] -my-[12px] whitespace-nowrap bg-clip-text px-[10px] py-[12px] text-[83px] font-medium leading-[80px] tracking-[-3.32px] text-transparent"
             style={{
               backgroundImage:
                 "linear-gradient(100deg, rgb(255,255,255) 2%, rgb(63,63,63) 100%)",

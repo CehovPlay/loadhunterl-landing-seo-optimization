@@ -1,3 +1,4 @@
+import { useCallback, useRef, useState } from "react"
 import type { CSSProperties } from "react"
 
 type Feature = {
@@ -10,7 +11,10 @@ type Plan = {
   name: string
   icon: string
   blurb: string
-  price: string
+  /** static price label (AI card); priced plans use `base` instead */
+  price?: string
+  /** base monthly price per dispatcher (loadhunter.io logic) */
+  base?: number
   unit?: string
   note: string
   cols: [Feature[], Feature[]]
@@ -53,7 +57,7 @@ const PLANS: Plan[] = [
     name: "Basic",
     icon: "/figma/pricing/icon-basic.png",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
-    price: "From $26.97",
+    base: 9.99,
     unit: "/per month",
     note: "Save 20% with team rate.",
     cols: [
@@ -70,7 +74,7 @@ const PLANS: Plan[] = [
     name: "Standard",
     icon: "/figma/pricing/icon-standard.png",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
-    price: "From $40.47",
+    base: 14.99,
     unit: "/per month",
     note: "Save 20% with team rate.",
     cols: [
@@ -107,7 +111,7 @@ const PLANS: Plan[] = [
     name: "Pro",
     icon: "/figma/pricing/icon-pro.png",
     blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
-    price: "From $80.97",
+    base: 29.99,
     unit: "/per month",
     note: "Best value for 10+ dispatchers.",
     cols: PRO_COLS,
@@ -193,7 +197,15 @@ function FeatureItem({ item }: { item: Feature }) {
   )
 }
 
-function PlanCard({ plan, left }: { plan: Plan; left: number }) {
+function PlanCard({
+  plan,
+  left,
+  priceText,
+}: {
+  plan: Plan
+  left: number
+  priceText: string
+}) {
   const headStyle: CSSProperties =
     plan.head === "pro"
       ? { backgroundImage: "radial-gradient(ellipse 433px 487px at 6px 7px, rgba(53,50,70,1) 0%, rgba(53,50,70,0) 100%)" }
@@ -234,7 +246,7 @@ function PlanCard({ plan, left }: { plan: Plan; left: number }) {
         {/* price */}
         <div className="absolute left-[24px] top-[136px] w-[361px]">
           <div className="flex items-center gap-[12px]">
-            <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">{plan.price}</span>
+            <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">{priceText}</span>
             {plan.unit && (
               <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-[#a2a2a2]">{plan.unit}</span>
             )}
@@ -270,7 +282,65 @@ function PlanCard({ plan, left }: { plan: Plan; left: number }) {
   )
 }
 
+/* --- loadhunter.io pricing logic ---------------------------------------
+ * team discount: n === 3 → -10%, n >= 4 → -20%;
+ * annual billing → extra -10%;
+ * per-dispatcher price truncated to cents, then multiplied by n.
+ */
+function planTotal(base: number, n: number, annual: boolean): number {
+  const teamMult = n >= 4 ? 0.8 : n === 3 ? 0.9 : 1
+  const annualMult = annual ? 0.9 : 1
+  const per = Math.floor(base * teamMult * annualMult * 100) / 100
+  return Math.round(per * n * 100) / 100
+}
+
+/* Slider zones anchored to the design's badge positions (track 848px wide,
+ * knob center at 271px = 3 dispatchers, -20% badge center at 499px = 4). */
+const KNOB_MIN = 11
+const KNOB_10 = 271
+const KNOB_20 = 499
+const KNOB_MAX = 837
+
+function knobToCount(px: number): number {
+  if (px <= KNOB_10) return Math.round(1 + ((px - KNOB_MIN) / (KNOB_10 - KNOB_MIN)) * 2)
+  if (px <= KNOB_20) return px < (KNOB_10 + KNOB_20) / 2 ? 3 : 4
+  return Math.round(4 + ((px - KNOB_20) / (KNOB_MAX - KNOB_20)) * 46)
+}
+
 export function Pricing() {
+  const [annual, setAnnual] = useState(false)
+  const [knob, setKnob] = useState(KNOB_10) // design default: 3 dispatchers
+  const trackRef = useRef<HTMLDivElement>(null)
+  const n = knobToCount(knob)
+
+  const moveTo = useCallback((clientX: number) => {
+    const track = trackRef.current
+    if (!track) return
+    const r = track.getBoundingClientRect()
+    const frac = Math.min(1, Math.max(0, (clientX - r.left) / r.width))
+    setKnob(Math.min(KNOB_MAX, Math.max(KNOB_MIN, frac * 848)))
+  }, [])
+
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+      moveTo(e.clientX)
+      const onMove = (ev: PointerEvent) => moveTo(ev.clientX)
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove)
+        window.removeEventListener("pointerup", onUp)
+      }
+      window.addEventListener("pointermove", onMove)
+      window.addEventListener("pointerup", onUp)
+    },
+    [moveTo],
+  )
+
+  const priceFor = (plan: Plan) =>
+    plan.base != null
+      ? `From $${planTotal(plan.base, n, annual).toFixed(2)}`
+      : (plan.price ?? "")
+
   return (
     <section id="pricing" className="relative h-[1462px] bg-gray-800">
       {/* header icon */}
@@ -290,51 +360,87 @@ export function Pricing() {
       <div
         className="absolute left-[832.5px] top-[278px] flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] py-[6px] pl-[6px] pr-[11px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
       >
-        <button
-          type="button"
-          className="flex h-[28px] w-[76px] items-center justify-center rounded-[99px] border border-[rgba(232,232,232,0.75)] backdrop-blur-[10px]"
-          style={{
-            backgroundImage: "radial-gradient(42px 38px at 50% 109%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
-            boxShadow: PILL_SHADOW,
-          }}
-        >
-          <span className="text-[14px] leading-[16px] tracking-[-0.56px] text-white">Monthly</span>
-        </button>
-        <button type="button" className="text-[14px] leading-[16px] tracking-[-0.56px] text-white">
-          Annually
-        </button>
+        {(["Monthly", "Annually"] as const).map((label) => {
+          const active = (label === "Annually") === annual
+          return (
+            <button
+              key={label}
+              type="button"
+              onClick={() => setAnnual(label === "Annually")}
+              className={
+                active
+                  ? "flex h-[28px] items-center justify-center rounded-[99px] border border-[rgba(232,232,232,0.75)] px-[12px] backdrop-blur-[10px] transition-all"
+                  : "flex h-[28px] items-center justify-center rounded-[99px] px-[6px] transition-all"
+              }
+              style={
+                active
+                  ? {
+                      backgroundImage:
+                        "radial-gradient(42px 38px at 50% 109%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
+                      boxShadow: PILL_SHADOW,
+                    }
+                  : undefined
+              }
+            >
+              <span className="text-[14px] leading-[16px] tracking-[-0.56px] text-white">{label}</span>
+            </button>
+          )
+        })}
         <DiscountBadge text="save up -10%" />
       </div>
 
       {/* dispatchers slider */}
-      <div className="absolute left-[536px] top-[342px] w-[848px]">
-        <div className="pl-[214px]">
-          <p className="w-[98px] text-center text-[16px] leading-[20px] tracking-[-0.64px] text-white">3 dispatchers</p>
-        </div>
-        <div className="relative mt-[14px] h-[16px] w-full rounded-[200px] bg-[rgba(231,231,231,0.1)]">
-          <div className="absolute left-[2px] top-[2px] h-[12px] w-[269px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]" />
-          <div className="absolute left-[260px] top-[-3px] size-[22px]">
+      <div className="absolute left-[536px] top-[342px] w-[848px] select-none">
+        <p
+          className="w-[120px] whitespace-nowrap text-center text-[16px] leading-[20px] tracking-[-0.64px] text-white"
+          style={{ marginLeft: knob - 68 }}
+        >
+          {n} {n === 1 ? "dispatcher" : "dispatchers"}
+        </p>
+        <div
+          ref={trackRef}
+          onPointerDown={onPointerDown}
+          className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-[200px] bg-[rgba(231,231,231,0.1)]"
+        >
+          <div
+            className="absolute left-[2px] top-[2px] h-[12px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
+            style={{ width: Math.max(12, knob - 2) }}
+          />
+          <div
+            className="absolute top-[-3px] size-[22px] cursor-grab active:cursor-grabbing"
+            style={{ left: knob - 11 }}
+          >
             <img
               src="/figma/pricing/knob.svg"
               alt=""
+              draggable={false}
               className="absolute max-w-none"
               style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}
             />
           </div>
         </div>
         <div className="relative mt-[14px] h-[18px]">
-          <div className="absolute left-[239px] top-0">
-            <DiscountBadge text="-10% OFF" />
+          <div
+            className={`absolute left-[239px] top-0 transition-opacity duration-300 ${n >= 3 ? "opacity-100" : "opacity-50"}`}
+          >
+            <DiscountBadge text="-10% OFF" shadow={n >= 3} />
           </div>
-          <div className="absolute left-[466px] top-0 opacity-50">
-            <DiscountBadge text="-20% OFF" shadow={false} />
+          <div
+            className={`absolute left-[466px] top-0 transition-opacity duration-300 ${n >= 4 ? "opacity-100" : "opacity-50"}`}
+          >
+            <DiscountBadge text="-20% OFF" shadow={n >= 4} />
           </div>
         </div>
       </div>
 
       {/* plan cards */}
       {PLANS.map((plan, i) => (
-        <PlanCard key={plan.name} plan={plan} left={[120, 541, 962, 1383][i]} />
+        <PlanCard
+          key={plan.name}
+          plan={plan}
+          left={[120, 541, 962, 1383][i]}
+          priceText={priceFor(plan)}
+        />
       ))}
     </section>
   )
