@@ -7,6 +7,9 @@ import gsap from "gsap"
  *  - [data-parallax="k"]   scroll parallax, k ≈ 0.03–0.1; applied as
  *                          yPercent so it composes with the reveal's y
  *  - [data-lift]           hover scale-up (cards, CTAs)
+ *  - [data-magnetic]       primary CTAs pull toward the cursor (x/y, clamped)
+ *  - [data-tilt="deg"]     3D tilt following the mouse across the enclosing
+ *                          section (hero mockup); rotation channels only
  *  - [data-countup]        first number in the text counts up on first view
  *  - every <button>        press feedback (scale down while pressed)
  *
@@ -95,6 +98,67 @@ export function initMicro() {
     })
   })
 
+  /* --------------------------------------------------------- magnetic --- */
+  const magnetics = new Set<HTMLElement>()
+  document.querySelectorAll<HTMLElement>("[data-magnetic]").forEach((el) => {
+    magnetics.add(el)
+    const k = parseFloat(el.dataset.magnetic || "") || 0.3 // pull factor
+    const xTo = gsap.quickTo(el, "x", { duration: 0.4, ease: "power3.out" })
+    const yTo = gsap.quickTo(el, "y", { duration: 0.4, ease: "power3.out" })
+    const move = (e: MouseEvent) => {
+      const r = el.getBoundingClientRect()
+      // rects are in viewport px, gsap x/y in layout px — undo the canvas scale
+      const s = el.offsetWidth ? r.width / el.offsetWidth : 1
+      const dx = (e.clientX - (r.left + r.width / 2)) / s
+      const dy = (e.clientY - (r.top + r.height / 2)) / s
+      xTo(gsap.utils.clamp(-14, 14, dx * k))
+      yTo(gsap.utils.clamp(-10, 10, dy * k * 1.33))
+    }
+    const leave = () => {
+      gsap.to(el, {
+        x: 0,
+        y: 0,
+        duration: 0.8,
+        ease: "elastic.out(1, 0.45)",
+        overwrite: "auto",
+      })
+    }
+    el.addEventListener("mousemove", move)
+    el.addEventListener("mouseleave", leave)
+    cleanups.push(() => {
+      el.removeEventListener("mousemove", move)
+      el.removeEventListener("mouseleave", leave)
+    })
+  })
+
+  /* ------------------------------------------------------------- tilt --- */
+  const tilted = new Set<HTMLElement>()
+  document.querySelectorAll<HTMLElement>("[data-tilt]").forEach((el) => {
+    tilted.add(el)
+    const strength = parseFloat(el.dataset.tilt || "4")
+    const area = (el.closest("section") as HTMLElement) || el
+    gsap.set(el, { transformPerspective: 1400 })
+    const rxTo = gsap.quickTo(el, "rotationX", { duration: 0.9, ease: "power2.out" })
+    const ryTo = gsap.quickTo(el, "rotationY", { duration: 0.9, ease: "power2.out" })
+    const move = (e: MouseEvent) => {
+      const r = area.getBoundingClientRect()
+      const mx = (e.clientX - r.left) / r.width - 0.5
+      const my = (e.clientY - r.top) / r.height - 0.5
+      ryTo(mx * strength)
+      rxTo(-my * strength * 0.75)
+    }
+    const leave = () => {
+      ryTo(0)
+      rxTo(0)
+    }
+    area.addEventListener("mousemove", move)
+    area.addEventListener("mouseleave", leave)
+    cleanups.push(() => {
+      area.removeEventListener("mousemove", move)
+      area.removeEventListener("mouseleave", leave)
+    })
+  })
+
   /* --------------------------------------------------- press feedback --- */
   document.querySelectorAll<HTMLElement>("button").forEach((el) => {
     touched.add(el)
@@ -174,5 +238,7 @@ export function initMicro() {
     // (floated wrappers are never reveal targets, so their y is ours too)
     if (touched.size) gsap.set([...touched], { clearProps: "scale,yPercent" })
     if (floated.size) gsap.set([...floated], { clearProps: "transform" })
+    if (magnetics.size) gsap.set([...magnetics], { clearProps: "x,y" })
+    if (tilted.size) gsap.set([...tilted], { clearProps: "transform" })
   }
 }

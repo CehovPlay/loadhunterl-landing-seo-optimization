@@ -161,6 +161,7 @@ export function Navbar() {
             <div className="relative flex h-[28px] items-center gap-[6px]">
               <a
                 href="#contact"
+                data-magnetic="0.2"
                 className="flex h-[28px] items-center justify-center rounded-[99px] border border-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white backdrop-blur-[10px]"
                 style={{
                   backgroundImage:
@@ -172,6 +173,7 @@ export function Navbar() {
               </a>
               <a
                 href="#start"
+                data-magnetic="0.2"
                 className="flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white backdrop-blur-[10px]"
                 style={{ boxShadow: PILL_SHADOW }}
               >

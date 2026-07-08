@@ -20,22 +20,28 @@ export function Hero() {
         className="pointer-events-none absolute left-[-22px] top-[-22px] w-[1138px] max-w-none"
       />
 
-      {/* Right — product mockup */}
-      <img
-        src={heroDashboard}
-        alt="LoadHunter dashboard"
-        data-parallax="0.05"
-        className="absolute left-[897px] top-[128px] w-[1023px] max-w-none"
-      />
+      {/* Right — product mockup; the wrapper 3D-tilts after the mouse while
+          the images keep their own parallax channel (yPercent) */}
+      <div
+        data-tilt="4"
+        className="absolute left-[897px] top-[80px] h-[960px] w-[1023px]"
+      >
+        <img
+          src={heroDashboard}
+          alt="LoadHunter dashboard"
+          data-parallax="0.05"
+          className="absolute left-0 top-[48px] w-[1023px] max-w-none"
+        />
 
-      {/* extension settings popup — 1:1 crop from the Figma render (region 1200,80–1920,760) */}
-      <img
-        src="/figma/hero-settings-popup.png"
-        alt=""
-        aria-hidden
-        data-parallax="0.05"
-        className="absolute left-[1200px] top-[80px] w-[720px] max-w-none"
-      />
+        {/* extension settings popup — 1:1 crop from the Figma render (region 1200,80–1920,760) */}
+        <img
+          src="/figma/hero-settings-popup.png"
+          alt=""
+          aria-hidden
+          data-parallax="0.05"
+          className="absolute left-[303px] top-0 w-[720px] max-w-none"
+        />
+      </div>
 
       {/* Left — copy */}
       <div className="absolute left-0 top-[203px] flex w-[938px] flex-col items-start gap-[70px] px-[120px]">
@@ -96,6 +102,7 @@ export function Hero() {
         <div className="flex items-center gap-[12px]">
           <button
             data-lift
+            data-magnetic
             className="flex h-[42px] w-[228px] items-center justify-center rounded-[99px] border border-white text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#454545] backdrop-blur-[10px]"
             style={{
               backgroundImage:
@@ -108,6 +115,7 @@ export function Hero() {
           </button>
           <button
             data-lift
+            data-magnetic
             className="flex h-[42px] w-[228px] items-center justify-center gap-[8px] overflow-hidden rounded-[99px] border border-white py-[4px] pl-[9px] pr-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
             style={{
               backgroundImage:
