@@ -20,6 +20,15 @@ const SPEED_ROW = ["Booking speed", "47 seconds", "~ 2-3 minutes", "~1 minute"]
 export function WhyLoadHunter() {
   return (
     <section className="relative h-[1118px] bg-gray-800">
+      {/* panel glow + rounded panel background — FIRST in DOM: the export is
+          fully opaque (baked #181A1F bg) and would cover the heading otherwise */}
+      <img
+        src="/figma/why-glow.png"
+        alt=""
+        aria-hidden
+        className="absolute left-[375px] top-[198px] w-[1172px] max-w-none"
+      />
+
       {/* heading */}
       <div className="absolute left-[928px] top-[120px] size-[64px]">
         <img
@@ -34,14 +43,6 @@ export function WhyLoadHunter() {
       <p className="absolute left-[418px] top-[322px] w-[1084px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
         Measured across real bookings. Based on real dispatcher workflows.
       </p>
-
-      {/* panel glow + rounded panel background (baked image; render bounds +44px) */}
-      <img
-        src="/figma/why-glow.png"
-        alt=""
-        aria-hidden
-        className="absolute left-[375px] top-[198px] w-[1172px] max-w-none"
-      />
 
       {/* comparison table */}
       <div className="absolute left-[416px] top-[458px] h-[540px] w-[1084px]">

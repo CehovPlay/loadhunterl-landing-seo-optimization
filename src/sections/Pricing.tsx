@@ -356,8 +356,9 @@ export function Pricing() {
         Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!
       </p>
 
-      {/* billing toggle */}
+      {/* billing toggle — excluded from the scroll-reveal cascade */}
       <div
+        data-no-reveal
         className="absolute left-[832.5px] top-[278px] flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] py-[6px] pl-[6px] pr-[11px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
       >
         {(["Monthly", "Annually"] as const).map((label) => {
