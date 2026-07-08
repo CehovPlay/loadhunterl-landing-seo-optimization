@@ -56,7 +56,7 @@ function Heading({
   const is = iconStyle ?? { w: 84, l: -10, t: -4 }
   return (
     <>
-      <div className="absolute left-[352px] size-[64px]" style={{ top }}>
+      <div data-float className="absolute left-[352px] size-[64px]" style={{ top }}>
         <img
           src={icon}
           alt=""
@@ -105,7 +105,7 @@ function WhySection() {
         aria-hidden
         className="absolute left-0 top-0 w-[478px] max-w-none"
       />
-      <div className="absolute left-[352px] top-0 size-[64px]">
+      <div data-float className="absolute left-[352px] top-0 size-[64px]">
         <img
           src="/figma/tablet/heading-icon.png"
           alt=""
@@ -196,6 +196,7 @@ function WhySection() {
           {SPEED_ROW.map((t, j) => (
             <div
               key={t}
+              data-countup={j === 1 ? "" : undefined}
               className={
                 "w-[155px] pt-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white" +
                 (j === 0 ? "" : " text-center")
@@ -1078,6 +1079,7 @@ export function TabletBottom() {
         src="/figma/tablet/chaos.png"
         alt=""
         aria-hidden
+        data-parallax="0.04"
         className="absolute left-0 top-[932px] h-[555px] w-[768px] max-w-none"
       />
 

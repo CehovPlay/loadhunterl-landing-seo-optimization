@@ -21,7 +21,7 @@ export function PhoneOrbitEco() {
       {/* ecosystem products card */}
       <div className="absolute left-[-2px] top-[462px] h-[843px] w-[390px] overflow-hidden rounded-[12px] bg-[#ebeaec]">
         {/* figma icon — 64x64 box, 84px render incl. glow (desktop export reused) */}
-        <div className="absolute left-[163px] top-[40px] size-[64px]">
+        <div data-float className="absolute left-[163px] top-[40px] size-[64px]">
           <img
             src="/figma/feat-icon-2x.png"
             alt=""

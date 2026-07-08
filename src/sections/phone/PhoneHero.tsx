@@ -53,6 +53,7 @@ export function PhoneHero() {
         }}
       >
         <span
+          data-countup
           className="whitespace-nowrap bg-clip-text text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-transparent"
           style={{
             backgroundImage:
@@ -127,6 +128,7 @@ export function PhoneHero() {
       <img
         src="/figma/phone/hero-mockup.png"
         alt="LoadHunter dashboard"
+        data-parallax="0.04"
         className="absolute left-0 top-[572px] w-[390px] max-w-none"
       />
     </section>

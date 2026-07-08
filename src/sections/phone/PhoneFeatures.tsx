@@ -102,7 +102,7 @@ export function PhoneFeatures() {
       </div>
 
       {/* header icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-      <div className="absolute left-[163px] top-[110px] size-[64px]">
+      <div data-float className="absolute left-[163px] top-[110px] size-[64px]">
         <img
           src="/figma/feat-icon-2x.png"
           alt=""

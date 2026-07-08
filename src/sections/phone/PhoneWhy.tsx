@@ -74,7 +74,7 @@ export function PhoneWhy() {
       />
 
       {/* figma icon */}
-      <div className="absolute left-[161px] top-[101px] size-[64px]">
+      <div data-float className="absolute left-[161px] top-[101px] size-[64px]">
         <img
           src="/figma/phone/icon-figma.png"
           alt=""

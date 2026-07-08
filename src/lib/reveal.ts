@@ -88,8 +88,8 @@ export function initReveal() {
     ;(riseSafe ? items : fadeOnly).push(el)
   })
 
-  gsap.set(items, { autoAlpha: 0, y: RISE })
-  gsap.set(fadeOnly, { autoAlpha: 0 })
+  if (items.length) gsap.set(items, { autoAlpha: 0, y: RISE })
+  if (fadeOnly.length) gsap.set(fadeOnly, { autoAlpha: 0 })
   const all = [...items, ...fadeOnly]
 
   const show = (batch: HTMLElement[]) =>
@@ -125,6 +125,6 @@ export function initReveal() {
   return () => {
     io.disconnect()
     // clear ONLY what the reveal set — never React-managed inline styles
-    gsap.set(all, { clearProps: "transform,opacity,visibility" })
+    if (all.length) gsap.set(all, { clearProps: "transform,opacity,visibility" })
   }
 }

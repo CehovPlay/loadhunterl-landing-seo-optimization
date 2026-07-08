@@ -251,7 +251,7 @@ export function PhonePricing() {
   return (
     <section id="pricing" className="relative overflow-hidden bg-gray-800" style={{ height: 1782 }}>
       {/* figma icon */}
-      <div className="absolute left-[163px] top-0 size-[64px]">
+      <div data-float className="absolute left-[163px] top-0 size-[64px]">
         <img
           src="/figma/phone/icon-figma.png"
           alt=""

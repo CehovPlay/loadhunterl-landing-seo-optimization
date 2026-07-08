@@ -60,7 +60,7 @@ export function Faq() {
   return (
     <section id="faq" className="relative h-[1046px] overflow-hidden bg-gray-800">
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-      <div className="absolute left-[928px] top-[120px] size-[64px]">
+      <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
         <img
           src="/figma/tail/faq-icon.png"
           alt=""

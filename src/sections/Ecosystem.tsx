@@ -142,6 +142,7 @@ export function Ecosystem() {
         {/* left column — icon rebuilt from the original Figma vector layers:
             everything (grid, ring, glyph) is centered by construction */}
         <div
+          data-float
           className="absolute left-[60px] top-[60px] size-[64px] overflow-hidden rounded-[16px]"
           style={{ boxShadow: "0px 6px 16px -6px rgba(146,92,255,0.48)" }}
         >

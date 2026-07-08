@@ -201,7 +201,7 @@ export function PhoneTools() {
       style={{ height: 4342 }}
     >
       {/* intro icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-      <div className="absolute left-[163px] top-[160px] size-[64px]">
+      <div data-float className="absolute left-[163px] top-[160px] size-[64px]">
         <img
           src="/figma/tools/intro-icon.png"
           alt=""

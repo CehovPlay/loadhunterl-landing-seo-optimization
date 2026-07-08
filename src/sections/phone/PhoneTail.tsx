@@ -288,7 +288,7 @@ const FAQ_LINES = [232, 468, 748, 988]
 
 function SectionIcon({ top }: { top: number }) {
   return (
-    <div className="absolute left-[163px] size-[64px]" style={{ top }}>
+    <div data-float className="absolute left-[163px] size-[64px]" style={{ top }}>
       <img
         src="/figma/phone/icon-figma.png"
         alt=""
@@ -333,7 +333,7 @@ export function PhoneTail() {
         {/* trust strip */}
         <div className="absolute left-[63px] top-[224px] h-[42px] w-[264px]">
           <div className="absolute left-0 top-0 flex h-[42px] w-[90px] flex-col items-center justify-between">
-            <p className="whitespace-nowrap text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#e8e8e8]">
+            <p data-countup className="whitespace-nowrap text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#e8e8e8]">
               5,000 +
             </p>
             <p className="whitespace-nowrap text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-[#e8e8e8]">
@@ -348,7 +348,7 @@ export function PhoneTail() {
                 alt="4.7 star rating"
                 className="h-[16px] w-[100px] max-w-none"
               />
-              <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#e8e8e8]">
+              <span data-countup className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#e8e8e8]">
                 4.7
               </span>
             </div>

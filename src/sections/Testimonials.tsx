@@ -150,7 +150,7 @@ export function Testimonials() {
   return (
     <section id="contact" className="relative h-[1084px] overflow-hidden bg-gray-800">
       {/* heading */}
-      <div className="absolute left-[928px] top-0 size-[64px]">
+      <div data-float className="absolute left-[928px] top-0 size-[64px]">
         <img
           src="/figma/tools/intro-icon.png"
           alt=""

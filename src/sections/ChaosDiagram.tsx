@@ -22,6 +22,7 @@ export function ChaosDiagram() {
         src={diagram}
         alt=""
         aria-hidden
+        data-parallax="0.04"
         className="absolute left-[120px] top-[166px] w-[1681px] max-w-none"
       />
     </section>

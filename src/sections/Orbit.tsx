@@ -108,6 +108,7 @@ export function Orbit() {
         src="/figma/orbit-center.png"
         alt=""
         aria-hidden
+        data-pulse
         className="absolute max-w-none"
         style={{ left: CX - 95, top: CY - 59.5, width: 191 }}
       />

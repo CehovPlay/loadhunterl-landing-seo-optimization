@@ -81,7 +81,7 @@ export function TabletFeatures() {
       {/* header */}
       <div className="absolute inset-x-0 top-[136px] flex flex-col items-center px-[40px]">
         {/* feature icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-        <div className="relative size-[64px]">
+        <div data-float className="relative size-[64px]">
           <img
             src="/figma/feat-icon-2x.png"
             alt=""

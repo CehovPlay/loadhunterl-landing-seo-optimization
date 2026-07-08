@@ -85,7 +85,7 @@ export function Features() {
         <div className="flex w-full flex-col items-center gap-[20px] px-[120px]">
           <div className="flex w-full flex-col items-center gap-[60px]">
             {/* feature icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-            <div className="relative size-[64px]">
+            <div data-float className="relative size-[64px]">
               <img
                 src="/figma/feat-icon-2x.png"
                 alt=""
@@ -107,6 +107,7 @@ export function Features() {
           {CARDS.map((c) => (
             <div
               key={c.title}
+              data-lift
               className="relative h-[440px] w-[546px] overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0]"
             >
               <div className="absolute left-[-1px] top-[-1px] flex w-[546px] items-center px-[14px] py-[20px]">

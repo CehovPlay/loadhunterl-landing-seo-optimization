@@ -24,6 +24,7 @@ export function Hero() {
       <img
         src={heroDashboard}
         alt="LoadHunter dashboard"
+        data-parallax="0.05"
         className="absolute left-[897px] top-[128px] w-[1023px] max-w-none"
       />
 
@@ -32,6 +33,7 @@ export function Hero() {
         src="/figma/hero-settings-popup.png"
         alt=""
         aria-hidden
+        data-parallax="0.05"
         className="absolute left-[1200px] top-[80px] w-[720px] max-w-none"
       />
 
@@ -72,6 +74,7 @@ export function Hero() {
             }}
           >
             <span
+              data-countup
               className="whitespace-nowrap bg-clip-text text-[60px] font-medium leading-[105px] tracking-[-2.4px] text-transparent"
               style={{
                 backgroundImage:
@@ -92,6 +95,7 @@ export function Hero() {
         {/* CTAs */}
         <div className="flex items-center gap-[12px]">
           <button
+            data-lift
             className="flex h-[42px] w-[228px] items-center justify-center rounded-[99px] border border-white text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#454545] backdrop-blur-[10px]"
             style={{
               backgroundImage:
@@ -103,6 +107,7 @@ export function Hero() {
             Start free trial 14 days
           </button>
           <button
+            data-lift
             className="flex h-[42px] w-[228px] items-center justify-center gap-[8px] overflow-hidden rounded-[99px] border border-white py-[4px] pl-[9px] pr-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
             style={{
               backgroundImage:

@@ -57,6 +57,7 @@ export function TabletHero() {
             }}
           >
             <span
+              data-countup
               className="whitespace-nowrap bg-clip-text text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-transparent"
               style={{
                 backgroundImage:

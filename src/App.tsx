@@ -2,6 +2,7 @@ import { useLayoutEffect } from "react"
 import Lenis from "lenis"
 import gsap from "gsap"
 import { initReveal } from "@/lib/reveal"
+import { initMicro } from "@/lib/micro"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useBreakpoint } from "@/components/site/useBreakpoint"
 import { Navbar } from "@/sections/Navbar"
@@ -34,6 +35,8 @@ function useLenis(breakpoint: string) {
 
     // cascade scroll-reveal for text blocks and visuals
     const teardownReveal = initReveal()
+    // micro-animations: float/pulse/parallax/lift/press/countup
+    const teardownMicro = initMicro()
 
     // smooth-scroll anchor navigation through Lenis
     const onClick = (e: MouseEvent) => {
@@ -50,6 +53,7 @@ function useLenis(breakpoint: string) {
 
     return () => {
       document.removeEventListener("click", onClick)
+      teardownMicro()
       teardownReveal()
       gsap.ticker.remove(update)
       lenis.destroy()

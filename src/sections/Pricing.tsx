@@ -215,6 +215,7 @@ function PlanCard({
 
   return (
     <div
+      data-lift
       className="absolute top-[544px] h-[690px] w-[417px] overflow-hidden rounded-[16px] border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       style={{ left, backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))" }}
     >
@@ -344,7 +345,7 @@ export function Pricing() {
   return (
     <section id="pricing" className="relative h-[1462px] bg-gray-800">
       {/* header icon */}
-      <div className="absolute left-[928px] top-0 size-[64px]">
+      <div data-float className="absolute left-[928px] top-0 size-[64px]">
         <img src="/figma/pricing/header-icon.png" alt="" className="absolute left-[-24px] top-[-24px] w-[112px] max-w-none" />
       </div>
 

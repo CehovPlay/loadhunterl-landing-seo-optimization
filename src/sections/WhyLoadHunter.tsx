@@ -30,7 +30,7 @@ export function WhyLoadHunter() {
       />
 
       {/* heading */}
-      <div className="absolute left-[928px] top-[120px] size-[64px]">
+      <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
         <img
           src="/figma/tools/intro-icon.png"
           alt=""
@@ -113,6 +113,7 @@ export function WhyLoadHunter() {
           {SPEED_ROW.map((t, j) => (
             <div
               key={t}
+              data-countup={j === 1 ? "" : undefined}
               className={
                 "w-[251px] pt-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px]" +
                 (j === 0 ? " text-white" : " text-center text-gray-100")
