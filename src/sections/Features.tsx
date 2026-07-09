@@ -1,30 +1,53 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import orbitSvg from "@/assets/features/orbit.svg?raw"
+import gaugeSvg from "@/assets/features/gauge.svg?raw"
+import aiSvg from "@/assets/features/ai.svg?raw"
 
+/**
+ * The three feature visuals are Figma vector exports (src/assets/features/*.svg),
+ * inlined so their layers can be animated (each shape keeps its Figma id/name).
+ * Each sits in the same card window the PNG used; `viewBox` crops the
+ * illustration to the original PNG composition (derived from the SVG geometry
+ * bboxes + the PNG's imgCls transform) and `par` (preserveAspectRatio) covers
+ * the window, aligned to match how the PNG was placed (top-anchored for the
+ * gauge, centred for the others).
+ */
 const CARDS = [
   {
     title: "All needs in one place",
     body: "Access every essential dispatching tool directly from your load board — emails, notifications, maps, and more, all seamlessly integrated.",
-    img: "/figma/feat-card1-img.png",
-    // Figma: container 546x350 @ top 89, img shifted 5.47% down
+    svg: orbitSvg,
     imgBox: { top: 89, height: 350 },
-    imgCls: "absolute left-0 top-[5.47%] size-full max-w-none",
+    viewBox: "112 586 587 376",
+    par: "xMidYMid slice",
   },
   {
     title: "Time saver",
     body: "Save hours every day by automating repetitive tasks, streamlining workflows, and focusing on what matters most— booking the best loads.",
-    img: "/figma/feat-card2-img.png",
+    svg: gaugeSvg,
     imgBox: { top: 97, height: 342 },
-    imgCls: "absolute left-0 top-0 h-[102.34%] w-full max-w-none",
+    viewBox: "140 116 523 342",
+    par: "xMidYMin slice",
   },
   {
     title: "AI-Powered automation",
     body: "Automate your workflow with AI-driven features like Telegram notifications and auto-emailing, reducing manual tasks and saving valuable time.",
-    img: "/figma/feat-card3-img.png",
+    svg: aiSvg,
     imgBox: { top: 83, height: 356 },
-    imgCls: "absolute left-[-3.85%] top-0 h-[105.62%] w-[107.43%] max-w-none",
+    viewBox: "183 152 524 342",
+    par: "xMidYMid slice",
   },
 ]
+
+/** Rewrite the exported <svg> tag to a given viewBox/alignment and cover the window. */
+function svgHtml(raw: string, viewBox: string, par: string) {
+  return raw.replace(
+    /<svg\b[^>]*>/,
+    `<svg viewBox="${viewBox}" preserveAspectRatio="${par}" fill="none" ` +
+      `xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">`,
+  )
+}
 
 /* Partners marquee row — Figma PartnersBlock: logos 112x56 @ y40, step 302px */
 const PARTNER_SEQ = [
@@ -124,7 +147,12 @@ export function Features() {
                 className="absolute left-[-1px] w-[546px] overflow-hidden"
                 style={{ top: c.imgBox.top, height: c.imgBox.height }}
               >
-                <img src={c.img} alt="" className={c.imgCls} />
+                <div
+                  data-feat-visual
+                  data-no-reveal
+                  className="absolute inset-0"
+                  dangerouslySetInnerHTML={{ __html: svgHtml(c.svg, c.viewBox, c.par) }}
+                />
               </div>
             </div>
           ))}

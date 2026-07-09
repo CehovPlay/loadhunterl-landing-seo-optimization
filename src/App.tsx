@@ -3,6 +3,7 @@ import Lenis from "lenis"
 import gsap from "gsap"
 import { initReveal } from "@/lib/reveal"
 import { initMicro } from "@/lib/micro"
+import { initEcosystemPin } from "@/lib/ecosystemPin"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useBreakpoint } from "@/components/site/useBreakpoint"
 import { Navbar } from "@/sections/Navbar"
@@ -37,6 +38,8 @@ function useLenis(breakpoint: string) {
     const teardownReveal = initReveal()
     // micro-animations: float/pulse/parallax/lift/press/countup
     const teardownMicro = initMicro()
+    // pin the ecosystem section and scroll its product list on the way through
+    const teardownEcoPin = initEcosystemPin()
 
     // smooth-scroll anchor navigation through Lenis
     const onClick = (e: MouseEvent) => {
@@ -53,6 +56,7 @@ function useLenis(breakpoint: string) {
 
     return () => {
       document.removeEventListener("click", onClick)
+      teardownEcoPin()
       teardownMicro()
       teardownReveal()
       gsap.ticker.remove(update)
