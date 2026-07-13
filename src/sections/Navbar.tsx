@@ -36,8 +36,10 @@ export function Navbar() {
     }
     raf = requestAnimationFrame(tick)
 
+    // same cap as DesignFrame's maxScale={1}: above 1920 the canvas stops
+    // growing and centers, and the fixed pill must match it
     const onResize = () =>
-      setScale(document.documentElement.clientWidth / 1920)
+      setScale(Math.min(document.documentElement.clientWidth / 1920, 1))
     onResize()
     window.addEventListener("resize", onResize)
     return () => {

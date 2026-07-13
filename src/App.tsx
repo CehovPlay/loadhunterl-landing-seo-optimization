@@ -4,6 +4,7 @@ import gsap from "gsap"
 import { initReveal } from "@/lib/reveal"
 import { initMicro } from "@/lib/micro"
 import { initEcosystemPin } from "@/lib/ecosystemPin"
+import { BleedBg } from "@/components/site/BleedBg"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useBreakpoint } from "@/components/site/useBreakpoint"
 import { Navbar } from "@/sections/Navbar"
@@ -72,10 +73,15 @@ function DesktopLanding() {
       <Navbar />
       <main>
         <Hero />
-        <Features />
+        {/* Light sections: bleed their bg into the >1920 side gutters */}
+        <BleedBg color="#fafafa">
+          <Features />
+        </BleedBg>
         <DispatchIntro />
         <Tools />
-        <Orbit />
+        <BleedBg color="#ffffff">
+          <Orbit />
+        </BleedBg>
         <Ecosystem />
         <WhyLoadHunter />
         <ChaosDiagram />
@@ -106,8 +112,12 @@ function App() {
       </DesignFrame>
     )
   }
+  // Above the 1920 desktop artboard the Figma adaptive frames center the same
+  // pixel-sized content with side gutters rather than scaling up — so cap the
+  // desktop canvas at 1× and let DesignFrame center it. Phone/tablet keep their
+  // fill-to-viewport scaling (they scale up within their own breakpoint bands).
   return (
-    <DesignFrame width={1920}>
+    <DesignFrame width={1920} maxScale={1}>
       <DesktopLanding />
     </DesignFrame>
   )

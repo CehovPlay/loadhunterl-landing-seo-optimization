@@ -137,23 +137,11 @@ function ProductRow({ product }: { product: Product }) {
 
 export function Ecosystem() {
   // h-[2077px] = the card's 377px footprint + a 1700px scroll runway
-  // (600px width-expand + 1100px inner-list overflow). initEcosystemPin() pins
-  // the card at viewport centre and consumes the runway expanding the card and
-  // then scrolling the list; see src/lib/ecosystemPin.ts.
+  // (600px fullscreen-expand + 1100px inner-list overflow). initEcosystemPin()
+  // pins the card at viewport centre and consumes the runway expanding the card
+  // to the full viewport and then scrolling the list; see src/lib/ecosystemPin.ts.
   return (
     <section id="offers" data-eco-pin className="relative h-[2077px] bg-gray-800">
-      {/* Frozen backdrop: sized to the viewport every frame by initEcosystemPin()
-          so it stays put while the section scrolls, and faded in with the card's
-          expansion. It hides the Orbit content that would otherwise scroll above
-          the pinned card. Matches the card fill (#e9e9eb) so the thin strips
-          above/below the centred card read as one seamless full-bleed panel
-          rather than a dark line. */}
-      <div
-        data-eco-cover
-        data-no-reveal
-        aria-hidden="true"
-        className="pointer-events-none absolute left-0 h-0 w-[1920px] bg-[#e9e9eb] will-change-[top,height]"
-      />
       {/* data-no-reveal: the card runs its own pin/expand/list-scroll
           choreography, so it opts out of the global fade-rise cascade (which
           would otherwise fight the pin and could leave rows stuck hidden). */}
@@ -202,8 +190,13 @@ export function Ecosystem() {
 
         {/* right column — product list, scrolled by the pin (not native
             overflow): the page scroll drives data-eco-list's translateY while
-            the section is pinned. See src/lib/ecosystemPin.ts. */}
-        <div className="absolute left-[646px] top-0 h-[1000px] w-[1034px] overflow-hidden">
+            the section is pinned. The window's height/y are also driven by the
+            pin so it stretches with the card as it expands to fullscreen.
+            See src/lib/ecosystemPin.ts. */}
+        <div
+          data-eco-window
+          className="absolute left-[646px] top-0 h-[1000px] w-[1034px] overflow-hidden will-change-[transform,height]"
+        >
           <div
             data-eco-list
             className="ml-[40px] flex w-[954px] flex-col gap-[20px] py-[40px] will-change-transform"

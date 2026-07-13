@@ -76,7 +76,13 @@ export function Orbit() {
   }, [])
 
   return (
-    <section ref={rootRef} className="relative h-[1389px] w-full overflow-hidden bg-white">
+    <section ref={rootRef} className="relative h-[1389px] w-full bg-white">
+      {/* Horizontal bleed: the rings span the Figma 2K frame's 2560px, so above
+          1920 they run into the side gutters instead of being masked at the
+          canvas edges. The wrapper clips only vertically (ring tops hide under
+          the dark section above, as in the design). */}
+      <div className="absolute left-[-320px] top-0 h-full w-[2560px] overflow-hidden">
+        <div className="absolute left-[320px] top-0 h-full w-[1920px]">
       {/* dotted rings */}
       <svg
         className="pointer-events-none absolute"
@@ -145,6 +151,8 @@ export function Orbit() {
           ))}
         </div>
       ))}
+        </div>
+      </div>
     </section>
   )
 }
