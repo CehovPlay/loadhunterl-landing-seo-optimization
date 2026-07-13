@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: section spans phone-frame y 8206..9095 (h=889).
  * Glow "image 60" (916:72375) @2x export renders 255x708; aligned at (0,-44).
@@ -28,9 +29,11 @@ function CellIcon({ kind }: { kind: Cell }) {
   if (kind === "cross") {
     return (
       <div className="relative h-[12px] w-[13.93px] opacity-50">
-        <img
+        <Img
           src="/figma/phone/why-cross.svg"
           alt="no"
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-0.75px] top-[-0.75px] h-[13.5px] w-[15.43px] max-w-none"
         />
       </div>
@@ -39,9 +42,11 @@ function CellIcon({ kind }: { kind: Cell }) {
   const wide = kind === "check-wide"
   return (
     <div className="relative h-[12px]" style={{ width: wide ? 18 : 17 }}>
-      <img
+      <Img
         src={wide ? "/figma/phone/why-check2.svg" : "/figma/phone/why-check.svg"}
         alt="yes"
+        loading="lazy"
+        decoding="async"
         className="absolute left-[-14px] top-[-14px] h-[40px] max-w-none"
         style={{ width: wide ? 46 : 45 }}
       />
@@ -52,10 +57,12 @@ function CellIcon({ kind }: { kind: Cell }) {
 function Hairline() {
   return (
     <div className="relative h-0 w-full">
-      <img
+      <Img
         src="/figma/phone/line-456.svg"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-[-1px] h-px w-full max-w-none"
       />
     </div>
@@ -64,20 +71,24 @@ function Hairline() {
 
 export function PhoneWhy() {
   return (
-    <section className="relative overflow-hidden bg-gray-800" style={{ height: 889 }}>
+    <section className="relative overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:390px_889px]" style={{ height: 889 }}>
       {/* violet glow behind icon + panel — 2x export of image 60 */}
-      <img
+      <Img
         src="/figma/phone/why-glow.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-[-44px] w-[255px] max-w-none"
       />
 
       {/* figma icon */}
       <div data-float className="absolute left-[161px] top-[101px] size-[64px]">
-        <img
+        <Img
           src="/figma/phone/icon-figma.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -91,7 +102,7 @@ export function PhoneWhy() {
 
       {/* comparison table */}
       <div
-        className="absolute left-[12px] top-[365px] flex h-[404px] w-[362px] flex-col gap-[12px] overflow-hidden rounded-[12px] p-[12px] backdrop-blur-[100px]"
+        className="absolute left-[12px] top-[365px] flex h-[404px] w-[362px] flex-col gap-[12px] overflow-hidden rounded-[12px] p-[12px]"
         style={{ backgroundImage: PANEL_BG }}
       >
         {/* header */}
@@ -100,9 +111,11 @@ export function PhoneWhy() {
             Feature
           </p>
           <div className="flex min-w-px flex-1 items-center justify-center">
-            <img
+            <Img
               src="/figma/phone/why-table-icon.svg"
               alt="loadhunter"
+              loading="lazy"
+              decoding="async"
               className="h-[16px] w-[16.92px] max-w-none"
             />
           </div>

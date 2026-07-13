@@ -1,5 +1,7 @@
+import { Img } from "@/components/site/Img"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
 
 /**
  * Figma: Tablet (768) features — Frame 2147238647 (916:70049, 768x1363 @ y=1324),
@@ -43,31 +45,39 @@ const CARDS = [
 const STRIP_PERIOD = 728
 
 export function TabletFeatures() {
+  const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
+    if (prefersReducedMotion()) return
     const tween = gsap.to(track, {
       x: STRIP_PERIOD, // one tile period → seamless wrap
       duration: 30, // ≈ desktop marquee speed (24 px/s)
       ease: "none",
       repeat: -1,
     })
+    const stopGate = gateLoops(sectionRef.current, tween)
+    const stopWC = willChangeInView(track, sectionRef.current)
     return () => {
+      stopWC()
+      stopGate()
       tween.kill()
     }
   }, [])
 
   return (
-    <section id="why" className="relative overflow-hidden bg-bg-light" style={{ height: 1379 }}>
+    <section ref={sectionRef} id="why" className="relative overflow-hidden bg-bg-light [content-visibility:auto] [contain-intrinsic-size:768px_1379px]" style={{ height: 1379 }}>
       {/* partners strip — marquee of the tiling export */}
       <div className="absolute left-0 top-0 h-[96px] w-[768px] overflow-hidden">
-        <div ref={trackRef} data-marquee-track className="absolute inset-0 will-change-transform">
+        <div ref={trackRef} data-marquee-track className="absolute inset-0">
           {[-STRIP_PERIOD, 0, STRIP_PERIOD].map((x) => (
-            <img
+            <Img
               key={x}
               src="/figma/tablet/partners-strip.png"
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute top-[20px] h-[59px] w-[768px] max-w-none"
               style={{ left: x }}
             />
@@ -82,9 +92,11 @@ export function TabletFeatures() {
       <div className="absolute inset-x-0 top-[136px] flex flex-col items-center px-[40px]">
         {/* feature icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
         <div data-float className="relative size-[64px]">
-          <img
+          <Img
             src="/figma/feat-icon-2x.png"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
           />
         </div>
@@ -107,9 +119,11 @@ export function TabletFeatures() {
             key={c.title}
             className="relative h-[309px] w-full overflow-hidden rounded-[12px] bg-[#f0f0f0]"
           >
-            <img
+            <Img
               src={c.img}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute top-0 h-[309px] max-w-none"
               style={{ left: c.imgLeft, width: c.imgWidth }}
             />

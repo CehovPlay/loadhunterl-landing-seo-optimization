@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665222 (926:113307) — 390x4222 @ y2540 (section h 4342,
  * 120px bottom padding). Intro (icon @160, H2 @264, sub @360) + 4 blocks:
@@ -161,9 +162,11 @@ function ToolItem({ it, light }: { it: Item; light?: boolean }) {
         style={{ top: it.y }}
       >
         {it.icon ? (
-          <img
+          <Img
             src={it.icon.src}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute top-0 max-w-none"
             style={{
               left: it.icon.w === 62 ? -10 : 0,
@@ -197,14 +200,16 @@ export function PhoneTools() {
   return (
     <section
       id="features"
-      className="relative overflow-hidden bg-gray-800"
+      className="relative overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:390px_4342px]"
       style={{ height: 4342 }}
     >
       {/* intro icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[163px] top-[160px] size-[64px]">
-        <img
+        <Img
           src="/figma/tools/intro-icon.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -222,9 +227,11 @@ export function PhoneTools() {
 
       {BLOCKS.map((b) => (
         <div key={b.key} className="contents">
-          <img
+          <Img
             src={b.mockup.src}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-[14px] max-w-none"
             style={{ top: b.mockup.y, width: b.mockup.w }}
           />

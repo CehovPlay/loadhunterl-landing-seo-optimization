@@ -1,7 +1,10 @@
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
+/* latin subset only — the copy is English; this drops the unused cyrillic /
+   greek / vietnamese / latin-ext @font-face rules and woff2 from the build.
+   (→ U+2192 was already a fallback glyph in every subset, so unchanged.) */
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/inter/latin-600.css";
+@import "@fontsource/inter/latin-700.css";
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */

@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Tablet (768) — bottom region. Figma: Group 2085665211 (921:86998),
  * page y 12210–19032 (h=6822). Stacked sub-blocks (section-relative y):
@@ -15,6 +16,7 @@
 import { useEffect, useRef } from "react"
 import type { CSSProperties } from "react"
 import gsap from "gsap"
+import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
 
 const PILL_SHADOW =
   "0px 1px 0px rgba(0,0,0,0.05), 0px 4px 4px rgba(0,0,0,0.05), 0px 10px 10px rgba(0,0,0,0.1)"
@@ -57,10 +59,12 @@ function Heading({
   return (
     <>
       <div data-float className="absolute left-[352px] size-[64px]" style={{ top }}>
-        <img
+        <Img
           src={icon}
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className="absolute max-w-none"
           style={{ left: is.l, top: is.t, width: is.w }}
         />
@@ -99,17 +103,21 @@ function WhySection() {
   return (
     <>
       {/* ambient glow (image 60, render bounds cropped to section top) */}
-      <img
+      <Img
         src="/figma/tablet/why-glow.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-0 w-[478px] max-w-none"
       />
       <div data-float className="absolute left-[352px] top-0 size-[64px]">
-        <img
+        <Img
           src="/figma/tablet/heading-icon.png"
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -123,7 +131,7 @@ function WhySection() {
 
       {/* comparison table */}
       <div
-        className="absolute left-[50px] top-[274px] h-[428px] w-[668px] rounded-[12px] backdrop-blur-[100px]"
+        className="absolute left-[50px] top-[274px] h-[428px] w-[668px] rounded-[12px]"
         style={{
           backgroundImage: figmaRadial(
             668,
@@ -140,9 +148,11 @@ function WhySection() {
             Feature
           </div>
           <div className="flex w-[155px] justify-center pt-[6.9px]">
-            <img
+            <Img
               src="/figma/tablet/table-logo.svg"
               alt="loadhunter"
+              loading="lazy"
+              decoding="async"
               className="h-[26.17px] w-[132.71px] max-w-none"
             />
           </div>
@@ -174,15 +184,19 @@ function WhySection() {
             {row.cells.map((c, j) => (
               <div key={j} className="relative w-[155px]">
                 {c === "check" ? (
-                  <img
+                  <Img
                     src="/figma/tablet/check.png"
                     alt="yes"
+                    loading="lazy"
+                    decoding="async"
                     className="absolute left-[51px] top-[-0.75px] h-[45.5px] w-[53px] max-w-none"
                   />
                 ) : (
-                  <img
+                  <Img
                     src="/figma/tablet/table-cross.svg"
                     alt="no"
+                    loading="lazy"
+                    decoding="async"
                     className="absolute left-[67.2px] top-[13px] h-[18px] w-[20.57px] max-w-none opacity-50"
                   />
                 )}
@@ -382,9 +396,11 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
 function CheckIcon() {
   return (
     <div className="relative h-[6px] w-[9px] shrink-0">
-      <img
+      <Img
         src="/figma/pricing/check.svg"
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute max-w-none"
         style={{ left: -1, top: -1, width: 11, height: 7.21 }}
       />
@@ -397,9 +413,11 @@ function FeatureItem({ item }: { item: Feature }) {
     return (
       <div className="flex w-full items-start gap-[12px] opacity-50">
         <div className="relative size-[10px] shrink-0">
-          <img
+          <Img
             src="/figma/pricing/clock.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute max-w-none"
             style={{ left: -1, top: -1, width: 12, height: 12 }}
           />
@@ -458,9 +476,11 @@ function PlanCard({ plan }: { plan: Plan }) {
         )}
         {/* icon (40px box; png render carries the glow) */}
         <div className="absolute left-[24px] top-[24px] size-[40px]">
-          <img
+          <Img
             src={plan.icon}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-[-6.25px] top-[-2.5px] w-[52.5px] max-w-none"
           />
         </div>
@@ -471,7 +491,7 @@ function PlanCard({ plan }: { plan: Plan }) {
           </span>
           {plan.recommended && (
             <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <img src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
+              <Img src="/figma/pricing/crown.svg" alt="" loading="lazy" decoding="async" className="h-[14px] w-[12.24px] max-w-none" />
               <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
                 Recommended
               </span>
@@ -543,10 +563,12 @@ function PricingSection({ top }: { top: number }) {
   return (
     <>
       <div className="absolute left-[352px] size-[64px]" style={{ top }}>
-        <img
+        <Img
           src="/figma/tablet/heading-icon.png"
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -600,9 +622,11 @@ function PricingSection({ top }: { top: number }) {
       >
         <div className="absolute left-[2px] top-[2px] h-[12px] w-[269px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]" />
         <div className="absolute left-[260px] top-[-3px] size-[22px]">
-          <img
+          <Img
             src="/figma/pricing/knob.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute max-w-none"
             style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}
           />
@@ -686,7 +710,7 @@ function ReviewCard({ r }: { r: Review }) {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[12px] backdrop-blur-[100px]"
+        className="pointer-events-none absolute inset-0 rounded-[12px]"
         style={{
           backgroundImage: r.violet
             ? figmaRadial(375, 262, "-16.229 -24.667 16.229 -24.667 187.96 284.99", "rgba(111,81,151,1)")
@@ -698,7 +722,7 @@ function ReviewCard({ r }: { r: Review }) {
       </p>
       <div className="relative mt-[40px] flex w-full items-center gap-[12px]">
         <div
-          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white backdrop-blur-[10px]"
+          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
@@ -721,17 +745,23 @@ function ReviewCard({ r }: { r: Review }) {
 const REVIEW_PERIOD = 1245 // collage width 1205 (x −218..987) + 40 gap
 
 function TestimonialsSection({ top }: { top: number }) {
+  const sectionRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
+    if (prefersReducedMotion()) return
     const tween = gsap.to(track, {
       x: -REVIEW_PERIOD, // one collage period → seamless wrap
       duration: 36, // ≈ desktop testimonials speed (34.6 px/s)
       ease: "none",
       repeat: -1,
     })
+    const stopGate = gateLoops(sectionRef.current, tween)
+    const stopWC = willChangeInView(track, sectionRef.current)
     return () => {
+      stopWC()
+      stopGate()
       tween.kill()
     }
   }, [])
@@ -745,21 +775,24 @@ function TestimonialsSection({ top }: { top: number }) {
         sub="Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials"
       />
       {/* trust strip: 5,000+ users, 4.7 rating, Google / Trustpilot / G2 */}
-      <img
+      <Img
         src="/figma/reviews-strip.png"
         alt="5,000+ trusted users, 4.7 from 100+ reviews on Google, Trustpilot and G2"
+        loading="lazy"
+        decoding="async"
         className="absolute left-[62.5px] w-[643.5px] max-w-none"
         style={{ top: top + 252 }}
       />
       {/* card marquee band (initial frame matches the design) */}
       <div
+        ref={sectionRef}
         className="absolute left-0 h-[524px] w-[768px] overflow-hidden"
         style={{ top: top + 374 }}
       >
         <div
           ref={trackRef}
           data-marquee-track
-          className="absolute inset-0 will-change-transform"
+          className="absolute inset-0"
         >
           {[0, 1, 2].map((copy) => (
             <div
@@ -770,10 +803,12 @@ function TestimonialsSection({ top }: { top: number }) {
               {REVIEWS.map((r) => (
                 <ReviewCard key={r.name} r={r} />
               ))}
-              <img
+              <Img
                 src="/figma/tablet/cursor.svg"
                 alt=""
                 aria-hidden
+                loading="lazy"
+                decoding="async"
                 className="absolute left-[421.5px] top-[195px] h-[32px] w-[27px] max-w-none"
               />
             </div>
@@ -903,11 +938,13 @@ function FaqSection({ top }: { top: number }) {
         </div>
       ))}
       {[196, 356, 536, 676].map((y) => (
-        <img
+        <Img
           key={y}
           src="/figma/tail/faq-line.svg"
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className="absolute left-[88px] h-px w-[640px] max-w-none"
           style={{ top: list + y - 0.5 }}
         />
@@ -929,14 +966,18 @@ function CtaSection({ top }: { top: number }) {
         }}
       >
         <div className="absolute left-[40px] top-[40px] h-[24px] w-[151px]">
-          <img
+          <Img
             src="/figma/tail/logo-icon-white.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-0 top-0 size-[24px] max-w-none"
           />
-          <img
+          <Img
             src="/figma/tail/logo-text-white.svg"
             alt="loadhunter"
+            loading="lazy"
+            decoding="async"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
           />
         </div>
@@ -951,7 +992,7 @@ function CtaSection({ top }: { top: number }) {
           className="absolute left-[40px] top-[224px] inline-flex h-[42px] items-center gap-[8px] rounded-full border border-white bg-white px-[24px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] transition-opacity hover:opacity-90"
           type="button"
         >
-          <img src="/figma/tail/cta-chrome.svg" alt="" className="size-[16px] max-w-none" />
+          <Img src="/figma/tail/cta-chrome.svg" alt="" loading="lazy" decoding="async" className="size-[16px] max-w-none" />
           <span
             className="bg-clip-text text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-transparent"
             style={{
@@ -964,26 +1005,32 @@ function CtaSection({ top }: { top: number }) {
       </div>
 
       {/* "One click automation" panel — baked 2x export */}
-      <img
+      <Img
         src="/figma/tablet/cta-panel.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-[50px] top-[326px] h-[300px] w-[668px] max-w-none"
       />
       {/* diffuse light haze over the panel (present only in the full-frame
           figma composite; reconstructed as an additive overlay) */}
-      <img
+      <Img
         src="/figma/tablet/cta-haze.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-[50px] top-[306px] h-[332px] w-[668px] max-w-none"
         style={{ mixBlendMode: "plus-lighter" }}
       />
       {/* right-edge glow (image 61; blur margins baked, left bleed cropped) */}
-      <img
+      <Img
         src="/figma/tablet/cta-glow.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-[718px] top-[242px] h-[440px] w-[712px] max-w-none"
       />
     </div>
@@ -1003,14 +1050,18 @@ function FooterSection({ top }: { top: number }) {
     <footer className="absolute left-0 top-0 h-full w-full">
       {/* logo + subscribe row */}
       <div className="absolute left-[40px] h-[24px] w-[151px]" style={{ top: top + 8 }}>
-        <img
+        <Img
           src="/figma/tail/logo-icon-white.svg"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-0 top-0 size-[24px] max-w-none"
         />
-        <img
+        <Img
           src="/figma/tail/logo-text-white.svg"
           alt="loadhunter"
+          loading="lazy"
+          decoding="async"
           className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
         />
       </div>
@@ -1043,15 +1094,17 @@ function FooterSection({ top }: { top: number }) {
       <div className="absolute left-[666px] flex gap-[4px]" style={{ top: top + 104 }}>
         {SOCIALS.map((src) => (
           <a key={src} href="#" className="block size-[18px]">
-            <img src={src} alt="" className="size-[18px] max-w-none" />
+            <Img src={src} alt="" loading="lazy" decoding="async" className="size-[18px] max-w-none" />
           </a>
         ))}
       </div>
 
       {/* orbit rings graphic (© caption + hairline baked in) */}
-      <img
+      <Img
         src="/figma/tablet/footer-orbit.png"
         alt="© 2026 loadhunt Corp. All rights reserved."
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 h-[875px] w-[768px] max-w-none"
         style={{ top: top + 122 }}
       />
@@ -1063,7 +1116,7 @@ function FooterSection({ top }: { top: number }) {
 
 export function TabletBottom() {
   return (
-    <section className="relative bg-gray-800" style={{ height: 6822 }}>
+    <section className="relative bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:768px_6822px]" style={{ height: 6822 }}>
       <WhySection />
 
       {/* from chaos to AI-powered dispatch */}
@@ -1075,11 +1128,13 @@ export function TabletBottom() {
         by hand. LoadHunter automates the busywork so your team can find better
         loads, respond faster, and book with confidence.
       </p>
-      <img
+      <Img
         src="/figma/tablet/chaos.png"
         alt=""
         aria-hidden
         data-parallax="0.04"
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-[932px] h-[555px] w-[768px] max-w-none"
       />
 

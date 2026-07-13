@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Frame 2147238594 (914:23798) — 1920x1166 @ page y=16643.
  * Section renders y 16643–17689 (h=1046); the frame's bottom 120px padding
@@ -58,12 +59,14 @@ const LINES = [124, 248, 356, 464]
 
 export function Faq() {
   return (
-    <section id="faq" className="relative h-[1046px] overflow-hidden bg-gray-800">
+    <section id="faq" className="relative h-[1046px] overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1046px]">
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
-        <img
+        <Img
           src="/figma/tail/faq-icon.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -95,11 +98,13 @@ export function Faq() {
         ))}
 
         {LINES.map((y) => (
-          <img
+          <Img
             key={y}
             src="/figma/tail/faq-line.svg"
             alt=""
             aria-hidden
+            loading="lazy"
+            decoding="async"
             className="absolute left-[860px] h-px w-[820px] max-w-none"
             style={{ top: y - 0.5 }}
           />

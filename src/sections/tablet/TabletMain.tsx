@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Tablet (768) frame 916:70003 → Group 2085665212 (921:86999),
  * 768x9387 @ frame y=2703 (+120px dark tail → section h=9507).
@@ -208,9 +209,11 @@ function DispatchIntroT() {
     <>
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div className="absolute left-[352px] top-[392px] size-[64px]">
-        <img
+        <Img
           src="/figma/tablet/intro-icon.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -236,9 +239,11 @@ function ToolBlockT({ b }: { b: ToolBlock }) {
   const descCls = b.lightDesc ? "text-gray-50" : "text-ink-2"
   return (
     <div className="absolute left-[40px] w-[688px]" style={{ top: b.top }}>
-      <img
+      <Img
         src={b.mockup.src}
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-0 max-w-none"
         style={{ width: b.mockup.w, height: b.mockup.h }}
       />
@@ -257,9 +262,11 @@ function ToolBlockT({ b }: { b: ToolBlock }) {
           <div key={it.title} className="absolute w-full" style={{ top: it.y }}>
             {/* icon 42x42; PNG has baked shadow margins (see iconW) */}
             <div className="absolute left-0 top-0 size-[42px]">
-              <img
+              <Img
                 src={it.icon}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="absolute top-0 max-w-none"
                 style={{ left: it.iconW === 62 ? -10 : 0, width: it.iconW }}
               />
@@ -287,10 +294,12 @@ function ToolBlockT({ b }: { b: ToolBlock }) {
 function OrbitT() {
   return (
     <div className="absolute left-0 top-[7624px] h-[763px] w-full bg-white">
-      <img
+      <Img
         src="/figma/tablet/orbit.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-0 w-[768px] max-w-none"
       />
     </div>
@@ -309,9 +318,11 @@ function EcosystemT() {
     >
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div className="absolute left-[40px] top-[80px] size-[64px]">
-        <img
+        <Img
           src="/figma/tablet/eco-icon.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -322,14 +333,18 @@ function EcosystemT() {
         Everything you need to find, evaluate, and book loads — faster,
         smarter, and in one place.
       </p>
-      <img
+      <Img
         src="/figma/tablet/eco-card1.png"
         alt="LoadHunter Extension — AI browser tool for major LoadBoards"
+        loading="lazy"
+        decoding="async"
         className="absolute left-[40px] top-[240px] w-[688px] max-w-none"
       />
-      <img
+      <Img
         src="/figma/tablet/eco-card2.png"
         alt="huntTMS — comprehensive transport management system"
+        loading="lazy"
+        decoding="async"
         className="absolute left-[40px] top-[710px] w-[688px] max-w-none"
       />
     </div>
@@ -338,7 +353,7 @@ function EcosystemT() {
 
 export function TabletMain() {
   return (
-    <section id="features" className="relative bg-gray-800" style={{ height: 9507 }}>
+    <section id="features" className="relative bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:768px_9507px]" style={{ height: 9507 }}>
       <DispatchIntroT />
       {BLOCKS.map((b) => (
         <ToolBlockT key={b.key} b={b} />

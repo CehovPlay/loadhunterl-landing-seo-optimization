@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 import heroDashboard from "/figma/hero-dashboard.png"
 import heroGlow from "/figma/hero-glow.png"
 import diamondIcon from "/figma/icon-diamond.svg"
@@ -13,10 +14,11 @@ export function Hero() {
   return (
     <section className="relative h-[1080px] w-full overflow-hidden bg-gray-800">
       {/* beem glow */}
-      <img
+      <Img
         src={heroGlow}
         alt=""
         aria-hidden
+        decoding="async"
         className="pointer-events-none absolute left-[-22px] top-[-22px] w-[1138px] max-w-none"
       />
 
@@ -28,17 +30,20 @@ export function Hero() {
         data-parallax="0.05"
         className="absolute left-[897px] top-[80px] h-[960px] w-[1023px]"
       >
-        <img
+        <Img
           src={heroDashboard}
           alt="LoadHunter dashboard"
+          decoding="async"
+          fetchPriority="high"
           className="absolute left-0 top-[48px] w-[1023px] max-w-none"
         />
 
         {/* extension settings popup — 1:1 crop from the Figma render (region 1200,80–1920,760) */}
-        <img
+        <Img
           src="/figma/hero-settings-popup.png"
           alt=""
           aria-hidden
+          decoding="async"
           className="absolute left-[303px] top-0 w-[720px] max-w-none"
         />
       </div>
@@ -123,7 +128,7 @@ export function Hero() {
               boxShadow: "0px 34px 74px -20px rgba(111,81,151,0.5)",
             }}
           >
-            <img src={diamondIcon} alt="" className="size-[25px]" />
+            <Img src={diamondIcon} alt="" decoding="async" className="size-[25px]" />
             Start booking in minutes
           </button>
         </div>

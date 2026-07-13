@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665223 (926:113308) — 1680 wide, clipped to 390 by the
  * phone frame; section spans frame y 9095..9785 (h=690).
@@ -7,7 +8,7 @@
  */
 export function PhoneChaos() {
   return (
-    <section className="relative overflow-hidden bg-gray-800" style={{ height: 690 }}>
+    <section className="relative overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:390px_690px]" style={{ height: 690 }}>
       <h2 className="absolute left-[12px] top-0 w-[362px] text-center text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-white">
         From chaos to
         <br />
@@ -20,10 +21,12 @@ export function PhoneChaos() {
       </p>
 
       {/* rings + icon nodes + caption pill — decorative 2x export (clipped render) */}
-      <img
+      <Img
         src="/figma/phone/chaos.png"
         data-parallax="0.04"
         alt="Turn manual dispatching into a faster, cleaner workflow powered by AI. LoadHunter helps your team find better loads."
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-[216px] w-[390px] max-w-none"
       />
     </section>

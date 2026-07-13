@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: dark tools mega-frame 2147238623 (914:23995), page y=2194, h=8058.
  * The intro (first 1080px) lives in DispatchIntro.tsx; this section renders
@@ -241,18 +242,22 @@ function ToolBlock({ b }: { b: Block }) {
       style={{ top: b.top, height: b.height, left: b.frameX ?? 120 }}
     >
       {b.bg && (
-        <img
+        <Img
           src={b.bg.src}
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className="absolute max-w-none"
           style={{ left: b.bg.x, top: b.bg.y, width: b.bg.w }}
         />
       )}
 
-      <img
+      <Img
         src={b.mockup.src}
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute max-w-none"
         style={{ left: b.mockup.x, top: b.mockup.y, width: b.mockup.w }}
       />
@@ -275,9 +280,11 @@ function ToolBlock({ b }: { b: Block }) {
           <div key={it.title} className="absolute w-full" style={{ top: it.y }}>
             {/* icon 42x42; PNG has baked margins (see iconW) */}
             <div className="absolute left-0 top-0 size-[42px]">
-              <img
+              <Img
                 src={it.icon}
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="absolute top-0 max-w-none"
                 style={{
                   left: it.iconW === 62 ? -10 : 0,
@@ -306,7 +313,7 @@ function ToolBlock({ b }: { b: Block }) {
 
 export function Tools() {
   return (
-    <section id="features" className="relative h-[6978px] bg-gray-800">
+    <section id="features" className="relative h-[6978px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_6978px]">
       {BLOCKS.map((b) => (
         <ToolBlock key={b.key} b={b} />
       ))}

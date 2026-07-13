@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Tablet (768) — Navigation bar 916:70007 (768x78, absolute overlay)
  * inner pill 688x46 @ 40,16 — logo pill left, "Menu" button right.
@@ -24,12 +25,12 @@ export function TabletNavbar() {
                 "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
             }}
           >
-            <img
+            <Img
               src="/figma/logo-icon.svg"
               alt=""
               className="h-[26.173px] w-[27.679px]"
             />
-            <img
+            <Img
               src="/figma/logo-text.svg"
               alt="loadhunter"
               className="h-[15.736px] w-[97.034px]"

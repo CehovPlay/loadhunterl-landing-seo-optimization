@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665221 (926:105044) — 390x1305 @ phone-frame y=6882 (x=-2).
  * White orbit graphic (Group 2085665057, 926:101890) exported @2x (renders 388
@@ -9,12 +10,14 @@
  */
 export function PhoneOrbitEco() {
   return (
-    <section className="relative overflow-hidden bg-gray-800" style={{ height: 1324 }}>
+    <section className="relative overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:390px_1324px]" style={{ height: 1324 }}>
       {/* white orbit rings + "Start free trial 14 days" pills — decorative 2x export */}
-      <img
+      <Img
         src="/figma/phone/orbit.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-0 top-0 w-[388px] max-w-none"
       />
 
@@ -22,9 +25,11 @@ export function PhoneOrbitEco() {
       <div className="absolute left-[-2px] top-[462px] h-[843px] w-[390px] overflow-hidden rounded-[12px] bg-[#ebeaec]">
         {/* figma icon — 64x64 box, 84px render incl. glow (desktop export reused) */}
         <div data-float className="absolute left-[163px] top-[40px] size-[64px]">
-          <img
+          <Img
             src="/figma/feat-icon-2x.png"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
           />
         </div>
@@ -38,14 +43,18 @@ export function PhoneOrbitEco() {
         </p>
 
         {/* product cards — 2x exports (Flex 926:102303 / 926:102931, clipped) */}
-        <img
+        <Img
           src="/figma/phone/eco-card-1.png"
           alt="LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.)."
+          loading="lazy"
+          decoding="async"
           className="absolute left-[14px] top-[292px] w-[362px] max-w-none"
         />
-        <img
+        <Img
           src="/figma/phone/eco-card-2.png"
           alt="huntTMS"
+          loading="lazy"
+          decoding="async"
           className="absolute left-[14px] top-[762px] w-[362px] max-w-none"
         />
       </div>

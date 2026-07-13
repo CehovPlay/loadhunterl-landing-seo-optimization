@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665217 (926:101885) — heading block @ y=12138 (1084 @ x=418),
  * glow "image 60" 1084x758 @ (418,12258), comparison table "Timeline container"
@@ -19,21 +20,25 @@ const SPEED_ROW = ["Booking speed", "47 seconds", "~ 2-3 minutes", "~1 minute"]
 
 export function WhyLoadHunter() {
   return (
-    <section className="relative h-[1118px] bg-gray-800">
+    <section className="relative h-[1118px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1118px]">
       {/* panel glow + rounded panel background — FIRST in DOM: the export is
           fully opaque (baked #181A1F bg) and would cover the heading otherwise */}
-      <img
+      <Img
         src="/figma/why-glow.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-[375px] top-[198px] w-[1172px] max-w-none"
       />
 
       {/* heading */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
-        <img
+        <Img
           src="/figma/tools/intro-icon.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -52,9 +57,11 @@ export function WhyLoadHunter() {
             Feature
           </div>
           <div className="flex w-[251px] justify-center pt-[7px]">
-            <img
+            <Img
               src="/figma/table-logo.svg"
               alt="loadhunter"
+              loading="lazy"
+              decoding="async"
               className="h-[26.17px] w-[132.71px]"
             />
           </div>
@@ -83,15 +90,19 @@ export function WhyLoadHunter() {
               {row.cells.map((c, j) => (
                 <div key={j} className="relative w-[251px]">
                   {c === "check" ? (
-                    <img
+                    <Img
                       src="/figma/table-check.png"
                       alt="yes"
+                      loading="lazy"
+                      decoding="async"
                       className="absolute left-[99px] top-[-0.6px] w-[53px] max-w-none mix-blend-lighten"
                     />
                   ) : (
-                    <img
+                    <Img
                       src="/figma/table-cross.svg"
                       alt="no"
+                      loading="lazy"
+                      decoding="async"
                       className="absolute left-[116.2px] top-[14px] h-[16px] w-[18.57px]"
                     />
                   )}

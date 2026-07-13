@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Frame 2147238581 (914:26048) — light card 1680x1000 @ (120, 11018).
  * The card floats over the orbit section (which ends at y=11641) and hangs
@@ -92,15 +93,19 @@ function ProductRow({ product }: { product: Product }) {
   return (
     <div className="group relative h-[320px] w-[954px] shrink-0 overflow-hidden rounded-[12px] bg-white">
       {/* product mockup (baked export, clipped by the row) */}
-      <img
+      <Img
         src={product.mockup}
         alt={`${product.name} product preview`}
+        loading="lazy"
+        decoding="async"
         className="absolute left-[343px] top-0 h-[320px] w-[611px] max-w-none"
       />
       {product.mockupHover && (
-        <img
+        <Img
           src={product.mockupHover}
           alt=""
+          loading="lazy"
+          decoding="async"
           aria-hidden="true"
           data-no-reveal
           className="absolute left-[343px] top-0 h-[320px] w-[611px] max-w-none opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -108,9 +113,11 @@ function ProductRow({ product }: { product: Product }) {
       )}
 
       {/* text panel (344 wide, transparent over the white row) */}
-      <img
+      <Img
         src={product.logo}
         alt={product.name}
+        loading="lazy"
+        decoding="async"
         className="absolute left-[32px] top-[32px] h-[24px] max-w-none"
         style={{ width: `${product.logoWidth}px` }}
       />
@@ -121,7 +128,7 @@ function ProductRow({ product }: { product: Product }) {
           {product.description}
         </p>
         {product.comingSoon && (
-          <div className="mt-[24px] inline-flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px]">
+          <div className="mt-[24px] inline-flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)]">
             <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
               Coming soon
             </span>
@@ -137,7 +144,7 @@ function ProductRow({ product }: { product: Product }) {
 
 export function Ecosystem() {
   return (
-    <section id="offers" className="relative h-[377px] bg-gray-800">
+    <section id="offers" className="relative h-[377px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_377px]">
       <div className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-[12px] bg-[#e9e9eb]">
         {/* left column — icon rebuilt from the original Figma vector layers:
             everything (grid, ring, glyph) is centered by construction */}
@@ -146,14 +153,18 @@ export function Ecosystem() {
           className="absolute left-[60px] top-[60px] size-[64px] overflow-hidden rounded-[16px]"
           style={{ boxShadow: "0px 6px 16px -6px rgba(146,92,255,0.48)" }}
         >
-          <img
+          <Img
             src="/figma/eco/icon-plate.png"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 size-full"
           />
-          <img
+          <Img
             src="/figma/eco/icon-glyph.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 size-full"
           />
           <div

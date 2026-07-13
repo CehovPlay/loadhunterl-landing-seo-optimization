@@ -1,5 +1,7 @@
+import { Img } from "@/components/site/Img"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops, prefersReducedMotion } from "@/lib/inview"
 
 /**
  * Figma: Group 2085665057 (914:23049) — rings + centre mark + 15 badge pills.
@@ -62,21 +64,32 @@ export function Orbit() {
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
+    // reduced motion: apply the upright orientations once but skip the endless
+    // ring spins (leave the static Figma frame).
+    const reduce = prefersReducedMotion()
+    const spins: gsap.core.Tween[] = []
     const ctx = gsap.context(() => {
       root.querySelectorAll<HTMLElement>("[data-ring]").forEach((ringEl) => {
         const duration = Number(ringEl.dataset.ring)
-        gsap.to(ringEl, { rotation: "+=360", duration, ease: "none", repeat: -1 })
+        if (!reduce)
+          spins.push(gsap.to(ringEl, { rotation: "+=360", duration, ease: "none", repeat: -1 }))
         ringEl.querySelectorAll<HTMLElement>("[data-upright]").forEach((u) => {
           gsap.set(u, { rotation: Number(u.dataset.upright) })
-          gsap.to(u, { rotation: "-=360", duration, ease: "none", repeat: -1 })
+          if (!reduce)
+            spins.push(gsap.to(u, { rotation: "-=360", duration, ease: "none", repeat: -1 }))
         })
       })
     }, root)
-    return () => ctx.revert()
+    // pause every ring/badge rotation while the orbit section is off-screen
+    const stopGate = spins.length ? gateLoops(root, spins) : () => {}
+    return () => {
+      stopGate()
+      ctx.revert()
+    }
   }, [])
 
   return (
-    <section ref={rootRef} className="relative h-[1389px] w-full overflow-hidden bg-white">
+    <section ref={rootRef} className="relative h-[1389px] w-full overflow-hidden bg-white [content-visibility:auto] [contain-intrinsic-size:1920px_1389px]">
       {/* dotted rings */}
       <svg
         className="pointer-events-none absolute"
@@ -104,11 +117,13 @@ export function Orbit() {
       {/* centre mark — 120px node, PNG render 191px (1x); the disc sits in the
           top of the render (soft shadow below), so we anchor by the GLYPH
           centroid (95, 59.5 at 1x) which is dead-centre of the disc */}
-      <img
+      <Img
         src="/figma/orbit-center.png"
         alt=""
         aria-hidden
         data-pulse
+        loading="lazy"
+        decoding="async"
         className="absolute max-w-none"
         style={{ left: CX - 95, top: CY - 59.5, width: 191 }}
       />
@@ -129,7 +144,7 @@ export function Orbit() {
             >
               <div data-upright={-b.angle} className="size-0">
                 <div
-                  className="flex h-[42px] w-max -translate-x-1/2 -translate-y-1/2 items-center whitespace-nowrap rounded-[99px] border border-white px-[12px] backdrop-blur-[10px]"
+                  className="flex h-[42px] w-max -translate-x-1/2 -translate-y-1/2 items-center whitespace-nowrap rounded-[99px] border border-white px-[12px]"
                   style={{
                     backgroundImage:
                       "linear-gradient(to bottom, #ffffff, rgba(255,255,255,0.5))",

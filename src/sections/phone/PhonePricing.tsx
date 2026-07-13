@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Frame 2147238566 (942:107755) — 390x1662 @ phone-frame y=9785;
  * section h=1782 (120px dark below). Static per the mobile design render:
@@ -126,9 +127,11 @@ function PlanCard({ plan }: { plan: Plan }) {
         )}
         {/* plan icon — 40x40 box, desktop 84px render scaled to 52.5 */}
         <div className="absolute left-[24px] top-[24px] size-[40px]">
-          <img
+          <Img
             src={plan.icon}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-[-6.25px] top-[-2.5px] w-[52.5px] max-w-none"
           />
         </div>
@@ -139,9 +142,11 @@ function PlanCard({ plan }: { plan: Plan }) {
           </span>
           {plan.recommended && (
             <div className="flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <img
+              <Img
                 src="/figma/pricing/crown.svg"
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="h-[14px] w-[12.24px] max-w-none"
               />
               <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-[#e8e8e8]">
@@ -200,7 +205,7 @@ function Controls(): ReactNode {
         <span className="pointer-events-none absolute inset-0 rounded-full bg-[rgba(231,231,231,0.1)] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]" />
         <button
           type="button"
-          className="relative flex h-[28px] min-w-px flex-1 items-center justify-center rounded-[99px] border border-white/65 bg-violet backdrop-blur-[10px]"
+          className="relative flex h-[28px] min-w-px flex-1 items-center justify-center rounded-[99px] border border-white/65 bg-violet"
           style={{ boxShadow: PILL_SHADOW }}
         >
           <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
@@ -226,10 +231,12 @@ function Controls(): ReactNode {
         <div className="relative mt-[14px] h-[16px] w-full rounded-[200px] bg-[rgba(231,231,231,0.1)]">
           <div className="absolute left-[2px] top-[2px] h-[12px] w-[61px] rounded-[8px] bg-violet shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]" />
           <div className="absolute left-[50px] top-[-3px] size-[22px]">
-            <img
+            <Img
               src="/figma/pricing/knob.svg"
               alt=""
               draggable={false}
+              loading="lazy"
+              decoding="async"
               className="absolute left-[-9.43px] top-[-4.71px] h-[40.86px] w-[40.86px] max-w-none"
             />
           </div>
@@ -249,12 +256,14 @@ function Controls(): ReactNode {
 
 export function PhonePricing() {
   return (
-    <section id="pricing" className="relative overflow-hidden bg-gray-800" style={{ height: 1782 }}>
+    <section id="pricing" className="relative overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:390px_1782px]" style={{ height: 1782 }}>
       {/* figma icon */}
       <div data-float className="absolute left-[163px] top-0 size-[64px]">
-        <img
+        <Img
           src="/figma/phone/icon-figma.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>

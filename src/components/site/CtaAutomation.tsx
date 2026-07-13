@@ -1,5 +1,7 @@
+import { Img } from "@/components/site/Img"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops } from "@/lib/inview"
 
 /**
  * Fully vector rebuild of the CTA "One click automation" panel (Figma
@@ -141,14 +143,18 @@ export function CtaAutomation() {
       )
     })
 
+    // pause the beam pulses while the CTA panel is off-screen
+    const stopGate = gateLoops(svg, tweens)
+
     return () => {
+      stopGate()
       tweens.forEach((t) => t.kill())
     }
   }, [])
 
   return (
     <div
-      className="absolute left-[671px] top-[240px] h-[627px] w-[1129px] overflow-hidden rounded-[12px]"
+      className="absolute left-[671px] top-[240px] h-[627px] w-[1129px] isolate overflow-hidden rounded-[12px]"
       style={{ backgroundImage: PANEL_BG }}
     >
       {/* dashed connectors + centre rect — original geometry and fade gradients */}
@@ -227,8 +233,8 @@ export function CtaAutomation() {
 
       {/* centre: icon + copy */}
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-[24px] pl-px pt-px">
-        <div className="flex size-[52px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] shadow-[0px_7.98px_7.98px_0px_rgba(0,0,0,0.05),0px_19.949px_19.949px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px]">
-          <img src="/figma/cta/icon-center.svg" alt="" data-no-reveal className="h-[33.92px] w-[35.86px]" />
+        <div className="flex size-[52px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] shadow-[0px_7.98px_7.98px_0px_rgba(0,0,0,0.05),0px_19.949px_19.949px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px] pointer-coarse:backdrop-blur-none">
+          <Img src="/figma/cta/icon-center.svg" alt="" data-no-reveal className="h-[33.92px] w-[35.86px]" />
         </div>
         <div className="flex flex-col items-center gap-[12px]">
           <p className="whitespace-nowrap text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
@@ -244,10 +250,10 @@ export function CtaAutomation() {
       {BALLS.map((b) => (
         <div
           key={b.icon}
-          className="absolute flex size-[62px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] backdrop-blur-[10px]"
+          className="absolute flex size-[62px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] backdrop-blur-[10px] pointer-coarse:backdrop-blur-none"
           style={{ left: b.x, top: b.cy - 31 }}
         >
-          <img src={b.icon} alt="" data-no-reveal style={{ width: b.w, height: b.h }} />
+          <Img src={b.icon} alt="" data-no-reveal style={{ width: b.w, height: b.h }} />
         </div>
       ))}
     </div>

@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Phone (390) hero — y 0..1061.
  * Copy block (Frame 2147238673 / "left"): eyebrow @118, H1 @180, badge @280,
@@ -13,10 +14,11 @@ export function PhoneHero() {
       style={{ height: 1061 }}
     >
       {/* top glow */}
-      <img
+      <Img
         src="/figma/phone/hero-glow.png"
         alt=""
         aria-hidden
+        decoding="async"
         className="pointer-events-none absolute left-0 top-[-22px] w-[390px] max-w-none"
       />
 
@@ -116,18 +118,21 @@ export function PhoneHero() {
             maskComposite: "exclude",
           }}
         />
-        <img
+        <Img
           src="/figma/phone/hero-btn-icon.svg"
           alt=""
+          decoding="async"
           className="size-[23px]"
         />
         Add to Chrome
       </button>
 
       {/* product mockup (browser + settings popup) */}
-      <img
+      <Img
         src="/figma/phone/hero-mockup.png"
         alt="LoadHunter dashboard"
+        decoding="async"
+        fetchPriority="high"
         data-parallax="0.04"
         className="absolute left-0 top-[572px] w-[390px] max-w-none"
       />

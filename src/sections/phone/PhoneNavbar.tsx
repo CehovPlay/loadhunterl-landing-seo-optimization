@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Navigation bar 916:71553 — 390x74 absolute overlay.
  * Outer padding 14, pill 362x46 (py-6 pl-6 pr-10), logo pill 34px, Menu 76x28.
@@ -40,12 +41,12 @@ export function PhoneNavbar() {
                 maskComposite: "exclude",
               }}
             />
-            <img
+            <Img
               src="/figma/logo-icon.svg"
               alt=""
               className="h-[26.173px] w-[27.679px]"
             />
-            <img
+            <Img
               src="/figma/logo-text.svg"
               alt="loadhunter"
               className="h-[15.736px] w-[97.034px]"

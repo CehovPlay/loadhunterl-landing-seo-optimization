@@ -1,0 +1,39 @@
+import { Navbar } from "@/sections/Navbar"
+import { Hero } from "@/sections/Hero"
+import { Features } from "@/sections/Features"
+import { DispatchIntro } from "@/sections/DispatchIntro"
+import { Tools } from "@/sections/Tools"
+import { Orbit } from "@/sections/Orbit"
+import { Ecosystem } from "@/sections/Ecosystem"
+import { WhyLoadHunter } from "@/sections/WhyLoadHunter"
+import { ChaosDiagram } from "@/sections/ChaosDiagram"
+import { Pricing } from "@/sections/Pricing"
+import { Testimonials } from "@/sections/Testimonials"
+import { Faq } from "@/sections/Faq"
+import { Cta } from "@/sections/Cta"
+import { Footer } from "@/sections/Footer"
+
+/** Desktop 1920 canvas. Extracted into its own module so App can code-split it
+ *  (React.lazy) — a phone/tablet visitor never downloads this tree. */
+export function DesktopLanding() {
+  return (
+    <div className="relative bg-gray-800 text-dark-text">
+      <Navbar />
+      <main>
+        <Hero />
+        <Features />
+        <DispatchIntro />
+        <Tools />
+        <Orbit />
+        <Ecosystem />
+        <WhyLoadHunter />
+        <ChaosDiagram />
+        <Pricing />
+        <Testimonials />
+        <Faq />
+        <Cta />
+      </main>
+      <Footer />
+    </div>
+  )
+}

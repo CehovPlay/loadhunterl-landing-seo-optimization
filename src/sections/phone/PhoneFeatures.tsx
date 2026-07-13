@@ -1,5 +1,7 @@
+import { Img } from "@/components/site/Img"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
 
 /**
  * Figma: Frame 2147238647 (916:71594) — 390x1479 @ y1061, light section.
@@ -58,29 +60,36 @@ export function PhoneFeatures() {
   const xs: number[] = []
   for (let x = -26 - PARTNER_PERIOD; x <= 390; x += 182) xs.push(x)
 
+  const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
+    if (prefersReducedMotion()) return
     const tween = gsap.to(track, {
       x: PARTNER_PERIOD, // one full pattern period → seamless wrap
       duration: 23, // ≈ desktop marquee speed (24 px/s)
       ease: "none",
       repeat: -1,
     })
+    const stopGate = gateLoops(sectionRef.current, tween)
+    const stopWC = willChangeInView(track, sectionRef.current)
     return () => {
+      stopWC()
+      stopGate()
       tween.kill()
     }
   }, [])
 
   return (
     <section
-      className="relative overflow-hidden bg-bg-light"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-bg-light [content-visibility:auto] [contain-intrinsic-size:390px_1479px]"
       style={{ height: 1479 }}
     >
       {/* partners marquee row */}
       <div className="absolute inset-x-0 top-0 h-[96px] overflow-hidden">
-        <div ref={trackRef} data-marquee-track className="absolute inset-0 will-change-transform">
+        <div ref={trackRef} data-marquee-track className="absolute inset-0">
           {xs.map((x) => {
             const p = PARTNERS[((((x + 26) / 182) % 3) + 3) % 3]
             return (
@@ -89,9 +98,11 @@ export function PhoneFeatures() {
                 className="absolute w-[112px] overflow-hidden"
                 style={{ left: x, top: 20 + p.mt, height: p.h }}
               >
-                <img
+                <Img
                   src={p.src}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                   className="max-w-none"
                   style={{ width: 112, height: p.h }}
                 />
@@ -103,9 +114,11 @@ export function PhoneFeatures() {
 
       {/* header icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[163px] top-[110px] size-[64px]">
-        <img
+        <Img
           src="/figma/feat-icon-2x.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -128,9 +141,11 @@ export function PhoneFeatures() {
           className="absolute left-[14px] w-[362px] overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0]"
           style={{ top: c.top, height: c.height }}
         >
-          <img
+          <Img
             src={c.img}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute max-w-none"
             style={c.imgRect}
           />

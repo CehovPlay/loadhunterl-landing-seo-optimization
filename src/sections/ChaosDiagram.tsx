@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 import diagram from "/figma/misc/chaos-diagram.png"
 import { ChaosBeams } from "@/components/site/ChaosBeams"
 
@@ -8,7 +9,7 @@ import { ChaosBeams } from "@/components/site/ChaosBeams"
  */
 export function ChaosDiagram() {
   return (
-    <section className="relative h-[961px] bg-gray-800">
+    <section className="relative h-[961px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_961px]">
       <h2 className="absolute left-[580px] top-0 w-[760px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
         From chaos to AI-Powered dispatch
       </h2>
@@ -21,10 +22,12 @@ export function ChaosDiagram() {
       {/* diagram + beams share one parallax box so they stay pixel-aligned */}
       <div data-parallax="0.04" className="absolute inset-0">
         {/* rings + icons + pill — decorative 2x export */}
-        <img
+        <Img
           src={diagram}
           alt=""
           aria-hidden
+          loading="lazy"
+          decoding="async"
           className="absolute left-[120px] top-[166px] w-[1681px] max-w-none"
         />
 

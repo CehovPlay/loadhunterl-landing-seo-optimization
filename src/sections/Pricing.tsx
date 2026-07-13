@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 import { useCallback, useRef, useState } from "react"
 import type { CSSProperties } from "react"
 
@@ -157,9 +158,11 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
 function CheckIcon() {
   return (
     <div className="relative h-[6px] w-[9px] shrink-0">
-      <img
+      <Img
         src="/figma/pricing/check.svg"
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute max-w-none"
         style={{ left: -1, top: -1, width: 11, height: 7.21 }}
       />
@@ -170,9 +173,11 @@ function CheckIcon() {
 function ClockIcon() {
   return (
     <div className="relative size-[10px] shrink-0">
-      <img
+      <Img
         src="/figma/pricing/clock.svg"
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute max-w-none"
         style={{ left: -1, top: -1, width: 12, height: 12 }}
       />
@@ -226,14 +231,14 @@ function PlanCard({
         )}
         {/* icon */}
         <div className="absolute left-[24px] top-[24px] size-[64px]">
-          <img src={plan.icon} alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
+          <Img src={plan.icon} alt="" loading="lazy" decoding="async" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
         </div>
         {/* name + badge */}
         <div className="absolute left-[112px] top-[24px] h-[32px] w-[273px]">
           <span className="whitespace-nowrap text-[20px] leading-[32px] tracking-[-0.8px] text-gray-50">{plan.name}</span>
           {plan.recommended && (
             <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <img src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
+              <Img src="/figma/pricing/crown.svg" alt="" loading="lazy" decoding="async" className="h-[14px] w-[12.24px] max-w-none" />
               <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">Recommended</span>
             </div>
           )}
@@ -275,7 +280,7 @@ function PlanCard({
         className="absolute bottom-[3px] left-[3px] flex h-[42px] w-[409px] items-center justify-center rounded-[12px] border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)]"
         type="button"
       >
-        <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)] backdrop-blur-[17px]" />
+        <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
         <span className="relative text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">{plan.cta}</span>
         <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.25)]" />
       </button>
@@ -343,10 +348,10 @@ export function Pricing() {
       : (plan.price ?? "")
 
   return (
-    <section id="pricing" className="relative h-[1462px] bg-gray-800">
+    <section id="pricing" className="relative h-[1462px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1462px]">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
-        <img src="/figma/pricing/header-icon.png" alt="" className="absolute left-[-24px] top-[-24px] w-[112px] max-w-none" />
+        <Img src="/figma/pricing/header-icon.png" alt="" loading="lazy" decoding="async" className="absolute left-[-24px] top-[-24px] w-[112px] max-w-none" />
       </div>
 
       {/* heading */}
@@ -412,9 +417,11 @@ export function Pricing() {
             className="absolute top-[-3px] size-[22px] cursor-grab active:cursor-grabbing"
             style={{ left: knob - 11 }}
           >
-            <img
+            <Img
               src="/figma/pricing/knob.svg"
               alt=""
+              loading="lazy"
+              decoding="async"
               draggable={false}
               className="absolute max-w-none"
               style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}

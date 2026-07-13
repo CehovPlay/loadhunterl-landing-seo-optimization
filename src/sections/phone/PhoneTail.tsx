@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665214 (924:101381) — 390x4030 @ phone-frame y=11567.
  * Stacked: testimonials (Frame 2147238672 @ y0), FAQ (Frame 2147238594 @
@@ -9,6 +10,7 @@
  */
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
 
 const CARD_SHADOW_INSET = "inset 0px -1px 1px 0px rgba(0,0,0,0.25)"
 const PILL_SHADOW =
@@ -107,7 +109,6 @@ function ReviewCard({ r }: { r: Review }) {
         className="pointer-events-none absolute inset-0 rounded-[12px]"
         style={{
           backgroundImage: radialBg(240, r.h, r.matrix, color),
-          backdropFilter: r.blur ? `blur(${r.blur}px)` : undefined,
         }}
       />
       <span
@@ -122,7 +123,7 @@ function ReviewCard({ r }: { r: Review }) {
       </p>
       <div className="relative flex w-full items-center gap-[12px]">
         <div
-          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white bg-gradient-to-b from-[rgba(255,255,255,0.6)] to-[rgba(255,255,255,0.5)] backdrop-blur-[10px]"
+          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white bg-gradient-to-b from-[rgba(255,255,255,0.6)] to-[rgba(255,255,255,0.5)]"
           style={{ boxShadow: PILL_SHADOW }}
         >
           <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
@@ -289,9 +290,11 @@ const FAQ_LINES = [232, 468, 748, 988]
 function SectionIcon({ top }: { top: number }) {
   return (
     <div data-float className="absolute left-[163px] size-[64px]" style={{ top }}>
-      <img
+      <Img
         src="/figma/phone/icon-figma.png"
         alt=""
+        loading="lazy"
+        decoding="async"
         className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
       />
     </div>
@@ -301,23 +304,29 @@ function SectionIcon({ top }: { top: number }) {
 const REVIEW_PERIOD = 1350 // collage width 1320 + 30 gap
 
 export function PhoneTail() {
+  const sectionRef = useRef<HTMLElement>(null)
   const reviewsTrack = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const track = reviewsTrack.current
     if (!track) return
+    if (prefersReducedMotion()) return
     const tween = gsap.to(track, {
       x: -REVIEW_PERIOD, // one collage period → seamless wrap
       duration: 39, // ≈ desktop testimonials speed (34.6 px/s)
       ease: "none",
       repeat: -1,
     })
+    const stopGate = gateLoops(sectionRef.current, tween)
+    const stopWC = willChangeInView(track, sectionRef.current)
     return () => {
+      stopWC()
+      stopGate()
       tween.kill()
     }
   }, [])
 
   return (
-    <footer className="relative overflow-hidden bg-gray-800" style={{ height: 4030 }}>
+    <footer ref={sectionRef} className="relative overflow-hidden bg-gray-800" style={{ height: 4030 }}>
       {/* ================= Testimonials (y 0..806) ================= */}
       <div id="contact" className="absolute left-0 top-0 h-[806px] w-full">
         <SectionIcon top={0} />
@@ -343,9 +352,11 @@ export function PhoneTail() {
           <div className="absolute left-[114px] top-[8.5px] h-[25px] w-px bg-[#e8e8e9] opacity-50" />
           <div className="absolute left-[138px] top-0 flex h-[42px] w-[126px] flex-col items-center justify-between">
             <div className="flex w-full items-center justify-between">
-              <img
+              <Img
                 src="/figma/phone/stars.svg"
                 alt="4.7 star rating"
+                loading="lazy"
+                decoding="async"
                 className="h-[16px] w-[100px] max-w-none"
               />
               <span data-countup className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#e8e8e8]">
@@ -363,7 +374,7 @@ export function PhoneTail() {
           <div
             ref={reviewsTrack}
             data-marquee-track
-            className="absolute inset-0 will-change-transform"
+            className="absolute inset-0"
           >
             {[0, 1, 2].map((copy) =>
               REVIEWS.map((r) => (
@@ -419,11 +430,13 @@ export function PhoneTail() {
             </div>
           ))}
           {FAQ_LINES.map((y) => (
-            <img
+            <Img
               key={y}
               src="/figma/phone/faq-line.svg"
               alt=""
               aria-hidden
+              loading="lazy"
+              decoding="async"
               className="absolute left-0 h-px w-full max-w-none"
               style={{ top: y - 0.5 }}
             />
@@ -434,9 +447,11 @@ export function PhoneTail() {
       {/* ================= CTA (y 2438..3142) ================= */}
       <div id="start" className="absolute left-0 top-[2438px] h-[704px] w-full">
         {/* automation panel + rings + glow — 2x export (card region re-drawn live on top) */}
-        <img
+        <Img
           src="/figma/phone/cta.png"
           alt="One click automation — book faster, miss less, earn more"
+          loading="lazy"
+          decoding="async"
           className="absolute left-0 top-0 w-[390px] max-w-none"
         />
 
@@ -448,14 +463,18 @@ export function PhoneTail() {
           }}
         >
           <div className="absolute left-[12px] top-[20px] h-[16px] w-[101px]">
-            <img
+            <Img
               src="/figma/tail/logo-icon-white.svg"
               alt=""
+              loading="lazy"
+              decoding="async"
               className="absolute left-0 top-0 size-[16px] max-w-none"
             />
-            <img
+            <Img
               src="/figma/tail/logo-text-white.svg"
               alt="loadhunter"
+              loading="lazy"
+              decoding="async"
               className="absolute left-[22.67px] top-[1.7px] h-[12.59px] w-[77.62px] max-w-none"
             />
           </div>
@@ -474,7 +493,7 @@ export function PhoneTail() {
             className="absolute left-[12px] top-[248px] flex h-[42px] items-center gap-[8px] rounded-[99px] border border-white bg-white px-[24px] backdrop-blur-[10px]"
             style={{ boxShadow: PILL_SHADOW }}
           >
-            <img src="/figma/tail/cta-chrome.svg" alt="" className="size-[16px] max-w-none" />
+            <Img src="/figma/tail/cta-chrome.svg" alt="" loading="lazy" decoding="async" className="size-[16px] max-w-none" />
             <span
               className="bg-clip-text text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-transparent"
               style={{
@@ -491,14 +510,18 @@ export function PhoneTail() {
       <div id="token" className="absolute left-0 top-[3218px] h-[812px] w-full">
         {/* logo */}
         <div className="absolute left-[119.78px] top-0 h-[24px] w-[150.44px]">
-          <img
+          <Img
             src="/figma/tail/logo-icon-white.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-0 top-0 size-[24px] max-w-none"
           />
-          <img
+          <Img
             src="/figma/tail/logo-text-white.svg"
             alt="loadhunter"
+            loading="lazy"
+            decoding="async"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
           />
         </div>
@@ -541,7 +564,7 @@ export function PhoneTail() {
             {["/figma/tail/social-1.png", "/figma/tail/social-2.png", "/figma/tail/social-3.png"].map(
               (src) => (
                 <a key={src} href="#" className="block size-[18px]">
-                  <img src={src} alt="" className="size-[18px] max-w-none" />
+                  <Img src={src} alt="" loading="lazy" decoding="async" className="size-[18px] max-w-none" />
                 </a>
               ),
             )}
@@ -549,9 +572,11 @@ export function PhoneTail() {
         </div>
 
         {/* orbit rings graphic (decorative, © caption baked in) */}
-        <img
+        <Img
           src="/figma/phone/footer-orbit.png"
           alt="© 2026 loadhunt Corp. All rights reserved."
+          loading="lazy"
+          decoding="async"
           className="absolute left-0 top-[224px] h-[588px] w-[390px] max-w-none"
         />
       </div>

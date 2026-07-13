@@ -4,12 +4,24 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react"
  * Renders children on a fixed `width`px design canvas (the Figma artboard width)
  * and uniformly scales it to the viewport width. Keeps hand-built HTML sections
  * and Figma image slices pixel-identical to the design at every screen size.
+ *
+ * `maxScale` caps how far the canvas is allowed to scale UP. The Figma adaptive
+ * frames (2K 2560 vs Full HD 1920) keep the content block at identical pixel
+ * sizes and merely center it with side gutters — i.e. above the artboard width
+ * the design must NOT grow. Passing maxScale={1} for the desktop artboard locks
+ * the canvas at its 1920 size beyond 1920px viewports and centers it, instead of
+ * blowing everything up to 1.33×/2× on 2K/4K screens. Below the artboard width
+ * the scale is still vw/width (unchanged down-scaling), and margin:auto collapses
+ * to 0 because the 1920 layout box is wider than the viewport — so it stays
+ * pinned left and scales down from the top-left origin exactly as before.
  */
 export function DesignFrame({
   width = 1920,
+  maxScale = Infinity,
   children,
 }: {
   width?: number
+  maxScale?: number
   children: React.ReactNode
 }) {
   const inner = useRef<HTMLDivElement>(null)
@@ -22,7 +34,7 @@ export function DesignFrame({
 
     const update = () => {
       const vw = document.documentElement.clientWidth
-      const s = vw / width
+      const s = Math.min(vw / width, maxScale)
       setScale(s)
       setHeight(el.offsetHeight * s)
     }
@@ -35,7 +47,7 @@ export function DesignFrame({
       ro.disconnect()
       window.removeEventListener("resize", update)
     }
-  }, [width])
+  }, [width, maxScale])
 
   // keep height in sync once images/fonts load
   useEffect(() => {
@@ -43,11 +55,11 @@ export function DesignFrame({
       const el = inner.current
       if (!el) return
       const vw = document.documentElement.clientWidth
-      setHeight(el.offsetHeight * (vw / width))
+      setHeight(el.offsetHeight * Math.min(vw / width, maxScale))
     }
     window.addEventListener("load", onLoad)
     return () => window.removeEventListener("load", onLoad)
-  }, [width])
+  }, [width, maxScale])
 
   return (
     <div style={{ height, overflow: "hidden" }}>
@@ -55,6 +67,7 @@ export function DesignFrame({
         ref={inner}
         style={{
           width,
+          margin: "0 auto",
           transformOrigin: "top left",
           transform: `scale(${scale})`,
         }}

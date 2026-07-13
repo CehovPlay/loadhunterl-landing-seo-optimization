@@ -1,5 +1,7 @@
+import { Img } from "@/components/site/Img"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
 
 const CARDS = [
   {
@@ -38,7 +40,7 @@ function PartnerLogo({ x, idx }: { x: number; idx: number }) {
   const p = PARTNER_SEQ[idx % 4]
   return (
     <div className="absolute top-[40px] h-[56px] w-[112px]" style={{ left: x }}>
-      <img src={p.src} alt="" className={p.cls} />
+      <Img src={p.src} alt="" loading="lazy" decoding="async" className={p.cls} />
     </div>
   )
 }
@@ -50,26 +52,32 @@ export function Features() {
   const xs: number[] = []
   for (let x = -20 - 1208; x <= 2094; x += 302) xs.push(x)
 
+  const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
+    if (prefersReducedMotion()) return // static partner strip
     const tween = gsap.to(track, {
       x: 1208, // one full pattern period → seamless wrap
       duration: 50,
       ease: "none",
       repeat: -1,
     })
+    const stopGate = gateLoops(sectionRef.current, tween)
+    const stopWC = willChangeInView(track, sectionRef.current)
     return () => {
+      stopWC()
+      stopGate()
       tween.kill()
     }
   }, [])
 
   return (
-    <section id="why" className="relative w-full bg-bg-light">
+    <section ref={sectionRef} id="why" className="relative w-full bg-bg-light">
       {/* Partners block, 136px — slow left→right marquee */}
       <div className="relative h-[136px] w-full overflow-hidden">
-        <div ref={trackRef} data-marquee-track className="absolute inset-0 will-change-transform">
+        <div ref={trackRef} data-marquee-track className="absolute inset-0">
           {xs.map((x) => {
             const idx = (((x + 20) / 302) % 4 + 4) % 4
             return <PartnerLogo key={x} x={x} idx={idx} />
@@ -86,9 +94,11 @@ export function Features() {
           <div className="flex w-full flex-col items-center gap-[60px]">
             {/* feature icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
             <div data-float className="relative size-[64px]">
-              <img
+              <Img
                 src="/figma/feat-icon-2x.png"
                 alt=""
+                loading="lazy"
+                decoding="async"
                 className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
               />
             </div>
@@ -124,7 +134,7 @@ export function Features() {
                 className="absolute left-[-1px] w-[546px] overflow-hidden"
                 style={{ top: c.imgBox.top, height: c.imgBox.height }}
               >
-                <img src={c.img} alt="" className={c.imgCls} />
+                <Img src={c.img} alt="" loading="lazy" decoding="async" className={c.imgCls} />
               </div>
             </div>
           ))}

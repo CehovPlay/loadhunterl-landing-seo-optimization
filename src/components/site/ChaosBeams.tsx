@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops } from "@/lib/inview"
 
 /**
  * Looping violet beams over the "From chaos to AI-Powered dispatch" diagram.
@@ -87,7 +88,11 @@ export function ChaosBeams() {
       )
     })
 
+    // pause the 28 filtered beam strokes while the diagram is off-screen
+    const stopGate = gateLoops(svg, tweens)
+
     return () => {
+      stopGate()
       tweens.forEach((t) => t.kill())
     }
   }, [])

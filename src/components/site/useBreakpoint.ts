@@ -11,13 +11,30 @@ export function getBreakpoint(w: number): Breakpoint {
 
 export function useBreakpoint(): Breakpoint {
   const [bp, setBp] = useState<Breakpoint>(() =>
-    getBreakpoint(typeof window === "undefined" ? 1920 : window.innerWidth),
+    getBreakpoint(
+      // measure with clientWidth (excludes the scrollbar) on both the initial
+      // state AND the resize handler, so the first paint and post-mount agree —
+      // reading innerWidth here vs clientWidth below could straddle 640/1024 and
+      // force an immediate remount/flash.
+      typeof document === "undefined" ? 1920 : document.documentElement.clientWidth,
+    ),
   )
   useEffect(() => {
-    const onResize = () => setBp(getBreakpoint(document.documentElement.clientWidth))
+    let t: ReturnType<typeof setTimeout> | undefined
+    const measure = () => setBp(getBreakpoint(document.documentElement.clientWidth))
+    const onResize = () => {
+      // debounce: crossing 640/1024 tears down and rebuilds the entire section
+      // tree + Lenis + reveal — the single most expensive frame in the app.
+      // Only rebuild once the drag/rotation settles.
+      clearTimeout(t)
+      t = setTimeout(measure, 150)
+    }
+    measure() // correct any first-paint mismatch immediately
     window.addEventListener("resize", onResize)
-    onResize()
-    return () => window.removeEventListener("resize", onResize)
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener("resize", onResize)
+    }
   }, [])
   return bp
 }

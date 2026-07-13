@@ -1,44 +1,48 @@
-import { useLayoutEffect } from "react"
+import { lazy, Suspense, useLayoutEffect } from "react"
 import Lenis from "lenis"
 import gsap from "gsap"
 import { initReveal } from "@/lib/reveal"
 import { initMicro } from "@/lib/micro"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useBreakpoint } from "@/components/site/useBreakpoint"
-import { Navbar } from "@/sections/Navbar"
-import { Hero } from "@/sections/Hero"
-import { Features } from "@/sections/Features"
-import { DispatchIntro } from "@/sections/DispatchIntro"
-import { Tools } from "@/sections/Tools"
-import { Orbit } from "@/sections/Orbit"
-import { Ecosystem } from "@/sections/Ecosystem"
-import { WhyLoadHunter } from "@/sections/WhyLoadHunter"
-import { ChaosDiagram } from "@/sections/ChaosDiagram"
-import { Pricing } from "@/sections/Pricing"
-import { Testimonials } from "@/sections/Testimonials"
-import { Faq } from "@/sections/Faq"
-import { Cta } from "@/sections/Cta"
-import { Footer } from "@/sections/Footer"
-import { PhoneLanding } from "@/sections/phone/PhoneLanding"
-import { TabletLanding } from "@/sections/tablet/TabletLanding"
+import { isCoarsePointer, prefersReducedMotion } from "@/lib/inview"
 
+// Code-split the three device canvases: each visitor downloads/parses only the
+// section tree their breakpoint renders (a phone user no longer ships the
+// desktop + tablet trees). Named exports wrapped to lazy's default contract.
+const DesktopLanding = lazy(() =>
+  import("@/sections/DesktopLanding").then((m) => ({ default: m.DesktopLanding })),
+)
+const TabletLanding = lazy(() =>
+  import("@/sections/tablet/TabletLanding").then((m) => ({ default: m.TabletLanding })),
+)
+const PhoneLanding = lazy(() =>
+  import("@/sections/phone/PhoneLanding").then((m) => ({ default: m.PhoneLanding })),
+)
+
+/**
+ * Smooth scroll + anchor navigation.
+ *
+ * Lenis is created only for a fine-pointer (mouse) visitor with motion enabled.
+ * On touch it fights native momentum and adds a permanent rAF loop for no gain,
+ * and under prefers-reduced-motion we want plain native scrolling — in both
+ * cases we skip Lenis entirely and route anchor clicks through native
+ * scrollIntoView. lagSmoothing is relaxed (was 0) so a single heavy frame is
+ * caught up smoothly instead of teleporting (the "freeze-then-jump" symptom).
+ */
 function useLenis(breakpoint: string) {
-  // layout effect: reveal must hide elements BEFORE the first paint,
-  // otherwise in-view text flashes and then disappears into the cascade
   useLayoutEffect(() => {
-    const lenis = new Lenis()
+    const nativeOnly = isCoarsePointer() || prefersReducedMotion()
 
-    // drive Lenis from GSAP's ticker so both share one rAF loop
-    const update = (time: number) => lenis.raf(time * 1000)
-    gsap.ticker.add(update)
-    gsap.ticker.lagSmoothing(0)
+    let lenis: Lenis | null = null
+    let update: ((time: number) => void) | null = null
+    if (!nativeOnly) {
+      lenis = new Lenis()
+      update = (time: number) => lenis!.raf(time * 1000)
+      gsap.ticker.add(update)
+      gsap.ticker.lagSmoothing(500, 33)
+    }
 
-    // cascade scroll-reveal for text blocks and visuals
-    const teardownReveal = initReveal()
-    // micro-animations: float/pulse/parallax/lift/press/countup
-    const teardownMicro = initMicro()
-
-    // smooth-scroll anchor navigation through Lenis
     const onClick = (e: MouseEvent) => {
       const a = (e.target as HTMLElement).closest?.('a[href^="#"]')
       if (!a) return
@@ -47,64 +51,57 @@ function useLenis(breakpoint: string) {
       const el = document.querySelector(hash)
       if (!el) return
       e.preventDefault()
-      lenis.scrollTo(el as HTMLElement)
+      if (lenis) lenis.scrollTo(el as HTMLElement)
+      else (el as HTMLElement).scrollIntoView({ behavior: "smooth" })
     }
     document.addEventListener("click", onClick)
 
     return () => {
       document.removeEventListener("click", onClick)
-      teardownMicro()
-      teardownReveal()
-      gsap.ticker.remove(update)
-      lenis.destroy()
+      if (update) gsap.ticker.remove(update)
+      if (lenis) lenis.destroy()
     }
-    // re-init on canvas switch: the whole section tree is remounted
   }, [breakpoint])
 }
 
-function DesktopLanding() {
-  return (
-    <div className="relative bg-gray-800 text-dark-text">
-      <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <DispatchIntro />
-        <Tools />
-        <Orbit />
-        <Ecosystem />
-        <WhyLoadHunter />
-        <ChaosDiagram />
-        <Pricing />
-        <Testimonials />
-        <Faq />
-        <Cta />
-      </main>
-      <Footer />
-    </div>
-  )
+/**
+ * Runs the scroll-reveal cascade + micro-animation layer. Rendered as the last
+ * child INSIDE the Suspense boundary so its layout effect fires only after the
+ * lazy landing tree has committed to the DOM (React runs sibling layout effects
+ * in order, and the boundary keeps this unmounted until the chunk resolves) —
+ * initReveal must hide elements before first paint, so the DOM must exist first.
+ */
+function CanvasEffects({ breakpoint }: { breakpoint: string }) {
+  useLayoutEffect(() => {
+    const teardownReveal = initReveal()
+    const teardownMicro = initMicro()
+    return () => {
+      teardownMicro()
+      teardownReveal()
+    }
+  }, [breakpoint])
+  return null
 }
 
 function App() {
   const bp = useBreakpoint()
   useLenis(bp)
-  if (bp === "phone") {
-    return (
-      <DesignFrame width={390}>
-        <PhoneLanding />
-      </DesignFrame>
-    )
-  }
-  if (bp === "tablet") {
-    return (
-      <DesignFrame width={768}>
-        <TabletLanding />
-      </DesignFrame>
-    )
-  }
+
+  const width = bp === "phone" ? 390 : bp === "tablet" ? 768 : 1920
+  const Landing = bp === "phone" ? PhoneLanding : bp === "tablet" ? TabletLanding : DesktopLanding
+
+  // Above the 1920 desktop artboard the Figma adaptive frames center the same
+  // pixel-sized content with side gutters rather than scaling up — so cap the
+  // desktop canvas at 1× and let DesignFrame center it. Phone/tablet keep their
+  // fill-to-viewport scaling (they scale up within their own breakpoint bands).
+  const maxScale = bp === "desktop" ? 1 : undefined
+
   return (
-    <DesignFrame width={1920}>
-      <DesktopLanding />
+    <DesignFrame width={width} maxScale={maxScale}>
+      <Suspense fallback={null}>
+        <Landing />
+        <CanvasEffects breakpoint={bp} />
+      </Suspense>
     </DesignFrame>
   )
 }

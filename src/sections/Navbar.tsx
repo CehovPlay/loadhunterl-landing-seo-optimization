@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
@@ -27,21 +28,26 @@ export function Navbar() {
   const [scale, setScale] = useState(1)
 
   useEffect(() => {
-    // rAF poll instead of scroll events: immune to smooth-scroll libraries
-    // and stale listeners; ~free (one comparison per frame)
-    let raf = 0
-    const tick = () => {
-      setScrolled(window.scrollY > 60)
-      raf = requestAnimationFrame(tick)
+    // passive scroll listener with a threshold guard — dispatches state only
+    // when crossing 60px, instead of the old self-perpetuating rAF that ran a
+    // comparison + setState every single frame for the life of the page.
+    // (Lenis performs real window scrolling, so native scroll events fire.)
+    const onScroll = () => {
+      const s = window.scrollY > 60
+      setScrolled((prev) => (prev === s ? prev : s))
     }
-    raf = requestAnimationFrame(tick)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
 
+    // Cap at 1× to match DesignFrame: above the 1920 artboard the canvas stops
+    // scaling up and centers, so this portalled pill must too (transformOrigin
+    // top-center keeps it centered), otherwise it balloons on 2K/4K screens.
     const onResize = () =>
-      setScale(document.documentElement.clientWidth / 1920)
+      setScale(Math.min(document.documentElement.clientWidth / 1920, 1))
     onResize()
     window.addEventListener("resize", onResize)
     return () => {
-      cancelAnimationFrame(raf)
+      window.removeEventListener("scroll", onScroll)
       window.removeEventListener("resize", onResize)
     }
   }, [])
@@ -77,12 +83,12 @@ export function Navbar() {
                 boxShadow: PILL_SHADOW,
               }}
             >
-              <img
+              <Img
                 src="/figma/logo-icon.svg"
                 alt=""
                 className="h-[26.173px] w-[27.679px]"
               />
-              <img
+              <Img
                 src="/figma/logo-text.svg"
                 alt="loadhunter"
                 className="h-[15.736px] w-[97.034px]"
@@ -128,13 +134,21 @@ export function Navbar() {
           <div
             className="relative mt-[16px] flex items-center gap-[60px] rounded-[2000px] py-[6px] pl-[6px] pr-[10px]"
             style={{
+              // isolate so the surviving backdrop-filter samples a small region,
+              // not the whole scrolling page behind the fixed pill
+              isolation: "isolate",
               opacity: scrolled ? 1 : 0,
+              // visibility flips to hidden AFTER the fade-out so the pill (and
+              // its backdrop-filter) isn't painted/composited while parked at the
+              // top of the page; flips to visible instantly on the way in
+              visibility: scrolled ? "visible" : "hidden",
               transform: scrolled
                 ? "translateY(0) scale(1)"
                 : "translateY(-48px) scale(0.9)",
               pointerEvents: scrolled ? "auto" : "none",
               transition:
-                "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0s linear " +
+                (scrolled ? "0s" : "0.65s"),
             }}
           >
             <div
@@ -144,14 +158,14 @@ export function Navbar() {
             {/* logo mark pill */}
             <a
               href="#"
-              className="relative flex h-[34px] items-center rounded-[99px] border border-white px-[4px] backdrop-blur-[10px]"
+              className="relative flex h-[34px] items-center rounded-[99px] border border-white px-[4px]"
               style={{
                 backgroundImage:
                   "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
                 boxShadow: PILL_SHADOW,
               }}
             >
-              <img
+              <Img
                 src="/figma/logo-icon.svg"
                 alt="loadhunter"
                 className="h-[26.173px] w-[27.679px]"
@@ -162,7 +176,7 @@ export function Navbar() {
               <a
                 href="#contact"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] border border-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white backdrop-blur-[10px]"
+                className="flex h-[28px] items-center justify-center rounded-[99px] border border-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
                 style={{
                   backgroundImage:
                     "linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.05))",
@@ -174,7 +188,7 @@ export function Navbar() {
               <a
                 href="#start"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white backdrop-blur-[10px]"
+                className="flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
                 style={{ boxShadow: PILL_SHADOW }}
               >
                 Add to Chrome

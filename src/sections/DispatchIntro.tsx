@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Frame 1618875000 (914:23996) — 1680x1080 @ x=120, first child of the
  * dark tools mega-frame (page y=2194). Icon 64px @ (808,410), H2 @ y=514,
@@ -5,12 +6,14 @@
  */
 export function DispatchIntro() {
   return (
-    <section className="relative h-[1080px] bg-gray-800">
+    <section className="relative h-[1080px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1080px]">
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[928px] top-[410px] size-[64px]">
-        <img
+        <Img
           src="/figma/tools/intro-icon.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>

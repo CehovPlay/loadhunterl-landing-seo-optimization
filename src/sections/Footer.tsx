@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: footer region — page y 18556–19624 (h=1068).
  * Logo/subscribe row 1680x40 @ (120,120) (914:23856), full-bleed separator
@@ -13,23 +14,29 @@ export function Footer() {
   return (
     <footer id="token" className="relative h-[1068px] overflow-hidden bg-gray-800">
       {/* big orbit rings graphic (decorative, © caption baked in) */}
-      <img
+      <Img
         src="/figma/tail/footer-orbit.png"
         alt="© 2026 loadhunt Corp. All rights reserved."
+        loading="lazy"
+        decoding="async"
         className="absolute left-[119px] top-[274px] h-[794px] w-[1681px] max-w-none"
       />
 
       {/* logo + subscribe row */}
       <div className="absolute left-[120px] top-[120px] h-[40px] w-[1680px]">
         <div className="absolute left-0 top-[8px] h-[24px] w-[151px]">
-          <img
+          <Img
             src="/figma/tail/logo-icon-white.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-0 top-0 size-[24px] max-w-none"
           />
-          <img
+          <Img
             src="/figma/tail/logo-text-white.svg"
             alt="loadhunter"
+            loading="lazy"
+            decoding="async"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
           />
         </div>
@@ -61,7 +68,7 @@ export function Footer() {
         <div className="absolute right-0 top-0 flex h-full items-center gap-[4px]">
           {SOCIALS.map((src) => (
             <a key={src} href="#" className="block size-[18px]">
-              <img src={src} alt="" className="size-[18px] max-w-none" />
+              <Img src={src} alt="" loading="lazy" decoding="async" className="size-[18px] max-w-none" />
             </a>
           ))}
         </div>

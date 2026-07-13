@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Tablet (768) hero — section y 0..1324.
  * Frame 2147238673 (916:70029, 768x1166 @ y=118):
@@ -10,10 +11,11 @@ export function TabletHero() {
   return (
     <section className="relative overflow-hidden bg-gray-800" style={{ height: 1324 }}>
       {/* beem glow (clipped at section top) */}
-      <img
+      <Img
         src="/figma/hero-glow.png"
         alt=""
         aria-hidden
+        decoding="async"
         className="pointer-events-none absolute left-[-111px] top-[-238px] w-[1112px] max-w-none"
       />
 
@@ -77,7 +79,7 @@ export function TabletHero() {
         {/* CTAs */}
         <div className="flex items-center gap-[12px]">
           <button
-            className="flex h-[42px] w-[160px] items-center justify-center rounded-[99px] border border-white text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545] backdrop-blur-[10px]"
+            className="flex h-[42px] w-[160px] items-center justify-center rounded-[99px] border border-white text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545]"
             style={{
               backgroundImage:
                 "linear-gradient(to bottom, #ffffff, rgba(255,255,255,0.5))",
@@ -88,15 +90,16 @@ export function TabletHero() {
             Start free trial 14 days
           </button>
           <button
-            className="relative flex h-[42px] items-center justify-center gap-[8px] rounded-[99px] bg-[#6f5197] py-[4px] pl-[9px] pr-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white backdrop-blur-[10px]"
+            className="relative flex h-[42px] items-center justify-center gap-[8px] rounded-[99px] bg-[#6f5197] py-[4px] pl-[9px] pr-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
             style={{
               boxShadow:
                 "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
             }}
           >
-            <img
+            <Img
               src="/figma/tablet/chrome-icon.svg"
               alt=""
+              decoding="async"
               className="size-[24.811px]"
             />
             Add to Chrome
@@ -124,9 +127,11 @@ export function TabletHero() {
       </div>
 
       {/* dashboard render (browser mockup + settings popup, blur baked in) */}
-      <img
+      <Img
         src="/figma/tablet/hero-dashboard.png"
         alt="LoadHunter dashboard"
+        decoding="async"
+        fetchPriority="high"
         className="absolute left-0 top-[534px] w-[768px] max-w-none"
       />
     </section>

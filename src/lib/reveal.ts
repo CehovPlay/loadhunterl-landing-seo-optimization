@@ -72,18 +72,27 @@ export function initReveal() {
     // already ABOVE the viewport (e.g. browser restored a mid-page scroll
     // position on reload): it will never intersect — leave it visible
     if (r.bottom < 0) return
+    // content-visibility:auto skips off-screen subtrees during this init pass
+    // (it runs in a layout-effect, before paint), collapsing descendant rects to
+    // ~0×0. Those can't be clip-analysed — and unlike a genuinely off-strip
+    // marquee copy (which keeps a real size) a collapsed element simply hasn't
+    // laid out yet. So skip the clip walk, hide + rise it, and let the runtime
+    // IntersectionObserver reveal it once its section renders on approach.
+    const degenerate = r.width < 1 && r.height < 1
     // rects are in viewport (scaled) px; the gsap rise is in layout px
     const rise = RISE * (el.offsetHeight ? r.height / el.offsetHeight : 1)
     let riseSafe = true
-    for (const c of clipRects(el)) {
-      // degenerate box: DesignFrame's outer div is height-0 during this same
-      // layout-effect pass (its measured height commits right after) — ignore
-      if (c.width < 1 || c.height < 1) continue
-      // fully clipped at rest — IO can never fire; leave untouched
-      if (r.bottom <= c.top || r.top >= c.bottom || r.right <= c.left || r.left >= c.right)
-        return
-      // the rise would push it fully below this clip box — deadlock
-      if (r.top + rise >= c.bottom) riseSafe = false
+    if (!degenerate) {
+      for (const c of clipRects(el)) {
+        // degenerate box: DesignFrame's outer div is height-0 during this same
+        // layout-effect pass (its measured height commits right after) — ignore
+        if (c.width < 1 || c.height < 1) continue
+        // fully clipped at rest — IO can never fire; leave untouched
+        if (r.bottom <= c.top || r.top >= c.bottom || r.right <= c.left || r.left >= c.right)
+          return
+        // the rise would push it fully below this clip box — deadlock
+        if (r.top + rise >= c.bottom) riseSafe = false
+      }
     }
     ;(riseSafe ? items : fadeOnly).push(el)
   })

@@ -1,4 +1,5 @@
 import gsap from "gsap"
+import { gateEach, isFinePointer } from "@/lib/inview"
 
 /**
  * Micro-animation layer, wired via data-attributes:
@@ -26,64 +27,107 @@ export function initMicro() {
   const cleanups: (() => void)[] = []
   const touched = new Set<HTMLElement>()
   const floated = new Set<HTMLElement>() // own their y (never reveal targets)
+  // (element → its infinite loop) pairs, gated to pause while off-screen
+  const gateEntries: { el: Element; anims: gsap.core.Tween }[] = []
 
   /* ---------------------------------------------------- float / pulse --- */
   document.querySelectorAll<HTMLElement>("[data-float]").forEach((el, i) => {
     floated.add(el)
-    tweens.push(
-      gsap.to(el, {
-        y: -5,
-        duration: 2.4 + (i % 3) * 0.5,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-        delay: (i % 5) * 0.35,
-      }),
-    )
+    const t = gsap.to(el, {
+      y: -5,
+      duration: 2.4 + (i % 3) * 0.5,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+      delay: (i % 5) * 0.35,
+    })
+    tweens.push(t)
+    gateEntries.push({ el, anims: t })
   })
 
   document.querySelectorAll<HTMLElement>("[data-pulse]").forEach((el) => {
     touched.add(el)
-    tweens.push(
-      gsap.to(el, {
-        scale: 1.04,
-        duration: 2.6,
-        ease: "sine.inOut",
-        yoyo: true,
-        repeat: -1,
-      }),
-    )
+    const t = gsap.to(el, {
+      scale: 1.04,
+      duration: 2.6,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+    })
+    tweens.push(t)
+    gateEntries.push({ el, anims: t })
   })
 
+  // one shared observer pauses every float/pulse loop whose icon is off-screen
+  if (gateEntries.length) cleanups.push(gateEach(gateEntries))
+
   /* --------------------------------------------------------- parallax --- */
+  // The tick runs on gsap's scroll-synced ticker. The old version called
+  // getBoundingClientRect() for every element EVERY frame — after Lenis had
+  // just written the scroll transform — forcing a synchronous reflow of the
+  // whole ~19kpx tree on each scroll frame (the dominant scroll-jank source).
+  // We now cache each element's resting document-space geometry (scaled px) and
+  // re-measure only on resize/load, so the per-frame tick is pure arithmetic on
+  // window.scrollY with zero layout reads.
   const parallax = [...document.querySelectorAll<HTMLElement>("[data-parallax]")].map(
     (el) => ({
       el,
       speed: parseFloat(el.dataset.parallax || "0.06"),
       set: gsap.quickSetter(el, "yPercent") as (v: number) => void,
       applied: 0,
+      baseTop: 0, // resting top in document space (scaled px)
+      h: 0, // rendered height (scaled px)
     }),
   )
   parallax.forEach((p) => touched.add(p.el))
 
-  const tick = () => {
-    const vh = window.innerHeight
+  const measure = () => {
+    const sy = window.scrollY
     for (const p of parallax) {
       const r = p.el.getBoundingClientRect()
-      if (!r.height || r.bottom < -vh || r.top > vh * 2) continue
-      // rect includes the offset we applied — recover the resting centre
-      const center = r.top + r.height / 2 - (p.applied / 100) * r.height
+      p.h = r.height
+      // r.top includes both our yPercent and any reveal y still on the element;
+      // undo our own applied offset to recover the resting document position.
+      p.baseTop = r.top + sy - (p.applied / 100) * r.height
+    }
+  }
+
+  const tick = () => {
+    const vh = window.innerHeight
+    const sy = window.scrollY
+    for (const p of parallax) {
+      if (!p.h) continue
+      const center = p.baseTop + p.h / 2 - sy
+      if (center < -vh || center > vh * 2) continue // off-screen: skip
       const px = (vh / 2 - center) * p.speed
-      p.applied = (px / r.height) * 100
+      p.applied = (px / p.h) * 100
       p.set(p.applied)
     }
   }
+
   if (parallax.length) {
+    measure()
     gsap.ticker.add(tick)
-    cleanups.push(() => gsap.ticker.remove(tick))
+    // re-measure after the reveal cascade settles / images load, and on resize,
+    // so cached resting positions stay correct (transform-independent baseline).
+    const onLoad = () => measure()
+    window.addEventListener("resize", measure)
+    window.addEventListener("load", onLoad)
+    cleanups.push(() => {
+      gsap.ticker.remove(tick)
+      window.removeEventListener("resize", measure)
+      window.removeEventListener("load", onLoad)
+    })
   }
 
-  /* ------------------------------------------------------ hover lift --- */
+  const magnetics = new Set<HTMLElement>()
+  const tilted = new Set<HTMLElement>()
+
+  /* --- hover-only effects (lift / magnetic / tilt): fine pointer only ---
+   * On touch none of these can fire, and on hybrids emitting synthetic mouse
+   * events the tilt/magnetic handlers would run getBoundingClientRect over the
+   * scaled canvas per pointer move. Register them only for a real mouse. */
+  if (isFinePointer()) {
   document.querySelectorAll<HTMLElement>("[data-lift]").forEach((el) => {
     touched.add(el)
     const over = () =>
@@ -99,7 +143,6 @@ export function initMicro() {
   })
 
   /* --------------------------------------------------------- magnetic --- */
-  const magnetics = new Set<HTMLElement>()
   document.querySelectorAll<HTMLElement>("[data-magnetic]").forEach((el) => {
     magnetics.add(el)
     const k = parseFloat(el.dataset.magnetic || "") || 0.3 // pull factor
@@ -132,7 +175,6 @@ export function initMicro() {
   })
 
   /* ------------------------------------------------------------- tilt --- */
-  const tilted = new Set<HTMLElement>()
   document.querySelectorAll<HTMLElement>("[data-tilt]").forEach((el) => {
     tilted.add(el)
     const strength = parseFloat(el.dataset.tilt || "4")
@@ -158,6 +200,7 @@ export function initMicro() {
       area.removeEventListener("mouseleave", leave)
     })
   })
+  } // end fine-pointer hover effects
 
   /* --------------------------------------------------- press feedback --- */
   document.querySelectorAll<HTMLElement>("button").forEach((el) => {

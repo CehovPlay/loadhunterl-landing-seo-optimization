@@ -1,3 +1,4 @@
+import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665218 (926:101886) — 1920x867 @ page y=17689.
  * Card row @ y=240: violet gradient card 531x627 @ x=120 (HTML) + decorative
@@ -8,12 +9,14 @@ import { CtaAutomation } from "@/components/site/CtaAutomation"
 
 export function Cta() {
   return (
-    <section id="start" className="relative h-[867px] overflow-hidden bg-gray-800">
+    <section id="start" className="relative h-[867px] overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_867px]">
       {/* right panel + glow — exported as one bitmap, full section height */}
-      <img
+      <Img
         src="/figma/tail/cta-right.png"
         alt=""
         aria-hidden
+        loading="lazy"
+        decoding="async"
         className="absolute left-[671px] top-0 h-[867px] w-[1129px] max-w-none"
       />
 
@@ -31,14 +34,18 @@ export function Cta() {
       >
         {/* logo */}
         <div className="absolute left-[40px] top-[40px] h-[24px] w-[151px]">
-          <img
+          <Img
             src="/figma/tail/logo-icon-white.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute left-0 top-0 size-[24px] max-w-none"
           />
-          <img
+          <Img
             src="/figma/tail/logo-text-white.svg"
             alt="loadhunter"
+            loading="lazy"
+            decoding="async"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
           />
         </div>
@@ -59,9 +66,11 @@ export function Cta() {
           data-magnetic
           className="absolute left-[40px] top-[545px] inline-flex h-[42px] items-center gap-[8px] rounded-full border border-white bg-white px-[24px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] transition-opacity hover:opacity-90"
         >
-          <img
+          <Img
             src="/figma/tail/cta-chrome.svg"
             alt=""
+            loading="lazy"
+            decoding="async"
             className="size-[16px] max-w-none"
           />
           <span

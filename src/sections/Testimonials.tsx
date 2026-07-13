@@ -1,5 +1,7 @@
+import { Img } from "@/components/site/Img"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
 
 /**
  * Figma: header Frame 1618873946 (914:23696) 1920x320 @ y=15559,
@@ -67,10 +69,15 @@ function ReviewCard({ r }: { r: Review }) {
       style={{ top: r.y }}
       data-card
     >
-      {/* default bg: dark radial from top-right (Figma 914:23772) */}
+      {/* default bg: dark radial from top-right (Figma 914:23772).
+          NOTE: this used backdrop-blur-[100px], but the backdrop is the flat
+          solid gray-800 section (cards never overlap: step 415 > width 375), so
+          the 100px blur returned the identical color — a pure no-op that
+          re-sampled a ~100px kernel every frame the marquee advanced, ×15 cards.
+          Removed; the radial gradient below is the only visible effect. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[12px] backdrop-blur-[100px]"
+        className="pointer-events-none absolute inset-0 rounded-[12px]"
         style={{
           backgroundImage:
             "radial-gradient(453px circle at 375px 6px, rgba(53,50,70,1), rgba(53,50,70,0))",
@@ -91,7 +98,7 @@ function ReviewCard({ r }: { r: Review }) {
       </p>
       <div className="relative mt-[40px] flex w-full items-center gap-[12px]">
         <div
-          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white backdrop-blur-[10px]"
+          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
@@ -115,19 +122,25 @@ function ReviewCard({ r }: { r: Review }) {
 }
 
 export function Testimonials() {
+  const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
-  const tweenRef = useRef<gsap.core.Tween | null>(null)
 
   useEffect(() => {
     const track = trackRef.current
     if (!track) return
+    // reduced motion: leave the strip on its static first frame
+    if (prefersReducedMotion()) return
+
     const tween = gsap.to(track, {
       x: -CYCLE,
       duration: SPEED_S,
       ease: "none",
       repeat: -1,
     })
-    tweenRef.current = tween
+
+    // pause the marquee (and free its composited layer) while off-screen
+    const stopGate = gateLoops(sectionRef.current, tween)
+    const stopWC = willChangeInView(track, sectionRef.current)
 
     const cards = track.querySelectorAll<HTMLElement>("[data-card]")
     const slow = () =>
@@ -143,17 +156,21 @@ export function Testimonials() {
         c.removeEventListener("mouseenter", slow)
         c.removeEventListener("mouseleave", resume)
       })
+      stopWC()
+      stopGate()
       tween.kill()
     }
   }, [])
 
   return (
-    <section id="contact" className="relative h-[1084px] overflow-hidden bg-gray-800">
+    <section ref={sectionRef} id="contact" className="relative h-[1084px] overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1084px]">
       {/* heading */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
-        <img
+        <Img
           src="/figma/tools/intro-icon.png"
           alt=""
+          loading="lazy"
+          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -166,9 +183,11 @@ export function Testimonials() {
       </p>
 
       {/* trust strip: 5,000+ users, 4.7 rating, Google Reviews / Trustpilot / G2 */}
-      <img
+      <Img
         src="/figma/reviews-strip.png"
         alt="5,000+ trusted users, 4.7 from 100+ reviews on Google, Trustpilot and G2"
+        loading="lazy"
+        decoding="async"
         className="absolute left-[638.5px] top-[278px] w-[643.5px] max-w-none"
       />
 
@@ -177,7 +196,7 @@ export function Testimonials() {
         <div
           ref={trackRef}
           data-marquee-track
-          className="relative h-full w-full will-change-transform"
+          className="relative h-full w-full"
         >
           {[0, 1, 2].map((copy) =>
             REVIEWS.map((r, i) => (

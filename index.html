@@ -5,6 +5,12 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="dark" />
+    <!-- Preload the LCP hero image per breakpoint (public paths are stable, not
+         hashed). type=image/avif → browsers without AVIF skip it and load the
+         WebP/PNG fallback from <picture> normally, so nothing is wasted. -->
+    <link rel="preload" as="image" type="image/avif" href="/figma/hero-dashboard.avif" media="(min-width: 1024px)" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/avif" href="/figma/tablet/hero-dashboard.avif" media="(min-width: 640px) and (max-width: 1023px)" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/avif" href="/figma/phone/hero-mockup.avif" media="(max-width: 639px)" fetchpriority="high" />
     <meta
       name="description"
       content="LoadHunter OS — book better loads before anyone else. AI-powered dispatch tools that book loads in under 30 seconds."
