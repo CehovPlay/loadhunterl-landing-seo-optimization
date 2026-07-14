@@ -118,7 +118,7 @@ const PLANS: Plan[] = [
     blurb: "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
     price: "Let's talk",
     note: "Best value for 20+ dispatchers.",
-    cta: "Contact us",
+    cta: "Add to wishlist",
     head: "ai",
     panelH: 218,
     cols: PRO_COLS,

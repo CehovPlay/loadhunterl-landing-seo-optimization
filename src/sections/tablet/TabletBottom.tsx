@@ -124,8 +124,7 @@ function WhySection() {
         Why LoadHunter
       </h2>
       <p className="absolute left-[40px] top-[184px] w-[688px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        Measured across real bookings. Based on real dispatcher workflows.
       </p>
 
       {/* comparison table */}
@@ -993,13 +992,20 @@ export function TabletBottom() {
         by hand. LoadHunter automates the busywork so your team can find better
         loads, respond faster, and book with confidence.
       </p>
+      {/* diagram export is cropped above its baked caption pill; the pill is
+          live text below so it matches the desktop wording */}
       <img loading="lazy" decoding="async"
         src="/figma/tablet/chaos.png"
         alt=""
         aria-hidden
         data-parallax="0.04"
-        className="absolute left-0 top-[932px] h-[555px] w-[768px] max-w-none"
+        className="absolute left-0 top-[932px] h-[500px] w-[768px] max-w-none"
       />
+      <div className="absolute left-1/2 top-[1438px] flex -translate-x-1/2 items-center justify-center rounded-[16px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-[24px] py-[12px] backdrop-blur-[20px]">
+        <span className="whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-300">
+          Logistics is moving to AI. Don&rsquo;t get left behind.
+        </span>
+      </div>
 
       <PricingSection top={1607} />
       <TestimonialsSection top={2825} />
