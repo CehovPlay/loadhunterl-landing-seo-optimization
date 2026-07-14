@@ -1,4 +1,3 @@
-import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665214 (924:101381) — 390x4030 @ phone-frame y=11567.
  * Stacked: testimonials (Frame 2147238672 @ y0), FAQ (Frame 2147238594 @
@@ -10,6 +9,7 @@ import { Img } from "@/components/site/Img"
  */
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
+import { Img } from "@/components/site/Img"
 import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
 
 const CARD_SHADOW_INSET = "inset 0px -1px 1px 0px rgba(0,0,0,0.25)"
@@ -287,11 +287,11 @@ const FAQ_LINES = [232, 468, 748, 988]
 
 /* --------------------------------------------------------------- shell --- */
 
-function SectionIcon({ top }: { top: number }) {
+function SectionIcon({ top, src = "/figma/tools/intro-icon.png" }: { top: number; src?: string }) {
   return (
     <div data-float className="absolute left-[163px] size-[64px]" style={{ top }}>
       <Img
-        src="/figma/phone/icon-figma.png"
+        src={src}
         alt=""
         loading="lazy"
         decoding="async"
@@ -352,11 +352,9 @@ export function PhoneTail() {
           <div className="absolute left-[114px] top-[8.5px] h-[25px] w-px bg-[#e8e8e9] opacity-50" />
           <div className="absolute left-[138px] top-0 flex h-[42px] w-[126px] flex-col items-center justify-between">
             <div className="flex w-full items-center justify-between">
-              <Img
+              <img loading="lazy" decoding="async"
                 src="/figma/phone/stars.svg"
                 alt="4.7 star rating"
-                loading="lazy"
-                decoding="async"
                 className="h-[16px] w-[100px] max-w-none"
               />
               <span data-countup className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#e8e8e8]">
@@ -430,13 +428,11 @@ export function PhoneTail() {
             </div>
           ))}
           {FAQ_LINES.map((y) => (
-            <Img
+            <img loading="lazy" decoding="async"
               key={y}
               src="/figma/phone/faq-line.svg"
               alt=""
               aria-hidden
-              loading="lazy"
-              decoding="async"
               className="absolute left-0 h-px w-full max-w-none"
               style={{ top: y - 0.5 }}
             />
@@ -463,18 +459,14 @@ export function PhoneTail() {
           }}
         >
           <div className="absolute left-[12px] top-[20px] h-[16px] w-[101px]">
-            <Img
+            <img loading="lazy" decoding="async"
               src="/figma/tail/logo-icon-white.svg"
               alt=""
-              loading="lazy"
-              decoding="async"
               className="absolute left-0 top-0 size-[16px] max-w-none"
             />
-            <Img
+            <img loading="lazy" decoding="async"
               src="/figma/tail/logo-text-white.svg"
               alt="loadhunter"
-              loading="lazy"
-              decoding="async"
               className="absolute left-[22.67px] top-[1.7px] h-[12.59px] w-[77.62px] max-w-none"
             />
           </div>
@@ -493,7 +485,7 @@ export function PhoneTail() {
             className="absolute left-[12px] top-[248px] flex h-[42px] items-center gap-[8px] rounded-[99px] border border-white bg-white px-[24px] backdrop-blur-[10px]"
             style={{ boxShadow: PILL_SHADOW }}
           >
-            <Img src="/figma/tail/cta-chrome.svg" alt="" loading="lazy" decoding="async" className="size-[16px] max-w-none" />
+            <img loading="lazy" decoding="async" src="/figma/tail/cta-chrome.svg" alt="" className="size-[16px] max-w-none" />
             <span
               className="bg-clip-text text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-transparent"
               style={{
@@ -510,18 +502,14 @@ export function PhoneTail() {
       <div id="token" className="absolute left-0 top-[3218px] h-[812px] w-full">
         {/* logo */}
         <div className="absolute left-[119.78px] top-0 h-[24px] w-[150.44px]">
-          <Img
+          <img loading="lazy" decoding="async"
             src="/figma/tail/logo-icon-white.svg"
             alt=""
-            loading="lazy"
-            decoding="async"
             className="absolute left-0 top-0 size-[24px] max-w-none"
           />
-          <Img
+          <img loading="lazy" decoding="async"
             src="/figma/tail/logo-text-white.svg"
             alt="loadhunter"
-            loading="lazy"
-            decoding="async"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
           />
         </div>

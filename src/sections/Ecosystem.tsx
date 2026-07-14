@@ -143,15 +143,31 @@ function ProductRow({ product }: { product: Product }) {
 }
 
 export function Ecosystem() {
+  // h-[2077px] = the card's 377px footprint + a 1700px scroll runway
+  // (600px fullscreen-expand + 1100px inner-list overflow). initEcosystemPin()
+  // pins the card at viewport centre and consumes the runway expanding the card
+  // to the full viewport and then scrolling the list; see src/lib/ecosystemPin.ts.
+  //
   // NO content-visibility on this section: it implies paint containment, which
   // clips children to the section box — but the ecosystem panel deliberately
   // hangs 623px ABOVE this section, floating over the orbit rings (Figma: panel
-  // 1680x1000 @ page y 11018, section starts 11641). Containment was cutting
-  // off the panel's heading + loadhunter row. The section is only 377px tall,
-  // so skipping the optimization costs almost nothing.
+  // 1680x1000 @ page y 11018, section starts 11641), and the pin later grows it
+  // to cover the whole viewport. Containment was cutting off the panel's
+  // heading + loadhunter row.
   return (
-    <section id="offers" className="relative h-[377px] bg-gray-800">
-      <div className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-[12px] bg-[#e9e9eb]">
+    <section id="offers" data-eco-pin className="relative h-[2077px] bg-gray-800">
+      {/* data-no-reveal: the card runs its own pin/expand/list-scroll
+          choreography, so it opts out of the global fade-rise cascade (which
+          would otherwise fight the pin and could leave rows stuck hidden). */}
+      <div
+        data-eco-stage
+        data-no-reveal
+        className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-[12px] bg-[#e9e9eb] will-change-transform"
+      >
+        {/* Inner content layer: the panel expands symmetrically around it, so
+            this is counter-translated by the pin to keep the content fixed —
+            never shifting left/right as the card widens. */}
+        <div data-eco-inner className="absolute inset-0 will-change-transform">
         {/* left column — icon rebuilt from the original Figma vector layers:
             everything (grid, ring, glyph) is centered by construction */}
         <div
@@ -190,16 +206,24 @@ export function Ecosystem() {
           faster, smarter, and in one place.
         </p>
 
-        {/* right column — internally scrollable product list */}
+        {/* right column — product list, scrolled by the pin (not native
+            overflow): the page scroll drives data-eco-list's translateY while
+            the section is pinned. The window's height/y are also driven by the
+            pin so it stretches with the card as it expands to fullscreen.
+            See src/lib/ecosystemPin.ts. */}
         <div
-          data-lenis-prevent
-          className="absolute left-[646px] top-0 h-[1000px] w-[1034px] overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          data-eco-window
+          className="absolute left-[646px] top-0 h-[1000px] w-[1034px] overflow-hidden will-change-[transform,height]"
         >
-          <div className="ml-[40px] flex w-[954px] flex-col gap-[20px] py-[40px]">
+          <div
+            data-eco-list
+            className="ml-[40px] flex w-[954px] flex-col gap-[20px] py-[40px] will-change-transform"
+          >
             {PRODUCTS.map((product) => (
               <ProductRow key={product.name} product={product} />
             ))}
           </div>
+        </div>
         </div>
       </div>
     </section>

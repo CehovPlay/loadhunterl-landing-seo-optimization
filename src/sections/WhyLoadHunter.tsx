@@ -92,12 +92,10 @@ export function WhyLoadHunter() {
               {row.cells.map((c, j) => (
                 <div key={j} className="relative w-[251px]">
                   {c === "check" ? (
-                    // tablet/check.png is the SAME glow-check but with true alpha
-                    // (the old table-check.png had a baked panel background that
-                    // mix-blend-lighten leaked as a visible box wherever the
-                    // panel behind was darker than the bake — e.g. the last row)
+                    // vector check with its glow filter — replaces the old PNG
+                    // whose baked panel background leaked through blend modes
                     <Img
-                      src="/figma/tablet/check.png"
+                      src="/figma/table-check.svg"
                       alt="yes"
                       loading="lazy"
                       decoding="async"

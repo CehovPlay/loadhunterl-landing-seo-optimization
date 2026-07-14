@@ -1,7 +1,7 @@
 import { Img } from "@/components/site/Img"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
-import { gateLoops, prefersReducedMotion } from "@/lib/inview"
+import { prefersReducedMotion } from "@/lib/inview"
 
 /**
  * Figma: Group 2085665057 (914:23049) — rings + centre mark + 15 badge pills.
@@ -60,6 +60,32 @@ const PILL_SHADOW =
 
 export function Orbit() {
   const rootRef = useRef<HTMLDivElement>(null)
+  const dotsRef = useRef<HTMLCanvasElement>(null)
+
+  // The dotted rings are drawn ONCE into a canvas. As SVG circles with
+  // stroke-dasharray="0.1 6.2" + round caps they froze the page for seconds
+  // every time the section re-entered the viewport: the rasterizer walks the
+  // dash pattern in 0.1px steps over ~30,000px of circumference on every
+  // repaint. The canvas raster is composited like an image instead.
+  useEffect(() => {
+    const canvas = dotsRef.current
+    if (!canvas) return
+    const scale = Math.min(window.devicePixelRatio || 1, 2)
+    canvas.width = 2040 * scale
+    canvas.height = 2040 * scale
+    const g = canvas.getContext("2d")
+    if (!g) return
+    g.scale(scale, scale)
+    g.fillStyle = "#878787"
+    for (const r of RING_RADII) {
+      const step = 6.3 / r // dash rhythm: one dot every 6.3px of arc
+      for (let a = 0; a < Math.PI * 2 - step / 2; a += step) {
+        g.beginPath()
+        g.arc(1020 + r * Math.cos(a), 1020 + r * Math.sin(a), 1, 0, Math.PI * 2)
+        g.fill()
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const root = rootRef.current
@@ -67,52 +93,53 @@ export function Orbit() {
     // reduced motion: apply the upright orientations once but skip the endless
     // ring spins (leave the static Figma frame).
     const reduce = prefersReducedMotion()
-    const spins: gsap.core.Tween[] = []
+    const tweens: gsap.core.Tween[] = []
     const ctx = gsap.context(() => {
       root.querySelectorAll<HTMLElement>("[data-ring]").forEach((ringEl) => {
         const duration = Number(ringEl.dataset.ring)
         if (!reduce)
-          spins.push(gsap.to(ringEl, { rotation: "+=360", duration, ease: "none", repeat: -1 }))
+          tweens.push(
+            gsap.to(ringEl, { rotation: "+=360", duration, ease: "none", repeat: -1 }),
+          )
         ringEl.querySelectorAll<HTMLElement>("[data-upright]").forEach((u) => {
           gsap.set(u, { rotation: Number(u.dataset.upright) })
           if (!reduce)
-            spins.push(gsap.to(u, { rotation: "-=360", duration, ease: "none", repeat: -1 }))
+            tweens.push(
+              gsap.to(u, { rotation: "-=360", duration, ease: "none", repeat: -1 }),
+            )
         })
       })
     }, root)
-    // pause every ring/badge rotation while the orbit section is off-screen
-    const stopGate = spins.length ? gateLoops(root, spins) : () => {}
+
+    // 18 infinite rotation tweens are pure waste (and a scroll-jank source)
+    // while the section is offscreen — run them only near the viewport
+    const io = new IntersectionObserver(
+      ([e]) => tweens.forEach((t) => t.paused(!e.isIntersecting)),
+      { rootMargin: "200px 0px 200px 0px" },
+    )
+    if (tweens.length) io.observe(root)
+
     return () => {
-      stopGate()
+      io.disconnect()
       ctx.revert()
     }
   }, [])
 
   return (
-    <section ref={rootRef} className="relative h-[1389px] w-full overflow-hidden bg-white [content-visibility:auto] [contain-intrinsic-size:1920px_1389px]">
-      {/* dotted rings */}
-      <svg
+    <section ref={rootRef} className="relative h-[1389px] w-full bg-white">
+      {/* Horizontal bleed: the rings span the Figma 2K frame's 2560px, so above
+          1920 they run into the side gutters instead of being masked at the
+          canvas edges. The wrapper clips only vertically (ring tops hide under
+          the dark section above, as in the design). */}
+      <div className="absolute left-[-320px] top-0 h-full w-[2560px] overflow-hidden">
+        <div className="absolute left-[320px] top-0 h-full w-[1920px]">
+      {/* dotted rings (canvas raster — see the drawing effect above) */}
+      <canvas
+        ref={dotsRef}
         className="pointer-events-none absolute"
-        style={{ left: CX - 1020, top: CY - 1020 }}
-        width={2040}
-        height={2040}
-        viewBox="0 0 2040 2040"
+        style={{ left: CX - 1020, top: CY - 1020, width: 2040, height: 2040 }}
         aria-hidden
-      >
-        {RING_RADII.map((r) => (
-          <circle
-            key={r}
-            cx={1020}
-            cy={1020}
-            r={r}
-            fill="none"
-            stroke="#878787"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeDasharray="0.1 6.2"
-          />
-        ))}
-      </svg>
+      />
 
       {/* centre mark — 120px node, PNG render 191px (1x); the disc sits in the
           top of the render (soft shadow below), so we anchor by the GLYPH
@@ -128,12 +155,17 @@ export function Orbit() {
         style={{ left: CX - 95, top: CY - 59.5, width: 191 }}
       />
 
-      {/* orbiting badges */}
+      {/* orbiting badges. Perf notes: the pills deliberately have NO
+          backdrop-blur — 15 constantly-moving backdrop-filter layers force a
+          full backdrop repaint every frame (the section-entry freeze), and
+          over the plain white section the blur is invisible anyway. The
+          rotating wrappers get will-change so each spins on its own
+          compositor layer without repaints. */}
       {RINGS.map((ring) => (
         <div
           key={ring.r}
           data-ring={ring.duration}
-          className="absolute size-0"
+          className="absolute size-0 will-change-transform"
           style={{ left: CX, top: CY }}
         >
           {ring.badges.map((b) => (
@@ -142,7 +174,7 @@ export function Orbit() {
               className="absolute size-0"
               style={{ transform: `rotate(${b.angle}deg) translateX(${ring.r}px)` }}
             >
-              <div data-upright={-b.angle} className="size-0">
+              <div data-upright={-b.angle} className="size-0 will-change-transform">
                 <div
                   className="flex h-[42px] w-max -translate-x-1/2 -translate-y-1/2 items-center whitespace-nowrap rounded-[99px] border border-white px-[12px]"
                   style={{
@@ -160,6 +192,8 @@ export function Orbit() {
           ))}
         </div>
       ))}
+        </div>
+      </div>
     </section>
   )
 }

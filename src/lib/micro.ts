@@ -5,6 +5,7 @@ import { gateEach, isFinePointer } from "@/lib/inview"
  * Micro-animation layer, wired via data-attributes:
  *  - [data-float]          gentle levitation loop (section icons)
  *  - [data-pulse]          slow breathing scale loop (orbit centre)
+ *  - [data-spin]           continuous loader rotation (pricing coming-soon)
  *  - [data-parallax="k"]   scroll parallax, k ≈ 0.03–0.1; applied as
  *                          yPercent so it composes with the reveal's y
  *  - [data-lift]           hover scale-up (cards, CTAs)
@@ -54,6 +55,14 @@ export function initMicro() {
       yoyo: true,
       repeat: -1,
     })
+    tweens.push(t)
+    gateEntries.push({ el, anims: t })
+  })
+
+  // continuous loader rotation (pricing coming-soon)
+  document.querySelectorAll<HTMLElement>("[data-spin]").forEach((el) => {
+    touched.add(el)
+    const t = gsap.to(el, { rotation: "+=360", duration: 1.6, ease: "none", repeat: -1 })
     tweens.push(t)
     gateEntries.push({ el, anims: t })
   })

@@ -16,6 +16,10 @@
       content="LoadHunter OS — book better loads before anyone else. AI-powered dispatch tools that book loads in under 30 seconds."
     />
     <title>LoadHunter OS — Book better loads before anyone else</title>
+    <!-- LCP: fetch the hero mockup for the active breakpoint before the JS bundle evaluates -->
+    <link rel="preload" as="image" href="/figma/hero-dashboard.png" media="(min-width: 1024px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/figma/tablet/hero-dashboard.png" media="(min-width: 640px) and (max-width: 1023px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/figma/phone/hero-mockup.png" media="(max-width: 639px)" fetchpriority="high" />
   </head>
   <body>
     <div id="root"></div>

@@ -113,18 +113,41 @@ export function initReveal() {
       overwrite: true,
     })
 
+  // Pending elements are merged over a short window and cascaded in VISUAL
+  // order — by row (quantized top), then left to right. Document order made
+  // side-by-side columns (the pricing feature lists) reveal column-by-column,
+  // which read as random; spatial order falls like a staircase instead.
+  let pending: HTMLElement[] = []
+  let flushTimer: ReturnType<typeof setTimeout> | null = null
+  const flush = () => {
+    flushTimer = null
+    const batch = pending
+    pending = []
+    if (!batch.length) return
+    const pos = new Map(
+      batch.map((el) => {
+        const r = el.getBoundingClientRect()
+        return [el, { row: Math.round(r.top / 24), left: r.left }] as const
+      }),
+    )
+    batch.sort((a, b) => {
+      const pa = pos.get(a)!
+      const pb = pos.get(b)!
+      return pa.row - pb.row || pa.left - pb.left
+    })
+    show(batch)
+  }
+
   const io = new IntersectionObserver(
     (entries) => {
-      const batch = entries
+      const fresh = entries
         .filter((e) => e.isIntersecting)
         .map((e) => e.target as HTMLElement)
-      if (!batch.length) return
-      batch.forEach((el) => io.unobserve(el))
-      // cascade in document order
-      batch.sort((a, b) =>
-        a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
-      )
-      show(batch)
+      if (!fresh.length) return
+      fresh.forEach((el) => io.unobserve(el))
+      pending.push(...fresh)
+      // merge entries landing within a couple of frames into one cascade
+      flushTimer ??= setTimeout(flush, 80)
     },
     // fire slightly before the element fully enters (≈ "top 94%")
     { rootMargin: "0px 0px -6% 0px", threshold: 0 },
@@ -133,6 +156,7 @@ export function initReveal() {
 
   return () => {
     io.disconnect()
+    if (flushTimer) clearTimeout(flushTimer)
     // clear ONLY what the reveal set — never React-managed inline styles
     if (all.length) gsap.set(all, { clearProps: "transform,opacity,visibility" })
   }

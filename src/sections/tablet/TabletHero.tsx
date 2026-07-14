@@ -30,7 +30,7 @@ export function TabletHero() {
               "linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.05))",
           }}
         >
-          The AI-powered browser extension for smarter dispatching
+          The AI copilot for smarter dispatching.
         </span>
 
         <div
@@ -45,9 +45,9 @@ export function TabletHero() {
                 "linear-gradient(98.816deg, rgb(255,255,255) 1.9565%, rgb(63,63,63) 100%)",
             }}
           >
-            See loads before
+            Book better loads
             <br />
-            competitors
+            before anyone else
           </h1>
 
           {/* badge pill */}
@@ -66,14 +66,15 @@ export function TabletHero() {
                   "linear-gradient(105.965deg, rgb(255,255,255) 1.9565%, rgb(63,63,63) 100%)",
               }}
             >
-              do 47 seconds faster
+              In under 30 seconds
             </span>
           </div>
         </div>
 
         {/* paragraph */}
-        <p className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
-          One dashboard. All boards. One click. Done
+        <p className="max-w-[520px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+          LoadHunter scans loadboard in real-time, filters high-RPM loads, and
+          lets you contact brokers instantly &mdash; email, SMS, or call.
         </p>
 
         {/* CTAs */}
@@ -90,38 +91,20 @@ export function TabletHero() {
             Start free trial 14 days
           </button>
           <button
-            className="relative flex h-[42px] items-center justify-center gap-[8px] rounded-[99px] bg-[#6f5197] py-[4px] pl-[9px] pr-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
+            className="flex h-[42px] items-center justify-center gap-[8px] overflow-hidden rounded-[99px] border border-white py-[4px] pl-[9px] pr-[16px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
             style={{
-              boxShadow:
-                "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
+              backgroundImage:
+                "radial-gradient(60% 140% at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
+              boxShadow: "0px 34px 74px -20px rgba(111,81,151,0.5)",
             }}
           >
-            <Img
-              src="/figma/tablet/chrome-icon.svg"
+            <img
+              src="/figma/icon-diamond.svg"
               alt=""
               decoding="async"
-              className="size-[24.811px]"
+              className="size-[21px]"
             />
-            Add to Chrome
-            {/* base rim */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[99px] border border-white/10"
-            />
-            {/* gradient overlay rim */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[99px] mix-blend-overlay"
-              style={{
-                padding: 1,
-                background:
-                  "linear-gradient(to top, rgba(255,255,255,0), #ffffff)",
-                WebkitMask:
-                  "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                WebkitMaskComposite: "xor",
-                maskComposite: "exclude",
-              }}
-            />
+            Start booking in minutes
           </button>
         </div>
       </div>

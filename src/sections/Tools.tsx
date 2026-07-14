@@ -30,7 +30,6 @@ type Block = {
   lightDesc?: boolean
   items: Item[]
   mockup: { src: string; x: number; y: number; w: number }
-  bg?: { src: string; x: number; y: number; w: number }
 }
 
 const BLOCKS: Block[] = [
@@ -61,7 +60,6 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: { src: "/figma/tools/a-mockup.png", x: 0, y: 0, w: 924 },
-    bg: { src: "/figma/tools/a-bg1.png", x: 0, y: 0, w: 1678 },
   },
   {
     key: "b",
@@ -172,7 +170,6 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: { src: "/figma/tools/e-mockup.png", x: 0, y: 0, w: 943 },
-    bg: { src: "/figma/tools/e-bg1.png", x: 0, y: 0, w: 1680 },
   },
   {
     key: "f",
@@ -200,7 +197,6 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: { src: "/figma/tools/f-mockup.png", x: 756, y: 0, w: 924 },
-    bg: { src: "/figma/tools/f-bg1.png", x: 0, y: 0, w: 1680 },
   },
   {
     key: "g",
@@ -229,7 +225,6 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: { src: "/figma/tools/g-mockup.png", x: 0, y: 0, w: 924 },
-    bg: { src: "/figma/tools/g-bg1.png", x: 0, y: 0, w: 1680 },
   },
 ]
 
@@ -241,18 +236,6 @@ function ToolBlock({ b }: { b: Block }) {
       className="absolute w-[1680px]"
       style={{ top: b.top, height: b.height, left: b.frameX ?? 120 }}
     >
-      {b.bg && (
-        <Img
-          src={b.bg.src}
-          alt=""
-          aria-hidden
-          loading="lazy"
-          decoding="async"
-          className="absolute max-w-none"
-          style={{ left: b.bg.x, top: b.bg.y, width: b.bg.w }}
-        />
-      )}
-
       <Img
         src={b.mockup.src}
         alt=""

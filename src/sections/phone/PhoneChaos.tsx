@@ -20,15 +20,24 @@ export function PhoneChaos() {
         loads, respond faster, and book with confidence.
       </p>
 
-      {/* rings + icon nodes + caption pill — decorative 2x export (clipped render) */}
+      {/* rings + icon nodes — the export is cropped above its baked caption
+          pill; the pill is live text below so it matches the desktop wording */}
       <Img
         src="/figma/phone/chaos.png"
         data-parallax="0.04"
-        alt="Turn manual dispatching into a faster, cleaner workflow powered by AI. LoadHunter helps your team find better loads."
+        alt=""
+        aria-hidden
+        width={780}
+        height={600}
         loading="lazy"
         decoding="async"
         className="absolute left-0 top-[216px] w-[390px] max-w-none"
       />
+      <div className="absolute left-[14px] top-[528px] flex w-[362px] items-center justify-center rounded-[16px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-[20px] py-[12px] backdrop-blur-[20px]">
+        <span className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-300">
+          Logistics is moving to AI. Don&rsquo;t get left behind.
+        </span>
+      </div>
     </section>
   )
 }

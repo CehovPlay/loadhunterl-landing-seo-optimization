@@ -56,7 +56,7 @@ const PRO_COLS: [Feature[], Feature[]] = [
 const PLANS: Plan[] = [
   {
     name: "Basic",
-    icon: "/figma/pricing/icon-basic.png",
+    icon: "/figma/pricing/icon-basic.svg",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     base: 9.99,
     unit: "/per month",
@@ -73,7 +73,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Standard",
-    icon: "/figma/pricing/icon-standard.png",
+    icon: "/figma/pricing/icon-standard.svg",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     base: 14.99,
     unit: "/per month",
@@ -110,7 +110,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Pro",
-    icon: "/figma/pricing/icon-pro.png",
+    icon: "/figma/pricing/icon-pro.svg",
     blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
     base: 29.99,
     unit: "/per month",
@@ -158,11 +158,9 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
 function CheckIcon() {
   return (
     <div className="relative h-[6px] w-[9px] shrink-0">
-      <Img
+      <img loading="lazy" decoding="async"
         src="/figma/pricing/check.svg"
         alt=""
-        loading="lazy"
-        decoding="async"
         className="absolute max-w-none"
         style={{ left: -1, top: -1, width: 11, height: 7.21 }}
       />
@@ -173,11 +171,16 @@ function CheckIcon() {
 function ClockIcon() {
   return (
     <div className="relative size-[10px] shrink-0">
-      <Img
+      {/* coming-soon marker spins like a loader — GSAP data-spin (micro.ts):
+          CSS keyframe animations on the transform don't render inside the
+          scaled canvas in Chrome, so it's driven from the shared ticker.
+          data-no-reveal: the reveal cascade tweens with overwrite:true and
+          would kill the spin the moment the row fades in. */}
+      <img loading="lazy" decoding="async"
         src="/figma/pricing/clock.svg"
         alt=""
-        loading="lazy"
-        decoding="async"
+        data-spin
+        data-no-reveal
         className="absolute max-w-none"
         style={{ left: -1, top: -1, width: 12, height: 12 }}
       />
@@ -220,7 +223,6 @@ function PlanCard({
 
   return (
     <div
-      data-lift
       className="absolute top-[544px] h-[690px] w-[417px] overflow-hidden rounded-[16px] border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       style={{ left, backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))" }}
     >
@@ -238,7 +240,7 @@ function PlanCard({
           <span className="whitespace-nowrap text-[20px] leading-[32px] tracking-[-0.8px] text-gray-50">{plan.name}</span>
           {plan.recommended && (
             <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <Img src="/figma/pricing/crown.svg" alt="" loading="lazy" decoding="async" className="h-[14px] w-[12.24px] max-w-none" />
+              <img loading="lazy" decoding="async" src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
               <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">Recommended</span>
             </div>
           )}
@@ -351,7 +353,7 @@ export function Pricing() {
     <section id="pricing" className="relative h-[1462px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1462px]">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
-        <Img src="/figma/pricing/header-icon.png" alt="" loading="lazy" decoding="async" className="absolute left-[-24px] top-[-24px] w-[112px] max-w-none" />
+        <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
       </div>
 
       {/* heading */}
@@ -417,11 +419,9 @@ export function Pricing() {
             className="absolute top-[-3px] size-[22px] cursor-grab active:cursor-grabbing"
             style={{ left: knob - 11 }}
           >
-            <Img
+            <img loading="lazy" decoding="async"
               src="/figma/pricing/knob.svg"
               alt=""
-              loading="lazy"
-              decoding="async"
               draggable={false}
               className="absolute max-w-none"
               style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}

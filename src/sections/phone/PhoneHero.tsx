@@ -30,7 +30,7 @@ export function PhoneHero() {
             "linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.05))",
         }}
       >
-        The AI-powered browser extension for smarter dispatching
+        The AI copilot for smarter dispatching.
       </div>
 
       {/* H1 gradient */}
@@ -41,9 +41,9 @@ export function PhoneHero() {
             "linear-gradient(98.63deg, rgb(255,255,255) 1.96%, rgb(63,63,63) 100%)",
         }}
       >
-        See loads before
+        Book better loads
         <br />
-        competitors
+        before anyone else
       </h1>
 
       {/* badge pill */}
@@ -62,13 +62,14 @@ export function PhoneHero() {
               "linear-gradient(105.98deg, rgb(255,255,255) 1.96%, rgb(63,63,63) 100%)",
           }}
         >
-          do 47 seconds faster
+          In under 30 seconds
         </span>
       </div>
 
       {/* paragraph */}
-      <p className="absolute left-[14px] top-[360px] w-[362px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
-        One dashboard. All boards. One click. Done
+      <p className="absolute left-[14px] top-[352px] w-[362px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+        LoadHunter scans loadboard in real-time, filters high-RPM loads, and
+        lets you contact brokers instantly &mdash; email, SMS, or call.
       </p>
 
       {/* CTAs */}
@@ -119,12 +120,12 @@ export function PhoneHero() {
           }}
         />
         <Img
-          src="/figma/phone/hero-btn-icon.svg"
+          src="/figma/icon-diamond.svg"
           alt=""
           decoding="async"
           className="size-[23px]"
         />
-        Add to Chrome
+        Start booking in minutes
       </button>
 
       {/* product mockup (browser + settings popup) */}

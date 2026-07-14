@@ -26,6 +26,7 @@ export function DesignFrame({
 }) {
   const inner = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
+  const [left, setLeft] = useState(0)
   const [height, setHeight] = useState<number>(0)
 
   useLayoutEffect(() => {
@@ -36,6 +37,13 @@ export function DesignFrame({
       const vw = document.documentElement.clientWidth
       const s = Math.min(vw / width, maxScale)
       setScale(s)
+      // center the SCALED canvas, not the layout box: margin:auto would offset
+      // by (vw - width)/2 whenever the artboard is narrower than the viewport
+      // (tablet 768 in a 640–1023 window, phone 390 above 390) and the
+      // top-left-origin scale would then overflow the right edge by the same
+      // amount — the whole landing looked pushed right. Non-zero only when
+      // maxScale caps the scale (desktop canvas above 1920).
+      setLeft(Math.max(0, (vw - width * s) / 2))
       setHeight(el.offsetHeight * s)
     }
 
@@ -61,20 +69,18 @@ export function DesignFrame({
     return () => window.removeEventListener("load", onLoad)
   }, [width, maxScale])
 
-  // Clip decorative bleed (hero glow, orbit rings, etc.) to the centered canvas.
-  // The OUTER wrapper is full viewport width, so above 1920 its overflow:hidden
-  // clips at the viewport, NOT the 1920 artboard — content overflowing the inner
-  // would leak into the side gutters. So the INNER (the 1920 canvas) must clip
-  // too. Full-bleed section BACKGROUNDS are unaffected: <BleedBg> portals a
-  // full-width colour band to <body>, outside this clipped box.
+  // The inner canvas deliberately does NOT clip: decorative bleed (orbit rings,
+  // marquee rows, the fullscreen-expanding ecosystem panel) is allowed to spill
+  // into the >1920 side gutters, matching the full-bleed Figma 2K frame. The
+  // OUTER wrapper still clips at the viewport, so nothing causes a horizontal
+  // scrollbar.
   return (
     <div style={{ height, overflow: "hidden" }}>
       <div
         ref={inner}
         style={{
           width,
-          margin: "0 auto",
-          overflow: "hidden",
+          marginLeft: left,
           transformOrigin: "top left",
           transform: `scale(${scale})`,
         }}

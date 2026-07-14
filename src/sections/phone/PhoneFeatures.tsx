@@ -124,13 +124,11 @@ export function PhoneFeatures() {
       </div>
 
       <h2 className="absolute left-[14px] top-[214px] w-[362px] text-center text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-ink">
-        Why thousands of dispatchers
-        <br />
-        choose LoadHunter
+        Everything you need to book faster &mdash; nothing extra
       </h2>
       <p className="absolute left-[14px] top-[286px] w-[362px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        New loads appear instantly &mdash; no refresh, no delay. Email or text
+        brokers in seconds, not minutes.
       </p>
 
       {/* cards */}

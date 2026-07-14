@@ -3,11 +3,12 @@ import Lenis from "lenis"
 import gsap from "gsap"
 import { initReveal } from "@/lib/reveal"
 import { initMicro } from "@/lib/micro"
+import { initEcosystemPin } from "@/lib/ecosystemPin"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useBreakpoint } from "@/components/site/useBreakpoint"
 import { isCoarsePointer, prefersReducedMotion } from "@/lib/inview"
 
-// Code-split the three device canvases: each visitor downloads/parses only the
+// Code-split the four device canvases: each visitor downloads/parses only the
 // section tree their breakpoint renders (a phone user no longer ships the
 // desktop + tablet trees). Named exports wrapped to lazy's default contract.
 const DesktopLanding = lazy(() =>
@@ -68,17 +69,21 @@ function useLenis(breakpoint: string) {
 }
 
 /**
- * Runs the scroll-reveal cascade + micro-animation layer. Rendered as the last
- * child INSIDE the Suspense boundary so its layout effect fires only after the
- * lazy landing tree has committed to the DOM (React runs sibling layout effects
- * in order, and the boundary keeps this unmounted until the chunk resolves) —
- * initReveal must hide elements before first paint, so the DOM must exist first.
+ * Runs the scroll-reveal cascade + micro-animation layer + ecosystem pin.
+ * Rendered as the last child INSIDE the Suspense boundary so its layout effect
+ * fires only after the lazy landing tree has committed to the DOM (React runs
+ * sibling layout effects in order, and the boundary keeps this unmounted until
+ * the chunk resolves) — initReveal must hide elements before first paint, so
+ * the DOM must exist first.
  */
 function CanvasEffects({ breakpoint }: { breakpoint: string }) {
   useLayoutEffect(() => {
     const teardownReveal = initReveal()
     const teardownMicro = initMicro()
+    // pin the ecosystem section and scroll its product list on the way through
+    const teardownEcoPin = initEcosystemPin()
     return () => {
+      teardownEcoPin()
       teardownMicro()
       teardownReveal()
     }
@@ -87,7 +92,13 @@ function CanvasEffects({ breakpoint }: { breakpoint: string }) {
 }
 
 function App() {
-  const bp = useBreakpoint()
+  let bp = useBreakpoint()
+  // The HD (1440) canvas is built only through Features so far — until it's
+  // complete, the 1024–1919 band falls back to the scaled 1920 desktop canvas.
+  // Opt into the HD work-in-progress with ?hd in the URL.
+  if (bp === "hd" && !new URLSearchParams(window.location.search).has("hd")) {
+    bp = "desktop"
+  }
   useLenis(bp)
 
   const width = bp === "phone" ? 390 : bp === "tablet" ? 768 : bp === "hd" ? 1440 : 1920
@@ -102,8 +113,8 @@ function App() {
 
   // Above the 1920 desktop artboard the Figma adaptive frames center the same
   // pixel-sized content with side gutters rather than scaling up — so cap the
-  // desktop canvas at 1× and let DesignFrame center it. Phone/tablet keep their
-  // fill-to-viewport scaling (they scale up within their own breakpoint bands).
+  // desktop canvas at 1× and let DesignFrame center it. Phone/tablet/HD keep
+  // their fill-to-viewport scaling (they scale up within their own bands).
   const maxScale = bp === "desktop" ? 1 : undefined
 
   return (

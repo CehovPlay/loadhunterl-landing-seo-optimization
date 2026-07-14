@@ -13,10 +13,18 @@ import { Img } from "@/components/site/Img"
  * "30 H2" token (30/40, tracking −1.2).
  */
 
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type { CSSProperties } from "react"
 import gsap from "gsap"
 import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
+import {
+  BASIC_COLS,
+  STANDARD_COLS,
+  PRO_COLS,
+  FeatureItem,
+  type FeatureCols,
+} from "@/sections/pricingFeatures"
+import { planTotal, knobToCount, type SliderZones } from "@/sections/pricingLogic"
 
 const PILL_SHADOW =
   "0px 1px 0px rgba(0,0,0,0.05), 0px 4px 4px rgba(0,0,0,0.05), 0px 10px 10px rgba(0,0,0,0.1)"
@@ -59,12 +67,10 @@ function Heading({
   return (
     <>
       <div data-float className="absolute left-[352px] size-[64px]" style={{ top }}>
-        <Img
+        <Img loading="lazy" decoding="async"
           src={icon}
           alt=""
           aria-hidden
-          loading="lazy"
-          decoding="async"
           className="absolute max-w-none"
           style={{ left: is.l, top: is.t, width: is.w }}
         />
@@ -103,21 +109,17 @@ function WhySection() {
   return (
     <>
       {/* ambient glow (image 60, render bounds cropped to section top) */}
-      <Img
+      <Img loading="lazy" decoding="async"
         src="/figma/tablet/why-glow.png"
         alt=""
         aria-hidden
-        loading="lazy"
-        decoding="async"
         className="absolute left-0 top-0 w-[478px] max-w-none"
       />
       <div data-float className="absolute left-[352px] top-0 size-[64px]">
-        <Img
-          src="/figma/tablet/heading-icon.png"
+        <Img loading="lazy" decoding="async"
+          src="/figma/tools/intro-icon.png"
           alt=""
           aria-hidden
-          loading="lazy"
-          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -125,8 +127,7 @@ function WhySection() {
         Why LoadHunter
       </h2>
       <p className="absolute left-[40px] top-[184px] w-[688px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua.
+        Measured across real bookings. Based on real dispatcher workflows.
       </p>
 
       {/* comparison table */}
@@ -148,11 +149,9 @@ function WhySection() {
             Feature
           </div>
           <div className="flex w-[155px] justify-center pt-[6.9px]">
-            <Img
+            <img loading="lazy" decoding="async"
               src="/figma/tablet/table-logo.svg"
               alt="loadhunter"
-              loading="lazy"
-              decoding="async"
               className="h-[26.17px] w-[132.71px] max-w-none"
             />
           </div>
@@ -184,19 +183,15 @@ function WhySection() {
             {row.cells.map((c, j) => (
               <div key={j} className="relative w-[155px]">
                 {c === "check" ? (
-                  <Img
+                  <Img loading="lazy" decoding="async"
                     src="/figma/tablet/check.png"
                     alt="yes"
-                    loading="lazy"
-                    decoding="async"
                     className="absolute left-[51px] top-[-0.75px] h-[45.5px] w-[53px] max-w-none"
                   />
                 ) : (
-                  <Img
+                  <img loading="lazy" decoding="async"
                     src="/figma/tablet/table-cross.svg"
                     alt="no"
-                    loading="lazy"
-                    decoding="async"
                     className="absolute left-[67.2px] top-[13px] h-[18px] w-[20.57px] max-w-none opacity-50"
                   />
                 )}
@@ -227,16 +222,16 @@ function WhySection() {
 
 /* ---------------------------------------------------------------- pricing */
 
-type Feature = { text: string; clock?: boolean; twoLine?: boolean }
-
 type Plan = {
   name: string
+  /** monthly price per dispatcher; absent for the "Let's talk" plan */
+  base?: number
   icon: string
   blurb: string
   price: string
   unit?: string
   note: string
-  cols: [Feature[], Feature[]]
+  cols: FeatureCols
   cta: string
   head: "border" | "pro" | "ai"
   recommended?: boolean
@@ -247,56 +242,16 @@ type Plan = {
   colGap: number
 }
 
-const f = (text: string, twoLine = false): Feature => ({ text, twoLine })
-const clock = (text: string): Feature => ({ text, clock: true, twoLine: true })
-
-const PRO_COLS: [Feature[], Feature[]] = [
-  [
-    f("SmartBoard View"),
-    f("Full LoadBoard Customization", true),
-    f("Auto-Refresh Button"),
-    f("Pin to Top"),
-    f("Performance Boost"),
-    f("Redesigned LoadBoard"),
-    f("Search Tabs Reorder"),
-    f("Up to 2 Factoring Connections", true),
-    f("FMCSA Broker Lookup"),
-  ],
-  [
-    f("Team Management"),
-    f("Advanced Filtering Modes", true),
-    f("Driver Profile Setup"),
-    clock("CC Support for Emails (Coming Soon)"),
-    clock("Dispatcher Analytics (Coming Soon)"),
-    clock("Idle Driver Email Alerts (Coming Soon)"),
-    clock("Email Read Notifications (Coming Soon)"),
-  ],
-]
-
 const PLANS: Plan[] = [
   {
     name: "Basic",
+    base: 9.99,
     icon: "/figma/pricing/icon-basic.png",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     price: "From $26.97",
     unit: "/per month",
     note: "Save 20% with team rate.",
-    cols: [
-      [
-        f("Unlimited Emails"),
-        f("1 Connected Email"),
-        f("1 Email Template"),
-        f("Google Maps Integration", true),
-        f("Load Filters"),
-      ],
-      [
-        f("RPM+"),
-        f("Click to Call"),
-        f("Copy Load Info"),
-        f("Weather Integration"),
-        f("Profit Calculator"),
-      ],
-    ],
+    cols: BASIC_COLS,
     cta: "Start 14 days trial",
     head: "border",
     headShift: 0,
@@ -306,35 +261,13 @@ const PLANS: Plan[] = [
   },
   {
     name: "Standard",
+    base: 14.99,
     icon: "/figma/pricing/icon-standard.png",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     price: "From $40.47",
     unit: "/per month",
     note: "Save 20% with team rate.",
-    cols: [
-      [
-        f("Unlimited Email Accounts", true),
-        f("Unlimited Templates"),
-        f("Email Signature"),
-        f("VoIP Integration"),
-        f("Tolls Integration"),
-        f("Integrated TMS"),
-        f("Saved Loads"),
-        f("Dark Mode"),
-        f("Integrated\nTrucking Map", true),
-      ],
-      [
-        f("Advanced Profit Calculator", true),
-        f("1 Factoring Connection"),
-        f("Community Reviews"),
-        f("Market Conditions"),
-        f("Load Notes"),
-        f("Ignore Brokers/States"),
-        f("Hide cancelled loads"),
-        f("Hide CA/MX Loads"),
-        f("Advanced Profit Calculator", true),
-      ],
-    ],
+    cols: STANDARD_COLS,
     cta: "Start 14 days trial",
     head: "border",
     headShift: 0,
@@ -344,6 +277,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Pro",
+    base: 29.99,
     icon: "/figma/pricing/icon-pro.png",
     blurb:
       "Unlock the full LoadHunter experience with automation, insights, and control.",
@@ -393,54 +327,17 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
   )
 }
 
-function CheckIcon() {
-  return (
-    <div className="relative h-[6px] w-[9px] shrink-0">
-      <Img
-        src="/figma/pricing/check.svg"
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="absolute max-w-none"
-        style={{ left: -1, top: -1, width: 11, height: 7.21 }}
-      />
-    </div>
-  )
-}
-
-function FeatureItem({ item }: { item: Feature }) {
-  if (item.clock) {
-    return (
-      <div className="flex w-full items-start gap-[12px] opacity-50">
-        <div className="relative size-[10px] shrink-0">
-          <Img
-            src="/figma/pricing/clock.svg"
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="absolute max-w-none"
-            style={{ left: -1, top: -1, width: 12, height: 12 }}
-          />
-        </div>
-        <p className="min-w-px flex-1 whitespace-pre-line text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
-          {item.text}
-        </p>
-      </div>
-    )
-  }
-  return (
-    <div
-      className={`flex w-full items-center gap-[12px] ${item.twoLine ? "h-[28px]" : "h-[14px]"}`}
-    >
-      <CheckIcon />
-      <p className="min-w-px flex-1 whitespace-pre-line text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
-        {item.text}
-      </p>
-    </div>
-  )
-}
-
-function PlanCard({ plan }: { plan: Plan }) {
+function PlanCard({
+  plan,
+  price,
+  expanded,
+  onSelect,
+}: {
+  plan: Plan
+  price: string
+  expanded: boolean
+  onSelect: () => void
+}) {
   const s = plan.headShift
   const headStyle: CSSProperties =
     plan.head === "pro"
@@ -464,9 +361,18 @@ function PlanCard({ plan }: { plan: Plan }) {
         : {}
 
   return (
+    // Accordion column (Figma 921:88128): the frame width animates between
+    // 341 (open) and 111.67 (collapsed) while the 333px content stays pinned
+    // left and gets clipped — exactly how the design's four states differ.
     <div
-      className="relative h-[660px] w-[341px] overflow-hidden rounded-[16px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-      style={{ backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))" }}
+      onClick={onSelect}
+      className={`relative h-[660px] shrink-0 overflow-hidden rounded-[16px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transition-[width] duration-500 ease-out ${
+        expanded ? "" : "cursor-pointer"
+      }`}
+      style={{
+        width: expanded ? 341 : 111.67,
+        backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))",
+      }}
     >
       <div className="pointer-events-none absolute inset-0 z-10 rounded-[16px] border border-[rgba(229,229,229,0.1)]" />
       {/* head panel */}
@@ -476,11 +382,9 @@ function PlanCard({ plan }: { plan: Plan }) {
         )}
         {/* icon (40px box; png render carries the glow) */}
         <div className="absolute left-[24px] top-[24px] size-[40px]">
-          <Img
+          <Img loading="lazy" decoding="async"
             src={plan.icon}
             alt=""
-            loading="lazy"
-            decoding="async"
             className="absolute left-[-6.25px] top-[-2.5px] w-[52.5px] max-w-none"
           />
         </div>
@@ -491,7 +395,7 @@ function PlanCard({ plan }: { plan: Plan }) {
           </span>
           {plan.recommended && (
             <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <Img src="/figma/pricing/crown.svg" alt="" loading="lazy" decoding="async" className="h-[14px] w-[12.24px] max-w-none" />
+              <img loading="lazy" decoding="async" src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
               <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
                 Recommended
               </span>
@@ -508,7 +412,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         <div className="absolute left-[24px] w-[285px]" style={{ top: 136 + s }}>
           <div className="flex items-center gap-[12px]">
             <span className="whitespace-nowrap text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-gray-50">
-              {plan.price}
+              {price}
             </span>
             {plan.unit && (
               <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-[#a2a2a2]">
@@ -551,24 +455,49 @@ function PlanCard({ plan }: { plan: Plan }) {
   )
 }
 
-/** deck: card 1 in full, cards 2–4 as clipped 111.67px slices */
-const CARD_SLOTS = [
-  { left: 40, width: 341 },
-  { left: 385, width: 111.66 },
-  { left: 500.66, width: 111.67 },
-  { left: 616.33, width: 111.67 },
-]
+/** slider zones anchored to the tablet badge positions (688px track) */
+const T_ZONES: SliderZones = { min: 11, at3: 269, at4: 501, max: 677 }
 
 function PricingSection({ top }: { top: number }) {
+  // horizontal accordion: Basic open by default; clicking a collapsed plan
+  // closes the open one and expands the clicked one (Figma 921:88128 states)
+  const [open, setOpen] = useState(0)
+  const [annual, setAnnual] = useState(false)
+  const [knob, setKnob] = useState(T_ZONES.at3) // design default: 3 dispatchers
+  const trackRef = useRef<HTMLDivElement>(null)
+  const n = knobToCount(knob, T_ZONES)
+
+  const moveTo = useCallback((clientX: number) => {
+    const track = trackRef.current
+    if (!track) return
+    const r = track.getBoundingClientRect()
+    const frac = Math.min(1, Math.max(0, (clientX - r.left) / r.width))
+    setKnob(Math.min(T_ZONES.max, Math.max(T_ZONES.min, frac * 688)))
+  }, [])
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+      moveTo(e.clientX)
+      const onMove = (ev: PointerEvent) => moveTo(ev.clientX)
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove)
+        window.removeEventListener("pointerup", onUp)
+      }
+      window.addEventListener("pointermove", onMove)
+      window.addEventListener("pointerup", onUp)
+    },
+    [moveTo],
+  )
+  const priceFor = (plan: Plan) =>
+    plan.base != null ? `From $${planTotal(plan.base, n, annual).toFixed(2)}` : plan.price
+
   return (
     <>
-      <div className="absolute left-[352px] size-[64px]" style={{ top }}>
-        <Img
-          src="/figma/tablet/heading-icon.png"
+      <div data-float className="absolute left-[352px] size-[64px]" style={{ top }}>
+        <img loading="lazy" decoding="async"
+          src="/figma/pricing/header-icon.svg"
           alt=""
           aria-hidden
-          loading="lazy"
-          decoding="async"
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
       </div>
@@ -586,69 +515,98 @@ function PricingSection({ top }: { top: number }) {
         unlock 20% off starting at 4 users!
       </p>
 
-      {/* billing toggle (static: Monthly) */}
+      {/* billing toggle */}
       <div
+        data-no-reveal
         className="absolute flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] py-[6px] pl-[6px] pr-[11px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
         style={{ left: 256.5, top: top + 212 }}
       >
-        <div
-          className="flex h-[28px] items-center justify-center rounded-[99px] border border-[rgba(232,232,232,0.75)] px-[12px] backdrop-blur-[10px]"
-          style={{
-            backgroundImage:
-              "radial-gradient(42px 38px at 50% 109%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
-            boxShadow: PILL_SHADOW,
-          }}
-        >
-          <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
-            Monthly
-          </span>
-        </div>
-        <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
-          Annually
-        </span>
+        {(["Monthly", "Annually"] as const).map((label) => {
+          const active = (label === "Annually") === annual
+          return (
+            <button
+              key={label}
+              type="button"
+              onClick={() => setAnnual(label === "Annually")}
+              className={
+                active
+                  ? "flex h-[28px] items-center justify-center rounded-[99px] border border-[rgba(232,232,232,0.75)] px-[12px] backdrop-blur-[10px] transition-all"
+                  : "flex h-[28px] items-center justify-center rounded-[99px] px-[6px] transition-all"
+              }
+              style={
+                active
+                  ? {
+                      backgroundImage:
+                        "radial-gradient(42px 38px at 50% 109%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
+                      boxShadow: PILL_SHADOW,
+                    }
+                  : undefined
+              }
+            >
+              <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+                {label}
+              </span>
+            </button>
+          )
+        })}
         <DiscountBadge text="save up -10%" />
       </div>
 
-      {/* dispatchers slider (static: 3 dispatchers) */}
-      <p
-        className="absolute left-[254px] w-[98px] whitespace-nowrap text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
-        style={{ top: top + 276 }}
-      >
-        3 dispatchers
-      </p>
-      <div
-        className="absolute left-[40px] h-[16px] w-[688px] rounded-[200px] bg-[rgba(231,231,231,0.1)]"
-        style={{ top: top + 310 }}
-      >
-        <div className="absolute left-[2px] top-[2px] h-[12px] w-[269px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]" />
-        <div className="absolute left-[260px] top-[-3px] size-[22px]">
-          <Img
-            src="/figma/pricing/knob.svg"
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="absolute max-w-none"
-            style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}
+      {/* dispatchers slider */}
+      <div className="absolute left-[40px] w-[688px] select-none" style={{ top: top + 276 }}>
+        <p
+          className="w-[98px] whitespace-nowrap text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
+          style={{ marginLeft: Math.min(590, Math.max(0, knob - 49)) }}
+        >
+          {n} {n === 1 ? "dispatcher" : "dispatchers"}
+        </p>
+        <div
+          ref={trackRef}
+          onPointerDown={onPointerDown}
+          className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-[200px] bg-[rgba(231,231,231,0.1)]"
+        >
+          <div
+            className="absolute left-[2px] top-[2px] h-[12px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
+            style={{ width: Math.max(12, knob - 2) }}
           />
+          <div
+            className="absolute top-[-3px] size-[22px] cursor-grab active:cursor-grabbing"
+            style={{ left: knob - 11 }}
+          >
+            <img loading="lazy" decoding="async"
+              src="/figma/pricing/knob.svg"
+              alt=""
+              draggable={false}
+              className="absolute max-w-none"
+              style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}
+            />
+          </div>
         </div>
-      </div>
-      <div className="absolute left-[279px]" style={{ top: top + 340 }}>
-        <DiscountBadge text="-10% OFF" />
-      </div>
-      <div className="absolute left-[506px] opacity-50" style={{ top: top + 340 }}>
-        <DiscountBadge text="-20% OFF" shadow={false} />
+        <div className="relative mt-[14px] h-[18px]">
+          <div className={`absolute left-[239px] top-0 transition-opacity duration-300 ${n >= 3 ? "opacity-100" : "opacity-50"}`}>
+            <DiscountBadge text="-10% OFF" shadow={n >= 3} />
+          </div>
+          <div className={`absolute left-[466px] top-0 transition-opacity duration-300 ${n >= 4 ? "opacity-100" : "opacity-50"}`}>
+            <DiscountBadge text="-20% OFF" shadow={n >= 4} />
+          </div>
+        </div>
       </div>
 
-      {/* plan-card deck */}
-      {PLANS.map((plan, i) => (
-        <div
-          key={plan.name}
-          className="absolute h-[660px] overflow-hidden"
-          style={{ left: CARD_SLOTS[i].left, top: top + 438, width: CARD_SLOTS[i].width }}
-        >
-          <PlanCard plan={plan} />
-        </div>
-      ))}
+      {/* plan-card accordion row (40px margins, 4px gaps) */}
+      <div
+        className="absolute left-[40px] flex w-[688px] gap-[4px]"
+        style={{ top: top + 438 }}
+      >
+        {PLANS.map((plan, i) => (
+          <PlanCard
+            key={plan.name}
+            plan={plan}
+            price={priceFor(plan)}
+            expanded={open === i}
+            onSelect={() => setOpen(i)}
+          />
+        ))}
+      </div>
     </>
   )
 }
@@ -775,11 +733,9 @@ function TestimonialsSection({ top }: { top: number }) {
         sub="Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials"
       />
       {/* trust strip: 5,000+ users, 4.7 rating, Google / Trustpilot / G2 */}
-      <Img
+      <Img loading="lazy" decoding="async"
         src="/figma/reviews-strip.png"
         alt="5,000+ trusted users, 4.7 from 100+ reviews on Google, Trustpilot and G2"
-        loading="lazy"
-        decoding="async"
         className="absolute left-[62.5px] w-[643.5px] max-w-none"
         style={{ top: top + 252 }}
       />
@@ -803,12 +759,10 @@ function TestimonialsSection({ top }: { top: number }) {
               {REVIEWS.map((r) => (
                 <ReviewCard key={r.name} r={r} />
               ))}
-              <Img
+              <img loading="lazy" decoding="async"
                 src="/figma/tablet/cursor.svg"
                 alt=""
                 aria-hidden
-                loading="lazy"
-                decoding="async"
                 className="absolute left-[421.5px] top-[195px] h-[32px] w-[27px] max-w-none"
               />
             </div>
@@ -938,13 +892,11 @@ function FaqSection({ top }: { top: number }) {
         </div>
       ))}
       {[196, 356, 536, 676].map((y) => (
-        <Img
+        <img loading="lazy" decoding="async"
           key={y}
           src="/figma/tail/faq-line.svg"
           alt=""
           aria-hidden
-          loading="lazy"
-          decoding="async"
           className="absolute left-[88px] h-px w-[640px] max-w-none"
           style={{ top: list + y - 0.5 }}
         />
@@ -966,18 +918,14 @@ function CtaSection({ top }: { top: number }) {
         }}
       >
         <div className="absolute left-[40px] top-[40px] h-[24px] w-[151px]">
-          <Img
+          <img loading="lazy" decoding="async"
             src="/figma/tail/logo-icon-white.svg"
             alt=""
-            loading="lazy"
-            decoding="async"
             className="absolute left-0 top-0 size-[24px] max-w-none"
           />
-          <Img
+          <img loading="lazy" decoding="async"
             src="/figma/tail/logo-text-white.svg"
             alt="loadhunter"
-            loading="lazy"
-            decoding="async"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
           />
         </div>
@@ -992,7 +940,7 @@ function CtaSection({ top }: { top: number }) {
           className="absolute left-[40px] top-[224px] inline-flex h-[42px] items-center gap-[8px] rounded-full border border-white bg-white px-[24px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] transition-opacity hover:opacity-90"
           type="button"
         >
-          <Img src="/figma/tail/cta-chrome.svg" alt="" loading="lazy" decoding="async" className="size-[16px] max-w-none" />
+          <img loading="lazy" decoding="async" src="/figma/tail/cta-chrome.svg" alt="" className="size-[16px] max-w-none" />
           <span
             className="bg-clip-text text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-transparent"
             style={{
@@ -1005,32 +953,26 @@ function CtaSection({ top }: { top: number }) {
       </div>
 
       {/* "One click automation" panel — baked 2x export */}
-      <Img
+      <Img loading="lazy" decoding="async"
         src="/figma/tablet/cta-panel.png"
         alt=""
         aria-hidden
-        loading="lazy"
-        decoding="async"
         className="absolute left-[50px] top-[326px] h-[300px] w-[668px] max-w-none"
       />
       {/* diffuse light haze over the panel (present only in the full-frame
           figma composite; reconstructed as an additive overlay) */}
-      <Img
+      <Img loading="lazy" decoding="async"
         src="/figma/tablet/cta-haze.png"
         alt=""
         aria-hidden
-        loading="lazy"
-        decoding="async"
         className="absolute left-[50px] top-[306px] h-[332px] w-[668px] max-w-none"
         style={{ mixBlendMode: "plus-lighter" }}
       />
       {/* right-edge glow (image 61; blur margins baked, left bleed cropped) */}
-      <Img
+      <Img loading="lazy" decoding="async"
         src="/figma/tablet/cta-glow.png"
         alt=""
         aria-hidden
-        loading="lazy"
-        decoding="async"
         className="absolute left-[718px] top-[242px] h-[440px] w-[712px] max-w-none"
       />
     </div>
@@ -1047,26 +989,26 @@ const SOCIALS = [
 
 function FooterSection({ top }: { top: number }) {
   return (
-    <footer className="absolute left-0 top-0 h-full w-full">
+    // pointer-events-none: this wrapper spans the WHOLE TabletBottom section
+    // (it only exists to inherit section coordinates) and would otherwise
+    // swallow every click on the sections underneath (pricing accordion,
+    // FAQ). Interactive children opt back in.
+    <footer className="pointer-events-none absolute left-0 top-0 h-full w-full">
       {/* logo + subscribe row */}
       <div className="absolute left-[40px] h-[24px] w-[151px]" style={{ top: top + 8 }}>
-        <Img
+        <img loading="lazy" decoding="async"
           src="/figma/tail/logo-icon-white.svg"
           alt=""
-          loading="lazy"
-          decoding="async"
           className="absolute left-0 top-0 size-[24px] max-w-none"
         />
-        <Img
+        <img loading="lazy" decoding="async"
           src="/figma/tail/logo-text-white.svg"
           alt="loadhunter"
-          loading="lazy"
-          decoding="async"
           className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
         />
       </div>
       <form
-        className="absolute left-[380px] h-[40px] w-[348px] rounded-full bg-[rgba(54,56,61,0.5)] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
+        className="pointer-events-auto absolute left-[380px] h-[40px] w-[348px] rounded-full bg-[rgba(54,56,61,0.5)] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
         style={{ top }}
         onSubmit={(e) => e.preventDefault()}
       >
@@ -1085,26 +1027,24 @@ function FooterSection({ top }: { top: number }) {
 
       {/* links + socials */}
       <div
-        className="absolute left-[40px] flex h-[14px] items-center gap-[32px] text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2"
+        className="pointer-events-auto absolute left-[40px] flex h-[14px] items-center gap-[32px] text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2"
         style={{ top: top + 106 }}
       >
         <a href="#" className="hover:text-gray-100">Privacy Policy</a>
         <a href="#" className="hover:text-gray-100">Terms of Service</a>
       </div>
-      <div className="absolute left-[666px] flex gap-[4px]" style={{ top: top + 104 }}>
+      <div className="pointer-events-auto absolute left-[666px] flex gap-[4px]" style={{ top: top + 104 }}>
         {SOCIALS.map((src) => (
           <a key={src} href="#" className="block size-[18px]">
-            <Img src={src} alt="" loading="lazy" decoding="async" className="size-[18px] max-w-none" />
+            <Img loading="lazy" decoding="async" src={src} alt="" className="size-[18px] max-w-none" />
           </a>
         ))}
       </div>
 
       {/* orbit rings graphic (© caption + hairline baked in) */}
-      <Img
+      <Img loading="lazy" decoding="async"
         src="/figma/tablet/footer-orbit.png"
         alt="© 2026 loadhunt Corp. All rights reserved."
-        loading="lazy"
-        decoding="async"
         className="absolute left-0 h-[875px] w-[768px] max-w-none"
         style={{ top: top + 122 }}
       />
@@ -1128,15 +1068,20 @@ export function TabletBottom() {
         by hand. LoadHunter automates the busywork so your team can find better
         loads, respond faster, and book with confidence.
       </p>
-      <Img
+      {/* diagram export is cropped above its baked caption pill; the pill is
+          live text below so it matches the desktop wording */}
+      <Img loading="lazy" decoding="async"
         src="/figma/tablet/chaos.png"
         alt=""
         aria-hidden
         data-parallax="0.04"
-        loading="lazy"
-        decoding="async"
-        className="absolute left-0 top-[932px] h-[555px] w-[768px] max-w-none"
+        className="absolute left-0 top-[932px] h-[500px] w-[768px] max-w-none"
       />
+      <div className="absolute left-1/2 top-[1438px] flex -translate-x-1/2 items-center justify-center rounded-[16px] border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-[24px] py-[12px] backdrop-blur-[20px]">
+        <span className="whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-300">
+          Logistics is moving to AI. Don&rsquo;t get left behind.
+        </span>
+      </div>
 
       <PricingSection top={1607} />
       <TestimonialsSection top={2825} />
