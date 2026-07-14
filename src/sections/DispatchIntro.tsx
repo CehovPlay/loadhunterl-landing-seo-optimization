@@ -8,7 +8,7 @@ export function DispatchIntro() {
     <section className="relative h-[1080px] bg-gray-800">
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[928px] top-[410px] size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/tools/intro-icon.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"

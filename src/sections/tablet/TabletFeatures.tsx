@@ -14,7 +14,7 @@ const CARDS = [
   {
     title: "All needs in one place",
     body: "Access every essential dispatching tool directly from your load board — emails, notifications, maps, and more, all seamlessly integrated.",
-    img: "/figma/tablet/feat-card1-img.png",
+    img: "/figma/tablet/feat-card1-img.webp",
     imgLeft: 326,
     imgWidth: 362,
     textLeft: 24,
@@ -23,7 +23,7 @@ const CARDS = [
   {
     title: "Time saver",
     body: "Save hours every day by automating repetitive tasks, streamlining workflows, and focusing on what matters most— booking the best loads.",
-    img: "/figma/tablet/feat-card2-img.png",
+    img: "/figma/tablet/feat-card2-img.webp",
     imgLeft: 327,
     imgWidth: 361,
     textLeft: 14,
@@ -32,7 +32,7 @@ const CARDS = [
   {
     title: "AI-Powered automation",
     body: "Automate your workflow with AI-driven features like Telegram notifications and auto-emailing, reducing manual tasks and saving valuable time.",
-    img: "/figma/tablet/feat-card3-img.png",
+    img: "/figma/tablet/feat-card3-img.webp",
     imgLeft: 327,
     imgWidth: 361,
     textLeft: 14,
@@ -64,7 +64,7 @@ export function TabletFeatures() {
       <div className="absolute left-0 top-0 h-[96px] w-[768px] overflow-hidden">
         <div ref={trackRef} data-marquee-track className="absolute inset-0 will-change-transform">
           {[-STRIP_PERIOD, 0, STRIP_PERIOD].map((x) => (
-            <img
+            <img loading="lazy" decoding="async"
               key={x}
               src="/figma/tablet/partners-strip.png"
               alt=""
@@ -82,7 +82,7 @@ export function TabletFeatures() {
       <div className="absolute inset-x-0 top-[136px] flex flex-col items-center px-[40px]">
         {/* feature icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
         <div data-float className="relative size-[64px]">
-          <img
+          <img loading="lazy" decoding="async"
             src="/figma/feat-icon-2x.png"
             alt=""
             className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -107,7 +107,7 @@ export function TabletFeatures() {
             key={c.title}
             className="relative h-[309px] w-full overflow-hidden rounded-[12px] bg-[#f0f0f0]"
           >
-            <img
+            <img loading="lazy" decoding="async"
               src={c.img}
               alt=""
               className="absolute top-0 h-[309px] max-w-none"

@@ -30,8 +30,8 @@ const PRODUCTS: Product[] = [
       'LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.).',
     logoWidth: 150.5,
     logo: '/figma/eco/logo1.png',
-    mockup: '/figma/eco/row1.png',
-    mockupHover: '/figma/eco/row1-hover.png',
+    mockup: '/figma/eco/row1.webp',
+    mockupHover: '/figma/eco/row1-hover.webp',
   },
   {
     name: 'huntTMS',
@@ -39,8 +39,8 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 113,
     logo: '/figma/eco/logo2.png',
-    mockup: '/figma/eco/row2.png',
-    mockupHover: '/figma/eco/row2-hover.png',
+    mockup: '/figma/eco/row2.webp',
+    mockupHover: '/figma/eco/row2-hover.webp',
   },
   {
     name: 'huntPAY',
@@ -48,7 +48,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 109,
     logo: '/figma/eco/logo3.png',
-    mockup: '/figma/eco/row3.png',
+    mockup: '/figma/eco/row3.webp',
     comingSoon: true,
   },
   {
@@ -57,7 +57,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 130,
     logo: '/figma/eco/logo4.png',
-    mockup: '/figma/eco/row4.png',
+    mockup: '/figma/eco/row4.webp',
     comingSoon: true,
   },
   {
@@ -66,7 +66,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 126,
     logo: '/figma/eco/logo5.png',
-    mockup: '/figma/eco/row5.png',
+    mockup: '/figma/eco/row5.webp',
     comingSoon: true,
   },
   {
@@ -75,7 +75,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 114,
     logo: '/figma/eco/logo6.png',
-    mockup: '/figma/eco/row6.png',
+    mockup: '/figma/eco/row6.webp',
     comingSoon: true,
   },
 ]
@@ -92,13 +92,13 @@ function ProductRow({ product }: { product: Product }) {
   return (
     <div className="group relative h-[320px] w-[954px] shrink-0 overflow-hidden rounded-[12px] bg-white">
       {/* product mockup (baked export, clipped by the row) */}
-      <img
+      <img loading="lazy" decoding="async"
         src={product.mockup}
         alt={`${product.name} product preview`}
         className="absolute left-[343px] top-0 h-[320px] w-[611px] max-w-none"
       />
       {product.mockupHover && (
-        <img
+        <img loading="lazy" decoding="async"
           src={product.mockupHover}
           alt=""
           aria-hidden="true"
@@ -108,7 +108,7 @@ function ProductRow({ product }: { product: Product }) {
       )}
 
       {/* text panel (344 wide, transparent over the white row) */}
-      <img
+      <img loading="lazy" decoding="async"
         src={product.logo}
         alt={product.name}
         className="absolute left-[32px] top-[32px] h-[24px] max-w-none"
@@ -161,12 +161,12 @@ export function Ecosystem() {
           className="absolute left-[60px] top-[60px] size-[64px] overflow-hidden rounded-[16px]"
           style={{ boxShadow: "0px 6px 16px -6px rgba(146,92,255,0.48)" }}
         >
-          <img
+          <img loading="lazy" decoding="async"
             src="/figma/eco/icon-plate.png"
             alt=""
             className="absolute inset-0 size-full"
           />
-          <img
+          <img loading="lazy" decoding="async"
             src="/figma/eco/icon-glyph.svg"
             alt=""
             className="absolute inset-0 size-full"

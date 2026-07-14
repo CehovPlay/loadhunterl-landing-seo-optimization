@@ -1,4 +1,4 @@
-import diagram from "/figma/misc/chaos-diagram.png"
+import diagram from "/figma/misc/chaos-diagram.webp"
 import { ChaosBeams } from "@/components/site/ChaosBeams"
 
 /**
@@ -21,7 +21,7 @@ export function ChaosDiagram() {
       {/* diagram + beams share one parallax box so they stay pixel-aligned */}
       <div data-parallax="0.04" className="absolute inset-0">
         {/* rings + icons + pill — decorative 2x export */}
-        <img
+        <img loading="lazy" decoding="async"
           src={diagram}
           alt=""
           aria-hidden

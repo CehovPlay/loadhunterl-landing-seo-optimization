@@ -61,7 +61,7 @@ function PartnerLogo({ x, idx }: { x: number; idx: number }) {
   const p = PARTNER_SEQ[idx % 4]
   return (
     <div className="absolute top-[40px] h-[56px] w-[112px]" style={{ left: x }}>
-      <img src={p.src} alt="" className={p.cls} />
+      <img loading="lazy" decoding="async" src={p.src} alt="" className={p.cls} />
     </div>
   )
 }
@@ -109,7 +109,7 @@ export function Features() {
           <div className="flex w-full flex-col items-center gap-[60px]">
             {/* feature icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
             <div data-float className="relative size-[64px]">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/figma/feat-icon-2x.png"
                 alt=""
                 className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"

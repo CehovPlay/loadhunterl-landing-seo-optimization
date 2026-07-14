@@ -20,8 +20,8 @@ export function PhoneChaos() {
       </p>
 
       {/* rings + icon nodes + caption pill — decorative 2x export (clipped render) */}
-      <img
-        src="/figma/phone/chaos.png"
+      <img loading="lazy" decoding="async"
+        src="/figma/phone/chaos.webp"
         data-parallax="0.04"
         alt="Turn manual dispatching into a faster, cleaner workflow powered by AI. LoadHunter helps your team find better loads."
         className="absolute left-0 top-[216px] w-[390px] max-w-none"

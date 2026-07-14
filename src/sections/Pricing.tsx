@@ -124,7 +124,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "AI subscription",
-    icon: "/figma/pricing/icon-ai.png",
+    icon: "/figma/pricing/icon-ai.webp",
     blurb: "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
     price: "Let's talk",
     note: "Best value for 20+ dispatchers.",
@@ -157,7 +157,7 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
 function CheckIcon() {
   return (
     <div className="relative h-[6px] w-[9px] shrink-0">
-      <img
+      <img loading="lazy" decoding="async"
         src="/figma/pricing/check.svg"
         alt=""
         className="absolute max-w-none"
@@ -175,7 +175,7 @@ function ClockIcon() {
           scaled canvas in Chrome, so it's driven from the shared ticker.
           data-no-reveal: the reveal cascade tweens with overwrite:true and
           would kill the spin the moment the row fades in. */}
-      <img
+      <img loading="lazy" decoding="async"
         src="/figma/pricing/clock.svg"
         alt=""
         data-spin
@@ -232,14 +232,14 @@ function PlanCard({
         )}
         {/* icon */}
         <div className="absolute left-[24px] top-[24px] size-[64px]">
-          <img src={plan.icon} alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
+          <img loading="lazy" decoding="async" src={plan.icon} alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
         </div>
         {/* name + badge */}
         <div className="absolute left-[112px] top-[24px] h-[32px] w-[273px]">
           <span className="whitespace-nowrap text-[20px] leading-[32px] tracking-[-0.8px] text-gray-50">{plan.name}</span>
           {plan.recommended && (
             <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <img src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
+              <img loading="lazy" decoding="async" src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
               <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">Recommended</span>
             </div>
           )}
@@ -352,7 +352,7 @@ export function Pricing() {
     <section id="pricing" className="relative h-[1462px] bg-gray-800">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
-        <img src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
+        <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
       </div>
 
       {/* heading */}
@@ -418,7 +418,7 @@ export function Pricing() {
             className="absolute top-[-3px] size-[22px] cursor-grab active:cursor-grabbing"
             style={{ left: knob - 11 }}
           >
-            <img
+            <img loading="lazy" decoding="async"
               src="/figma/pricing/knob.svg"
               alt=""
               draggable={false}

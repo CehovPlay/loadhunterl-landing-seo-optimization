@@ -22,8 +22,8 @@ export function WhyLoadHunter() {
     <section className="relative h-[1118px] bg-gray-800">
       {/* panel glow + rounded panel background — FIRST in DOM: the export is
           fully opaque (baked #181A1F bg) and would cover the heading otherwise */}
-      <img
-        src="/figma/why-glow.png"
+      <img loading="lazy" decoding="async"
+        src="/figma/why-glow.webp"
         alt=""
         aria-hidden
         className="absolute left-[375px] top-[198px] w-[1172px] max-w-none"
@@ -31,7 +31,7 @@ export function WhyLoadHunter() {
 
       {/* heading */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/tools/intro-icon.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -52,7 +52,7 @@ export function WhyLoadHunter() {
             Feature
           </div>
           <div className="flex w-[251px] justify-center pt-[7px]">
-            <img
+            <img loading="lazy" decoding="async"
               src="/figma/table-logo.svg"
               alt="loadhunter"
               className="h-[26.17px] w-[132.71px]"
@@ -85,13 +85,13 @@ export function WhyLoadHunter() {
                   {c === "check" ? (
                     // vector check with its glow filter — replaces the old PNG
                     // whose baked panel background leaked through blend modes
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/figma/table-check.svg"
                       alt="yes"
                       className="absolute left-[99px] top-[-0.6px] w-[53px] max-w-none"
                     />
                   ) : (
-                    <img
+                    <img loading="lazy" decoding="async"
                       src="/figma/table-cross.svg"
                       alt="no"
                       className="absolute left-[116.2px] top-[14px] h-[16px] w-[18.57px]"

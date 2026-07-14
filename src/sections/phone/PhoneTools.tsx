@@ -32,7 +32,7 @@ type Block = {
 const BLOCKS: Block[] = [
   {
     key: "a",
-    mockup: { src: "/figma/phone/tools-a-mockup.png", y: 600, w: 362 },
+    mockup: { src: "/figma/phone/tools-a-mockup.webp", y: 600, w: 362 },
     titleY: 929,
     title: "Smart-board view",
     descY: 977,
@@ -55,7 +55,7 @@ const BLOCKS: Block[] = [
   },
   {
     key: "b",
-    mockup: { src: "/figma/phone/tools-b-mockup.png", y: 1549, w: 362 },
+    mockup: { src: "/figma/phone/tools-b-mockup.webp", y: 1549, w: 362 },
     titleY: 2026,
     title: "Auto-emailing",
     descY: 2074,
@@ -77,7 +77,7 @@ const BLOCKS: Block[] = [
   },
   {
     key: "c",
-    mockup: { src: "/figma/phone/tools-c-mockup.png", y: 2566, w: 363 },
+    mockup: { src: "/figma/phone/tools-c-mockup.webp", y: 2566, w: 363 },
     titleY: 2901,
     title: "Telegram notifications",
     descY: 2949,
@@ -99,7 +99,7 @@ const BLOCKS: Block[] = [
   },
   {
     key: "d",
-    mockup: { src: "/figma/phone/tools-d-mockup.png", y: 3457, w: 362 },
+    mockup: { src: "/figma/phone/tools-d-mockup.webp", y: 3457, w: 362 },
     titleY: 3786,
     title: "Integrated TMS",
     descY: 3834,
@@ -161,7 +161,7 @@ function ToolItem({ it, light }: { it: Item; light?: boolean }) {
         style={{ top: it.y }}
       >
         {it.icon ? (
-          <img
+          <img loading="lazy" decoding="async"
             src={it.icon.src}
             alt=""
             className="absolute top-0 max-w-none"
@@ -202,7 +202,7 @@ export function PhoneTools() {
     >
       {/* intro icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[163px] top-[160px] size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/tools/intro-icon.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -222,7 +222,7 @@ export function PhoneTools() {
 
       {BLOCKS.map((b) => (
         <div key={b.key} className="contents">
-          <img
+          <img loading="lazy" decoding="async"
             src={b.mockup.src}
             alt=""
             className="absolute left-[14px] max-w-none"

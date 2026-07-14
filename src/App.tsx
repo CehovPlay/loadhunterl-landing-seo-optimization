@@ -1,32 +1,31 @@
-import { useLayoutEffect } from "react"
+import { lazy, Suspense, useLayoutEffect } from "react"
 import Lenis from "lenis"
 import gsap from "gsap"
 import { initReveal } from "@/lib/reveal"
 import { initMicro } from "@/lib/micro"
 import { initEcosystemPin } from "@/lib/ecosystemPin"
-import { BleedBg } from "@/components/site/BleedBg"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useBreakpoint } from "@/components/site/useBreakpoint"
-import { Navbar } from "@/sections/Navbar"
-import { Hero } from "@/sections/Hero"
-import { Features } from "@/sections/Features"
-import { DispatchIntro } from "@/sections/DispatchIntro"
-import { Tools } from "@/sections/Tools"
-import { Orbit } from "@/sections/Orbit"
-import { Ecosystem } from "@/sections/Ecosystem"
-import { WhyLoadHunter } from "@/sections/WhyLoadHunter"
-import { ChaosDiagram } from "@/sections/ChaosDiagram"
-import { Pricing } from "@/sections/Pricing"
-import { Testimonials } from "@/sections/Testimonials"
-import { Faq } from "@/sections/Faq"
-import { Cta } from "@/sections/Cta"
-import { Footer } from "@/sections/Footer"
-import { PhoneLanding } from "@/sections/phone/PhoneLanding"
-import { TabletLanding } from "@/sections/tablet/TabletLanding"
 
-function useLenis(breakpoint: string) {
-  // layout effect: reveal must hide elements BEFORE the first paint,
-  // otherwise in-view text flashes and then disappears into the cascade
+// Each breakpoint renders exactly one of these trees, so they load as separate
+// chunks — a phone visitor never downloads the desktop sections and vice versa.
+const DesktopLanding = lazy(() =>
+  import("@/sections/DesktopLanding").then((m) => ({ default: m.DesktopLanding })),
+)
+const TabletLanding = lazy(() =>
+  import("@/sections/tablet/TabletLanding").then((m) => ({ default: m.TabletLanding })),
+)
+const PhoneLanding = lazy(() =>
+  import("@/sections/phone/PhoneLanding").then((m) => ({ default: m.PhoneLanding })),
+)
+
+/**
+ * Scroll/animation bootstrap. Rendered as the landing's next sibling inside the
+ * same Suspense boundary: layout effects run bottom-up in tree order, so this
+ * initialises only after the (lazily loaded) section DOM is mounted — and still
+ * before first paint, which reveal needs to hide in-view elements flash-free.
+ */
+function Fx({ breakpoint }: { breakpoint: string }) {
   useLayoutEffect(() => {
     const lenis = new Lenis()
 
@@ -65,50 +64,28 @@ function useLenis(breakpoint: string) {
     }
     // re-init on canvas switch: the whole section tree is remounted
   }, [breakpoint])
-}
-
-function DesktopLanding() {
-  return (
-    <div className="relative bg-gray-800 text-dark-text">
-      <Navbar />
-      <main>
-        <Hero />
-        {/* Light sections: bleed their bg into the >1920 side gutters */}
-        <BleedBg color="#fafafa">
-          <Features />
-        </BleedBg>
-        <DispatchIntro />
-        <Tools />
-        <BleedBg color="#ffffff">
-          <Orbit />
-        </BleedBg>
-        <Ecosystem />
-        <WhyLoadHunter />
-        <ChaosDiagram />
-        <Pricing />
-        <Testimonials />
-        <Faq />
-        <Cta />
-      </main>
-      <Footer />
-    </div>
-  )
+  return null
 }
 
 function App() {
   const bp = useBreakpoint()
-  useLenis(bp)
   if (bp === "phone") {
     return (
       <DesignFrame width={390}>
-        <PhoneLanding />
+        <Suspense>
+          <PhoneLanding />
+          <Fx breakpoint={bp} />
+        </Suspense>
       </DesignFrame>
     )
   }
   if (bp === "tablet") {
     return (
       <DesignFrame width={768}>
-        <TabletLanding />
+        <Suspense>
+          <TabletLanding />
+          <Fx breakpoint={bp} />
+        </Suspense>
       </DesignFrame>
     )
   }
@@ -118,7 +95,10 @@ function App() {
   // fill-to-viewport scaling (they scale up within their own breakpoint bands).
   return (
     <DesignFrame width={1920} maxScale={1}>
-      <DesktopLanding />
+      <Suspense>
+        <DesktopLanding />
+        <Fx breakpoint={bp} />
+      </Suspense>
     </DesignFrame>
   )
 }

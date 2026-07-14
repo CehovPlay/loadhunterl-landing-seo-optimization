@@ -3,7 +3,7 @@ import gsap from "gsap"
 
 /**
  * Looping violet beams over the "From chaos to AI-Powered dispatch" diagram.
- * The curved connectors are baked into /figma/misc/chaos-diagram.png; the 14
+ * The curved connectors are baked into /figma/misc/chaos-diagram.webp; the 14
  * exact vector paths (Group 2085665078, 914:23235 — 7 per side) all converge
  * on the central logo at (680, 74) in the lines' local space.
  *

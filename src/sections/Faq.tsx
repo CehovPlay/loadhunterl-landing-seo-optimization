@@ -61,7 +61,7 @@ export function Faq() {
     <section id="faq" className="relative h-[1046px] overflow-hidden bg-gray-800">
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/tail/faq-icon.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -95,7 +95,7 @@ export function Faq() {
         ))}
 
         {LINES.map((y) => (
-          <img
+          <img loading="lazy" decoding="async"
             key={y}
             src="/figma/tail/faq-line.svg"
             alt=""

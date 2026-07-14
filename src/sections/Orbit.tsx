@@ -110,8 +110,8 @@ export function Orbit() {
       {/* centre mark — 120px node, PNG render 191px (1x); the disc sits in the
           top of the render (soft shadow below), so we anchor by the GLYPH
           centroid (95, 59.5 at 1x) which is dead-centre of the disc */}
-      <img
-        src="/figma/orbit-center.png"
+      <img loading="lazy" decoding="async"
+        src="/figma/orbit-center.webp"
         alt=""
         aria-hidden
         data-pulse

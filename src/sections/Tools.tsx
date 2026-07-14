@@ -58,7 +58,7 @@ const BLOCKS: Block[] = [
         sub: "You can drag, resize, reorder, hide, or pin any load — customizing the loadboard interface to fit their unique dispatching flow.",
       },
     ],
-    mockup: { src: "/figma/tools/a-mockup.png", x: 0, y: 0, w: 924 },
+    mockup: { src: "/figma/tools/a-mockup.webp", x: 0, y: 0, w: 924 },
   },
   {
     key: "b",
@@ -85,7 +85,7 @@ const BLOCKS: Block[] = [
         sub: "Avoid duplicates and re-posted loads by sending emails only to new brokers, keeping requests relevant.",
       },
     ],
-    mockup: { src: "/figma/tools/b-mockup.png", x: 756, y: 0, w: 924 },
+    mockup: { src: "/figma/tools/b-mockup.webp", x: 756, y: 0, w: 924 },
   },
   {
     key: "c",
@@ -113,7 +113,7 @@ const BLOCKS: Block[] = [
       },
     ],
     // export render bounds start 29px left of the layout box
-    mockup: { src: "/figma/tools/c-mockup.png", x: -29, y: 0, w: 953.5 },
+    mockup: { src: "/figma/tools/c-mockup.webp", x: -29, y: 0, w: 953.5 },
   },
   {
     key: "d",
@@ -140,7 +140,7 @@ const BLOCKS: Block[] = [
         sub: "Easily track driver schedules and task timelines for better coordination.",
       },
     ],
-    mockup: { src: "/figma/tools/d-mockup.png", x: 756, y: 0, w: 924 },
+    mockup: { src: "/figma/tools/d-mockup.webp", x: 756, y: 0, w: 924 },
   },
   {
     key: "e",
@@ -168,7 +168,7 @@ const BLOCKS: Block[] = [
         sub: "Connect multiple load boards to get loads from all of them in Telegram, streamlining your workflow.",
       },
     ],
-    mockup: { src: "/figma/tools/e-mockup.png", x: 0, y: 0, w: 943 },
+    mockup: { src: "/figma/tools/e-mockup.webp", x: 0, y: 0, w: 943 },
   },
   {
     key: "f",
@@ -195,7 +195,7 @@ const BLOCKS: Block[] = [
         sub: "Get instant alerts on brokers who frequently cancel loads at the last minute or have low credit scores.",
       },
     ],
-    mockup: { src: "/figma/tools/f-mockup.png", x: 756, y: 0, w: 924 },
+    mockup: { src: "/figma/tools/f-mockup.webp", x: 756, y: 0, w: 924 },
   },
   {
     key: "g",
@@ -223,7 +223,7 @@ const BLOCKS: Block[] = [
         sub: "Evaluate load profitability including deadhead miles (DHO/DHD). Don't settle for high gross if the Rate Per Mile doesn't meet your margin goals.",
       },
     ],
-    mockup: { src: "/figma/tools/g-mockup.png", x: 0, y: 0, w: 924 },
+    mockup: { src: "/figma/tools/g-mockup.webp", x: 0, y: 0, w: 924 },
   },
 ]
 
@@ -235,7 +235,7 @@ function ToolBlock({ b }: { b: Block }) {
       className="absolute w-[1680px]"
       style={{ top: b.top, height: b.height, left: b.frameX ?? 120 }}
     >
-      <img
+      <img loading="lazy" decoding="async"
         src={b.mockup.src}
         alt=""
         className="absolute max-w-none"
@@ -260,7 +260,7 @@ function ToolBlock({ b }: { b: Block }) {
           <div key={it.title} className="absolute w-full" style={{ top: it.y }}>
             {/* icon 42x42; PNG has baked margins (see iconW) */}
             <div className="absolute left-0 top-0 size-[42px]">
-              <img
+              <img loading="lazy" decoding="async"
                 src={it.icon}
                 alt=""
                 className="absolute top-0 max-w-none"

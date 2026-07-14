@@ -14,7 +14,7 @@ export function PhoneHero() {
     >
       {/* top glow */}
       <img
-        src="/figma/phone/hero-glow.png"
+        src="/figma/phone/hero-glow.webp"
         alt=""
         aria-hidden
         className="pointer-events-none absolute left-0 top-[-22px] w-[390px] max-w-none"
@@ -126,7 +126,7 @@ export function PhoneHero() {
 
       {/* product mockup (browser + settings popup) */}
       <img
-        src="/figma/phone/hero-mockup.png"
+        src="/figma/phone/hero-mockup.webp"
         alt="LoadHunter dashboard"
         data-parallax="0.04"
         className="absolute left-0 top-[572px] w-[390px] max-w-none"

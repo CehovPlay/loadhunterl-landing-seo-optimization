@@ -11,8 +11,8 @@ export function PhoneOrbitEco() {
   return (
     <section className="relative overflow-hidden bg-gray-800" style={{ height: 1324 }}>
       {/* white orbit rings + "Start free trial 14 days" pills — decorative 2x export */}
-      <img
-        src="/figma/phone/orbit.png"
+      <img loading="lazy" decoding="async"
+        src="/figma/phone/orbit.webp"
         alt=""
         aria-hidden
         className="absolute left-0 top-0 w-[388px] max-w-none"
@@ -22,7 +22,7 @@ export function PhoneOrbitEco() {
       <div className="absolute left-[-2px] top-[462px] h-[843px] w-[390px] overflow-hidden rounded-[12px] bg-[#ebeaec]">
         {/* figma icon — 64x64 box, 84px render incl. glow (desktop export reused) */}
         <div data-float className="absolute left-[163px] top-[40px] size-[64px]">
-          <img
+          <img loading="lazy" decoding="async"
             src="/figma/feat-icon-2x.png"
             alt=""
             className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -38,12 +38,12 @@ export function PhoneOrbitEco() {
         </p>
 
         {/* product cards — 2x exports (Flex 926:102303 / 926:102931, clipped) */}
-        <img
-          src="/figma/phone/eco-card-1.png"
+        <img loading="lazy" decoding="async"
+          src="/figma/phone/eco-card-1.webp"
           alt="LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.)."
           className="absolute left-[14px] top-[292px] w-[362px] max-w-none"
         />
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/phone/eco-card-2.png"
           alt="huntTMS"
           className="absolute left-[14px] top-[762px] w-[362px] max-w-none"

@@ -11,7 +11,7 @@ export function TabletHero() {
     <section className="relative overflow-hidden bg-gray-800" style={{ height: 1324 }}>
       {/* beem glow (clipped at section top) */}
       <img
-        src="/figma/hero-glow.png"
+        src="/figma/hero-glow.webp"
         alt=""
         aria-hidden
         className="pointer-events-none absolute left-[-111px] top-[-238px] w-[1112px] max-w-none"
@@ -125,7 +125,7 @@ export function TabletHero() {
 
       {/* dashboard render (browser mockup + settings popup, blur baked in) */}
       <img
-        src="/figma/tablet/hero-dashboard.png"
+        src="/figma/tablet/hero-dashboard.webp"
         alt="LoadHunter dashboard"
         className="absolute left-0 top-[534px] w-[768px] max-w-none"
       />

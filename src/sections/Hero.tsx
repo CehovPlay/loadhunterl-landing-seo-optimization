@@ -1,5 +1,5 @@
-import heroDashboard from "/figma/hero-dashboard.png"
-import heroGlow from "/figma/hero-glow.png"
+import heroDashboard from "/figma/hero-dashboard.webp"
+import heroGlow from "/figma/hero-glow.webp"
 import diamondIcon from "/figma/icon-diamond.svg"
 
 /**
@@ -36,7 +36,7 @@ export function Hero() {
 
         {/* extension settings popup — 1:1 crop from the Figma render (region 1200,80–1920,760) */}
         <img
-          src="/figma/hero-settings-popup.png"
+          src="/figma/hero-settings-popup.webp"
           alt=""
           aria-hidden
           className="absolute left-[303px] top-0 w-[720px] max-w-none"

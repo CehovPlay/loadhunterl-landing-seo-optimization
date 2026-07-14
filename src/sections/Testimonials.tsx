@@ -151,7 +151,7 @@ export function Testimonials() {
     <section id="contact" className="relative h-[1084px] overflow-hidden bg-gray-800">
       {/* heading */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/tools/intro-icon.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -166,7 +166,7 @@ export function Testimonials() {
       </p>
 
       {/* trust strip: 5,000+ users, 4.7 rating, Google Reviews / Trustpilot / G2 */}
-      <img
+      <img loading="lazy" decoding="async"
         src="/figma/reviews-strip.png"
         alt="5,000+ trusted users, 4.7 from 100+ reviews on Google, Trustpilot and G2"
         className="absolute left-[638.5px] top-[278px] w-[643.5px] max-w-none"

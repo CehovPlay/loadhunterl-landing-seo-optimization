@@ -51,7 +51,7 @@ type Plan = {
 const PLANS: Plan[] = [
   {
     name: "Basic",
-    icon: "/figma/pricing/icon-basic.png",
+    icon: "/figma/pricing/icon-basic.webp",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     price: "From $26.97",
     unit: "/per month",
@@ -62,7 +62,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Standard",
-    icon: "/figma/pricing/icon-standard.png",
+    icon: "/figma/pricing/icon-standard.webp",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     price: "From $40.47",
     unit: "/per month",
@@ -73,7 +73,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Pro",
-    icon: "/figma/pricing/icon-pro.png",
+    icon: "/figma/pricing/icon-pro.webp",
     blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
     price: "From $80.97",
     unit: "/per month",
@@ -85,7 +85,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "AI subscription",
-    icon: "/figma/pricing/icon-ai.png",
+    icon: "/figma/pricing/icon-ai.webp",
     blurb: "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
     price: "Let's talk",
     note: "Best value for 20+ dispatchers.",
@@ -126,7 +126,7 @@ function PlanCard({ plan }: { plan: Plan }) {
         )}
         {/* plan icon — 40x40 box, desktop 84px render scaled to 52.5 */}
         <div className="absolute left-[24px] top-[24px] size-[40px]">
-          <img
+          <img loading="lazy" decoding="async"
             src={plan.icon}
             alt=""
             className="absolute left-[-6.25px] top-[-2.5px] w-[52.5px] max-w-none"
@@ -139,7 +139,7 @@ function PlanCard({ plan }: { plan: Plan }) {
           </span>
           {plan.recommended && (
             <div className="flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/figma/pricing/crown.svg"
                 alt=""
                 className="h-[14px] w-[12.24px] max-w-none"
@@ -226,7 +226,7 @@ function Controls(): ReactNode {
         <div className="relative mt-[14px] h-[16px] w-full rounded-[200px] bg-[rgba(231,231,231,0.1)]">
           <div className="absolute left-[2px] top-[2px] h-[12px] w-[61px] rounded-[8px] bg-violet shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]" />
           <div className="absolute left-[50px] top-[-3px] size-[22px]">
-            <img
+            <img loading="lazy" decoding="async"
               src="/figma/pricing/knob.svg"
               alt=""
               draggable={false}
@@ -252,7 +252,7 @@ export function PhonePricing() {
     <section id="pricing" className="relative overflow-hidden bg-gray-800" style={{ height: 1782 }}>
       {/* figma icon */}
       <div data-float className="absolute left-[163px] top-0 size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/phone/icon-figma.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"

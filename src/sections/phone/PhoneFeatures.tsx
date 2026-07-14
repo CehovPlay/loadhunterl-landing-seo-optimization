@@ -27,7 +27,7 @@ const CARDS = [
   {
     title: "All needs in one place",
     body: "Access every essential dispatching tool directly from your load board — emails, notifications, maps, and more, all seamlessly integrated.",
-    img: "/figma/feat-card1-img.png",
+    img: "/figma/feat-card1-img.webp",
     top: 374,
     height: 403,
     // fill: w 150.83%, h 86.85%, left −25.41%, top 17.9% (−1 for card border)
@@ -36,7 +36,7 @@ const CARDS = [
   {
     title: "Time saver",
     body: "Save hours every day by automating repetitive tasks, streamlining workflows, and focusing on what matters most— booking the best loads.",
-    img: "/figma/feat-card2-img.png",
+    img: "/figma/feat-card2-img.webp",
     top: 791,
     height: 330,
     // fill: w 100%, h 70.32%, left 0, top 29.69% (−1 for card border)
@@ -45,7 +45,7 @@ const CARDS = [
   {
     title: "AI-Powered automation",
     body: "Automate your workflow with AI-driven features like Telegram notifications and auto-emailing, reducing manual tasks and saving valuable time.",
-    img: "/figma/feat-card3-img.png",
+    img: "/figma/feat-card3-img.webp",
     top: 1135,
     height: 330,
     // fill: w 105.9%, h 74.53%, left −2.81%, top 25.47% (−1 for card border)
@@ -89,7 +89,7 @@ export function PhoneFeatures() {
                 className="absolute w-[112px] overflow-hidden"
                 style={{ left: x, top: 20 + p.mt, height: p.h }}
               >
-                <img
+                <img loading="lazy" decoding="async"
                   src={p.src}
                   alt=""
                   className="max-w-none"
@@ -103,7 +103,7 @@ export function PhoneFeatures() {
 
       {/* header icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div data-float className="absolute left-[163px] top-[110px] size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/feat-icon-2x.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -128,7 +128,7 @@ export function PhoneFeatures() {
           className="absolute left-[14px] w-[362px] overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0]"
           style={{ top: c.top, height: c.height }}
         >
-          <img
+          <img loading="lazy" decoding="async"
             src={c.img}
             alt=""
             className="absolute max-w-none"

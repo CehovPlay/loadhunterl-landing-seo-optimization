@@ -1,7 +1,5 @@
-@import "@fontsource/inter/400.css";
+/* the whole landing is set in Inter Medium — 500 is the only weight used */
 @import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */

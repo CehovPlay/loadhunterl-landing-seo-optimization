@@ -289,7 +289,7 @@ const FAQ_LINES = [232, 468, 748, 988]
 function SectionIcon({ top }: { top: number }) {
   return (
     <div data-float className="absolute left-[163px] size-[64px]" style={{ top }}>
-      <img
+      <img loading="lazy" decoding="async"
         src="/figma/phone/icon-figma.png"
         alt=""
         className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -343,7 +343,7 @@ export function PhoneTail() {
           <div className="absolute left-[114px] top-[8.5px] h-[25px] w-px bg-[#e8e8e9] opacity-50" />
           <div className="absolute left-[138px] top-0 flex h-[42px] w-[126px] flex-col items-center justify-between">
             <div className="flex w-full items-center justify-between">
-              <img
+              <img loading="lazy" decoding="async"
                 src="/figma/phone/stars.svg"
                 alt="4.7 star rating"
                 className="h-[16px] w-[100px] max-w-none"
@@ -419,7 +419,7 @@ export function PhoneTail() {
             </div>
           ))}
           {FAQ_LINES.map((y) => (
-            <img
+            <img loading="lazy" decoding="async"
               key={y}
               src="/figma/phone/faq-line.svg"
               alt=""
@@ -434,8 +434,8 @@ export function PhoneTail() {
       {/* ================= CTA (y 2438..3142) ================= */}
       <div id="start" className="absolute left-0 top-[2438px] h-[704px] w-full">
         {/* automation panel + rings + glow — 2x export (card region re-drawn live on top) */}
-        <img
-          src="/figma/phone/cta.png"
+        <img loading="lazy" decoding="async"
+          src="/figma/phone/cta.webp"
           alt="One click automation — book faster, miss less, earn more"
           className="absolute left-0 top-0 w-[390px] max-w-none"
         />
@@ -448,12 +448,12 @@ export function PhoneTail() {
           }}
         >
           <div className="absolute left-[12px] top-[20px] h-[16px] w-[101px]">
-            <img
+            <img loading="lazy" decoding="async"
               src="/figma/tail/logo-icon-white.svg"
               alt=""
               className="absolute left-0 top-0 size-[16px] max-w-none"
             />
-            <img
+            <img loading="lazy" decoding="async"
               src="/figma/tail/logo-text-white.svg"
               alt="loadhunter"
               className="absolute left-[22.67px] top-[1.7px] h-[12.59px] w-[77.62px] max-w-none"
@@ -474,7 +474,7 @@ export function PhoneTail() {
             className="absolute left-[12px] top-[248px] flex h-[42px] items-center gap-[8px] rounded-[99px] border border-white bg-white px-[24px] backdrop-blur-[10px]"
             style={{ boxShadow: PILL_SHADOW }}
           >
-            <img src="/figma/tail/cta-chrome.svg" alt="" className="size-[16px] max-w-none" />
+            <img loading="lazy" decoding="async" src="/figma/tail/cta-chrome.svg" alt="" className="size-[16px] max-w-none" />
             <span
               className="bg-clip-text text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-transparent"
               style={{
@@ -491,12 +491,12 @@ export function PhoneTail() {
       <div id="token" className="absolute left-0 top-[3218px] h-[812px] w-full">
         {/* logo */}
         <div className="absolute left-[119.78px] top-0 h-[24px] w-[150.44px]">
-          <img
+          <img loading="lazy" decoding="async"
             src="/figma/tail/logo-icon-white.svg"
             alt=""
             className="absolute left-0 top-0 size-[24px] max-w-none"
           />
-          <img
+          <img loading="lazy" decoding="async"
             src="/figma/tail/logo-text-white.svg"
             alt="loadhunter"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
@@ -541,7 +541,7 @@ export function PhoneTail() {
             {["/figma/tail/social-1.png", "/figma/tail/social-2.png", "/figma/tail/social-3.png"].map(
               (src) => (
                 <a key={src} href="#" className="block size-[18px]">
-                  <img src={src} alt="" className="size-[18px] max-w-none" />
+                  <img loading="lazy" decoding="async" src={src} alt="" className="size-[18px] max-w-none" />
                 </a>
               ),
             )}
@@ -549,8 +549,8 @@ export function PhoneTail() {
         </div>
 
         {/* orbit rings graphic (decorative, © caption baked in) */}
-        <img
-          src="/figma/phone/footer-orbit.png"
+        <img loading="lazy" decoding="async"
+          src="/figma/phone/footer-orbit.webp"
           alt="© 2026 loadhunt Corp. All rights reserved."
           className="absolute left-0 top-[224px] h-[588px] w-[390px] max-w-none"
         />

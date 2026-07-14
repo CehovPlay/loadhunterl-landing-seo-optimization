@@ -28,7 +28,7 @@ function CellIcon({ kind }: { kind: Cell }) {
   if (kind === "cross") {
     return (
       <div className="relative h-[12px] w-[13.93px] opacity-50">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/phone/why-cross.svg"
           alt="no"
           className="absolute left-[-0.75px] top-[-0.75px] h-[13.5px] w-[15.43px] max-w-none"
@@ -39,7 +39,7 @@ function CellIcon({ kind }: { kind: Cell }) {
   const wide = kind === "check-wide"
   return (
     <div className="relative h-[12px]" style={{ width: wide ? 18 : 17 }}>
-      <img
+      <img loading="lazy" decoding="async"
         src={wide ? "/figma/phone/why-check2.svg" : "/figma/phone/why-check.svg"}
         alt="yes"
         className="absolute left-[-14px] top-[-14px] h-[40px] max-w-none"
@@ -52,7 +52,7 @@ function CellIcon({ kind }: { kind: Cell }) {
 function Hairline() {
   return (
     <div className="relative h-0 w-full">
-      <img
+      <img loading="lazy" decoding="async"
         src="/figma/phone/line-456.svg"
         alt=""
         aria-hidden
@@ -66,8 +66,8 @@ export function PhoneWhy() {
   return (
     <section className="relative overflow-hidden bg-gray-800" style={{ height: 889 }}>
       {/* violet glow behind icon + panel — 2x export of image 60 */}
-      <img
-        src="/figma/phone/why-glow.png"
+      <img loading="lazy" decoding="async"
+        src="/figma/phone/why-glow.webp"
         alt=""
         aria-hidden
         className="absolute left-0 top-[-44px] w-[255px] max-w-none"
@@ -75,7 +75,7 @@ export function PhoneWhy() {
 
       {/* figma icon */}
       <div data-float className="absolute left-[161px] top-[101px] size-[64px]">
-        <img
+        <img loading="lazy" decoding="async"
           src="/figma/phone/icon-figma.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -100,7 +100,7 @@ export function PhoneWhy() {
             Feature
           </p>
           <div className="flex min-w-px flex-1 items-center justify-center">
-            <img
+            <img loading="lazy" decoding="async"
               src="/figma/phone/why-table-icon.svg"
               alt="loadhunter"
               className="h-[16px] w-[16.92px] max-w-none"
