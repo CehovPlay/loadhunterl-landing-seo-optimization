@@ -298,47 +298,117 @@ function OrbitT() {
 }
 
 /**
- * Ecosystem — Frame 2147238589 (921:82383) 768x1000, clips its 2949px card
- * stack at 1000px: heading + loadhunter card + top 290px of the huntTMS card.
+ * Ecosystem — Frame 2147238589 (921:82383) 768x1000. The light block is the
+ * pin stage: initEcosystemPin() (see src/lib/ecosystemPin.ts) pins it at the
+ * viewport centre, grows it to the full viewport height and scrolls the
+ * product list through the window below the heading, then releases. The div's
+ * height reserves the resting 1000px block plus the 2500px pinned runway
+ * (expand 400 + listScroll 2100).
+ * Cards 1–2 are the Figma 2x exports; cards 3–6 are hidden (unrenderable) in
+ * the tablet Figma frame, so they're rebuilt in HTML from the desktop
+ * ecosystem assets following the exported cards' layout.
  */
+
+const ECO_DESC =
+  "Comprehensive transport management system providing a single platform to manage all aspects."
+
+const ECO_PRODUCTS = [
+  { name: "huntTMS", logo: "/figma/eco/logo2.png", logoW: 113, mockup: "/figma/eco/row2.png", live: true },
+  { name: "huntPAY", logo: "/figma/eco/logo3.png", logoW: 109, mockup: "/figma/eco/row3.png" },
+  { name: "huntDRIVE", logo: "/figma/eco/logo4.png", logoW: 130, mockup: "/figma/eco/row4.png" },
+  { name: "fleetHUNT", logo: "/figma/eco/logo5.png", logoW: 126, mockup: "/figma/eco/row5.png" },
+  { name: "huntONE", logo: "/figma/eco/logo6.png", logoW: 114, mockup: "/figma/eco/row6.png" },
+]
+
+function EcoCardT({ p }: { p: (typeof ECO_PRODUCTS)[number] }) {
+  return (
+    <div className="relative h-[450px] w-[688px] shrink-0 overflow-hidden rounded-[12px] bg-white">
+      <img loading="lazy" decoding="async"
+        src={p.logo}
+        alt={p.name}
+        className="absolute left-[32px] top-[32px] h-[24px] max-w-none"
+        style={{ width: p.logoW }}
+      />
+      <p className="absolute left-[32px] top-[104px] w-[560px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-ink-2">
+        {ECO_DESC}
+      </p>
+      {!p.live && (
+        <div className="absolute left-[32px] top-[168px] inline-flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px]">
+          <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+            Coming soon
+          </span>
+        </div>
+      )}
+      <img loading="lazy" decoding="async"
+        src={p.mockup}
+        alt={`${p.name} product preview`}
+        className="absolute left-[32px] top-[224px] w-[624px] max-w-none"
+      />
+      <div className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e8e8e8]" />
+    </div>
+  )
+}
+
 function EcosystemT() {
   return (
     <div
       id="offers"
-      className="absolute left-0 top-[8387px] h-[1000px] w-full overflow-hidden bg-[#ebeaec]"
+      data-eco-pin='{"sectionW":768,"cardH":1000,"cardTop":0,"cardLeft":0,"cardW":768,"radius":0,"windowTop":240,"expand":400,"listContent":2840,"listScroll":2100}'
+      className="absolute left-0 top-[8387px] h-[3500px] w-full"
     >
-      {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-      <div className="absolute left-[40px] top-[80px] size-[64px]">
-        <img loading="lazy" decoding="async"
-          src="/figma/tablet/eco-icon.png"
-          alt=""
-          className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
-        />
+      <div
+        data-eco-stage
+        data-no-reveal
+        className="absolute left-0 top-0 h-[1000px] w-[768px] overflow-hidden bg-[#ebeaec] will-change-transform"
+      >
+        <div data-eco-inner className="absolute inset-0 will-change-transform">
+          {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
+          <div className="absolute left-[40px] top-[80px] size-[64px]">
+            <img loading="lazy" decoding="async"
+              src="/figma/tablet/eco-icon.png"
+              alt=""
+              className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+            />
+          </div>
+          <h2 className="absolute left-[144px] top-[80px] w-[564px] text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-ink">
+            Our ecosystem products
+          </h2>
+          <p className="absolute left-[144px] top-[132px] w-[564px] text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-ink">
+            Everything you need to find, evaluate, and book loads — faster,
+            smarter, and in one place.
+          </p>
+
+          {/* product list window — scrolled by the pin below the heading */}
+          <div
+            data-eco-window
+            className="absolute left-0 top-[240px] h-[760px] w-full overflow-hidden will-change-[transform,height]"
+          >
+            <div
+              data-eco-list
+              className="ml-[40px] flex w-[688px] flex-col gap-[20px] pb-[40px] will-change-transform"
+            >
+              {/* card 1 is the Figma 2x export; the rest are hidden in the
+                  tablet frame (unrenderable), rebuilt as EcoCardT */}
+              <img loading="lazy" decoding="async"
+                src="/figma/tablet/eco-card1.png"
+                alt="LoadHunter Extension — AI browser tool for major LoadBoards"
+                className="w-[688px] max-w-none"
+              />
+              {ECO_PRODUCTS.map((p) => (
+                <EcoCardT key={p.name} p={p} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      <h2 className="absolute left-[144px] top-[80px] w-[564px] text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-ink">
-        Our ecosystem products
-      </h2>
-      <p className="absolute left-[144px] top-[132px] w-[564px] text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-ink">
-        Everything you need to find, evaluate, and book loads — faster,
-        smarter, and in one place.
-      </p>
-      <img loading="lazy" decoding="async"
-        src="/figma/tablet/eco-card1.png"
-        alt="LoadHunter Extension — AI browser tool for major LoadBoards"
-        className="absolute left-[40px] top-[240px] w-[688px] max-w-none"
-      />
-      <img loading="lazy" decoding="async"
-        src="/figma/tablet/eco-card2.png"
-        alt="huntTMS — comprehensive transport management system"
-        className="absolute left-[40px] top-[710px] w-[688px] max-w-none"
-      />
     </div>
   )
 }
 
 export function TabletMain() {
+  // height: the design's 9507 plus the ecosystem pin runway (2500)
   return (
-    <section id="features" className="relative bg-gray-800" style={{ height: 9507 }}>
+    <section id="features" className="relative bg-gray-800" style={{ height: 12007 }}>
       <DispatchIntroT />
       {BLOCKS.map((b) => (
         <ToolBlockT key={b.key} b={b} />

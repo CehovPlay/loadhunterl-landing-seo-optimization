@@ -12,9 +12,16 @@
  * "30 H2" token (30/40, tracking −1.2).
  */
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { CSSProperties } from "react"
 import gsap from "gsap"
+import {
+  BASIC_COLS,
+  STANDARD_COLS,
+  PRO_COLS,
+  FeatureItem,
+  type FeatureCols,
+} from "@/sections/pricingFeatures"
 
 const PILL_SHADOW =
   "0px 1px 0px rgba(0,0,0,0.05), 0px 4px 4px rgba(0,0,0,0.05), 0px 10px 10px rgba(0,0,0,0.1)"
@@ -213,8 +220,6 @@ function WhySection() {
 
 /* ---------------------------------------------------------------- pricing */
 
-type Feature = { text: string; clock?: boolean; twoLine?: boolean }
-
 type Plan = {
   name: string
   icon: string
@@ -222,7 +227,7 @@ type Plan = {
   price: string
   unit?: string
   note: string
-  cols: [Feature[], Feature[]]
+  cols: FeatureCols
   cta: string
   head: "border" | "pro" | "ai"
   recommended?: boolean
@@ -233,32 +238,6 @@ type Plan = {
   colGap: number
 }
 
-const f = (text: string, twoLine = false): Feature => ({ text, twoLine })
-const clock = (text: string): Feature => ({ text, clock: true, twoLine: true })
-
-const PRO_COLS: [Feature[], Feature[]] = [
-  [
-    f("SmartBoard View"),
-    f("Full LoadBoard Customization", true),
-    f("Auto-Refresh Button"),
-    f("Pin to Top"),
-    f("Performance Boost"),
-    f("Redesigned LoadBoard"),
-    f("Search Tabs Reorder"),
-    f("Up to 2 Factoring Connections", true),
-    f("FMCSA Broker Lookup"),
-  ],
-  [
-    f("Team Management"),
-    f("Advanced Filtering Modes", true),
-    f("Driver Profile Setup"),
-    clock("CC Support for Emails (Coming Soon)"),
-    clock("Dispatcher Analytics (Coming Soon)"),
-    clock("Idle Driver Email Alerts (Coming Soon)"),
-    clock("Email Read Notifications (Coming Soon)"),
-  ],
-]
-
 const PLANS: Plan[] = [
   {
     name: "Basic",
@@ -267,22 +246,7 @@ const PLANS: Plan[] = [
     price: "From $26.97",
     unit: "/per month",
     note: "Save 20% with team rate.",
-    cols: [
-      [
-        f("Unlimited Emails"),
-        f("1 Connected Email"),
-        f("1 Email Template"),
-        f("Google Maps Integration", true),
-        f("Load Filters"),
-      ],
-      [
-        f("RPM+"),
-        f("Click to Call"),
-        f("Copy Load Info"),
-        f("Weather Integration"),
-        f("Profit Calculator"),
-      ],
-    ],
+    cols: BASIC_COLS,
     cta: "Start 14 days trial",
     head: "border",
     headShift: 0,
@@ -297,30 +261,7 @@ const PLANS: Plan[] = [
     price: "From $40.47",
     unit: "/per month",
     note: "Save 20% with team rate.",
-    cols: [
-      [
-        f("Unlimited Email Accounts", true),
-        f("Unlimited Templates"),
-        f("Email Signature"),
-        f("VoIP Integration"),
-        f("Tolls Integration"),
-        f("Integrated TMS"),
-        f("Saved Loads"),
-        f("Dark Mode"),
-        f("Integrated\nTrucking Map", true),
-      ],
-      [
-        f("Advanced Profit Calculator", true),
-        f("1 Factoring Connection"),
-        f("Community Reviews"),
-        f("Market Conditions"),
-        f("Load Notes"),
-        f("Ignore Brokers/States"),
-        f("Hide cancelled loads"),
-        f("Hide CA/MX Loads"),
-        f("Advanced Profit Calculator", true),
-      ],
-    ],
+    cols: STANDARD_COLS,
     cta: "Start 14 days trial",
     head: "border",
     headShift: 0,
@@ -379,50 +320,15 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
   )
 }
 
-function CheckIcon() {
-  return (
-    <div className="relative h-[6px] w-[9px] shrink-0">
-      <img loading="lazy" decoding="async"
-        src="/figma/pricing/check.svg"
-        alt=""
-        className="absolute max-w-none"
-        style={{ left: -1, top: -1, width: 11, height: 7.21 }}
-      />
-    </div>
-  )
-}
-
-function FeatureItem({ item }: { item: Feature }) {
-  if (item.clock) {
-    return (
-      <div className="flex w-full items-start gap-[12px] opacity-50">
-        <div className="relative size-[10px] shrink-0">
-          <img loading="lazy" decoding="async"
-            src="/figma/pricing/clock.svg"
-            alt=""
-            className="absolute max-w-none"
-            style={{ left: -1, top: -1, width: 12, height: 12 }}
-          />
-        </div>
-        <p className="min-w-px flex-1 whitespace-pre-line text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
-          {item.text}
-        </p>
-      </div>
-    )
-  }
-  return (
-    <div
-      className={`flex w-full items-center gap-[12px] ${item.twoLine ? "h-[28px]" : "h-[14px]"}`}
-    >
-      <CheckIcon />
-      <p className="min-w-px flex-1 whitespace-pre-line text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
-        {item.text}
-      </p>
-    </div>
-  )
-}
-
-function PlanCard({ plan }: { plan: Plan }) {
+function PlanCard({
+  plan,
+  expanded,
+  onSelect,
+}: {
+  plan: Plan
+  expanded: boolean
+  onSelect: () => void
+}) {
   const s = plan.headShift
   const headStyle: CSSProperties =
     plan.head === "pro"
@@ -446,9 +352,18 @@ function PlanCard({ plan }: { plan: Plan }) {
         : {}
 
   return (
+    // Accordion column (Figma 921:88128): the frame width animates between
+    // 341 (open) and 111.67 (collapsed) while the 333px content stays pinned
+    // left and gets clipped — exactly how the design's four states differ.
     <div
-      className="relative h-[660px] w-[341px] overflow-hidden rounded-[16px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-      style={{ backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))" }}
+      onClick={onSelect}
+      className={`relative h-[660px] shrink-0 overflow-hidden rounded-[16px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transition-[width] duration-500 ease-out ${
+        expanded ? "" : "cursor-pointer"
+      }`}
+      style={{
+        width: expanded ? 341 : 111.67,
+        backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))",
+      }}
     >
       <div className="pointer-events-none absolute inset-0 z-10 rounded-[16px] border border-[rgba(229,229,229,0.1)]" />
       {/* head panel */}
@@ -531,15 +446,10 @@ function PlanCard({ plan }: { plan: Plan }) {
   )
 }
 
-/** deck: card 1 in full, cards 2–4 as clipped 111.67px slices */
-const CARD_SLOTS = [
-  { left: 40, width: 341 },
-  { left: 385, width: 111.66 },
-  { left: 500.66, width: 111.67 },
-  { left: 616.33, width: 111.67 },
-]
-
 function PricingSection({ top }: { top: number }) {
+  // horizontal accordion: Basic open by default; clicking a collapsed plan
+  // closes the open one and expands the clicked one (Figma 921:88128 states)
+  const [open, setOpen] = useState(0)
   return (
     <>
       <div className="absolute left-[352px] size-[64px]" style={{ top }}>
@@ -615,16 +525,20 @@ function PricingSection({ top }: { top: number }) {
         <DiscountBadge text="-20% OFF" shadow={false} />
       </div>
 
-      {/* plan-card deck */}
-      {PLANS.map((plan, i) => (
-        <div
-          key={plan.name}
-          className="absolute h-[660px] overflow-hidden"
-          style={{ left: CARD_SLOTS[i].left, top: top + 438, width: CARD_SLOTS[i].width }}
-        >
-          <PlanCard plan={plan} />
-        </div>
-      ))}
+      {/* plan-card accordion row (40px margins, 4px gaps) */}
+      <div
+        className="absolute left-[40px] flex w-[688px] gap-[4px]"
+        style={{ top: top + 438 }}
+      >
+        {PLANS.map((plan, i) => (
+          <PlanCard
+            key={plan.name}
+            plan={plan}
+            expanded={open === i}
+            onSelect={() => setOpen(i)}
+          />
+        ))}
+      </div>
     </>
   )
 }
