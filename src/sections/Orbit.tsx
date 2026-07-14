@@ -1,4 +1,5 @@
 import { Img } from "@/components/site/Img"
+import { ShaderBand } from "@/components/site/ShaderBand"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { prefersReducedMotion } from "@/lib/inview"
@@ -126,7 +127,10 @@ export function Orbit() {
   }, [])
 
   return (
-    <section ref={rootRef} className="relative h-[1389px] w-full bg-white">
+    <section ref={rootRef} className="relative h-[1389px] w-full">
+      {/* animated shader background (experiment) — full-bleed behind the
+          section; carries the white base. Rings/badges paint above untouched. */}
+      <ShaderBand baseColor="#ffffff" />
       {/* Horizontal bleed: the rings span the Figma 2K frame's 2560px, so above
           1920 they run into the side gutters instead of being masked at the
           canvas edges. The wrapper clips only vertically (ring tops hide under

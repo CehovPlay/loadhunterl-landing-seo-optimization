@@ -31,9 +31,8 @@ export function DesktopLanding() {
         </BleedBg>
         <DispatchIntro />
         <Tools />
-        <BleedBg color="#ffffff">
-          <Orbit />
-        </BleedBg>
+        {/* Orbit's full-bleed white bg + shader come from its own ShaderBand */}
+        <Orbit />
         <Ecosystem />
         <WhyLoadHunter />
         <ChaosDiagram />
