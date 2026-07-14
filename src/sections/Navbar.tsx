@@ -65,8 +65,8 @@ export function Navbar() {
             "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* experiment: white pill navbar inside a 1440 container (p-3 = 12px) */}
-        <div className="w-full max-w-[1440px] p-[12px]">
+        {/* experiment: white pill navbar, full-width flex container */}
+        <div className="w-full p-[12px]">
         <div className="relative flex items-center justify-between rounded-full bg-white p-[5px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.04),0px_8px_24px_0px_rgba(0,0,0,0.08)]">
 
           {/* logo */}

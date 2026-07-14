@@ -12,8 +12,9 @@ import diamondIcon from "/figma/icon-diamond.svg"
  */
 export function Hero() {
   return (
-    <section className="relative h-[1080px] w-full overflow-hidden bg-[#EFEFEF]">
-      {/* animated shader background (experiment) */}
+    <section className="relative h-[1080px] w-full">
+      {/* animated shader background (experiment) — portalled full-bleed behind
+          the page; also paints the hero's #EFEFEF base into the side gutters */}
       <HeroShaderBg />
 
       {/* Right — product mockup. Parallax + 3D tilt live on the WRAPPER so the

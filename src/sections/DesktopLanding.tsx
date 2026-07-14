@@ -18,9 +18,12 @@ import { Footer } from "@/sections/Footer"
  *  (React.lazy) — a phone/tablet visitor never downloads this tree. */
 export function DesktopLanding() {
   return (
-    <div className="relative bg-gray-800 text-dark-text">
+    // no root bg: the hero band must stay transparent so the full-bleed
+    // shader portal (z -1) shows through; body is gray-800 for the rest
+    <div className="relative text-dark-text">
       <Navbar />
       <main>
+        {/* hero's full-bleed light bg + shader come from HeroShaderBg's portal */}
         <Hero />
         {/* Light sections: bleed their bg into the >1920 side gutters */}
         <BleedBg color="#fafafa">
