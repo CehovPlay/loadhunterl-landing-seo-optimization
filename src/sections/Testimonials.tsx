@@ -148,7 +148,10 @@ export function Testimonials() {
   }, [])
 
   return (
-    <section id="contact" className="relative h-[1084px] overflow-hidden bg-gray-800">
+    // No overflow-hidden: the marquee cards drift past the 1920 canvas into
+    // the >1920 side gutters (the DesignFrame wrapper clips at the window
+    // edge), instead of being cut at the canvas boundary.
+    <section id="contact" className="relative h-[1084px] bg-gray-800">
       {/* heading */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
         <img loading="lazy" decoding="async"
@@ -179,7 +182,9 @@ export function Testimonials() {
           data-marquee-track
           className="relative h-full w-full will-change-transform"
         >
-          {[0, 1, 2].map((copy) =>
+          {/* the -1 copy keeps the left gutter populated right after each
+              loop reset (t≈0), when copy 0 has not yet drifted past it */}
+          {[-1, 0, 1, 2].map((copy) =>
             REVIEWS.map((r, i) => (
               <div
                 key={`${copy}-${r.name}`}
