@@ -353,7 +353,7 @@ function EcosystemT() {
   return (
     <div
       id="offers"
-      data-eco-pin='{"sectionW":768,"cardH":1000,"cardTop":0,"cardLeft":0,"cardW":768,"radius":0,"windowTop":240,"expand":400,"listContent":2840,"listScroll":2100}'
+      data-eco-pin='{"sectionW":768,"cardH":1000,"cardTop":0,"cardLeft":0,"cardW":768,"radius":0,"expand":400,"listContent":3080,"listScroll":2100}'
       className="absolute left-0 top-[8387px] h-[3500px] w-full"
     >
       <div
@@ -362,31 +362,32 @@ function EcosystemT() {
         className="absolute left-0 top-0 h-[1000px] w-[768px] overflow-hidden bg-[#ebeaec] will-change-transform"
       >
         <div data-eco-inner className="absolute inset-0 will-change-transform">
-          {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-          <div className="absolute left-[40px] top-[80px] size-[64px]">
-            <img loading="lazy" decoding="async"
-              src="/figma/tablet/eco-icon.png"
-              alt=""
-              className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
-            />
-          </div>
-          <h2 className="absolute left-[144px] top-[80px] w-[564px] text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-ink">
-            Our ecosystem products
-          </h2>
-          <p className="absolute left-[144px] top-[132px] w-[564px] text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-ink">
-            Everything you need to find, evaluate, and book loads — faster,
-            smarter, and in one place.
-          </p>
-
-          {/* product list window — scrolled by the pin below the heading */}
+          {/* the window spans the whole card: the heading is part of the
+              scrolled content (it drifts away with the list) and cards clip
+              only at the card/viewport edge, not at a mid-screen boundary */}
           <div
             data-eco-window
-            className="absolute left-0 top-[240px] h-[760px] w-full overflow-hidden will-change-[transform,height]"
+            className="absolute inset-0 overflow-hidden will-change-[transform,height]"
           >
-            <div
-              data-eco-list
-              className="ml-[40px] flex w-[688px] flex-col gap-[20px] pb-[40px] will-change-transform"
-            >
+            <div data-eco-list className="relative will-change-transform">
+              <div className="relative h-[240px]">
+                {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
+                <div className="absolute left-[40px] top-[80px] size-[64px]">
+                  <img loading="lazy" decoding="async"
+                    src="/figma/tablet/eco-icon.png"
+                    alt=""
+                    className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+                  />
+                </div>
+                <h2 className="absolute left-[144px] top-[80px] w-[564px] text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-ink">
+                  Our ecosystem products
+                </h2>
+                <p className="absolute left-[144px] top-[132px] w-[564px] text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-ink">
+                  Everything you need to find, evaluate, and book loads — faster,
+                  smarter, and in one place.
+                </p>
+              </div>
+              <div className="ml-[40px] flex w-[688px] flex-col gap-[20px] pb-[40px]">
               {/* card 1 is the Figma 2x export; the rest are hidden in the
                   tablet frame (unrenderable), rebuilt as EcoCardT */}
               <img loading="lazy" decoding="async"
@@ -397,6 +398,7 @@ function EcosystemT() {
               {ECO_PRODUCTS.map((p) => (
                 <EcoCardT key={p.name} p={p} />
               ))}
+              </div>
             </div>
           </div>
         </div>

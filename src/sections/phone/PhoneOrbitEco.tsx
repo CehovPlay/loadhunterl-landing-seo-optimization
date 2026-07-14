@@ -59,7 +59,7 @@ function EcoCardP({ p }: { p: (typeof ECO_PRODUCTS)[number] }) {
 export function PhoneOrbitEco() {
   return (
     <section
-      data-eco-pin='{"sectionW":390,"cardH":843,"cardTop":462,"cardLeft":-2,"cardW":390,"radius":12,"windowTop":292,"expand":400,"listContent":2840,"listScroll":2300}'
+      data-eco-pin='{"sectionW":390,"cardH":843,"cardTop":462,"cardLeft":-2,"cardW":390,"radius":12,"expand":400,"listContent":3132,"listScroll":2300}'
       className="relative bg-gray-800"
       style={{ height: 4005 }}
     >
@@ -78,40 +78,41 @@ export function PhoneOrbitEco() {
         className="absolute left-[-2px] top-[462px] h-[843px] w-[390px] overflow-hidden rounded-[12px] bg-[#ebeaec] will-change-transform"
       >
         <div data-eco-inner className="absolute inset-0 will-change-transform">
-          {/* figma icon — 64x64 box, 84px render incl. glow (desktop export reused) */}
-          <div data-float className="absolute left-[163px] top-[40px] size-[64px]">
-            <img loading="lazy" decoding="async"
-              src="/figma/feat-icon-2x.png"
-              alt=""
-              className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
-            />
-          </div>
-
-          <h2 className="absolute left-[14px] top-[144px] w-[362px] text-center text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-ink">
-            Our ecosystem products
-          </h2>
-          <p className="absolute left-[14px] top-[200px] w-[362px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink">
-            Everything you need to find, evaluate, and book loads — faster,
-            smarter, and in one place.
-          </p>
-
-          {/* product list window — scrolled by the pin below the heading */}
+          {/* the window spans the whole card: the heading is part of the
+              scrolled content (it drifts away with the list) and cards clip
+              only at the card/viewport edge, not at a mid-screen boundary */}
           <div
             data-eco-window
-            className="absolute left-[14px] top-[292px] h-[551px] w-[362px] overflow-hidden will-change-[transform,height]"
+            className="absolute inset-0 overflow-hidden will-change-[transform,height]"
           >
-            <div
-              data-eco-list
-              className="flex w-[362px] flex-col gap-[20px] pb-[40px] will-change-transform"
-            >
-              <img loading="lazy" decoding="async"
-                src="/figma/phone/eco-card-1.png"
-                alt="LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.)."
-                className="w-[362px] max-w-none"
-              />
-              {ECO_PRODUCTS.map((p) => (
-                <EcoCardP key={p.name} p={p} />
-              ))}
+            <div data-eco-list className="relative will-change-transform">
+              <div className="relative h-[292px]">
+                {/* figma icon — 64x64 box, 84px render incl. glow (desktop export reused) */}
+                <div data-float className="absolute left-[163px] top-[40px] size-[64px]">
+                  <img loading="lazy" decoding="async"
+                    src="/figma/feat-icon-2x.png"
+                    alt=""
+                    className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+                  />
+                </div>
+                <h2 className="absolute left-[14px] top-[144px] w-[362px] text-center text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-ink">
+                  Our ecosystem products
+                </h2>
+                <p className="absolute left-[14px] top-[200px] w-[362px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink">
+                  Everything you need to find, evaluate, and book loads — faster,
+                  smarter, and in one place.
+                </p>
+              </div>
+              <div className="ml-[14px] flex w-[362px] flex-col gap-[20px] pb-[40px]">
+                <img loading="lazy" decoding="async"
+                  src="/figma/phone/eco-card-1.png"
+                  alt="LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.)."
+                  className="w-[362px] max-w-none"
+                />
+                {ECO_PRODUCTS.map((p) => (
+                  <EcoCardP key={p.name} p={p} />
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -26,6 +26,7 @@ export function DesignFrame({
 }) {
   const inner = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
+  const [left, setLeft] = useState(0)
   const [height, setHeight] = useState<number>(0)
 
   useLayoutEffect(() => {
@@ -36,6 +37,13 @@ export function DesignFrame({
       const vw = document.documentElement.clientWidth
       const s = Math.min(vw / width, maxScale)
       setScale(s)
+      // center the SCALED canvas, not the layout box: margin:auto would offset
+      // by (vw - width)/2 whenever the artboard is narrower than the viewport
+      // (tablet 768 in a 640–1023 window, phone 390 above 390) and the
+      // top-left-origin scale would then overflow the right edge by the same
+      // amount — the whole landing looked pushed right. Non-zero only when
+      // maxScale caps the scale (desktop canvas above 1920).
+      setLeft(Math.max(0, (vw - width * s) / 2))
       setHeight(el.offsetHeight * s)
     }
 
@@ -72,7 +80,7 @@ export function DesignFrame({
         ref={inner}
         style={{
           width,
-          margin: "0 auto",
+          marginLeft: left,
           transformOrigin: "top left",
           transform: `scale(${scale})`,
         }}

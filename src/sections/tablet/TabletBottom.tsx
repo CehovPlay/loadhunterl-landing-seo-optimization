@@ -914,7 +914,11 @@ const SOCIALS = [
 
 function FooterSection({ top }: { top: number }) {
   return (
-    <footer className="absolute left-0 top-0 h-full w-full">
+    // pointer-events-none: this wrapper spans the WHOLE TabletBottom section
+    // (it only exists to inherit section coordinates) and would otherwise
+    // swallow every click on the sections underneath (pricing accordion,
+    // FAQ). Interactive children opt back in.
+    <footer className="pointer-events-none absolute left-0 top-0 h-full w-full">
       {/* logo + subscribe row */}
       <div className="absolute left-[40px] h-[24px] w-[151px]" style={{ top: top + 8 }}>
         <img loading="lazy" decoding="async"
@@ -929,7 +933,7 @@ function FooterSection({ top }: { top: number }) {
         />
       </div>
       <form
-        className="absolute left-[380px] h-[40px] w-[348px] rounded-full bg-[rgba(54,56,61,0.5)] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
+        className="pointer-events-auto absolute left-[380px] h-[40px] w-[348px] rounded-full bg-[rgba(54,56,61,0.5)] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
         style={{ top }}
         onSubmit={(e) => e.preventDefault()}
       >
@@ -948,13 +952,13 @@ function FooterSection({ top }: { top: number }) {
 
       {/* links + socials */}
       <div
-        className="absolute left-[40px] flex h-[14px] items-center gap-[32px] text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2"
+        className="pointer-events-auto absolute left-[40px] flex h-[14px] items-center gap-[32px] text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2"
         style={{ top: top + 106 }}
       >
         <a href="#" className="hover:text-gray-100">Privacy Policy</a>
         <a href="#" className="hover:text-gray-100">Terms of Service</a>
       </div>
-      <div className="absolute left-[666px] flex gap-[4px]" style={{ top: top + 104 }}>
+      <div className="pointer-events-auto absolute left-[666px] flex gap-[4px]" style={{ top: top + 104 }}>
         {SOCIALS.map((src) => (
           <a key={src} href="#" className="block size-[18px]">
             <img loading="lazy" decoding="async" src={src} alt="" className="size-[18px] max-w-none" />
