@@ -170,11 +170,17 @@ function CheckIcon() {
 function ClockIcon() {
   return (
     <div className="relative size-[10px] shrink-0">
-      {/* coming-soon marker spins like a loader */}
+      {/* coming-soon marker spins like a loader — GSAP data-spin (micro.ts):
+          CSS keyframe animations on the transform don't render inside the
+          scaled canvas in Chrome, so it's driven from the shared ticker.
+          data-no-reveal: the reveal cascade tweens with overwrite:true and
+          would kill the spin the moment the row fades in. */}
       <img
         src="/figma/pricing/clock.svg"
         alt=""
-        className="absolute max-w-none animate-spin [animation-duration:1.6s] motion-reduce:animate-none"
+        data-spin
+        data-no-reveal
+        className="absolute max-w-none"
         style={{ left: -1, top: -1, width: 12, height: 12 }}
       />
     </div>
