@@ -143,8 +143,14 @@ function ProductRow({ product }: { product: Product }) {
 }
 
 export function Ecosystem() {
+  // NO content-visibility on this section: it implies paint containment, which
+  // clips children to the section box — but the ecosystem panel deliberately
+  // hangs 623px ABOVE this section, floating over the orbit rings (Figma: panel
+  // 1680x1000 @ page y 11018, section starts 11641). Containment was cutting
+  // off the panel's heading + loadhunter row. The section is only 377px tall,
+  // so skipping the optimization costs almost nothing.
   return (
-    <section id="offers" className="relative h-[377px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_377px]">
+    <section id="offers" className="relative h-[377px] bg-gray-800">
       <div className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-[12px] bg-[#e9e9eb]">
         {/* left column — icon rebuilt from the original Figma vector layers:
             everything (grid, ring, glyph) is centered by construction */}

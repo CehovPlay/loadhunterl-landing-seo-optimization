@@ -32,10 +32,12 @@ export function WhyLoadHunter() {
         className="absolute left-[375px] top-[198px] w-[1172px] max-w-none"
       />
 
-      {/* heading */}
+      {/* heading — Figma 914:23109: the DARK feature-icon (purple-glow diamond on
+          a dark plate), exported to why-icon.png; not the Tools gear icon and not
+          the light Features variant */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
         <Img
-          src="/figma/tools/intro-icon.png"
+          src="/figma/why-icon.png"
           alt=""
           loading="lazy"
           decoding="async"
@@ -90,12 +92,16 @@ export function WhyLoadHunter() {
               {row.cells.map((c, j) => (
                 <div key={j} className="relative w-[251px]">
                   {c === "check" ? (
+                    // tablet/check.png is the SAME glow-check but with true alpha
+                    // (the old table-check.png had a baked panel background that
+                    // mix-blend-lighten leaked as a visible box wherever the
+                    // panel behind was darker than the bake — e.g. the last row)
                     <Img
-                      src="/figma/table-check.png"
+                      src="/figma/tablet/check.png"
                       alt="yes"
                       loading="lazy"
                       decoding="async"
-                      className="absolute left-[99px] top-[-0.6px] w-[53px] max-w-none mix-blend-lighten"
+                      className="absolute left-[99px] top-[-0.6px] w-[53px] max-w-none"
                     />
                   ) : (
                     <Img

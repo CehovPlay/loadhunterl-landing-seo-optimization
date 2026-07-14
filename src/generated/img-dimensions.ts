@@ -429,5 +429,9 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/why-glow.png": [
     1172,
     846
+  ],
+  "/figma/why-icon.png": [
+    168,
+    168
   ]
 }

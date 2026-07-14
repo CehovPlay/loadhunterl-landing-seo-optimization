@@ -61,6 +61,12 @@ export function DesignFrame({
     return () => window.removeEventListener("load", onLoad)
   }, [width, maxScale])
 
+  // Clip decorative bleed (hero glow, orbit rings, etc.) to the centered canvas.
+  // The OUTER wrapper is full viewport width, so above 1920 its overflow:hidden
+  // clips at the viewport, NOT the 1920 artboard — content overflowing the inner
+  // would leak into the side gutters. So the INNER (the 1920 canvas) must clip
+  // too. Full-bleed section BACKGROUNDS are unaffected: <BleedBg> portals a
+  // full-width colour band to <body>, outside this clipped box.
   return (
     <div style={{ height, overflow: "hidden" }}>
       <div
@@ -68,6 +74,7 @@ export function DesignFrame({
         style={{
           width,
           margin: "0 auto",
+          overflow: "hidden",
           transformOrigin: "top left",
           transform: `scale(${scale})`,
         }}

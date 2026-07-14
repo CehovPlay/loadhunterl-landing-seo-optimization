@@ -1,3 +1,4 @@
+import { BleedBg } from "@/components/site/BleedBg"
 import { Navbar } from "@/sections/Navbar"
 import { Hero } from "@/sections/Hero"
 import { Features } from "@/sections/Features"
@@ -21,10 +22,15 @@ export function DesktopLanding() {
       <Navbar />
       <main>
         <Hero />
-        <Features />
+        {/* Light sections: bleed their bg into the >1920 side gutters */}
+        <BleedBg color="#fafafa">
+          <Features />
+        </BleedBg>
         <DispatchIntro />
         <Tools />
-        <Orbit />
+        <BleedBg color="#ffffff">
+          <Orbit />
+        </BleedBg>
         <Ecosystem />
         <WhyLoadHunter />
         <ChaosDiagram />

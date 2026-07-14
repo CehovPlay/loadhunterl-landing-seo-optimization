@@ -18,8 +18,10 @@ const ROOT = new URL("../public/figma/", import.meta.url).pathname
 const PUBLIC = new URL("../public/", import.meta.url).pathname
 const MANIFEST = new URL("../src/generated/img-dimensions.ts", import.meta.url).pathname
 const FORCE = process.argv.includes("--force")
-const WEBP = { quality: 88, effort: 5 }
-const AVIF = { quality: 64, effort: 4 } // effort 4 keeps encode time bounded
+const WEBP = { quality: 90, effort: 5 }
+// q72 (was 64): q64 left visible artefacts on the detailed dashboard/UI
+// screenshots with small text; 72 restores crispness for a modest size bump.
+const AVIF = { quality: 72, effort: 4 } // effort 4 keeps encode time bounded
 
 async function walk(dir) {
   const out = []
