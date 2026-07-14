@@ -409,6 +409,11 @@ export function Pricing() {
         <div
           ref={trackRef}
           onPointerDown={onPointerDown}
+          role="slider"
+          aria-label="Number of dispatchers"
+          aria-valuemin={1}
+          aria-valuemax={10}
+          aria-valuenow={n}
           className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-[200px] bg-[rgba(231,231,231,0.1)]"
         >
           <div

@@ -15,6 +15,7 @@ import { Img } from "@/components/site/Img"
  */
 
 const SOCIALS = ["/figma/tail/social-1.png", "/figma/tail/social-2.png", "/figma/tail/social-3.png"]
+const SOCIAL_LABELS = ["Website", "X (Twitter)", "Telegram"]
 
 const RINGS = [928, 713, 460] // Ellipse 64 / 62 / 63, all tangent at the top
 
@@ -69,6 +70,7 @@ export function Footer() {
         >
           <input
             type="email"
+            aria-label="Email address"
             placeholder="Enter your e-mail address"
             className="h-[24px] w-[241px] rounded-full bg-gradient-to-b from-[rgba(255,255,255,0.06)] to-[rgba(255,255,255,0.05)] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] placeholder:text-ink-2 focus:outline-none"
           />
@@ -89,8 +91,8 @@ export function Footer() {
           <a href="#" className="hover:text-gray-100">Terms of Service</a>
         </div>
         <div className="absolute right-0 top-0 flex h-full items-center gap-[4px]">
-          {SOCIALS.map((src) => (
-            <a key={src} href="#" className="block size-[18px]">
+          {SOCIALS.map((src, i) => (
+            <a key={src} href="#" aria-label={SOCIAL_LABELS[i]} className="block size-[18px]">
               <Img src={src} alt="" loading="lazy" decoding="async" className="size-[18px] max-w-none" />
             </a>
           ))}
