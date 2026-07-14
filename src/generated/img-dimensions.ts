@@ -116,7 +116,7 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   ],
   "/figma/phone/chaos.png": [
     780,
-    708
+    600
   ],
   "/figma/phone/cta.png": [
     780,
@@ -125,10 +125,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/phone/eco-card-1.png": [
     724,
     900
-  ],
-  "/figma/phone/eco-card-2.png": [
-    724,
-    162
   ],
   "/figma/phone/footer-orbit.png": [
     780,
@@ -170,10 +166,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     255,
     708
   ],
-  "/figma/pricing/header-icon.png": [
-    112,
-    128
-  ],
   "/figma/pricing/icon-ai.png": [
     168,
     168
@@ -194,13 +186,9 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     1287,
     84
   ],
-  "/figma/table-check.png": [
-    212,
-    181
-  ],
   "/figma/tablet/chaos.png": [
     1536,
-    1110
+    1000
   ],
   "/figma/tablet/check.png": [
     106,
@@ -221,10 +209,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/tablet/eco-card1.png": [
     1376,
     900
-  ],
-  "/figma/tablet/eco-card2.png": [
-    1376,
-    580
   ],
   "/figma/tablet/eco-icon.png": [
     168,
@@ -306,10 +290,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     168,
     168
   ],
-  "/figma/tail/footer-orbit.png": [
-    3362,
-    1588
-  ],
   "/figma/tail/social-1.png": [
     72,
     72
@@ -321,10 +301,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/tail/social-3.png": [
     72,
     72
-  ],
-  "/figma/tools/a-bg1.png": [
-    3356,
-    1848
   ],
   "/figma/tools/a-icon1.png": [
     124,
@@ -374,10 +350,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     1848,
     1256
   ],
-  "/figma/tools/e-bg1.png": [
-    3360,
-    1624
-  ],
   "/figma/tools/e-icon1.png": [
     124,
     124
@@ -390,10 +362,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     1886,
     1274
   ],
-  "/figma/tools/f-bg1.png": [
-    3360,
-    1664
-  ],
   "/figma/tools/f-icon1.png": [
     104,
     124
@@ -405,10 +373,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/tools/f-mockup.png": [
     1848,
     1372
-  ],
-  "/figma/tools/g-bg1.png": [
-    3360,
-    1624
   ],
   "/figma/tools/g-icon1.png": [
     124,
