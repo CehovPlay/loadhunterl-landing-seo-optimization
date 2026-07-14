@@ -72,7 +72,10 @@ export function ShaderBand({
                   // — drifts continuously, no cursor involvement. The linear
                   // (hero) mode keeps the cursor-driven violet ChromaFlow.
                   const input = polarCenter ? (
-                    <Swirl colorA="#9B79CE" colorB="#F1ECFA" detail={1.7} speed={0.5} />
+                    // pale lavender ↔ near-white: big Swirl blobs never read
+                    // as dark violet slabs, but the fluting still has a clear
+                    // gradient to refract
+                    <Swirl colorA="#C9B7E7" colorB="#F8F6FC" detail={1.7} speed={0.35} />
                   ) : (
                     <ChromaFlow
                       baseColor="#ffffff"
