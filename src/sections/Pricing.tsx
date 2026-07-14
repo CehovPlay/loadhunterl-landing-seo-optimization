@@ -346,7 +346,7 @@ export function Pricing() {
     <section id="pricing" className="relative h-[1462px] bg-gray-800">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
-        <img src="/figma/pricing/header-icon.png" alt="" className="absolute left-[-24px] top-[-24px] w-[112px] max-w-none" />
+        <img src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
       </div>
 
       {/* heading */}
