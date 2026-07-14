@@ -83,10 +83,12 @@ export function WhyLoadHunter() {
               {row.cells.map((c, j) => (
                 <div key={j} className="relative w-[251px]">
                   {c === "check" ? (
+                    // vector check with its glow filter — replaces the old PNG
+                    // whose baked panel background leaked through blend modes
                     <img
-                      src="/figma/table-check.png"
+                      src="/figma/table-check.svg"
                       alt="yes"
-                      className="absolute left-[99px] top-[-0.6px] w-[53px] max-w-none mix-blend-lighten"
+                      className="absolute left-[99px] top-[-0.6px] w-[53px] max-w-none"
                     />
                   ) : (
                     <img

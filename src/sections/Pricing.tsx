@@ -55,7 +55,7 @@ const PRO_COLS: [Feature[], Feature[]] = [
 const PLANS: Plan[] = [
   {
     name: "Basic",
-    icon: "/figma/pricing/icon-basic.png",
+    icon: "/figma/pricing/icon-basic.svg",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     base: 9.99,
     unit: "/per month",
@@ -72,7 +72,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Standard",
-    icon: "/figma/pricing/icon-standard.png",
+    icon: "/figma/pricing/icon-standard.svg",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     base: 14.99,
     unit: "/per month",
@@ -109,7 +109,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Pro",
-    icon: "/figma/pricing/icon-pro.png",
+    icon: "/figma/pricing/icon-pro.svg",
     blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
     base: 29.99,
     unit: "/per month",
@@ -170,10 +170,11 @@ function CheckIcon() {
 function ClockIcon() {
   return (
     <div className="relative size-[10px] shrink-0">
+      {/* coming-soon marker spins like a loader */}
       <img
         src="/figma/pricing/clock.svg"
         alt=""
-        className="absolute max-w-none"
+        className="absolute max-w-none animate-spin [animation-duration:1.6s] motion-reduce:animate-none"
         style={{ left: -1, top: -1, width: 12, height: 12 }}
       />
     </div>
@@ -215,7 +216,6 @@ function PlanCard({
 
   return (
     <div
-      data-lift
       className="absolute top-[544px] h-[690px] w-[417px] overflow-hidden rounded-[16px] border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       style={{ left, backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))" }}
     >
