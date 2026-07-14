@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import { Shader, Swirl, ChromaFlow, FlutedGlass, FilmGrain, PolarCoordinates } from "shaders/react"
+import { Shader, Swirl, ChromaFlow, FlutedGlass, FilmGrain, Mirror, PolarCoordinates } from "shaders/react"
 
 /**
  * Full-bleed animated shader band (experiment): Swirl base → ChromaFlow
@@ -99,9 +99,14 @@ export function ShaderBand({
                   )
                   // Polar mode: horizontal flutes (angle 90) become constant-
                   // radius bands = concentric circles around polarCenter.
+                  // Mirror first makes the input left-right symmetric, so the
+                  // angular wrap seam (the horizontal line pointing left from
+                  // the centre) lands on identical pixels and disappears.
                   return polarCenter ? (
                     <PolarCoordinates center={polarCenter} edges="mirror">
-                      {fluted}
+                      <Mirror center={{ x: 0.5, y: 0.5 }} angle={90} edges="mirror">
+                        {fluted}
+                      </Mirror>
                     </PolarCoordinates>
                   ) : (
                     fluted
