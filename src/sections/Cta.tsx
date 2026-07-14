@@ -11,7 +11,7 @@ export function Cta() {
     <section id="start" className="relative h-[867px] overflow-hidden bg-gray-800">
       {/* right panel + glow — exported as one bitmap, full section height */}
       <img loading="lazy" decoding="async"
-        src="/figma/tail/cta-right.webp"
+        src="/figma/tail/cta-right.png"
         alt=""
         aria-hidden
         className="absolute left-[671px] top-0 h-[867px] w-[1129px] max-w-none"

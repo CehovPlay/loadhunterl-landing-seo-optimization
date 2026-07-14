@@ -1,4 +1,4 @@
-import diagram from "/figma/misc/chaos-diagram.webp"
+import diagram from "/figma/misc/chaos-diagram.png"
 import { ChaosBeams } from "@/components/site/ChaosBeams"
 
 /**

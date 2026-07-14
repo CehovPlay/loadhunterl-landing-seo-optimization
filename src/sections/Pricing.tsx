@@ -124,7 +124,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "AI subscription",
-    icon: "/figma/pricing/icon-ai.webp",
+    icon: "/figma/pricing/icon-ai.png",
     blurb: "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
     price: "Let's talk",
     note: "Best value for 20+ dispatchers.",

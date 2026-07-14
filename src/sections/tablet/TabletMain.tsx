@@ -36,7 +36,7 @@ const BLOCKS: ToolBlock[] = [
     title: "Smart-board view",
     desc: "We’ve completely redesigned how LoadBoards are displayed by replacing the default DAT  view with our custom high-performance interface. This allows users to fully customize column layout, hide or show fields, and experience a smoother, faster workflow — without any of the typical lags or freezing.",
     lightDesc: true,
-    mockup: { src: "/figma/tablet/tool-a.webp", w: 688, h: 437 },
+    mockup: { src: "/figma/tablet/tool-a.png", w: 688, h: 437 },
     textY: 477,
     items: [
       {
@@ -60,7 +60,7 @@ const BLOCKS: ToolBlock[] = [
     top: 2079,
     title: "Auto-emailing",
     desc: "Our custom view eliminates the slowdowns and UI glitches of traditional integration, delivering a smooth and responsive experience across all supported load boards.",
-    mockup: { src: "/figma/tablet/tool-b.webp", w: 688, h: 437.07 },
+    mockup: { src: "/figma/tablet/tool-b.png", w: 688, h: 437.07 },
     textY: 469.07,
     items: [
       {
@@ -84,7 +84,7 @@ const BLOCKS: ToolBlock[] = [
     top: 2974.07,
     title: "Telegram notifications",
     desc: "Get instant load alerts from multiple load boards like One and Truckstop directly in Telegram. Stay ahead with real-time updates across all your platforms.",
-    mockup: { src: "/figma/tablet/tool-c.webp", w: 688, h: 559 },
+    mockup: { src: "/figma/tablet/tool-c.png", w: 688, h: 559 },
     textY: 591,
     items: [
       {
@@ -108,7 +108,7 @@ const BLOCKS: ToolBlock[] = [
     top: 3991.07,
     title: "Integrated TMS",
     desc: "Take full control of your dispatching process with a built-in TMS. Track driver timelines, manage workflows, and streamline operations — all within LoadHunter. Perfect for organizing your team and boosting efficiency.",
-    mockup: { src: "/figma/tablet/tool-d.webp", w: 688, h: 468.07 },
+    mockup: { src: "/figma/tablet/tool-d.png", w: 688, h: 468.07 },
     textY: 500.07,
     items: [
       {
@@ -133,7 +133,7 @@ const BLOCKS: ToolBlock[] = [
     title: "Integrated map",
     desc: "Easily track routes and load details on an interactive map, all directly within your load board for enhanced convenience.",
     // export render is 19px wider than the layout box (map glow bleeds right)
-    mockup: { src: "/figma/tablet/tool-e.webp", w: 707, h: 474 },
+    mockup: { src: "/figma/tablet/tool-e.png", w: 707, h: 474 },
     textY: 506,
     items: [
       {
@@ -157,7 +157,7 @@ const BLOCKS: ToolBlock[] = [
     top: 5853.15,
     title: "Broker reviews",
     desc: "Easily share your experiences working with brokers to help others make informed decisions and avoid potential issues.",
-    mockup: { src: "/figma/tablet/tool-f.webp", w: 688, h: 510.79 },
+    mockup: { src: "/figma/tablet/tool-f.png", w: 688, h: 510.79 },
     textY: 542.79,
     items: [
       {
@@ -181,7 +181,7 @@ const BLOCKS: ToolBlock[] = [
     top: 6805.94,
     title: "Profit calculator",
     desc: "Estimate profitability by factoring in expenses like fuel and miles, giving you clear insights to maximize your earnings.",
-    mockup: { src: "/figma/tablet/tool-g.webp", w: 688, h: 422.5 },
+    mockup: { src: "/figma/tablet/tool-g.png", w: 688, h: 422.5 },
     textY: 454.5,
     items: [
       {
@@ -288,7 +288,7 @@ function OrbitT() {
   return (
     <div className="absolute left-0 top-[7624px] h-[763px] w-full bg-white">
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/orbit.webp"
+        src="/figma/tablet/orbit.png"
         alt=""
         aria-hidden
         className="absolute left-0 top-0 w-[768px] max-w-none"
@@ -323,12 +323,12 @@ function EcosystemT() {
         smarter, and in one place.
       </p>
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/eco-card1.webp"
+        src="/figma/tablet/eco-card1.png"
         alt="LoadHunter Extension — AI browser tool for major LoadBoards"
         className="absolute left-[40px] top-[240px] w-[688px] max-w-none"
       />
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/eco-card2.webp"
+        src="/figma/tablet/eco-card2.png"
         alt="huntTMS — comprehensive transport management system"
         className="absolute left-[40px] top-[710px] w-[688px] max-w-none"
       />

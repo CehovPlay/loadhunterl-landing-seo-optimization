@@ -435,7 +435,7 @@ export function PhoneTail() {
       <div id="start" className="absolute left-0 top-[2438px] h-[704px] w-full">
         {/* automation panel + rings + glow — 2x export (card region re-drawn live on top) */}
         <img loading="lazy" decoding="async"
-          src="/figma/phone/cta.webp"
+          src="/figma/phone/cta.png"
           alt="One click automation — book faster, miss less, earn more"
           className="absolute left-0 top-0 w-[390px] max-w-none"
         />
@@ -550,7 +550,7 @@ export function PhoneTail() {
 
         {/* orbit rings graphic (decorative, © caption baked in) */}
         <img loading="lazy" decoding="async"
-          src="/figma/phone/footer-orbit.webp"
+          src="/figma/phone/footer-orbit.png"
           alt="© 2026 loadhunt Corp. All rights reserved."
           className="absolute left-0 top-[224px] h-[588px] w-[390px] max-w-none"
         />

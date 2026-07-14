@@ -32,7 +32,7 @@ type Block = {
 const BLOCKS: Block[] = [
   {
     key: "a",
-    mockup: { src: "/figma/phone/tools-a-mockup.webp", y: 600, w: 362 },
+    mockup: { src: "/figma/phone/tools-a-mockup.png", y: 600, w: 362 },
     titleY: 929,
     title: "Smart-board view",
     descY: 977,
@@ -55,7 +55,7 @@ const BLOCKS: Block[] = [
   },
   {
     key: "b",
-    mockup: { src: "/figma/phone/tools-b-mockup.webp", y: 1549, w: 362 },
+    mockup: { src: "/figma/phone/tools-b-mockup.png", y: 1549, w: 362 },
     titleY: 2026,
     title: "Auto-emailing",
     descY: 2074,
@@ -77,7 +77,7 @@ const BLOCKS: Block[] = [
   },
   {
     key: "c",
-    mockup: { src: "/figma/phone/tools-c-mockup.webp", y: 2566, w: 363 },
+    mockup: { src: "/figma/phone/tools-c-mockup.png", y: 2566, w: 363 },
     titleY: 2901,
     title: "Telegram notifications",
     descY: 2949,
@@ -99,7 +99,7 @@ const BLOCKS: Block[] = [
   },
   {
     key: "d",
-    mockup: { src: "/figma/phone/tools-d-mockup.webp", y: 3457, w: 362 },
+    mockup: { src: "/figma/phone/tools-d-mockup.png", y: 3457, w: 362 },
     titleY: 3786,
     title: "Integrated TMS",
     descY: 3834,

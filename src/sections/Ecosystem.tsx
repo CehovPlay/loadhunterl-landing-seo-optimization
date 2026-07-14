@@ -30,8 +30,8 @@ const PRODUCTS: Product[] = [
       'LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.).',
     logoWidth: 150.5,
     logo: '/figma/eco/logo1.png',
-    mockup: '/figma/eco/row1.webp',
-    mockupHover: '/figma/eco/row1-hover.webp',
+    mockup: '/figma/eco/row1.png',
+    mockupHover: '/figma/eco/row1-hover.png',
   },
   {
     name: 'huntTMS',
@@ -39,8 +39,8 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 113,
     logo: '/figma/eco/logo2.png',
-    mockup: '/figma/eco/row2.webp',
-    mockupHover: '/figma/eco/row2-hover.webp',
+    mockup: '/figma/eco/row2.png',
+    mockupHover: '/figma/eco/row2-hover.png',
   },
   {
     name: 'huntPAY',
@@ -48,7 +48,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 109,
     logo: '/figma/eco/logo3.png',
-    mockup: '/figma/eco/row3.webp',
+    mockup: '/figma/eco/row3.png',
     comingSoon: true,
   },
   {
@@ -57,7 +57,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 130,
     logo: '/figma/eco/logo4.png',
-    mockup: '/figma/eco/row4.webp',
+    mockup: '/figma/eco/row4.png',
     comingSoon: true,
   },
   {
@@ -66,7 +66,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 126,
     logo: '/figma/eco/logo5.png',
-    mockup: '/figma/eco/row5.webp',
+    mockup: '/figma/eco/row5.png',
     comingSoon: true,
   },
   {
@@ -75,7 +75,7 @@ const PRODUCTS: Product[] = [
       'Comprehensive transport management system providing a single platform to manage all aspects.',
     logoWidth: 114,
     logo: '/figma/eco/logo6.png',
-    mockup: '/figma/eco/row6.webp',
+    mockup: '/figma/eco/row6.png',
     comingSoon: true,
   },
 ]

@@ -14,7 +14,7 @@ const CARDS = [
   {
     title: "All needs in one place",
     body: "Access every essential dispatching tool directly from your load board — emails, notifications, maps, and more, all seamlessly integrated.",
-    img: "/figma/tablet/feat-card1-img.webp",
+    img: "/figma/tablet/feat-card1-img.png",
     imgLeft: 326,
     imgWidth: 362,
     textLeft: 24,
@@ -23,7 +23,7 @@ const CARDS = [
   {
     title: "Time saver",
     body: "Save hours every day by automating repetitive tasks, streamlining workflows, and focusing on what matters most— booking the best loads.",
-    img: "/figma/tablet/feat-card2-img.webp",
+    img: "/figma/tablet/feat-card2-img.png",
     imgLeft: 327,
     imgWidth: 361,
     textLeft: 14,
@@ -32,7 +32,7 @@ const CARDS = [
   {
     title: "AI-Powered automation",
     body: "Automate your workflow with AI-driven features like Telegram notifications and auto-emailing, reducing manual tasks and saving valuable time.",
-    img: "/figma/tablet/feat-card3-img.webp",
+    img: "/figma/tablet/feat-card3-img.png",
     imgLeft: 327,
     imgWidth: 361,
     textLeft: 14,

@@ -2,22 +2,48 @@
  * Figma: footer region — page y 18556–19624 (h=1068).
  * Logo/subscribe row 1680x40 @ (120,120) (914:23856), full-bleed separator
  * @ y=191, links/socials row 1680x18 @ (120,224) (914:23887), gradient
- * hairline "Line 17" @ y=274, orbit graphic Group 926:101887 exported @2x
- * (aligned @ (119,274), carries the © caption; design extends past the page
- * bottom so the section clips it via overflow-hidden).
+ * hairline "Line 17" @ y=274, orbit graphic Group 926:101887 rebuilt as
+ * vectors: three rings tangent at (960,377), tick fading up from the tangent,
+ * logomark 914:23912 @ (908.33,558), © caption @ (848,1005). The rings run
+ * past the page bottom, so they sit in their own overflow-hidden layer — the
+ * section itself must NOT clip (the dividers bleed into the >1920 gutters),
+ * and it has no own bg: the PNG's baked backdrop is gone, the root gray-800
+ * shows through.
  */
 
 const SOCIALS = ["/figma/tail/social-1.png", "/figma/tail/social-2.png", "/figma/tail/social-3.png"]
 
+const RINGS = [928, 713, 460] // Ellipse 64 / 62 / 63, all tangent at the top
+
 export function Footer() {
   return (
-    <footer id="token" className="relative h-[1068px] overflow-hidden bg-gray-800">
-      {/* big orbit rings graphic (decorative, © caption baked in) */}
-      <img loading="lazy" decoding="async"
-        src="/figma/tail/footer-orbit.webp"
-        alt="© 2026 loadhunt Corp. All rights reserved."
-        className="absolute left-[119px] top-[274px] h-[794px] w-[1681px] max-w-none"
-      />
+    <footer id="token" className="relative h-[1068px]">
+      {/* orbit rings + logomark + caption (clipped at the section bounds) */}
+      <div className="absolute inset-0 overflow-hidden">
+        {RINGS.map((d) => (
+          <div
+            key={d}
+            className="absolute rounded-full border border-[rgba(150,150,150,0.2)]"
+            style={{ left: 960 - d / 2, top: 377, width: d, height: d }}
+          />
+        ))}
+        {/* tick above the rings' tangent point, fading upward */}
+        <div
+          className="absolute left-[960px] top-[345px] h-[32px] w-px"
+          style={{
+            background:
+              "linear-gradient(0deg, rgba(150,150,150,0.5) 0%, rgba(150,150,150,0) 100%)",
+          }}
+        />
+        <img loading="lazy" decoding="async"
+          src="/figma/tail/footer-logo.svg"
+          alt=""
+          className="absolute left-[908.33px] top-[558px] h-[98px] w-[103.65px] max-w-none"
+        />
+        <p className="absolute left-[848px] top-[1005px] w-[224px] whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">
+          © 2026 loadhunt Corp. All rights reserved.
+        </p>
+      </div>
 
       {/* logo + subscribe row */}
       <div className="absolute left-[120px] top-[120px] h-[40px] w-[1680px]">
@@ -49,8 +75,9 @@ export function Footer() {
         </form>
       </div>
 
-      {/* full-bleed separator */}
-      <div className="absolute left-0 top-[191px] h-px w-[1920px] bg-[#33353a]" />
+      {/* full-bleed separator — spans the whole viewport, past the >1920
+          gutters (the DesignFrame wrapper clips it at the window edge) */}
+      <div className="absolute left-1/2 top-[191px] h-px w-[6000px] -translate-x-1/2 bg-[#33353a]" />
 
       {/* links + socials row */}
       <div className="absolute left-[120px] top-[224px] h-[18px] w-[1680px]">
@@ -67,9 +94,9 @@ export function Footer() {
         </div>
       </div>
 
-      {/* gradient hairline above the orbit graphic */}
+      {/* gradient hairline above the orbit graphic — full viewport width */}
       <div
-        className="absolute left-[120px] top-[274px] h-px w-[1680px]"
+        className="absolute left-1/2 top-[274px] h-px w-[6000px] -translate-x-1/2"
         style={{
           background:
             "linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.268) 50%, rgba(255,255,255,0.03) 100%)",

@@ -23,7 +23,7 @@ export function WhyLoadHunter() {
       {/* panel glow + rounded panel background — FIRST in DOM: the export is
           fully opaque (baked #181A1F bg) and would cover the heading otherwise */}
       <img loading="lazy" decoding="async"
-        src="/figma/why-glow.webp"
+        src="/figma/why-glow.png"
         alt=""
         aria-hidden
         className="absolute left-[375px] top-[198px] w-[1172px] max-w-none"

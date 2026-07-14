@@ -100,7 +100,7 @@ function WhySection() {
     <>
       {/* ambient glow (image 60, render bounds cropped to section top) */}
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/why-glow.webp"
+        src="/figma/tablet/why-glow.png"
         alt=""
         aria-hidden
         className="absolute left-0 top-0 w-[478px] max-w-none"
@@ -262,7 +262,7 @@ const PRO_COLS: [Feature[], Feature[]] = [
 const PLANS: Plan[] = [
   {
     name: "Basic",
-    icon: "/figma/pricing/icon-basic.webp",
+    icon: "/figma/pricing/icon-basic.png",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     price: "From $26.97",
     unit: "/per month",
@@ -292,7 +292,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Standard",
-    icon: "/figma/pricing/icon-standard.webp",
+    icon: "/figma/pricing/icon-standard.png",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     price: "From $40.47",
     unit: "/per month",
@@ -330,7 +330,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Pro",
-    icon: "/figma/pricing/icon-pro.webp",
+    icon: "/figma/pricing/icon-pro.png",
     blurb:
       "Unlock the full LoadHunter experience with automation, insights, and control.",
     price: "From $80.97",
@@ -347,7 +347,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "AI subscription",
-    icon: "/figma/pricing/icon-ai.webp",
+    icon: "/figma/pricing/icon-ai.png",
     blurb:
       "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
     price: "Let's talk",
@@ -965,7 +965,7 @@ function CtaSection({ top }: { top: number }) {
 
       {/* "One click automation" panel — baked 2x export */}
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/cta-panel.webp"
+        src="/figma/tablet/cta-panel.png"
         alt=""
         aria-hidden
         className="absolute left-[50px] top-[326px] h-[300px] w-[668px] max-w-none"
@@ -973,7 +973,7 @@ function CtaSection({ top }: { top: number }) {
       {/* diffuse light haze over the panel (present only in the full-frame
           figma composite; reconstructed as an additive overlay) */}
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/cta-haze.webp"
+        src="/figma/tablet/cta-haze.png"
         alt=""
         aria-hidden
         className="absolute left-[50px] top-[306px] h-[332px] w-[668px] max-w-none"
@@ -981,7 +981,7 @@ function CtaSection({ top }: { top: number }) {
       />
       {/* right-edge glow (image 61; blur margins baked, left bleed cropped) */}
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/cta-glow.webp"
+        src="/figma/tablet/cta-glow.png"
         alt=""
         aria-hidden
         className="absolute left-[718px] top-[242px] h-[440px] w-[712px] max-w-none"
@@ -1050,7 +1050,7 @@ function FooterSection({ top }: { top: number }) {
 
       {/* orbit rings graphic (© caption + hairline baked in) */}
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/footer-orbit.webp"
+        src="/figma/tablet/footer-orbit.png"
         alt="© 2026 loadhunt Corp. All rights reserved."
         className="absolute left-0 h-[875px] w-[768px] max-w-none"
         style={{ top: top + 122 }}
@@ -1076,7 +1076,7 @@ export function TabletBottom() {
         loads, respond faster, and book with confidence.
       </p>
       <img loading="lazy" decoding="async"
-        src="/figma/tablet/chaos.webp"
+        src="/figma/tablet/chaos.png"
         alt=""
         aria-hidden
         data-parallax="0.04"

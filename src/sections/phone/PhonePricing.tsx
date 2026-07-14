@@ -51,7 +51,7 @@ type Plan = {
 const PLANS: Plan[] = [
   {
     name: "Basic",
-    icon: "/figma/pricing/icon-basic.webp",
+    icon: "/figma/pricing/icon-basic.png",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     price: "From $26.97",
     unit: "/per month",
@@ -62,7 +62,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Standard",
-    icon: "/figma/pricing/icon-standard.webp",
+    icon: "/figma/pricing/icon-standard.png",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     price: "From $40.47",
     unit: "/per month",
@@ -73,7 +73,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Pro",
-    icon: "/figma/pricing/icon-pro.webp",
+    icon: "/figma/pricing/icon-pro.png",
     blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
     price: "From $80.97",
     unit: "/per month",
@@ -85,7 +85,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "AI subscription",
-    icon: "/figma/pricing/icon-ai.webp",
+    icon: "/figma/pricing/icon-ai.png",
     blurb: "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
     price: "Let's talk",
     note: "Best value for 20+ dispatchers.",

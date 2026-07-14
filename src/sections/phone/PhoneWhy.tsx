@@ -67,7 +67,7 @@ export function PhoneWhy() {
     <section className="relative overflow-hidden bg-gray-800" style={{ height: 889 }}>
       {/* violet glow behind icon + panel — 2x export of image 60 */}
       <img loading="lazy" decoding="async"
-        src="/figma/phone/why-glow.webp"
+        src="/figma/phone/why-glow.png"
         alt=""
         aria-hidden
         className="absolute left-0 top-[-44px] w-[255px] max-w-none"

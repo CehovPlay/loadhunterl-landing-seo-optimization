@@ -12,7 +12,7 @@ export function PhoneOrbitEco() {
     <section className="relative overflow-hidden bg-gray-800" style={{ height: 1324 }}>
       {/* white orbit rings + "Start free trial 14 days" pills — decorative 2x export */}
       <img loading="lazy" decoding="async"
-        src="/figma/phone/orbit.webp"
+        src="/figma/phone/orbit.png"
         alt=""
         aria-hidden
         className="absolute left-0 top-0 w-[388px] max-w-none"
@@ -39,7 +39,7 @@ export function PhoneOrbitEco() {
 
         {/* product cards — 2x exports (Flex 926:102303 / 926:102931, clipped) */}
         <img loading="lazy" decoding="async"
-          src="/figma/phone/eco-card-1.webp"
+          src="/figma/phone/eco-card-1.png"
           alt="LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.)."
           className="absolute left-[14px] top-[292px] w-[362px] max-w-none"
         />
