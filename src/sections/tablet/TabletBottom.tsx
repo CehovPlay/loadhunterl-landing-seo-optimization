@@ -12,7 +12,7 @@
  * "30 H2" token (30/40, tracking −1.2).
  */
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type { CSSProperties } from "react"
 import gsap from "gsap"
 import {
@@ -22,6 +22,7 @@ import {
   FeatureItem,
   type FeatureCols,
 } from "@/sections/pricingFeatures"
+import { planTotal, knobToCount, type SliderZones } from "@/sections/pricingLogic"
 
 const PILL_SHADOW =
   "0px 1px 0px rgba(0,0,0,0.05), 0px 4px 4px rgba(0,0,0,0.05), 0px 10px 10px rgba(0,0,0,0.1)"
@@ -114,7 +115,7 @@ function WhySection() {
       />
       <div data-float className="absolute left-[352px] top-0 size-[64px]">
         <img loading="lazy" decoding="async"
-          src="/figma/tablet/heading-icon.png"
+          src="/figma/tools/intro-icon.png"
           alt=""
           aria-hidden
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -221,6 +222,8 @@ function WhySection() {
 
 type Plan = {
   name: string
+  /** monthly price per dispatcher; absent for the "Let's talk" plan */
+  base?: number
   icon: string
   blurb: string
   price: string
@@ -240,6 +243,7 @@ type Plan = {
 const PLANS: Plan[] = [
   {
     name: "Basic",
+    base: 9.99,
     icon: "/figma/pricing/icon-basic.png",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     price: "From $26.97",
@@ -255,6 +259,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Standard",
+    base: 14.99,
     icon: "/figma/pricing/icon-standard.png",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     price: "From $40.47",
@@ -270,6 +275,7 @@ const PLANS: Plan[] = [
   },
   {
     name: "Pro",
+    base: 29.99,
     icon: "/figma/pricing/icon-pro.png",
     blurb:
       "Unlock the full LoadHunter experience with automation, insights, and control.",
@@ -321,10 +327,12 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
 
 function PlanCard({
   plan,
+  price,
   expanded,
   onSelect,
 }: {
   plan: Plan
+  price: string
   expanded: boolean
   onSelect: () => void
 }) {
@@ -402,7 +410,7 @@ function PlanCard({
         <div className="absolute left-[24px] w-[285px]" style={{ top: 136 + s }}>
           <div className="flex items-center gap-[12px]">
             <span className="whitespace-nowrap text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-gray-50">
-              {plan.price}
+              {price}
             </span>
             {plan.unit && (
               <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-[#a2a2a2]">
@@ -445,15 +453,47 @@ function PlanCard({
   )
 }
 
+/** slider zones anchored to the tablet badge positions (688px track) */
+const T_ZONES: SliderZones = { min: 11, at3: 269, at4: 501, max: 677 }
+
 function PricingSection({ top }: { top: number }) {
   // horizontal accordion: Basic open by default; clicking a collapsed plan
   // closes the open one and expands the clicked one (Figma 921:88128 states)
   const [open, setOpen] = useState(0)
+  const [annual, setAnnual] = useState(false)
+  const [knob, setKnob] = useState(T_ZONES.at3) // design default: 3 dispatchers
+  const trackRef = useRef<HTMLDivElement>(null)
+  const n = knobToCount(knob, T_ZONES)
+
+  const moveTo = useCallback((clientX: number) => {
+    const track = trackRef.current
+    if (!track) return
+    const r = track.getBoundingClientRect()
+    const frac = Math.min(1, Math.max(0, (clientX - r.left) / r.width))
+    setKnob(Math.min(T_ZONES.max, Math.max(T_ZONES.min, frac * 688)))
+  }, [])
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+      moveTo(e.clientX)
+      const onMove = (ev: PointerEvent) => moveTo(ev.clientX)
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove)
+        window.removeEventListener("pointerup", onUp)
+      }
+      window.addEventListener("pointermove", onMove)
+      window.addEventListener("pointerup", onUp)
+    },
+    [moveTo],
+  )
+  const priceFor = (plan: Plan) =>
+    plan.base != null ? `From $${planTotal(plan.base, n, annual).toFixed(2)}` : plan.price
+
   return (
     <>
-      <div className="absolute left-[352px] size-[64px]" style={{ top }}>
+      <div data-float className="absolute left-[352px] size-[64px]" style={{ top }}>
         <img loading="lazy" decoding="async"
-          src="/figma/tablet/heading-icon.png"
+          src="/figma/pricing/header-icon.svg"
           alt=""
           aria-hidden
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
@@ -473,55 +513,81 @@ function PricingSection({ top }: { top: number }) {
         unlock 20% off starting at 4 users!
       </p>
 
-      {/* billing toggle (static: Monthly) */}
+      {/* billing toggle */}
       <div
+        data-no-reveal
         className="absolute flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] py-[6px] pl-[6px] pr-[11px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
         style={{ left: 256.5, top: top + 212 }}
       >
-        <div
-          className="flex h-[28px] items-center justify-center rounded-[99px] border border-[rgba(232,232,232,0.75)] px-[12px] backdrop-blur-[10px]"
-          style={{
-            backgroundImage:
-              "radial-gradient(42px 38px at 50% 109%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
-            boxShadow: PILL_SHADOW,
-          }}
-        >
-          <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
-            Monthly
-          </span>
-        </div>
-        <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
-          Annually
-        </span>
+        {(["Monthly", "Annually"] as const).map((label) => {
+          const active = (label === "Annually") === annual
+          return (
+            <button
+              key={label}
+              type="button"
+              onClick={() => setAnnual(label === "Annually")}
+              className={
+                active
+                  ? "flex h-[28px] items-center justify-center rounded-[99px] border border-[rgba(232,232,232,0.75)] px-[12px] backdrop-blur-[10px] transition-all"
+                  : "flex h-[28px] items-center justify-center rounded-[99px] px-[6px] transition-all"
+              }
+              style={
+                active
+                  ? {
+                      backgroundImage:
+                        "radial-gradient(42px 38px at 50% 109%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
+                      boxShadow: PILL_SHADOW,
+                    }
+                  : undefined
+              }
+            >
+              <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+                {label}
+              </span>
+            </button>
+          )
+        })}
         <DiscountBadge text="save up -10%" />
       </div>
 
-      {/* dispatchers slider (static: 3 dispatchers) */}
-      <p
-        className="absolute left-[254px] w-[98px] whitespace-nowrap text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
-        style={{ top: top + 276 }}
-      >
-        3 dispatchers
-      </p>
-      <div
-        className="absolute left-[40px] h-[16px] w-[688px] rounded-[200px] bg-[rgba(231,231,231,0.1)]"
-        style={{ top: top + 310 }}
-      >
-        <div className="absolute left-[2px] top-[2px] h-[12px] w-[269px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]" />
-        <div className="absolute left-[260px] top-[-3px] size-[22px]">
-          <img loading="lazy" decoding="async"
-            src="/figma/pricing/knob.svg"
-            alt=""
-            className="absolute max-w-none"
-            style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}
+      {/* dispatchers slider */}
+      <div className="absolute left-[40px] w-[688px] select-none" style={{ top: top + 276 }}>
+        <p
+          className="w-[98px] whitespace-nowrap text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
+          style={{ marginLeft: Math.min(590, Math.max(0, knob - 49)) }}
+        >
+          {n} {n === 1 ? "dispatcher" : "dispatchers"}
+        </p>
+        <div
+          ref={trackRef}
+          onPointerDown={onPointerDown}
+          className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-[200px] bg-[rgba(231,231,231,0.1)]"
+        >
+          <div
+            className="absolute left-[2px] top-[2px] h-[12px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
+            style={{ width: Math.max(12, knob - 2) }}
           />
+          <div
+            className="absolute top-[-3px] size-[22px] cursor-grab active:cursor-grabbing"
+            style={{ left: knob - 11 }}
+          >
+            <img loading="lazy" decoding="async"
+              src="/figma/pricing/knob.svg"
+              alt=""
+              draggable={false}
+              className="absolute max-w-none"
+              style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}
+            />
+          </div>
         </div>
-      </div>
-      <div className="absolute left-[279px]" style={{ top: top + 340 }}>
-        <DiscountBadge text="-10% OFF" />
-      </div>
-      <div className="absolute left-[506px] opacity-50" style={{ top: top + 340 }}>
-        <DiscountBadge text="-20% OFF" shadow={false} />
+        <div className="relative mt-[14px] h-[18px]">
+          <div className={`absolute left-[239px] top-0 transition-opacity duration-300 ${n >= 3 ? "opacity-100" : "opacity-50"}`}>
+            <DiscountBadge text="-10% OFF" shadow={n >= 3} />
+          </div>
+          <div className={`absolute left-[466px] top-0 transition-opacity duration-300 ${n >= 4 ? "opacity-100" : "opacity-50"}`}>
+            <DiscountBadge text="-20% OFF" shadow={n >= 4} />
+          </div>
+        </div>
       </div>
 
       {/* plan-card accordion row (40px margins, 4px gaps) */}
@@ -533,6 +599,7 @@ function PricingSection({ top }: { top: number }) {
           <PlanCard
             key={plan.name}
             plan={plan}
+            price={priceFor(plan)}
             expanded={open === i}
             onSelect={() => setOpen(i)}
           />

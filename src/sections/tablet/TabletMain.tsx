@@ -209,7 +209,7 @@ function DispatchIntroT() {
       {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
       <div className="absolute left-[352px] top-[392px] size-[64px]">
         <img loading="lazy" decoding="async"
-          src="/figma/tablet/intro-icon.png"
+          src="/figma/tools/intro-icon.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />
@@ -339,10 +339,12 @@ function EcoCardT({ p }: { p: (typeof ECO_PRODUCTS)[number] }) {
           </span>
         </div>
       )}
+      {/* clip the export's baked top hairline and dark rounded-corner pixels */}
       <img loading="lazy" decoding="async"
         src={p.mockup}
         alt={`${p.name} product preview`}
         className="absolute left-[32px] top-[224px] w-[624px] max-w-none"
+        style={{ clipPath: "inset(2px 2px 0 0 round 0 14px 0 0)" }}
       />
       <div className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e8e8e8]" />
     </div>
@@ -371,12 +373,28 @@ function EcosystemT() {
           >
             <div data-eco-list className="relative will-change-transform">
               <div className="relative h-[240px]">
-                {/* icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4) */}
-                <div className="absolute left-[40px] top-[80px] size-[64px]">
+                {/* icon — desktop ecosystem vector composite (plate + glyph) */}
+                <div
+                  data-float
+                  className="absolute left-[40px] top-[80px] size-[64px] overflow-hidden rounded-[16px]"
+                  style={{ boxShadow: "0px 6px 16px -6px rgba(146,92,255,0.48)" }}
+                >
                   <img loading="lazy" decoding="async"
-                    src="/figma/tablet/eco-icon.png"
+                    src="/figma/eco/icon-plate.png"
                     alt=""
-                    className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+                    className="absolute inset-0 size-full"
+                  />
+                  <img loading="lazy" decoding="async"
+                    src="/figma/eco/icon-glyph.svg"
+                    alt=""
+                    className="absolute inset-0 size-full"
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-[16px]"
+                    style={{
+                      boxShadow:
+                        "inset 0px 0px 1px 0px #925cff, inset 0px 0px 3px 0px rgba(146,92,255,0.24), inset 0px 0px 12px 0px rgba(146,92,255,0.12)",
+                    }}
                   />
                 </div>
                 <h2 className="absolute left-[144px] top-[80px] w-[564px] text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-ink">

@@ -286,11 +286,11 @@ const FAQ_LINES = [232, 468, 748, 988]
 
 /* --------------------------------------------------------------- shell --- */
 
-function SectionIcon({ top }: { top: number }) {
+function SectionIcon({ top, src = "/figma/tools/intro-icon.png" }: { top: number; src?: string }) {
   return (
     <div data-float className="absolute left-[163px] size-[64px]" style={{ top }}>
       <img loading="lazy" decoding="async"
-        src="/figma/phone/icon-figma.png"
+        src={src}
         alt=""
         className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
       />

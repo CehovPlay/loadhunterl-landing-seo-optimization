@@ -76,7 +76,7 @@ export function PhoneWhy() {
       {/* figma icon */}
       <div data-float className="absolute left-[161px] top-[101px] size-[64px]">
         <img loading="lazy" decoding="async"
-          src="/figma/phone/icon-figma.png"
+          src="/figma/tools/intro-icon.png"
           alt=""
           className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
         />

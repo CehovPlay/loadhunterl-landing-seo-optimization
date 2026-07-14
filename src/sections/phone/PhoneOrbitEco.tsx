@@ -46,10 +46,12 @@ function EcoCardP({ p }: { p: (typeof ECO_PRODUCTS)[number] }) {
           </span>
         </div>
       )}
+      {/* clip the export's baked top hairline and dark rounded-corner pixels */}
       <img loading="lazy" decoding="async"
         src={p.mockup}
         alt={`${p.name} product preview`}
         className="absolute left-[24px] top-[230px] w-[400px] max-w-none"
+        style={{ clipPath: "inset(2px 2px 0 0 round 0 14px 0 0)" }}
       />
       <div className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e8e8e8]" />
     </div>
@@ -87,12 +89,28 @@ export function PhoneOrbitEco() {
           >
             <div data-eco-list className="relative will-change-transform">
               <div className="relative h-[292px]">
-                {/* figma icon — 64x64 box, 84px render incl. glow (desktop export reused) */}
-                <div data-float className="absolute left-[163px] top-[40px] size-[64px]">
+                {/* icon — desktop ecosystem vector composite (plate + glyph) */}
+                <div
+                  data-float
+                  className="absolute left-[163px] top-[40px] size-[64px] overflow-hidden rounded-[16px]"
+                  style={{ boxShadow: "0px 6px 16px -6px rgba(146,92,255,0.48)" }}
+                >
                   <img loading="lazy" decoding="async"
-                    src="/figma/feat-icon-2x.png"
+                    src="/figma/eco/icon-plate.png"
                     alt=""
-                    className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+                    className="absolute inset-0 size-full"
+                  />
+                  <img loading="lazy" decoding="async"
+                    src="/figma/eco/icon-glyph.svg"
+                    alt=""
+                    className="absolute inset-0 size-full"
+                  />
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-[16px]"
+                    style={{
+                      boxShadow:
+                        "inset 0px 0px 1px 0px #925cff, inset 0px 0px 3px 0px rgba(146,92,255,0.24), inset 0px 0px 12px 0px rgba(146,92,255,0.12)",
+                    }}
                   />
                 </div>
                 <h2 className="absolute left-[14px] top-[144px] w-[362px] text-center text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-ink">
