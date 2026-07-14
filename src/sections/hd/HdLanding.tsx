@@ -1,5 +1,6 @@
 import { HdNavbar } from "./HdNavbar"
 import { HdHero } from "./HdHero"
+import { HdFeatures } from "./HdFeatures"
 
 /**
  * HD (1440) desktop canvas — Figma frame 916:73794. Serves the 1024–1919 band
@@ -13,6 +14,7 @@ export function HdLanding() {
       <HdNavbar />
       <main>
         <HdHero />
+        <HdFeatures />
       </main>
     </div>
   )

@@ -13,6 +13,9 @@ import { isCoarsePointer, prefersReducedMotion } from "@/lib/inview"
 const DesktopLanding = lazy(() =>
   import("@/sections/DesktopLanding").then((m) => ({ default: m.DesktopLanding })),
 )
+const HdLanding = lazy(() =>
+  import("@/sections/hd/HdLanding").then((m) => ({ default: m.HdLanding })),
+)
 const TabletLanding = lazy(() =>
   import("@/sections/tablet/TabletLanding").then((m) => ({ default: m.TabletLanding })),
 )
@@ -87,8 +90,15 @@ function App() {
   const bp = useBreakpoint()
   useLenis(bp)
 
-  const width = bp === "phone" ? 390 : bp === "tablet" ? 768 : 1920
-  const Landing = bp === "phone" ? PhoneLanding : bp === "tablet" ? TabletLanding : DesktopLanding
+  const width = bp === "phone" ? 390 : bp === "tablet" ? 768 : bp === "hd" ? 1440 : 1920
+  const Landing =
+    bp === "phone"
+      ? PhoneLanding
+      : bp === "tablet"
+        ? TabletLanding
+        : bp === "hd"
+          ? HdLanding
+          : DesktopLanding
 
   // Above the 1920 desktop artboard the Figma adaptive frames center the same
   // pixel-sized content with side gutters rather than scaling up — so cap the

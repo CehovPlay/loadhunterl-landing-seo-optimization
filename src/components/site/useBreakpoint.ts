@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 
-export type Breakpoint = "desktop" | "tablet" | "phone"
+export type Breakpoint = "desktop" | "hd" | "tablet" | "phone"
 
-/** Figma adaptive frames: Phone 390 (< 640), Tablet 768 (640–1023), Full HD 1920 (>= 1024) */
+/** Figma adaptive frames: Phone 390 (< 640), Tablet 768 (640–1023), HD 1440 (1024–1919), Full HD 1920 (>= 1920) */
 export function getBreakpoint(w: number): Breakpoint {
   if (w < 640) return "phone"
   if (w < 1024) return "tablet"
+  if (w < 1920) return "hd"
   return "desktop"
 }
 
