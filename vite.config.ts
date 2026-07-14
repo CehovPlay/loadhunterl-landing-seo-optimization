@@ -10,6 +10,12 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    // shaders/react must share the app's React instance — without dedupe the
+    // dep optimizer gives it its own copy and hooks explode ("Invalid hook call")
+    dedupe: ["react", "react-dom"],
+  },
+  optimizeDeps: {
+    include: ["shaders/react"],
   },
   build: {
     rollupOptions: {

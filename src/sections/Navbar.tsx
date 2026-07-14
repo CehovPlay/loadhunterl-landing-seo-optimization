@@ -56,7 +56,7 @@ export function Navbar() {
     <>
       {/* Default full-width bar (page top) */}
       <header
-        className="absolute inset-x-0 top-0 z-50 flex items-center px-[120px] py-[16px]"
+        className="absolute inset-x-0 top-0 z-50 flex justify-center"
         style={{
           opacity: scrolled ? 0 : 1,
           transform: scrolled ? "translateY(-40px) scale(0.96)" : "translateY(0) scale(1)",
@@ -65,23 +65,16 @@ export function Navbar() {
             "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        <div className="relative flex flex-1 items-center justify-between rounded-[2000px] py-[6px] pl-[6px] pr-[12px]">
-          {/* pill backdrop */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-[2000px] bg-[rgba(54,56,61,0.5)] backdrop-blur-[7px]"
-          />
+        {/* experiment: white pill navbar inside a 1440 container (p-3 = 12px) */}
+        <div className="w-full max-w-[1440px] p-[12px]">
+        <div className="relative flex items-center justify-between rounded-full bg-white p-[5px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.04),0px_8px_24px_0px_rgba(0,0,0,0.08)]">
 
           {/* logo */}
           <div className="relative flex w-[212px] items-center">
             <a
               href="#"
-              className="flex h-[34px] items-center gap-[8px] rounded-[99px] border border-white py-[4px] pl-[4px] pr-[8px] backdrop-blur-[10px]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
-                boxShadow: PILL_SHADOW,
-              }}
+              className="flex h-[34px] items-center gap-[8px] rounded-[99px] border border-[#ececec] bg-white py-[4px] pl-[4px] pr-[8px]"
+              style={{ boxShadow: PILL_SHADOW }}
             >
               <Img
                 src="/figma/logo-icon.svg"
@@ -97,20 +90,13 @@ export function Navbar() {
           </div>
 
           {/* nav links */}
-          <nav
-            className="relative flex items-center justify-center gap-[2px] rounded-[99px] backdrop-blur-[10px]"
-            style={{
-              backgroundImage:
-                "linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.05))",
-              boxShadow: PILL_SHADOW,
-            }}
-          >
+          <nav className="relative flex items-center justify-center gap-[2px] rounded-[99px]">
             {LINKS.map((l, i) => (
               <a
                 key={l.label}
                 href={l.href}
                 className={
-                  "flex h-[28px] items-center justify-center px-[20px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white" +
+                  "flex h-[28px] items-center justify-center px-[20px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545] transition-colors hover:text-black" +
                   (i === 0 ? " rounded-l-[99px]" : "") +
                   (i === LINKS.length - 1 ? " rounded-r-[99px]" : "")
                 }
@@ -119,9 +105,7 @@ export function Navbar() {
               </a>
             ))}
           </nav>
-
-          {/* inner shadow ring */}
-          <div className="pointer-events-none absolute inset-0 rounded-[2000px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]" />
+        </div>
         </div>
       </header>
 

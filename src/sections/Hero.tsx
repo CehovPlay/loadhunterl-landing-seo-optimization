@@ -1,6 +1,6 @@
 import { Img } from "@/components/site/Img"
+import { HeroShaderBg } from "@/components/site/HeroShaderBg"
 import heroDashboard from "/figma/hero-dashboard.png"
-import heroGlow from "/figma/hero-glow.png"
 import diamondIcon from "/figma/icon-diamond.svg"
 
 /**
@@ -12,15 +12,9 @@ import diamondIcon from "/figma/icon-diamond.svg"
  */
 export function Hero() {
   return (
-    <section className="relative h-[1080px] w-full overflow-hidden bg-gray-800">
-      {/* beem glow */}
-      <Img
-        src={heroGlow}
-        alt=""
-        aria-hidden
-        decoding="async"
-        className="pointer-events-none absolute left-[-22px] top-[-22px] w-[1138px] max-w-none"
-      />
+    <section className="relative h-[1080px] w-full overflow-hidden bg-[#EFEFEF]">
+      {/* animated shader background (experiment) */}
+      <HeroShaderBg />
 
       {/* Right — product mockup. Parallax + 3D tilt live on the WRAPPER so the
           dashboard and its settings popup move as one composited unit (giving
@@ -28,7 +22,7 @@ export function Hero() {
       <div
         data-tilt="4"
         data-parallax="0.05"
-        className="absolute left-[897px] top-[80px] h-[960px] w-[1023px]"
+        className="absolute left-[897px] top-[80px] z-20 h-[960px] w-[1023px]"
       >
         <Img
           src={heroDashboard}
@@ -49,13 +43,13 @@ export function Hero() {
       </div>
 
       {/* Left — copy */}
-      <div className="absolute left-0 top-[203px] flex w-[938px] flex-col items-start gap-[70px] px-[120px]">
+      <div className="absolute left-0 top-[203px] z-20 flex w-[938px] flex-col items-start gap-[70px] px-[120px]">
         {/* eyebrow pill */}
         <span
-          className="inline-flex w-fit items-center rounded-[99px] px-[20px] py-[4px] text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-white"
+          className="inline-flex w-fit items-center rounded-[99px] px-[20px] py-[4px] text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-[#454545]"
           style={{
             backgroundImage:
-              "linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.05))",
+              "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.5))",
           }}
         >
           The AI copilot for smarter dispatching.
@@ -68,7 +62,7 @@ export function Hero() {
             className="-mx-[10px] -my-[12px] whitespace-nowrap bg-clip-text px-[10px] py-[12px] text-[83px] font-medium leading-[80px] tracking-[-3.32px] text-transparent"
             style={{
               backgroundImage:
-                "linear-gradient(100deg, rgb(255,255,255) 2%, rgb(63,63,63) 100%)",
+                "linear-gradient(100deg, rgb(26,26,26) 2%, rgb(120,120,120) 100%)",
             }}
           >
             Book better loads
@@ -81,7 +75,7 @@ export function Hero() {
             className="flex w-fit items-center justify-center rounded-[200px] px-[50px]"
             style={{
               backgroundImage:
-                "linear-gradient(104deg, rgba(73,73,73,0.4) 2%, rgba(43,43,43,0.4) 100%)",
+                "linear-gradient(104deg, rgba(255,255,255,0.7) 2%, rgba(255,255,255,0.45) 100%)",
             }}
           >
             <span
@@ -89,7 +83,7 @@ export function Hero() {
               className="whitespace-nowrap bg-clip-text text-[60px] font-medium leading-[105px] tracking-[-2.4px] text-transparent"
               style={{
                 backgroundImage:
-                  "linear-gradient(102deg, rgb(255,255,255) 2%, rgb(63,63,63) 100%)",
+                  "linear-gradient(102deg, rgb(26,26,26) 2%, rgb(120,120,120) 100%)",
               }}
             >
               In under 30 seconds
@@ -97,7 +91,7 @@ export function Hero() {
           </div>
 
           {/* paragraph */}
-          <p className="w-full text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
+          <p className="w-full text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-[#454545]">
             LoadHunter scans loadboard in real-time, filters high-RPM loads,
             and lets you contact brokers instantly — email, SMS, or call.
           </p>
