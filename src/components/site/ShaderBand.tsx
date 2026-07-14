@@ -1,6 +1,16 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import { Shader, Swirl, ChromaFlow, FlutedGlass, FilmGrain, Mirror, PolarCoordinates } from "shaders/react"
+import {
+  Shader,
+  Swirl,
+  ChromaFlow,
+  FlutedGlass,
+  FilmGrain,
+  Group,
+  LinearGradient,
+  Mirror,
+  PolarCoordinates,
+} from "shaders/react"
 
 /**
  * Full-bleed animated shader band (experiment): Swirl base → ChromaFlow
@@ -72,20 +82,40 @@ export function ShaderBand({
                   // — drifts continuously, no cursor involvement. The linear
                   // (hero) mode keeps the cursor-driven violet ChromaFlow.
                   const input = polarCenter ? (
-                    // Mostly-white field with violet only as an accent: the
-                    // base is a neutral white↔grey Swirl (drives the fluting),
-                    // and a second violet Swirl floats above at 25% opacity —
-                    // soft lavender washes drift through instead of filling
-                    // the whole viewport.
-                    <Swirl
-                      colorA="#9B79CE"
-                      colorB="#ffffff"
-                      detail={0.8}
-                      speed={0.35}
-                      opacity={0.28}
-                    >
+                    // Violet is radially fenced so it can NEVER flood the
+                    // section: in pre-polar space y = radius, and the white
+                    // LinearGradient overlay (transparent → opaque along y)
+                    // erases the violet Swirl from mid-radius outward. After
+                    // the polar bend the outer rings — most of the viewport —
+                    // stay white; the drifting violet lives only around the
+                    // centre.
+                    <Group>
+                      {/* base: neutral drifting swirl — drives the ring fluting */}
                       <Swirl colorA="#ffffff" colorB="#e2e2e2" detail={1.7} speed={0.35} />
-                    </Swirl>
+                      {/* violet accent, luminance-masked by the fence below:
+                          visible only where the fence is bright (inner radius),
+                          so it can never flood the whole section */}
+                      <Swirl
+                        colorA="#9B79CE"
+                        colorB="#ffffff"
+                        detail={0.9}
+                        speed={0.35}
+                        opacity={0.35}
+                        maskSource="violet-fence"
+                        maskType="luminance"
+                      />
+                      {/* the fence: bright at inner radius (pre-polar y≈0.3),
+                          black from mid-radius out; not painted itself */}
+                      <LinearGradient
+                        id="violet-fence"
+                        visible={false}
+                        colorA="#ffffff"
+                        colorB="#000000"
+                        start={{ x: 0.5, y: 0.3 }}
+                        end={{ x: 0.5, y: 0.72 }}
+                        edges="stretch"
+                      />
+                    </Group>
                   ) : (
                     <ChromaFlow
                       baseColor="#ffffff"
