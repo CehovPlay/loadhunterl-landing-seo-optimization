@@ -67,6 +67,29 @@ export function ShaderBand({
             <Shader className="h-full w-full" style={{ width: "100%", height: "100%" }}>
               <FilmGrain strength={0.05}>
                 {(() => {
+                  // Polar (orbit) mode animates on its own: a violet Swirl —
+                  // a couple of tones brighter/lighter than the brand #6F5197
+                  // — drifts continuously, no cursor involvement. The linear
+                  // (hero) mode keeps the cursor-driven violet ChromaFlow.
+                  const input = polarCenter ? (
+                    <Swirl colorA="#9B79CE" colorB="#F1ECFA" detail={1.7} speed={0.5} />
+                  ) : (
+                    <ChromaFlow
+                      baseColor="#ffffff"
+                      downColor="#6f5197"
+                      leftColor="#6f5197"
+                      rightColor="#6f5197"
+                      upColor="#6f5197"
+                      momentum={13}
+                      radius={3.5}
+                      opacity={0.55}
+                    >
+                      {/* colorB stays slightly darker than white even on white
+                          bands — a flat input gives FlutedGlass nothing to
+                          refract and the whole effect vanishes */}
+                      <Swirl colorA="#ffffff" colorB="#eaeaea" detail={1.7} />
+                    </ChromaFlow>
+                  )
                   const fluted = (
                     <FlutedGlass
                       aberration={0.61}
@@ -80,27 +103,13 @@ export function ShaderBand({
                       softness={1}
                       speed={0.15}
                     >
-                      <ChromaFlow
-                        baseColor="#ffffff"
-                        downColor="#6f5197"
-                        leftColor="#6f5197"
-                        rightColor="#6f5197"
-                        upColor="#6f5197"
-                        momentum={13}
-                        radius={3.5}
-                        opacity={0.55}
-                      >
-                        {/* colorB stays slightly darker than white even on white
-                            bands — a flat input gives FlutedGlass nothing to
-                            refract and the whole effect vanishes */}
-                        <Swirl colorA="#ffffff" colorB="#eaeaea" detail={1.7} />
-                      </ChromaFlow>
+                      {input}
                     </FlutedGlass>
                   )
                   // Polar mode: horizontal flutes (angle 90) become constant-
                   // radius bands = concentric circles around polarCenter.
                   // Mirror first makes the input left-right symmetric, so the
-                  // angular wrap seam (the horizontal line pointing left from
+                  // angular wrap seam (the horizontal line pointing left of
                   // the centre) lands on identical pixels and disappears.
                   return polarCenter ? (
                     <PolarCoordinates center={polarCenter} edges="mirror">
