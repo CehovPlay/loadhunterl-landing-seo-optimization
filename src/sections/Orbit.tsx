@@ -129,8 +129,10 @@ export function Orbit() {
   return (
     <section ref={rootRef} className="relative h-[1389px] w-full">
       {/* animated shader background (experiment) — full-bleed behind the
-          section; carries the white base. Rings/badges paint above untouched. */}
-      <ShaderBand baseColor="#ffffff" />
+          section; carries the white base. Rings/badges paint above untouched.
+          polarCenter = the orbit system centre (CX/1920 ≈ 0.5, CY/1389) so the
+          shader's concentric circles share the rings' centre. */}
+      <ShaderBand baseColor="#ffffff" polarCenter={{ x: 0.5, y: CY / 1389 }} />
       {/* Horizontal bleed: the rings span the Figma 2K frame's 2560px, so above
           1920 they run into the side gutters instead of being masked at the
           canvas edges. The wrapper clips only vertically (ring tops hide under

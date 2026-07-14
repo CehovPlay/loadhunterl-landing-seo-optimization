@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import { Shader, Swirl, ChromaFlow, FlutedGlass, FilmGrain } from "shaders/react"
+import { Shader, Swirl, ChromaFlow, FlutedGlass, FilmGrain, PolarCoordinates } from "shaders/react"
 
 /**
  * Full-bleed animated shader band (experiment): Swirl base → ChromaFlow
@@ -16,7 +16,15 @@ import { Shader, Swirl, ChromaFlow, FlutedGlass, FilmGrain } from "shaders/react
  * the shader shows through over the artboard too. Section content (rings,
  * pills, copy) paints above untouched.
  */
-export function ShaderBand({ baseColor }: { baseColor: string }) {
+export function ShaderBand({
+  baseColor,
+  polarCenter,
+}: {
+  baseColor: string
+  /** When set, the fluted pattern is bent into concentric circles around this
+   *  point (0..1 of the band) — matches the orbit-rings composition. */
+  polarCenter?: { x: number; y: number }
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const [box, setBox] = useState<{ top: number; height: number } | null>(null)
 
@@ -58,34 +66,47 @@ export function ShaderBand({ baseColor }: { baseColor: string }) {
           >
             <Shader className="h-full w-full" style={{ width: "100%", height: "100%" }}>
               <FilmGrain strength={0.05}>
-                <FlutedGlass
-                  aberration={0.61}
-                  angle={31}
-                  frequency={8}
-                  highlight={0.12}
-                  highlightSoftness={0}
-                  lightAngle={-90}
-                  refraction={4}
-                  shape="rounded"
-                  softness={1}
-                  speed={0.15}
-                >
-                  <ChromaFlow
-                    baseColor="#ffffff"
-                    downColor="#6f5197"
-                    leftColor="#6f5197"
-                    rightColor="#6f5197"
-                    upColor="#6f5197"
-                    momentum={13}
-                    radius={3.5}
-                    opacity={0.55}
-                  >
-                    {/* colorB stays slightly darker than white even on white
-                        bands — a flat input gives FlutedGlass nothing to
-                        refract and the whole effect vanishes */}
-                    <Swirl colorA="#ffffff" colorB="#eaeaea" detail={1.7} />
-                  </ChromaFlow>
-                </FlutedGlass>
+                {(() => {
+                  const fluted = (
+                    <FlutedGlass
+                      aberration={0.61}
+                      angle={polarCenter ? 90 : 31}
+                      frequency={8}
+                      highlight={0.12}
+                      highlightSoftness={0}
+                      lightAngle={-90}
+                      refraction={4}
+                      shape="rounded"
+                      softness={1}
+                      speed={0.15}
+                    >
+                      <ChromaFlow
+                        baseColor="#ffffff"
+                        downColor="#6f5197"
+                        leftColor="#6f5197"
+                        rightColor="#6f5197"
+                        upColor="#6f5197"
+                        momentum={13}
+                        radius={3.5}
+                        opacity={0.55}
+                      >
+                        {/* colorB stays slightly darker than white even on white
+                            bands — a flat input gives FlutedGlass nothing to
+                            refract and the whole effect vanishes */}
+                        <Swirl colorA="#ffffff" colorB="#eaeaea" detail={1.7} />
+                      </ChromaFlow>
+                    </FlutedGlass>
+                  )
+                  // Polar mode: horizontal flutes (angle 90) become constant-
+                  // radius bands = concentric circles around polarCenter.
+                  return polarCenter ? (
+                    <PolarCoordinates center={polarCenter} edges="mirror">
+                      {fluted}
+                    </PolarCoordinates>
+                  ) : (
+                    fluted
+                  )
+                })()}
               </FilmGrain>
             </Shader>
           </div>,
