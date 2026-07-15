@@ -59,17 +59,25 @@ export function ChaosZoom() {
     const cover = coverRef.current
     if (!section || !pin || !svg || !textEl || !cover) return
 
-    // dive target: the hyphen's ink centre in SVG user units. The horizontal
-    // extent is reliable from the glyph cell; the bar's vertical centre is
-    // derived from the baseline (the cell spans the whole ascent/descent).
+    // Dive target: the EXACT ink centre of the hyphen bar, in SVG user
+    // units. Any anchor error is magnified by the zoom factor (×430 at full
+    // depth) and reads as the camera drifting off the hyphen mid-dive, so an
+    // estimate is not good enough — the glyph ink box is measured precisely
+    // via canvas TextMetrics (actualBoundingBox*), anchored at the char's
+    // pen position from the live SVG text.
     let hx = CX0
     let hy = BASELINE_Y - FONT * HYPHEN_RISE
     const measure = () => {
       try {
-        const ext = textEl.getExtentOfChar(HYPHEN_I)
-        hx = ext.x + ext.width / 2
+        const pen = textEl.getStartPositionOfChar(HYPHEN_I)
+        const ctx = document.createElement("canvas").getContext("2d")
+        if (!ctx) return
+        ctx.font = `500 ${FONT}px Inter, sans-serif`
+        const m = ctx.measureText(TEXT[HYPHEN_I])
+        hx = pen.x + (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2
+        hy = BASELINE_Y - (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2
       } catch {
-        /* not rendered yet — keep the centre fallback */
+        /* not rendered yet — keep the estimate fallback */
       }
     }
     if (document.fonts?.ready) document.fonts.ready.then(measure)
