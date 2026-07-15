@@ -1,27 +1,19 @@
-import { Img } from "@/components/site/Img"
 /**
- * Compact footer (the Figma orbit-rings figure that used to fill the bottom
- * ~800px was removed on request): logo/subscribe row @ (120,120), full-bleed
- * separator @ y=191, links/socials row @ (120,224), gradient hairline @
- * y=274, © caption below. The section must NOT clip (the dividers bleed into
- * the >1920 gutters) and has no own bg — the root gray-800 shows through.
- * NOTE: no [content-visibility:auto] here — the 6000px-wide dividers
- * intentionally paint outside the section box, and the containment that
- * comes with content-visibility would clip them.
+ * Compact footer: logo/subscribe row @ (120,120) and a full-bleed separator
+ * @ y=191 — the page ends there (links/socials, hairline and © were removed
+ * on request). The section must NOT clip (the divider bleeds into the >1920
+ * gutters) and has no own bg — the root gray-800 shows through.
+ * NOTE: no [content-visibility:auto] here — the 6000px-wide divider
+ * intentionally paints outside the section box, and the containment that
+ * comes with content-visibility would clip it.
+ * data-no-reveal: the row sits in the bottom 6% of the viewport at max
+ * scroll, below the reveal IntersectionObserver's rootMargin — it would
+ * stay at autoAlpha 0 forever if reveal-managed.
  */
-
-const SOCIALS = ["/figma/tail/social-1.png", "/figma/tail/social-2.png", "/figma/tail/social-3.png"]
-const SOCIAL_LABELS = ["Website", "X (Twitter)", "Telegram"]
 
 export function Footer() {
   return (
-    <footer id="token" className="relative h-[340px]">
-      {/* © caption — the orbit-rings figure that used to fill the footer's
-          bottom is gone; the footer is now compact */}
-      <p className="absolute left-[848px] top-[300px] w-[224px] whitespace-nowrap text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">
-        © 2026 loadhunt Corp. All rights reserved.
-      </p>
-
+    <footer id="token" data-no-reveal className="relative h-[192px]">
       {/* logo + subscribe row */}
       <div className="absolute left-[120px] top-[120px] h-[40px] w-[1680px]">
         <div className="absolute left-0 top-[8px] h-[24px] w-[151px]">
@@ -56,30 +48,6 @@ export function Footer() {
       {/* full-bleed separator — spans the whole viewport, past the >1920
           gutters (the DesignFrame wrapper clips it at the window edge) */}
       <div className="absolute left-1/2 top-[191px] h-px w-[6000px] -translate-x-1/2 bg-[#33353a]" />
-
-      {/* links + socials row */}
-      <div className="absolute left-[120px] top-[224px] h-[18px] w-[1680px]">
-        <div className="absolute left-0 top-0 flex h-full items-center gap-[32px] text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">
-          <a href="#" className="hover:text-gray-100">Privacy Policy</a>
-          <a href="#" className="hover:text-gray-100">Terms of Service</a>
-        </div>
-        <div className="absolute right-0 top-0 flex h-full items-center gap-[4px]">
-          {SOCIALS.map((src, i) => (
-            <a key={src} href="#" aria-label={SOCIAL_LABELS[i]} className="block size-[18px]">
-              <Img src={src} alt="" loading="lazy" decoding="async" className="size-[18px] max-w-none" />
-            </a>
-          ))}
-        </div>
-      </div>
-
-      {/* gradient hairline — full viewport width */}
-      <div
-        className="absolute left-1/2 top-[274px] h-px w-[6000px] -translate-x-1/2"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.268) 50%, rgba(255,255,255,0.03) 100%)",
-        }}
-      />
     </footer>
   )
 }

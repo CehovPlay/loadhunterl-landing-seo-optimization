@@ -1,7 +1,8 @@
 import { Img } from "@/components/site/Img"
 /**
  * Tablet (768) — bottom region. Figma: Group 2085665211 (921:86998),
- * page y 12210–19032 (h=6822). Stacked sub-blocks (section-relative y):
+ * page y 12210–19032, trimmed to h=5898 (the page now ends at the footer
+ * separator). Stacked sub-blocks (section-relative y):
  *   0     Why LoadHunter comparison table   (916:70726)
  *   822   From chaos to AI-Powered dispatch (916:70847, diagram baked @2x)
  *   1607  Pricing (heading / toggle / slider / 4-card deck)   (921:85509)
@@ -981,19 +982,15 @@ function CtaSection({ top }: { top: number }) {
 
 /* ------------------------------------------------------------------ footer */
 
-const SOCIALS = [
-  "/figma/tail/social-1.png",
-  "/figma/tail/social-2.png",
-  "/figma/tail/social-3.png",
-]
-
 function FooterSection({ top }: { top: number }) {
   return (
     // pointer-events-none: this wrapper spans the WHOLE TabletBottom section
     // (it only exists to inherit section coordinates) and would otherwise
     // swallow every click on the sections underneath (pricing accordion,
     // FAQ). Interactive children opt back in.
-    <footer className="pointer-events-none absolute left-0 top-0 h-full w-full">
+    // data-no-reveal: the row sits in the bottom ~70px of the page — below the
+    // reveal IO's -6% rootMargin on tall viewports, so it would never reveal
+    <footer data-no-reveal className="pointer-events-none absolute left-0 top-0 h-full w-full">
       {/* logo + subscribe row */}
       <div className="absolute left-[40px] h-[24px] w-[151px]" style={{ top: top + 8 }}>
         <img loading="lazy" decoding="async"
@@ -1022,32 +1019,9 @@ function FooterSection({ top }: { top: number }) {
         </button>
       </form>
 
-      {/* full-bleed separator */}
+      {/* full-bleed separator — the page ends here (links/socials and the
+          orbit-rings graphic below were removed on request) */}
       <div className="absolute left-0 h-px w-[768px] bg-[#33353a]" style={{ top: top + 72 }} />
-
-      {/* links + socials */}
-      <div
-        className="pointer-events-auto absolute left-[40px] flex h-[14px] items-center gap-[32px] text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2"
-        style={{ top: top + 106 }}
-      >
-        <a href="#" className="hover:text-gray-100">Privacy Policy</a>
-        <a href="#" className="hover:text-gray-100">Terms of Service</a>
-      </div>
-      <div className="pointer-events-auto absolute left-[666px] flex gap-[4px]" style={{ top: top + 104 }}>
-        {SOCIALS.map((src) => (
-          <a key={src} href="#" className="block size-[18px]">
-            <Img loading="lazy" decoding="async" src={src} alt="" className="size-[18px] max-w-none" />
-          </a>
-        ))}
-      </div>
-
-      {/* orbit rings graphic (© caption + hairline baked in) */}
-      <Img loading="lazy" decoding="async"
-        src="/figma/tablet/footer-orbit.png"
-        alt="© 2026 loadhunt Corp. All rights reserved."
-        className="absolute left-0 h-[875px] w-[768px] max-w-none"
-        style={{ top: top + 122 }}
-      />
     </footer>
   )
 }
@@ -1056,7 +1030,7 @@ function FooterSection({ top }: { top: number }) {
 
 export function TabletBottom() {
   return (
-    <section className="relative bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:768px_6822px]" style={{ height: 6822 }}>
+    <section className="relative bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:768px_5898px]" style={{ height: 5898 }}>
       <WhySection />
 
       {/* from chaos to AI-powered dispatch */}

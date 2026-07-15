@@ -1,8 +1,9 @@
 /**
- * Figma: Group 2085665214 (924:101381) — 390x4030 @ phone-frame y=11567.
+ * Figma: Group 2085665214 (924:101381) — 390x4030 @ phone-frame y=11567,
+ * trimmed to h=3387 (the page now ends at the footer separator).
  * Stacked: testimonials (Frame 2147238672 @ y0), FAQ (Frame 2147238594 @
  * y926), CTA (Group 2085665213 @ y2482, automation panel baked @ y2438),
- * footer (Frame 2147238693 @ y3218, orbit graphic baked @ y3442).
+ * footer (Frame 2147238693 @ y3218).
  * The testimonial collage (cards at x −464..856, 30px gaps) marquees leftward
  * with period 1350 (collage width + gap), like the desktop strip; the initial
  * frame matches the design (violet "AJ Cargo" card centered).
@@ -326,7 +327,7 @@ export function PhoneTail() {
   }, [])
 
   return (
-    <footer ref={sectionRef} className="relative overflow-hidden bg-gray-800" style={{ height: 4030 }}>
+    <footer ref={sectionRef} className="relative overflow-hidden bg-gray-800" style={{ height: 3387 }}>
       {/* ================= Testimonials (y 0..806) ================= */}
       <div id="contact" className="absolute left-0 top-0 h-[806px] w-full">
         <SectionIcon top={0} />
@@ -498,8 +499,10 @@ export function PhoneTail() {
         </div>
       </div>
 
-      {/* ================= Footer (y 3218..4030) ================= */}
-      <div id="token" className="absolute left-0 top-[3218px] h-[812px] w-full">
+      {/* ================= Footer (y 3218..3387, ends at the separator) ================= */}
+      {/* data-no-reveal: the block sits at the very end of the page, below the
+          reveal IO's -6% rootMargin on tall viewports — it would never reveal */}
+      <div id="token" data-no-reveal className="absolute left-0 top-[3218px] h-[169px] w-full">
         {/* logo */}
         <div className="absolute left-[119.78px] top-0 h-[24px] w-[150.44px]">
           <img loading="lazy" decoding="async"
@@ -535,38 +538,9 @@ export function PhoneTail() {
           </button>
         </form>
 
-        {/* separator */}
+        {/* separator — the page ends here (links/socials and the orbit
+            graphic below were removed on request) */}
         <div className="absolute left-0 top-[168px] h-px w-full bg-[#33353a]" />
-
-        {/* links + socials */}
-        <div className="absolute left-0 top-[200px] flex h-[24px] w-full items-center justify-between px-[14px]">
-          <div className="flex items-center gap-[32px] text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">
-            <a href="#" className="hover:text-gray-100">
-              Privacy Policy
-            </a>
-            <a href="#" className="hover:text-gray-100">
-              Terms of Service
-            </a>
-          </div>
-          <div className="flex items-center gap-[4px]">
-            {["/figma/tail/social-1.png", "/figma/tail/social-2.png", "/figma/tail/social-3.png"].map(
-              (src) => (
-                <a key={src} href="#" className="block size-[18px]">
-                  <Img src={src} alt="" loading="lazy" decoding="async" className="size-[18px] max-w-none" />
-                </a>
-              ),
-            )}
-          </div>
-        </div>
-
-        {/* orbit rings graphic (decorative, © caption baked in) */}
-        <Img
-          src="/figma/phone/footer-orbit.png"
-          alt="© 2026 loadhunt Corp. All rights reserved."
-          loading="lazy"
-          decoding="async"
-          className="absolute left-0 top-[224px] h-[588px] w-[390px] max-w-none"
-        />
       </div>
     </footer>
   )
