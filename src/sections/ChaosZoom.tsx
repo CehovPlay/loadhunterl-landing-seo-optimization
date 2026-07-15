@@ -26,7 +26,7 @@ import { prefersReducedMotion } from "@/lib/inview"
  */
 
 const SVG_W = 6000 // svg band, canvas px — bleeds into the side gutters
-const SVG_H = 1400
+const SVG_H = 2400 // tall enough to cover any viewport (up to 4K fullscreen)
 const CX0 = SVG_W / 2
 const CY0 = SVG_H / 2
 const FONT = 96
@@ -36,7 +36,10 @@ const TEXT = "From chaos to AI-Powered dispatch"
 const HYPHEN_I = TEXT.indexOf("-")
 const FINAL_VBW = 14 // viewBox width at full zoom — inside the hyphen bar
 const RUNWAY = 1600 // canvas px of scroll consumed by the dive
-const SECTION_H = RUNWAY + 1080
+// tail below the runway ≥ any viewport height (canvas px): the next section
+// physically cannot enter the viewport until the dive is complete and the
+// screen is already dark (the cover spans the whole section)
+const SECTION_H = RUNWAY + 2400
 const DIVE_EASE = 1.5 // pow on progress — the exponential zoom does the rest
 const COVER_FROM = 0.9 // progress where the dark cover starts fading in
 
@@ -84,11 +87,15 @@ export function ChaosZoom() {
       )
       const p = gsap.utils.clamp(0, 1, (yCenter - halfView) / RUNWAY)
       const eased = Math.pow(p, DIVE_EASE)
-      // exponential camera zoom, anchor gliding onto the hyphen centre
+      // exponential camera zoom. Classic zoom-to-point anchoring: the centre
+      // converges onto the hyphen at the SAME rate as the zoom (r = vbW/W0),
+      // which keeps the hyphen at a fixed screen spot (≈ dead centre, since
+      // the text is centred) for the whole dive — no lateral drift.
       const vbW = SVG_W * Math.pow(FINAL_VBW / SVG_W, eased)
       const vbH = vbW * (SVG_H / SVG_W)
-      const cx = CX0 + (hx - CX0) * eased
-      const cy = CY0 + (hy - CY0) * eased
+      const r = vbW / SVG_W
+      const cx = hx + (CX0 - hx) * r
+      const cy = hy + (CY0 - hy) * r
       svg.setAttribute("viewBox", `${cx - vbW / 2} ${cy - vbH / 2} ${vbW} ${vbH}`)
       pin.style.transform = `translateY(${yCenter - SVG_H / 2}px)`
       cover.style.opacity = String(
