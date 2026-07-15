@@ -277,13 +277,22 @@ function PlanCard({
         ))}
       </div>
 
-      {/* button */}
+      {/* button — violet glow floods up from the bottom on hover */}
       <button
-        className="absolute bottom-[3px] left-[3px] flex h-[42px] w-[409px] items-center justify-center rounded-[12px] border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)]"
+        className="group absolute bottom-[3px] left-[3px] flex h-[42px] w-[409px] items-center justify-center overflow-hidden rounded-[12px] border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
         type="button"
       >
         <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
-        <span className="relative text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">{plan.cta}</span>
+        <span
+          className="pointer-events-none absolute inset-0 rounded-[11px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            backgroundImage:
+              "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.95) 0%, rgba(111,81,151,0) 100%)",
+          }}
+        />
+        <span className="relative text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50 transition-transform duration-300 group-hover:-translate-y-[1px]">
+          {plan.cta}
+        </span>
         <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.25)]" />
       </button>
     </div>
@@ -316,8 +325,9 @@ function knobToCount(px: number): number {
 }
 
 export function Pricing() {
-  const [annual, setAnnual] = useState(false)
-  const [knob, setKnob] = useState(KNOB_10) // design default: 3 dispatchers
+  // defaults: annual billing + 1 dispatcher — the lowest price we can show
+  const [annual, setAnnual] = useState(true)
+  const [knob, setKnob] = useState(KNOB_MIN)
   const trackRef = useRef<HTMLDivElement>(null)
   const n = knobToCount(knob)
 
@@ -364,38 +374,57 @@ export function Pricing() {
         Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!
       </p>
 
-      {/* billing toggle — excluded from the scroll-reveal cascade */}
+      {/* billing toggle — Figma 1206:100899: container p-6/gap-12 on a
+          rgba(231,231,231,0.1) pill with inset shadow; buttons h-28 px-12;
+          the active pill gets a white border + bottom violet radial, and
+          Annually carries the "save up -10%" badge inside (pr-4, gap-8);
+          excluded from the scroll-reveal cascade */}
       <div
         data-no-reveal
-        className="absolute left-[832.5px] top-[278px] flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] py-[6px] pl-[6px] pr-[11px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
+        className="absolute left-[832.5px] top-[278px] flex h-[40px] items-center gap-[12px] rounded-[2000px] bg-[rgba(231,231,231,0.1)] p-[6px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
       >
         {(["Monthly", "Annually"] as const).map((label) => {
           const active = (label === "Annually") === annual
+          const isAnnually = label === "Annually"
           return (
             <button
               key={label}
               type="button"
-              onClick={() => setAnnual(label === "Annually")}
+              onClick={() => setAnnual(isAnnually)}
               className={
-                active
-                  ? "flex h-[28px] items-center justify-center rounded-[99px] border border-[rgba(232,232,232,0.75)] px-[12px] backdrop-blur-[10px] transition-all"
-                  : "flex h-[28px] items-center justify-center rounded-[99px] px-[6px] transition-all"
+                "flex h-[28px] items-center justify-center gap-[8px] rounded-[99px] py-[4px] transition-all " +
+                (isAnnually ? "pl-[12px] pr-[4px] " : "px-[12px] ") +
+                (active ? "border border-white backdrop-blur-[10px]" : "")
               }
               style={
                 active
                   ? {
                       backgroundImage:
-                        "radial-gradient(42px 38px at 50% 109%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
+                        "radial-gradient(110px 38px at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
                       boxShadow: PILL_SHADOW,
                     }
                   : undefined
               }
             >
               <span className="text-[14px] leading-[16px] tracking-[-0.56px] text-white">{label}</span>
+              {/* the discount badge lives INSIDE the Annually pill */}
+              {isAnnually && (
+                <span
+                  className="flex items-center rounded-[99px] border border-white px-[6px] py-[2px]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
+                    boxShadow: PILL_SHADOW,
+                  }}
+                >
+                  <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-white">
+                    save up -10%
+                  </span>
+                </span>
+              )}
             </button>
           )
         })}
-        <DiscountBadge text="save up -10%" />
       </div>
 
       {/* dispatchers slider */}

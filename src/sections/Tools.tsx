@@ -1,13 +1,33 @@
+import { useEffect, useRef } from "react"
+import gsap from "gsap"
 import { Img } from "@/components/site/Img"
+import { prefersReducedMotion } from "@/lib/inview"
+
 /**
- * Figma: dark tools mega-frame 2147238623 (914:23995), page y=2194, h=8058.
- * The intro (first 1080px) lives in DispatchIntro.tsx; this section renders
- * the remaining 6978px with 7 absolutely-positioned feature blocks.
- * Block tops here = Figma frameY − 1080.
+ * Dark tools mega-frame, rebuilt to Figma 1206:96802 (intro + zigzag blocks
+ * in ONE section — the old DispatchIntro was merged in so the spine is a
+ * single seamless SVG path):
+ *
+ *   heading (x120, y220, left-aligned) → subtitle (y360) → 220px air →
+ *   gear icon (120, 596). The glowing spine is born at the icon: horizontal
+ *   run right → soft arc → vertical drop at the CANVAS CENTRE (x=960).
+ *   Feature blocks alternate sides of the centre line (1st right, 2nd left,
+ *   …), each with a node on the spine at title level (+20). Block column
+ *   w=777; title → desc → 80px → mockup (w=777) → 80px → items; block pitch
+ *   1461.
+ *
+ * The path is revealed with stroke-dashoffset; the vertical front is kept
+ * px-aligned with the 60%-viewport line (the curve prefix is compressed into
+ * the pre-vertical scroll distance). All scroll math reads live
+ * getBoundingClientRect per gsap.ticker frame — immune to the scaled canvas
+ * and Lenis smoothing (ScrollTrigger mis-measures inside transform: scale()).
+ * IO-gated so it costs nothing off-screen.
+ *
+ * Block elements get the hero-headline entrance (rise out of a light blur,
+ * expo.out) via [data-tb] targets — the global reveal cascade is opted out.
  */
 
 type Item = {
-  y: number
   icon: string
   /** natural PNG width at 1x: 62 (124px png, offset -10) or 52 (104px png) */
   iconW: 62 | 52
@@ -17,250 +37,207 @@ type Item = {
 
 type Block = {
   key: string
-  top: number
-  height: number
-  /** block frame x (E and G sit at 119 in the design) */
-  frameX?: number
-  textX: number
-  titleY: number
   title: string
-  descY: number
   desc: string
-  /** A uses gray-50 for title+desc; the rest use white/ink-2 */
-  lightDesc?: boolean
   items: Item[]
-  mockup: { src: string; x: number; y: number; w: number }
+  mockup: string
 }
+
+/* ------------------------------------------------- geometry constants --- */
+const CENTER_X = 960 // spine vertical, canvas centre
+const ICON_Y = 628 // icon centre — the horizontal run's y
+const CURVE_END_Y = 1042 // where the arc lands on the vertical
+const SPINE_D = `M 206 ${ICON_Y} H 546 Q ${CENTER_X} ${ICON_Y} ${CENTER_X} ${CURVE_END_Y}`
+const BLOCK0_Y = 1028 // first block title top
+const PITCH = 1461 // title-to-title vertical rhythm
+const NODE_OFFSET = 20 // node sits level with the block title
+const BLOCK_W = 777
+const RIGHT_X = 1020 // blocks right of the spine
+const LEFT_X = 120 // blocks left of the spine
+const SPINE_BOTTOM = BLOCK0_Y + 6 * PITCH + NODE_OFFSET // last node
+const SECTION_H = 10960
+const SPINE_PATH = `${SPINE_D} V ${SPINE_BOTTOM}`
 
 const BLOCKS: Block[] = [
   {
     key: "a",
-    top: 260,
-    height: 924,
-    textX: 1004,
-    titleY: 400,
     title: "Smart-board view",
-    descY: 464,
     desc: "We’ve completely redesigned how LoadBoards are displayed by replacing the default DAT  view with our custom high-performance interface. This allows users to fully customize column layout, hide or show fields, and experience a smoother, faster workflow — without any of the typical lags or freezing.",
-    lightDesc: true,
     items: [
       {
-        y: 624,
         icon: "/figma/tools/a-icon1.png",
         iconW: 62,
         title: "Performance optimization",
         sub: "Our custom view eliminates the slowdowns and UI glitches of traditional integration, delivering a smooth and responsive experience across all supported loadboards.",
       },
       {
-        y: 744,
         icon: "/figma/tools/a-icon2.png",
         iconW: 62,
         title: "Workflow customization",
         sub: "You can drag, resize, reorder, hide, or pin any load — customizing the loadboard interface to fit their unique dispatching flow.",
       },
     ],
-    mockup: { src: "/figma/tools/a-mockup.png", x: 0, y: 0, w: 924 },
+    mockup: "/figma/tools/a-mockup.png",
   },
   {
     key: "b",
-    top: 1304,
-    height: 828,
-    textX: 0,
-    titleY: 400,
     title: "Auto-emailing",
-    descY: 464,
     desc: "Our custom view eliminates the slowdowns and UI glitches of traditional integration, delivering a smooth and responsive experience across all supported load boards.",
     items: [
       {
-        y: 544,
         icon: "/figma/tools/b-icon1.png",
         iconW: 52,
         title: "Multiple email accounts",
         sub: "Send emails from multiple accounts automatically, ideal for teams working with different carriers.",
       },
       {
-        y: 648,
         icon: "/figma/tools/b-icon2.png",
         iconW: 52,
         title: "AI filtering",
         sub: "Avoid duplicates and re-posted loads by sending emails only to new brokers, keeping requests relevant.",
       },
     ],
-    mockup: { src: "/figma/tools/b-mockup.png", x: 756, y: 0, w: 924 },
+    mockup: "/figma/tools/b-mockup.png",
   },
   {
     key: "c",
-    top: 2252,
-    height: 924,
-    textX: 1004,
-    titleY: 448,
     title: "Telegram notifications",
-    descY: 512,
     desc: "Get instant load alerts from multiple load boards like One and Truckstop directly in Telegram. Stay ahead with real-time updates across all your platforms.",
     items: [
       {
-        y: 592,
         icon: "/figma/tools/c-icon1.png",
         iconW: 62,
         title: "Advanced filtering",
         sub: "Filter Telegram notifications to receive only the most relevant loads based on your preferences, improving efficiency.",
       },
       {
-        y: 712,
         icon: "/figma/tools/c-icon2.png",
         iconW: 62,
         title: "Multiple load-boards",
         sub: "Connect multiple load boards to get loads from all of them in Telegram, streamlining your workflow.",
       },
     ],
-    // export render bounds start 29px left of the layout box
-    mockup: { src: "/figma/tools/c-mockup.png", x: -29, y: 0, w: 953.5 },
+    mockup: "/figma/tools/c-mockup.png",
   },
   {
     key: "d",
-    top: 3296,
-    height: 832,
-    textX: 0,
-    titleY: 400,
     title: "Integrated TMS",
-    descY: 464,
     desc: "Take full control of your dispatching process with a built-in TMS. Track driver timelines, manage workflows, and streamline operations — all within LoadHunter. Perfect for organizing your team and boosting efficiency.",
     items: [
       {
-        y: 564,
         icon: "/figma/tools/d-icon1.png",
         iconW: 52,
         title: "Efficient workflow management",
         sub: "Manage dispatch tasks directly in TMS, streamlining communication and boosting productivity.",
       },
       {
-        y: 668,
         icon: "/figma/tools/d-icon2.png",
         iconW: 52,
         title: "Improved task planning",
         sub: "Easily track driver schedules and task timelines for better coordination.",
       },
     ],
-    mockup: { src: "/figma/tools/d-mockup.png", x: 756, y: 0, w: 924 },
+    mockup: "/figma/tools/d-mockup.png",
   },
   {
     key: "e",
-    top: 4248,
-    height: 828,
-    frameX: 119,
-    textX: 1004,
-    titleY: 400,
     title: "Integrated map",
-    descY: 464,
     desc: "Easily track routes and load details on an interactive map, all directly within your load board for enhanced convenience.",
     items: [
       {
-        y: 544,
         icon: "/figma/tools/e-icon1.png",
         iconW: 62,
         title: "Advanced filtering",
         sub: "Filter Telegram notifications to receive only the most relevant loads based on your preferences, improving efficiency.",
       },
       {
-        y: 664,
         icon: "/figma/tools/e-icon2.png",
         iconW: 62,
         title: "Multiple load-boards",
         sub: "Connect multiple load boards to get loads from all of them in Telegram, streamlining your workflow.",
       },
     ],
-    mockup: { src: "/figma/tools/e-mockup.png", x: 0, y: 0, w: 943 },
+    mockup: "/figma/tools/e-mockup.png",
   },
   {
     key: "f",
-    top: 5180,
-    height: 832,
-    textX: 0,
-    titleY: 400,
     title: "Broker reviews",
-    descY: 464,
     desc: "Easily share your experiences working with brokers to help others make informed decisions and avoid potential issues.",
     items: [
       {
-        y: 544,
         icon: "/figma/tools/f-icon1.png",
         iconW: 52,
         title: "Verified Payment History",
         sub: "See how long brokers actually take to pay and if they respect detention or layover agreements.",
       },
       {
-        y: 648,
         icon: "/figma/tools/f-icon2.png",
         iconW: 52,
         title: "Real-time Red Flags",
         sub: "Get instant alerts on brokers who frequently cancel loads at the last minute or have low credit scores.",
       },
     ],
-    mockup: { src: "/figma/tools/f-mockup.png", x: 756, y: 0, w: 924 },
+    mockup: "/figma/tools/f-mockup.png",
   },
   {
     key: "g",
-    top: 6132,
-    height: 844,
-    frameX: 119,
-    textX: 1004,
-    titleY: 400,
     title: "Profit calculator",
-    descY: 464,
     desc: "Estimate profitability by factoring in expenses like fuel and miles, giving you clear insights to maximize your earnings.",
     items: [
       {
-        y: 544,
         icon: "/figma/tools/g-icon1.png",
         iconW: 62,
         title: "Full Expense Breakdown",
         sub: "Account for fuel consumption, current diesel prices, and tolls automatically. Know your true net profit before you even call the broker.",
       },
       {
-        y: 664,
         icon: "/figma/tools/g-icon2.png",
         iconW: 62,
         title: "Smart RPM+ Evaluation",
         sub: "Evaluate load profitability including deadhead miles (DHO/DHD). Don't settle for high gross if the Rate Per Mile doesn't meet your margin goals.",
       },
     ],
-    mockup: { src: "/figma/tools/g-mockup.png", x: 0, y: 0, w: 924 },
+    mockup: "/figma/tools/g-mockup.png",
   },
 ]
 
-function ToolBlock({ b }: { b: Block }) {
-  const titleCls = b.lightDesc ? "text-gray-50" : "text-white"
-  const descCls = b.lightDesc ? "text-gray-50" : "text-ink-2"
+/* -------------------------------------------------------------- blocks --- */
+
+function ToolBlock({ b, index }: { b: Block; index: number }) {
+  const left = index % 2 === 0 ? RIGHT_X : LEFT_X
+  // data-no-reveal: the block runs its own blur-rise entrance (same motion as
+  // the hero headline) driven from the effect below — the global reveal
+  // cascade must not double-animate. [data-tb] marks the entrance targets.
   return (
     <div
-      className="absolute w-[1680px]"
-      style={{ top: b.top, height: b.height, left: b.frameX ?? 120 }}
+      data-tool-block={b.key}
+      data-no-reveal
+      className="absolute"
+      style={{ top: BLOCK0_Y + index * PITCH, left, width: BLOCK_W }}
     >
-      <Img
-        src={b.mockup.src}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="absolute max-w-none"
-        style={{ left: b.mockup.x, top: b.mockup.y, width: b.mockup.w }}
-      />
-
-      {/* text column */}
-      <div className="absolute top-0 h-full w-[676px]" style={{ left: b.textX }}>
-        <h3
-          className={`absolute w-full text-[30px] font-medium leading-[40px] tracking-[-1.2px] ${titleCls}`}
-          style={{ top: b.titleY }}
-        >
-          {b.title}
-        </h3>
-        <p
-          className={`absolute w-full text-[16px] font-medium leading-[20px] tracking-[-0.64px] ${descCls}`}
-          style={{ top: b.descY }}
-        >
-          {b.desc}
-        </p>
+      <h3 data-tb className="text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-white">
+        {b.title}
+      </h3>
+      <p data-tb className="mt-[16px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-ink-2">
+        {b.desc}
+      </p>
+      {/* mockup between the description and the items (Figma: 80px gaps);
+          the entrance animates this wrapper, so it never fights the img's own
+          data-parallax transform */}
+      <div data-tb className="mt-[80px]">
+        <Img
+          src={b.mockup}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          data-parallax="0.04"
+          className="max-w-none"
+          style={{ width: BLOCK_W }}
+        />
+      </div>
+      <div className="mt-[80px] flex flex-col gap-[24px]">
         {b.items.map((it) => (
-          <div key={it.title} className="absolute w-full" style={{ top: it.y }}>
+          <div key={it.title} data-tb className="relative pl-[62px]">
             {/* icon 42x42; PNG has baked margins (see iconW) */}
             <div className="absolute left-0 top-0 size-[42px]">
               <Img
@@ -269,24 +246,15 @@ function ToolBlock({ b }: { b: Block }) {
                 loading="lazy"
                 decoding="async"
                 className="absolute top-0 max-w-none"
-                style={{
-                  left: it.iconW === 62 ? -10 : 0,
-                  width: it.iconW,
-                }}
+                style={{ left: it.iconW === 62 ? -10 : 0, width: it.iconW }}
               />
             </div>
-            <div className="absolute left-[62px] top-0 w-[614px]">
-              <h4
-                className={`text-[16px] font-medium leading-[20px] tracking-[-0.64px] ${
-                  b.lightDesc ? "text-gray-50" : "text-white"
-                }`}
-              >
-                {it.title}
-              </h4>
-              <p className="mt-[8px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-                {it.sub}
-              </p>
-            </div>
+            <h4 className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+              {it.title}
+            </h4>
+            <p className="mt-[8px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+              {it.sub}
+            </p>
           </div>
         ))}
       </div>
@@ -294,11 +262,233 @@ function ToolBlock({ b }: { b: Block }) {
   )
 }
 
-export function Tools() {
+/* ------------------------------------------------------- glowing spine --- */
+
+function Spine() {
   return (
-    <section id="features" className="relative h-[6978px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_6978px]">
-      {BLOCKS.map((b) => (
-        <ToolBlock key={b.key} b={b} />
+    <div aria-hidden data-no-reveal>
+      <svg
+        className="pointer-events-none absolute left-0 top-0"
+        width="1920"
+        height={SPINE_BOTTOM + 10}
+        viewBox={`0 0 1920 ${SPINE_BOTTOM + 10}`}
+        fill="none"
+      >
+        {/* static track */}
+        <path d={SPINE_PATH} stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+        {/* scroll-drawn fill — one continuous stroke from the icon */}
+        <path
+          data-spine-fill
+          d={SPINE_PATH}
+          stroke="url(#spine-grad)"
+          strokeWidth="2"
+          strokeDasharray={1000}
+          strokeDashoffset={1000}
+          pathLength={1000}
+          style={{ filter: "drop-shadow(0 0 6px rgba(155,121,206,0.55))" }}
+        />
+        <defs>
+          <linearGradient
+            id="spine-grad"
+            x1={CENTER_X}
+            y1={ICON_Y}
+            x2={CENTER_X}
+            y2={SPINE_BOTTOM}
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop offset="0" stopColor="#6f5197" />
+            <stop offset="1" stopColor="#9B79CE" />
+          </linearGradient>
+        </defs>
+      </svg>
+      {/* luminous tip riding the vertical fill's leading edge */}
+      <div
+        data-spine-tip
+        className="absolute size-[10px] rounded-full"
+        style={{
+          left: CENTER_X - 5,
+          top: CURVE_END_Y - 5,
+          background: "#C9B3EC",
+          boxShadow: "0 0 22px 6px rgba(155,121,206,0.65)",
+          opacity: 0,
+        }}
+      />
+      {/* ignite nodes, one per block at title level */}
+      {BLOCKS.map((b, i) => (
+        <div
+          key={b.key}
+          data-tool-node={b.key}
+          className="absolute size-[14px] rounded-full border border-white/15"
+          style={{
+            left: CENTER_X - 7,
+            top: BLOCK0_Y + i * PITCH + NODE_OFFSET - 7,
+            background: "#101114",
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+export function Tools() {
+  const ref = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const section = ref.current
+    if (!section) return
+    const fill = section.querySelector<SVGPathElement>("[data-spine-fill]")
+    const tip = section.querySelector<HTMLElement>("[data-spine-tip]")
+    if (!fill || !tip) return
+
+    const lit = (key: string, on: boolean) => {
+      const node = section.querySelector<HTMLElement>(`[data-tool-node="${key}"]`)
+      if (!node) return
+      gsap.to(node, {
+        backgroundColor: on ? "#9B79CE" : "#101114",
+        borderColor: on ? "rgba(201,179,236,0.9)" : "rgba(255,255,255,0.15)",
+        boxShadow: on ? "0 0 18px 4px rgba(155,121,206,0.55)" : "0 0 0px 0px rgba(155,121,206,0)",
+        scale: on ? 1.25 : 1,
+        duration: 0.3,
+        ease: "power3.out",
+        overwrite: "auto",
+      })
+    }
+
+    if (prefersReducedMotion()) {
+      fill.style.strokeDashoffset = "0"
+      BLOCKS.forEach((b) => lit(b.key, true))
+      return
+    }
+
+    const blocks = BLOCKS.map((b) => ({
+      key: b.key,
+      el: section.querySelector<HTMLElement>(`[data-tool-block="${b.key}"]`),
+      lit: false,
+    }))
+
+    // blur-rise entrance for each block's elements — the same motion as the
+    // hero headline, cascading once per block as it enters the viewport
+    const entranceTweens: gsap.core.Tween[] = []
+    const entranceIo = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue
+          entranceIo.unobserve(e.target)
+          const targets = e.target.querySelectorAll<HTMLElement>("[data-tb]")
+          entranceTweens.push(
+            gsap.to(targets, {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 0.7,
+              ease: "expo.out",
+              stagger: 0.12,
+              overwrite: "auto",
+            }),
+          )
+        }
+      },
+      { rootMargin: "0px 0px -15% 0px" },
+    )
+    blocks.forEach((blk) => {
+      if (!blk.el) return
+      gsap.set(blk.el.querySelectorAll<HTMLElement>("[data-tb]"), {
+        opacity: 0,
+        y: 22,
+        filter: "blur(6px)",
+      })
+      entranceIo.observe(blk.el)
+    })
+
+    // per-frame scroll math from the live rect (scale/Lenis-immune). The
+    // vertical front stays px-aligned with the 60%-viewport line; the curve
+    // prefix (horizontal + arc) is drawn proportionally while the 60% line
+    // travels from icon level down to the curve's landing point.
+    const totalLen = fill.getTotalLength()
+    const verticalLen = SPINE_BOTTOM - CURVE_END_Y
+    const curveLen = totalLen - verticalLen
+    const onTick = () => {
+      const rect = section.getBoundingClientRect()
+      const vh = window.innerHeight
+      const scale = rect.width / 1920
+      const y60 = (vh * 0.6 - rect.top) / scale // 60%-line in canvas px
+      const s =
+        y60 <= CURVE_END_Y
+          ? curveLen * gsap.utils.clamp(0, 1, (y60 - ICON_Y) / (CURVE_END_Y - ICON_Y))
+          : curveLen + Math.min(verticalLen, y60 - CURVE_END_Y)
+      fill.style.strokeDashoffset = String(1000 * (1 - s / totalLen))
+      const vp = gsap.utils.clamp(0, 1, (y60 - CURVE_END_Y) / verticalLen)
+      tip.style.transform = `translateY(${vp * verticalLen}px)`
+      tip.style.opacity = vp > 0.002 && vp < 0.998 ? "1" : "0"
+      for (const blk of blocks) {
+        if (!blk.el) continue
+        const on = blk.el.getBoundingClientRect().top < vh * 0.65
+        if (on !== blk.lit) {
+          blk.lit = on
+          lit(blk.key, on)
+        }
+      }
+    }
+
+    // run the ticker only while the section is on screen
+    let ticking = false
+    const io = new IntersectionObserver(
+      (entries) => {
+        const e = entries[entries.length - 1]
+        if (e.isIntersecting && !ticking) {
+          ticking = true
+          gsap.ticker.add(onTick)
+        } else if (!e.isIntersecting && ticking) {
+          ticking = false
+          gsap.ticker.remove(onTick)
+        }
+      },
+      { rootMargin: "200px 0px 200px 0px" },
+    )
+    io.observe(section)
+    return () => {
+      io.disconnect()
+      entranceIo.disconnect()
+      entranceTweens.forEach((t) => t.kill())
+      if (ticking) gsap.ticker.remove(onTick)
+    }
+  }, [])
+
+  return (
+    <section
+      id="features"
+      ref={ref}
+      className={`relative bg-gray-800 [content-visibility:auto]`}
+      style={{ height: SECTION_H, containIntrinsicSize: `1920px ${SECTION_H}px` }}
+    >
+      {/* intro — left-aligned heading + subtitle, 220px from the top */}
+      <h2 className="absolute left-[120px] top-[220px] w-[1680px] text-left text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-gray-50">
+        Book better loads faster — without missing opportunities with
+        <br />
+        game-changing tools for dispatchers
+      </h2>
+      <p className="absolute left-[120px] top-[360px] w-[1200px] text-left text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+        LoadHunter finds high-RPM loads in real-time, filters the noise, and
+        lets you contact brokers instantly — all in one place. Real-time load
+        scanning, smart filters, and instant outreach — built for dispatchers
+        who want results, not dashboards.
+      </p>
+
+      {/* gear icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4);
+          the spine is born here */}
+      <div data-float className="absolute left-[120px] top-[596px] size-[64px]">
+        <Img
+          src="/figma/tools/intro-icon.png"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+        />
+      </div>
+
+      <Spine />
+      {BLOCKS.map((b, i) => (
+        <ToolBlock key={b.key} b={b} index={i} />
       ))}
     </section>
   )

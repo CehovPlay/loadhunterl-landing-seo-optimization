@@ -2,12 +2,11 @@ import { BleedBg } from "@/components/site/BleedBg"
 import { Navbar } from "@/sections/Navbar"
 import { Hero } from "@/sections/Hero"
 import { Features } from "@/sections/Features"
-import { DispatchIntro } from "@/sections/DispatchIntro"
 import { Tools } from "@/sections/Tools"
 import { Orbit } from "@/sections/Orbit"
 import { Ecosystem } from "@/sections/Ecosystem"
 import { WhyLoadHunter } from "@/sections/WhyLoadHunter"
-import { ChaosDiagram } from "@/sections/ChaosDiagram"
+import { ChaosZoom } from "@/sections/ChaosZoom"
 import { Pricing } from "@/sections/Pricing"
 import { Testimonials } from "@/sections/Testimonials"
 import { Faq } from "@/sections/Faq"
@@ -29,13 +28,13 @@ export function DesktopLanding() {
         <BleedBg color="#fafafa">
           <Features />
         </BleedBg>
-        <DispatchIntro />
+        {/* zoom-through transition: dive into the hyphen, land in dark Tools */}
+        <ChaosZoom />
         <Tools />
         {/* Orbit's full-bleed white bg + shader come from its own ShaderBand */}
         <Orbit />
         <Ecosystem />
         <WhyLoadHunter />
-        <ChaosDiagram />
         <Pricing />
         <Testimonials />
         <Faq />

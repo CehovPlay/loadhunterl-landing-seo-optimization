@@ -56,7 +56,8 @@ const BALLS: { icon: string; x: number; cy: number; w: number; h: number }[] = [
 ]
 
 const BEAM = 64 // pulse length, px along the path
-const SPEED = 210 // px/s
+const DURATION = 2.6 // s — all beams travel out together (synchronous)
+const REPEAT_DELAY = 1.6 // s — equal pause between every volley
 
 /* frame radial (0.4 opacity) pre-blended into the section bg #181a1f */
 const PANEL_BG = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 1129 627' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect width='100%' height='100%' fill='url(%23g)'/><defs><radialGradient id='g' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-20.75 55.45 -64.003 -23.951 686 27)'><stop stop-color='rgb(36,38,43)' offset='0'/><stop stop-color='rgb(30,32,37)' offset='0.5'/><stop stop-color='rgb(24,26,31)' offset='1'/></radialGradient></defs></svg>")`
@@ -126,18 +127,19 @@ export function CtaAutomation() {
         p.style.strokeDasharray = `${BEAM} ${len}`
       })
       // pulse emerges at the rect edge (path start) and travels outward,
-      // dimming along the line's own fade gradient until it dissolves
+      // dimming along the line's own fade gradient until it dissolves.
+      // All beams share one duration and one repeat delay (no random offsets)
+      // so every volley fires in sync with an even beat between volleys.
       tweens.push(
         gsap.fromTo(
           paths,
           { strokeDashoffset: BEAM },
           {
             strokeDashoffset: -len,
-            duration: (len + BEAM) / SPEED,
+            duration: DURATION,
             ease: "none",
             repeat: -1,
-            delay: gsap.utils.random(0, 3),
-            repeatDelay: gsap.utils.random(1.6, 3.4),
+            repeatDelay: REPEAT_DELAY,
           },
         ),
       )

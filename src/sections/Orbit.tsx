@@ -9,6 +9,11 @@ import { ShaderBand } from "@/components/site/ShaderBand"
 
 const CX = 959
 const CY = 382
+/** The band runs past the section bottom to fill the ecosystem card's
+ *  hang-over zone and 1000px beyond (card bottom = eco top + 377), so the white
+ *  band stays visible until the pinned eco card expands to full screen.
+ *  Ecosystem's own bg starts at that same y. */
+const EXTEND = 1377
 
 export function Orbit() {
   return (
@@ -16,7 +21,11 @@ export function Orbit() {
       {/* animated shader background (experiment) — full-bleed behind the
           section; carries the white base. Its concentric circles share the
           old orbit system centre. */}
-      <ShaderBand baseColor="#ffffff" polarCenter={{ x: 0.5, y: CY / 1389 }} />
+      <ShaderBand
+        baseColor="#ffffff"
+        polarCenter={{ x: 0.5, y: CY / (1389 + EXTEND) }}
+        extendBottom={EXTEND}
+      />
 
       {/* centre mark — inline vector (120px), replaces the old PNG disc */}
       <img

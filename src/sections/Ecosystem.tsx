@@ -155,7 +155,12 @@ export function Ecosystem() {
   // to cover the whole viewport. Containment was cutting off the panel's
   // heading + loadhunter row.
   return (
-    <section id="offers" data-eco-pin className="relative h-[2077px] bg-gray-800">
+    <section id="offers" data-eco-pin className="relative h-[2077px]">
+      {/* dark bg starts BELOW the hang-over zone (card bottom = y 377): the
+          top strip stays transparent so the Orbit shader band — extended past
+          its section (see Orbit EXTEND) — stays visible around the card until
+          the pin expands it to full screen */}
+      <div aria-hidden className="absolute inset-x-0 bottom-0 top-[1377px] bg-gray-800" />
       {/* data-no-reveal: the card runs its own pin/expand/list-scroll
           choreography, so it opts out of the global fade-rise cascade (which
           would otherwise fight the pin and could leave rows stuck hidden). */}

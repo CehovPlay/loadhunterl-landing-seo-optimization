@@ -65,12 +65,12 @@ export function Navbar() {
             "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        {/* experiment: white pill navbar, full-width flex container */}
-        <div className="w-full p-[12px]">
-        <div className="relative flex items-center justify-between rounded-full bg-white p-[5px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.04),0px_8px_24px_0px_rgba(0,0,0,0.08)]">
+        {/* experiment: compact white pill navbar, hugs its content and centers */}
+        <div className="p-[12px]">
+        <div className="relative flex items-center gap-[16px] rounded-full bg-white p-[5px]">
 
           {/* logo */}
-          <div className="relative flex w-[212px] items-center">
+          <div className="relative flex items-center">
             <a
               href="#"
               className="flex h-[34px] items-center gap-[8px] rounded-[99px] border border-[#ececec] bg-white py-[4px] pl-[4px] pr-[8px]"
@@ -96,7 +96,7 @@ export function Navbar() {
                 key={l.label}
                 href={l.href}
                 className={
-                  "flex h-[28px] items-center justify-center px-[20px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545] transition-colors hover:text-black" +
+                  "flex h-[28px] items-center justify-center px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545] transition-colors hover:text-black" +
                   (i === 0 ? " rounded-l-[99px]" : "") +
                   (i === LINKS.length - 1 ? " rounded-r-[99px]" : "")
                 }
@@ -135,19 +135,16 @@ export function Navbar() {
                 (scrolled ? "0s" : "0.65s"),
             }}
           >
+            {/* frosted white pill — same style family as the top navbar */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[2000px] bg-[rgba(54,56,61,0.5)] backdrop-blur-[7px]"
+              className="pointer-events-none absolute inset-0 rounded-[2000px] bg-white/70 backdrop-blur-[10px]"
             />
             {/* logo mark pill */}
             <a
               href="#"
-              className="relative flex h-[34px] items-center rounded-[99px] border border-white px-[4px]"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
-                boxShadow: PILL_SHADOW,
-              }}
+              className="relative flex h-[34px] items-center rounded-[99px] border border-[#ececec] bg-white px-[4px]"
+              style={{ boxShadow: PILL_SHADOW }}
             >
               <Img
                 src="/figma/logo-icon.svg"
@@ -160,25 +157,20 @@ export function Navbar() {
               <a
                 href="#contact"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] border border-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.05))",
-                  boxShadow: PILL_SHADOW,
-                }}
+                className="flex h-[28px] items-center justify-center rounded-[99px] border border-[#ececec] bg-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545] transition-colors hover:text-black"
+                style={{ boxShadow: PILL_SHADOW }}
               >
                 Get Demo
               </a>
               <a
                 href="#start"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
+                className="flex h-[28px] items-center justify-center rounded-[99px] bg-[#6f5197] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
                 style={{ boxShadow: PILL_SHADOW }}
               >
                 Add to Chrome
               </a>
             </div>
-            <div className="pointer-events-none absolute inset-0 rounded-[2000px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]" />
           </div>
         </div>,
         document.body,

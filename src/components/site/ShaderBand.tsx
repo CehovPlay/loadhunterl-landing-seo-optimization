@@ -25,15 +25,28 @@ import {
  * covering the >1920 side gutters; the host section must stay transparent so
  * the shader shows through over the artboard too. Section content (rings,
  * pills, copy) paints above untouched.
+ *
+ * Debug escape hatch: `?noshader` renders only the flat base-colour band (no
+ * WebGPU) — for headless screenshots and bisecting shader-related jank.
  */
+const noShader =
+  typeof window !== "undefined" &&
+  new URLSearchParams(window.location.search).has("noshader")
+
 export function ShaderBand({
   baseColor,
   polarCenter,
+  extendBottom = 0,
 }: {
   baseColor: string
   /** When set, the fluted pattern is bent into concentric circles around this
    *  point (0..1 of the band) — matches the orbit-rings composition. */
   polarCenter?: { x: number; y: number }
+  /** Extra px the band runs PAST the host section's bottom edge — for
+   *  covering the transparent top of the next section (e.g. the ecosystem
+   *  card's hang-over zone). Remember polarCenter y is a fraction of the
+   *  EXTENDED band height. */
+  extendBottom?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [box, setBox] = useState<{ top: number; height: number } | null>(null)
@@ -43,7 +56,7 @@ export function ShaderBand({
     if (!el) return
     const measure = () => {
       const r = el.getBoundingClientRect()
-      setBox({ top: r.top + window.scrollY, height: r.height })
+      setBox({ top: r.top + window.scrollY, height: r.height + extendBottom })
     }
     measure()
     const ro = new ResizeObserver(measure)
@@ -55,7 +68,7 @@ export function ShaderBand({
       window.removeEventListener("resize", measure)
       window.removeEventListener("load", measure)
     }
-  }, [])
+  }, [extendBottom])
 
   return (
     <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0">
@@ -74,6 +87,7 @@ export function ShaderBand({
               pointerEvents: "none",
             }}
           >
+            {noShader ? null : (
             <Shader className="h-full w-full" style={{ width: "100%", height: "100%" }}>
               <FilmGrain strength={0.05}>
                 {(() => {
@@ -166,6 +180,7 @@ export function ShaderBand({
                 })()}
               </FilmGrain>
             </Shader>
+            )}
           </div>,
           document.body,
         )}

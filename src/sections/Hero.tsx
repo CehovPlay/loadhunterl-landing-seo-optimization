@@ -1,4 +1,5 @@
 import { Img } from "@/components/site/Img"
+import { RotatingHeadline } from "@/components/site/RotatingHeadline"
 import { ShaderBand } from "@/components/site/ShaderBand"
 import diamondIcon from "/figma/icon-diamond.svg"
 
@@ -27,44 +28,28 @@ export function Hero() {
         </span>
 
         <div className="flex flex-col items-center gap-[60px]">
-          {/* H1 gradient */}
-          {/* px/py + negative margins widen the paint box so bg-clip-text doesn't crop glyph edges */}
-          <h1
-            className="-mx-[10px] -my-[12px] whitespace-nowrap bg-clip-text px-[10px] py-[12px] text-[83px] font-medium leading-[80px] tracking-[-3.32px] text-transparent"
-            style={{
-              backgroundImage:
-                "linear-gradient(100deg, rgb(26,26,26) 2%, rgb(120,120,120) 100%)",
-            }}
-          >
-            Book better loads
-            <br />
-            before anyone else
-          </h1>
+          {/* rotating typed H1 + matching sub-headline badge */}
+          <RotatingHeadline />
 
-          {/* badge pill */}
-          <div
-            className="flex w-fit items-center justify-center rounded-[200px] px-[50px]"
-            style={{
-              backgroundImage:
-                "linear-gradient(104deg, rgba(255,255,255,0.7) 2%, rgba(255,255,255,0.45) 100%)",
-            }}
-          >
+          {/* trust line: 6K+ users + weighted rating across Google (4.6/28) and
+              Trustpilot (3.8/9) = 4.4 */}
+          <p className="flex items-center gap-[10px] text-[17px] font-medium leading-[24px] tracking-[-0.68px] text-[#454545] opacity-60">
+            Trusted by 6K+ users
+            <span aria-hidden className="text-[#b8b8b8]">·</span>
             <span
-              data-countup
-              className="whitespace-nowrap bg-clip-text text-[60px] font-medium leading-[105px] tracking-[-2.4px] text-transparent"
-              style={{
-                backgroundImage:
-                  "linear-gradient(102deg, rgb(26,26,26) 2%, rgb(120,120,120) 100%)",
-              }}
+              className="relative inline-flex text-[15px] leading-none tracking-[2px]"
+              role="img"
+              aria-label="Rated 4.4 out of 5 on Google and Trustpilot"
             >
-              In under 30 seconds
+              <span className="text-[#c9c9c9]">★★★★★</span>
+              <span
+                className="absolute inset-0 overflow-hidden whitespace-nowrap text-[#6f5197]"
+                style={{ width: `${(4.4 / 5) * 100}%` }}
+              >
+                ★★★★★
+              </span>
             </span>
-          </div>
-
-          {/* paragraph */}
-          <p className="max-w-[698px] text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-[#454545]">
-            LoadHunter scans loadboard in real-time, filters high-RPM loads,
-            and lets you contact brokers instantly — email, SMS, or call.
+            4.4 on Google &amp; Trustpilot
           </p>
         </div>
 
@@ -72,7 +57,6 @@ export function Hero() {
         <div className="flex items-center gap-[12px]">
           <button
             data-lift
-            data-magnetic
             className="flex h-[42px] w-[228px] items-center justify-center rounded-[99px] border border-white text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#454545] backdrop-blur-[10px]"
             style={{
               backgroundImage:
@@ -85,7 +69,6 @@ export function Hero() {
           </button>
           <button
             data-lift
-            data-magnetic
             className="flex h-[42px] w-[228px] items-center justify-center gap-[8px] overflow-hidden rounded-[99px] border border-white py-[4px] pl-[9px] pr-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
             style={{
               backgroundImage:
