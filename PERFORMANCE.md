@@ -64,14 +64,29 @@ mockup text stays crisp.
     with the original PNG as the universal fallback. 124 `<img>` were migrated to `<Img>`.
     23.5 MB → 1.87 MB AVIF.
 
+## Round 2 (July 2026) — startup / network
+
+12. **`shaders` WebGPU engine code-split + idle-gated.** The `shaders/react` stack (TypeGPU +
+    WGSL codegen, ~700 KB min / 174 KB gzip) was statically imported by `ShaderBand` and dominated
+    the DesktopLanding chunk: **927 KB → 225 KB (gzip 236 → 62 KB)**. The shader tree now lives in
+    `ShaderStack.tsx` behind `React.lazy`, and its fetch doesn't even START until
+    `requestIdleCallback` (timeout 1.5 s; Safari falls back to a 350 ms timer) — it can't compete
+    with the LCP image / critical JS. The band's flat base colour (identical to the shader's idle
+    background) paints immediately; the WebGPU canvas takes over when ready. `?noshader` unchanged.
+13. **Killed the hero double-preload.** `index.html` preloaded BOTH the typed AVIF and an untyped
+    PNG per breakpoint — an AVIF-capable browser (~95 %+) downloaded both, wasting up to **947 KB**
+    (desktop) / 859 KB (tablet) / 280 KB (phone) per first visit. The untyped PNG preloads are gone;
+    non-AVIF browsers simply load their `<picture>` fallback without a preload.
+14. **Removed the dead desktop hero preload.** The ≥1024 hero renders copy over the shader band —
+    no `hero-dashboard` image at all (the HD tree that used it is gated behind `?hd`). Every desktop
+    visitor still preloaded its 114 KB AVIF. Only the tablet/phone hero preloads remain.
+
 ## Remaining / recommended next steps
 
 Not blocking; ordered by value.
 
-- **Debounce the breakpoint switch** (`useBreakpoint`): crossing 640/1024 tears down and rebuilds
-  the whole tree + Lenis + reveal; dragging a window across the boundary churns. Debounce ~150 ms.
-- **Fix `useBreakpoint` init mismatch**: initial state reads `innerWidth`, resize reads
-  `clientWidth` — near 640/1024 with a scrollbar the first paint can pick the wrong tree and remount.
+- ~~**Debounce the breakpoint switch**~~ — done (150 ms debounce in `useBreakpoint`).
+- ~~**Fix `useBreakpoint` init mismatch**~~ — done (both paths read `clientWidth`).
 - **`CtaAutomation` glass balls**: add `isolation:isolate`; on coarse-pointer/mobile replace the
   live `backdrop-blur` with a static semi-opaque fill.
 - **Move the always-on 74px box-shadow off the animated tablet/phone featured review cards**

@@ -7,8 +7,9 @@
     <meta name="color-scheme" content="dark" />
     <!-- Preload the LCP hero image per breakpoint (public paths are stable, not
          hashed). type=image/avif → browsers without AVIF skip it and load the
-         WebP/PNG fallback from <picture> normally, so nothing is wasted. -->
-    <link rel="preload" as="image" type="image/avif" href="/figma/hero-dashboard.avif" media="(min-width: 1024px)" fetchpriority="high" />
+         WebP/PNG fallback from <picture> normally, so nothing is wasted.
+         NOTE: no desktop preload — the ≥1024 hero is copy over a shader band,
+         it renders no hero-dashboard image at all. -->
     <link rel="preload" as="image" type="image/avif" href="/figma/tablet/hero-dashboard.avif" media="(min-width: 640px) and (max-width: 1023px)" fetchpriority="high" />
     <link rel="preload" as="image" type="image/avif" href="/figma/phone/hero-mockup.avif" media="(max-width: 639px)" fetchpriority="high" />
     <meta
@@ -16,10 +17,9 @@
       content="LoadHunter OS — book better loads before anyone else. AI-powered dispatch tools that book loads in under 30 seconds."
     />
     <title>LoadHunter OS — Book better loads before anyone else</title>
-    <!-- LCP: fetch the hero mockup for the active breakpoint before the JS bundle evaluates -->
-    <link rel="preload" as="image" href="/figma/hero-dashboard.png" media="(min-width: 1024px)" fetchpriority="high" />
-    <link rel="preload" as="image" href="/figma/tablet/hero-dashboard.png" media="(min-width: 640px) and (max-width: 1023px)" fetchpriority="high" />
-    <link rel="preload" as="image" href="/figma/phone/hero-mockup.png" media="(max-width: 639px)" fetchpriority="high" />
+    <!-- NO untyped PNG preload here: an AVIF-capable browser would fetch BOTH
+         the AVIF above and the PNG (up to ~950 KB wasted). The rare non-AVIF
+         browser simply loads its fallback via <picture> without a preload. -->
   </head>
   <body>
     <div id="root"></div>
