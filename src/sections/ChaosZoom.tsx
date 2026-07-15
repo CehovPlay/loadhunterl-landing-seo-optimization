@@ -5,59 +5,69 @@ import { prefersReducedMotion } from "@/lib/inview"
 
 /**
  * Scroll-scrubbed zoom-through transition (clearstreet.io-style) between the
- * light Features band and the dark Tools section.
+ * light Features band and the dark Tools section: the camera dives straight
+ * into the HYPHEN of "AI-Powered".
  *
- * The heading "From chaos to AI-Powered dispatch" pins at the viewport
- * centre while the scroll runway scrubs a huge scale-up whose
- * transform-origin is the HYPHEN between "AI" and "Powered" — the camera
- * dives straight into the hyphen. As the glyph bar floods the screen a
- * full-bleed dark cover fades in, landing seamlessly on the gray-800 Tools
- * section that follows. Fully reversible: everything is a pure function of
- * scroll position.
+ * The heading lives in an SVG and the zoom is done by animating the viewBox
+ * — the browser re-renders the vector glyphs at native resolution every
+ * frame, so the text stays CRISP at any zoom (transform:scale() composites a
+ * cached raster and turns to mush). The SVG band is 6000px wide (bleeding
+ * far past the 1920 canvas into the >1920 gutters) with xMidYMid slice, so
+ * mid-dive the giant glyphs — and at the end the dark bar — cover the whole
+ * viewport with no white margins. The viewBox centre is interpolated to the
+ * hyphen's ink centre, so the dive lands dead-centre by construction.
  *
- * Pinning is done ecosystemPin-style — translate driven from the live
- * section rect on each gsap.ticker frame (position:fixed can't escape the
- * scaled canvas, and ScrollTrigger mis-measures inside transform:scale()).
- * The text colour equals the Tools bg (#181a1f), so the moment the bar
- * fills the viewport the handoff to the next section is invisible.
+ * Pinning is ecosystemPin-style — translate driven from the live section
+ * rect on each gsap.ticker frame (position:fixed can't escape the scaled
+ * canvas; ScrollTrigger mis-measures inside transform:scale()). Everything
+ * is a pure function of scroll — fully reversible. Text colour = Tools bg
+ * (#181a1f) and a dark cover fades in at the very end, so the handoff to
+ * the next section is invisible.
  */
 
+const SVG_W = 6000 // svg band, canvas px — bleeds into the side gutters
+const SVG_H = 1400
+const CX0 = SVG_W / 2
+const CY0 = SVG_H / 2
+const FONT = 96
+const BASELINE_Y = CY0 + FONT * 0.354 // optically centred cap height
+const HYPHEN_RISE = 0.31 // Inter hyphen ink-bar centre, em above baseline
+const TEXT = "From chaos to AI-Powered dispatch"
+const HYPHEN_I = TEXT.indexOf("-")
+const FINAL_VBW = 14 // viewBox width at full zoom — inside the hyphen bar
 const RUNWAY = 1600 // canvas px of scroll consumed by the dive
 const SECTION_H = RUNWAY + 1080
-const SCALE_MAX = 130
-const DIVE_EASE = 2.2 // pow easing — accelerate into the hyphen
-const COVER_FROM = 0.82 // progress where the dark cover starts fading in
+const DIVE_EASE = 1.5 // pow on progress — the exponential zoom does the rest
+const COVER_FROM = 0.9 // progress where the dark cover starts fading in
 
 export function ChaosZoom() {
   const sectionRef = useRef<HTMLElement>(null)
   const pinRef = useRef<HTMLDivElement>(null)
-  const h2Ref = useRef<HTMLHeadingElement>(null)
-  const hyphenRef = useRef<HTMLSpanElement>(null)
+  const svgRef = useRef<SVGSVGElement>(null)
+  const textRef = useRef<SVGTextElement>(null)
   const coverRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (prefersReducedMotion()) return
     const section = sectionRef.current
     const pin = pinRef.current
-    const h2 = h2Ref.current
-    const hyphen = hyphenRef.current
+    const svg = svgRef.current
+    const textEl = textRef.current
     const cover = coverRef.current
-    if (!section || !pin || !h2 || !hyphen || !cover) return
+    if (!section || !pin || !svg || !textEl || !cover) return
 
-    // dive point: the hyphen's centre inside the h2 (transform-origin), and
-    // its horizontal offset from the canvas centre (drifted out during the
-    // dive so the bar lands dead-centre). Measured after fonts settle.
-    let originSet = false
-    let dx = 0
+    // dive target: the hyphen's ink centre in SVG user units. The horizontal
+    // extent is reliable from the glyph cell; the bar's vertical centre is
+    // derived from the baseline (the cell spans the whole ascent/descent).
+    let hx = CX0
+    let hy = BASELINE_Y - FONT * HYPHEN_RISE
     const measure = () => {
-      const ox = hyphen.offsetLeft + hyphen.offsetWidth / 2
-      const oy = hyphen.offsetTop + hyphen.offsetHeight / 2
-      h2.style.transformOrigin = `${ox}px ${oy}px`
-      const sRect = section.getBoundingClientRect()
-      const s = sRect.width / 1920
-      const hRect = hyphen.getBoundingClientRect()
-      dx = 960 - (hRect.left + hRect.width / 2 - sRect.left) / s
-      originSet = true
+      try {
+        const ext = textEl.getExtentOfChar(HYPHEN_I)
+        hx = ext.x + ext.width / 2
+      } catch {
+        /* not rendered yet — keep the centre fallback */
+      }
     }
     if (document.fonts?.ready) document.fonts.ready.then(measure)
 
@@ -65,8 +75,7 @@ export function ChaosZoom() {
       const rect = section.getBoundingClientRect()
       const vh = window.innerHeight
       const s = rect.width / 1920
-      if (!originSet) measure()
-      // keep the heading at the viewport centre while the runway is consumed
+      // keep the band at the viewport centre while the runway is consumed
       const halfView = vh / (2 * s)
       const yCenter = gsap.utils.clamp(
         halfView,
@@ -75,12 +84,18 @@ export function ChaosZoom() {
       )
       const p = gsap.utils.clamp(0, 1, (yCenter - halfView) / RUNWAY)
       const eased = Math.pow(p, DIVE_EASE)
-      pin.style.transform = `translate(${dx * eased}px, ${yCenter - h2.offsetHeight / 2}px)`
-      h2.style.transform = `scale(${1 + (SCALE_MAX - 1) * eased})`
+      // exponential camera zoom, anchor gliding onto the hyphen centre
+      const vbW = SVG_W * Math.pow(FINAL_VBW / SVG_W, eased)
+      const vbH = vbW * (SVG_H / SVG_W)
+      const cx = CX0 + (hx - CX0) * eased
+      const cy = CY0 + (hy - CY0) * eased
+      svg.setAttribute("viewBox", `${cx - vbW / 2} ${cy - vbH / 2} ${vbW} ${vbH}`)
+      pin.style.transform = `translateY(${yCenter - SVG_H / 2}px)`
       cover.style.opacity = String(
         gsap.utils.clamp(0, 1, (p - COVER_FROM) / (1 - COVER_FROM)),
       )
     }
+    measure()
     onTick()
 
     // run the ticker only while the section is on screen
@@ -107,34 +122,47 @@ export function ChaosZoom() {
 
   return (
     <BleedBg color="#fafafa">
-      <section
-        ref={sectionRef}
-        className="relative overflow-hidden"
-        style={{ height: SECTION_H }}
-      >
-        {/* pinned heading — translate driven per tick; the h2 zooms around
-            the hyphen. data-no-reveal: fully owned by the tick loop. */}
+      <section ref={sectionRef} className="relative" style={{ height: SECTION_H }}>
+        {/* pinned svg band — translateY driven per tick; the viewBox zooms.
+            data-no-reveal: fully owned by the tick loop. NO overflow clip:
+            mid-dive the glyphs must spill across the >1920 gutters (the
+            DesignFrame wrapper clips at the window edge). */}
         <div
           ref={pinRef}
           data-no-reveal
-          className="absolute inset-x-0 top-0 flex justify-center will-change-transform"
+          className="absolute top-0 will-change-transform"
+          style={{ left: (1920 - SVG_W) / 2, width: SVG_W, height: SVG_H }}
         >
-          <h2
-            ref={h2Ref}
-            className="whitespace-nowrap text-[96px] font-medium leading-[104px] tracking-[-3.84px] will-change-transform"
-            style={{ color: "#181a1f" }}
+          <svg
+            ref={svgRef}
+            width={SVG_W}
+            height={SVG_H}
+            viewBox={`0 0 ${SVG_W} ${SVG_H}`}
+            preserveAspectRatio="xMidYMid slice"
+            aria-label={TEXT}
+            role="img"
+            className="block"
           >
-            From chaos to AI
-            <span ref={hyphenRef} data-hyphen>
-              -
-            </span>
-            Powered dispatch
-          </h2>
+            <text
+              ref={textRef}
+              x={CX0}
+              y={BASELINE_Y}
+              textAnchor="middle"
+              fill="#181a1f"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 500,
+                fontSize: FONT,
+                letterSpacing: "-0.04em",
+              }}
+            >
+              {TEXT}
+            </text>
+          </svg>
         </div>
 
-        {/* full-bleed dark cover — fades in at the end of the dive so the
-            handoff to the gray-800 Tools section below is seamless; wider
-            than the canvas to also cover the >1920 side gutters */}
+        {/* full-bleed dark cover — guarantees a clean handoff to the gray-800
+            Tools section at the very end of the dive */}
         <div
           ref={coverRef}
           aria-hidden
