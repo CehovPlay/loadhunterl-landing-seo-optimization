@@ -23,8 +23,10 @@ import { prefersReducedMotion } from "@/lib/inview"
  * and Lenis smoothing (ScrollTrigger mis-measures inside transform: scale()).
  * IO-gated so it costs nothing off-screen.
  *
- * Block elements get the hero-headline entrance (rise out of a light blur,
- * expo.out) via [data-tb] targets — the global reveal cascade is opted out.
+ * Block text elements get the hero-headline entrance (rise out of a light
+ * blur, expo.out) via [data-tb] targets; the software mockup emerges from
+ * the dark (fade + rise + brightness ramp) via [data-tb-mockup] — the global
+ * reveal cascade is opted out.
  */
 
 type Item = {
@@ -46,8 +48,9 @@ type Block = {
 /* ------------------------------------------------- geometry constants --- */
 const CENTER_X = 960 // spine vertical, canvas centre
 const ICON_Y = 628 // icon centre — the horizontal run's y
-const CURVE_END_Y = 1042 // where the arc lands on the vertical
-const SPINE_D = `M 206 ${ICON_Y} H 546 Q ${CENTER_X} ${ICON_Y} ${CENTER_X} ${CURVE_END_Y}`
+const ARC_R = 150 // corner radius of the horizontal→vertical turn
+const CURVE_END_Y = ICON_Y + ARC_R // where the arc lands on the vertical
+const SPINE_D = `M 206 ${ICON_Y} H ${CENTER_X - ARC_R} Q ${CENTER_X} ${ICON_Y} ${CENTER_X} ${CURVE_END_Y}`
 const BLOCK0_Y = 1028 // first block title top
 const PITCH = 1461 // title-to-title vertical rhythm
 const NODE_OFFSET = 20 // node sits level with the block title
@@ -223,8 +226,9 @@ function ToolBlock({ b, index }: { b: Block; index: number }) {
       </p>
       {/* mockup between the description and the items (Figma: 80px gaps);
           the entrance animates this wrapper, so it never fights the img's own
-          data-parallax transform */}
-      <div data-tb className="mt-[80px]">
+          data-parallax transform. [data-tb-mockup]: unlike the text targets,
+          the mockup emerges from the dark — fade + rise + brightness ramp */}
+      <div data-tb-mockup className="mt-[80px]">
         <Img
           src={b.mockup}
           alt=""
@@ -366,8 +370,10 @@ export function Tools() {
       lit: false,
     }))
 
-    // blur-rise entrance for each block's elements — the same motion as the
-    // hero headline, cascading once per block as it enters the viewport
+    // blur-rise entrance for each block's text elements — the same motion as
+    // the hero headline, cascading once per block as it enters the viewport.
+    // The mockup gets its own emerge-from-the-dark reveal (fade + rise +
+    // brightness ramp), timed to land inside the text cascade.
     const entranceTweens: gsap.core.Tween[] = []
     const entranceIo = new IntersectionObserver(
       (entries) => {
@@ -390,6 +396,29 @@ export function Tools() {
       },
       { rootMargin: "0px 0px -15% 0px" },
     )
+    // the mockup is observed SEPARATELY: the block IO above fires when the
+    // block's title enters, at which point the mockup (~240px lower) is still
+    // below the fold — animating it then would finish entirely off-screen.
+    const mockupIo = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue
+          mockupIo.unobserve(e.target)
+          entranceTweens.push(
+            gsap.to(e.target, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: "brightness(1)",
+              duration: 1.05,
+              ease: "expo.out",
+              overwrite: "auto",
+            }),
+          )
+        }
+      },
+      { rootMargin: "0px 0px -12% 0px" },
+    )
     blocks.forEach((blk) => {
       if (!blk.el) return
       gsap.set(blk.el.querySelectorAll<HTMLElement>("[data-tb]"), {
@@ -397,6 +426,17 @@ export function Tools() {
         y: 22,
         filter: "blur(6px)",
       })
+      const mockup = blk.el.querySelector<HTMLElement>("[data-tb-mockup]")
+      if (mockup) {
+        gsap.set(mockup, {
+          opacity: 0,
+          y: 56,
+          scale: 0.965,
+          transformOrigin: "50% 65%",
+          filter: "brightness(0.25)",
+        })
+        mockupIo.observe(mockup)
+      }
       entranceIo.observe(blk.el)
     })
 
@@ -419,7 +459,11 @@ export function Tools() {
       fill.style.strokeDashoffset = String(1000 * (1 - s / totalLen))
       const vp = gsap.utils.clamp(0, 1, (y60 - CURVE_END_Y) / verticalLen)
       tip.style.transform = `translateY(${vp * verticalLen}px)`
-      tip.style.opacity = vp > 0.002 && vp < 0.998 ? "1" : "0"
+      // the tip appears only once the front has passed the FIRST node —
+      // before that the leading edge rides bare
+      const frontY = CURVE_END_Y + vp * verticalLen
+      tip.style.opacity =
+        frontY > BLOCK0_Y + NODE_OFFSET && vp < 0.998 ? "1" : "0"
       for (const blk of blocks) {
         if (!blk.el) continue
         const on = blk.el.getBoundingClientRect().top < vh * 0.65
@@ -449,6 +493,7 @@ export function Tools() {
     return () => {
       io.disconnect()
       entranceIo.disconnect()
+      mockupIo.disconnect()
       entranceTweens.forEach((t) => t.kill())
       if (ticking) gsap.ticker.remove(onTick)
     }
