@@ -48,6 +48,7 @@ export function ChaosZoom() {
   const pinRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const textRef = useRef<SVGTextElement>(null)
+  const barRef = useRef<SVGRectElement>(null)
   const coverRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -56,8 +57,9 @@ export function ChaosZoom() {
     const pin = pinRef.current
     const svg = svgRef.current
     const textEl = textRef.current
+    const bar = barRef.current
     const cover = coverRef.current
-    if (!section || !pin || !svg || !textEl || !cover) return
+    if (!section || !pin || !svg || !textEl || !bar || !cover) return
 
     // Dive target: the EXACT ink centre of the hyphen bar, in SVG user
     // units. Any anchor error is magnified by the zoom factor (×430 at full
@@ -76,6 +78,15 @@ export function ChaosZoom() {
         const m = ctx.measureText(TEXT[HYPHEN_I])
         hx = pen.x + (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2
         hy = BASELINE_Y - (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2
+        // solid rect laid EXACTLY over the hyphen's ink (same fill — it is
+        // invisible over the glyph). Chrome's glyph rasterisation falls apart
+        // beyond ~×50 viewBox zoom (fragments jump around the screen); plain
+        // rects scale flawlessly, so the deep phase of the dive rides on the
+        // rect while the text is faded out.
+        bar.setAttribute("x", String(pen.x - m.actualBoundingBoxLeft))
+        bar.setAttribute("y", String(BASELINE_Y - m.actualBoundingBoxAscent))
+        bar.setAttribute("width", String(m.actualBoundingBoxLeft + m.actualBoundingBoxRight))
+        bar.setAttribute("height", String(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent))
       } catch {
         /* not rendered yet — keep the estimate fallback */
       }
@@ -106,6 +117,9 @@ export function ChaosZoom() {
       const cy = hy + (CY0 - hy) * r
       svg.setAttribute("viewBox", `${cx - vbW / 2} ${cy - vbH / 2} ${vbW} ${vbH}`)
       pin.style.transform = `translateY(${yCenter - SVG_H / 2}px)`
+      // crossfade the glyphs out before Chrome's deep-zoom glyph breakage
+      // kicks in (~×50); from here the ink rect carries the growing bar
+      textEl.style.opacity = String(gsap.utils.clamp(0, 1, (vbW - 150) / 100))
       cover.style.opacity = String(
         gsap.utils.clamp(0, 1, (p - COVER_FROM) / (1 - COVER_FROM)),
       )
@@ -173,6 +187,9 @@ export function ChaosZoom() {
             >
               {TEXT}
             </text>
+            {/* the hyphen's ink, duplicated as a rect (set from measure()) —
+                invisible over the glyph, it carries the deep zoom phase */}
+            <rect ref={barRef} fill="#181a1f" width="0" height="0" />
           </svg>
         </div>
 
