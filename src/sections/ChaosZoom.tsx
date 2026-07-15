@@ -36,9 +36,9 @@ const TEXT = "From chaos to AI-Powered dispatch"
 const HYPHEN_I = TEXT.indexOf("-")
 const FINAL_VBW = 14 // viewBox width at full zoom — inside the hyphen bar
 const RUNWAY = 1600 // canvas px of scroll consumed by the dive
-// tail below the runway ≥ any viewport height (canvas px): the next section
-// physically cannot enter the viewport until the dive is complete and the
-// screen is already dark (the cover spans the whole section)
+// initial tail fallback; the effect resizes the section to RUNWAY + exactly
+// one viewport, so the next section enters the moment the dive completes
+// (and not a px earlier — the screen is already dark by then)
 const SECTION_H = RUNWAY + 2400
 const DIVE_EASE = 1.5 // pow on progress — the exponential zoom does the rest
 const COVER_FROM = 0.9 // progress where the dark cover starts fading in
@@ -52,7 +52,6 @@ export function ChaosZoom() {
   const coverRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (prefersReducedMotion()) return
     const section = sectionRef.current
     const pin = pinRef.current
     const svg = svgRef.current
@@ -60,6 +59,21 @@ export function ChaosZoom() {
     const bar = barRef.current
     const cover = coverRef.current
     if (!section || !pin || !svg || !textEl || !bar || !cover) return
+
+    if (prefersReducedMotion()) {
+      // no dive — just a static heading band
+      section.style.height = "1080px"
+      return
+    }
+
+    // tail = exactly one viewport (canvas px): Tools enters the moment the
+    // dive completes, with no dead dark scroll after it
+    const sizeSection = () => {
+      const s = section.getBoundingClientRect().width / 1920
+      section.style.height = `${RUNWAY + window.innerHeight / s}px`
+    }
+    sizeSection()
+    window.addEventListener("resize", sizeSection)
 
     // Dive target: the EXACT ink centre of the hyphen bar, in SVG user
     // units. Any anchor error is magnified by the zoom factor (×430 at full
@@ -145,6 +159,7 @@ export function ChaosZoom() {
     io.observe(section)
     return () => {
       io.disconnect()
+      window.removeEventListener("resize", sizeSection)
       if (ticking) gsap.ticker.remove(onTick)
     }
   }, [])
