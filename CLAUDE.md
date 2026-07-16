@@ -32,25 +32,23 @@ screenshots with `sharp` (a devDependency) since full-page captures are ~19 000p
 
 ## Architecture — the fixed-canvas scaling model (read this first)
 
-The entire page is NOT responsive in the usual flow sense. Each section is **absolutely
-pixel-positioned** against a fixed-width design canvas that exactly matches a Figma adaptive frame,
-and `DesignFrame` (`src/components/site/DesignFrame.tsx`) uniformly `transform: scale()`s that canvas
-to the viewport. This is why every element uses exact `px` values from Figma.
+The page is NOT responsive in the usual flow sense. Each section is **absolutely pixel-positioned**
+against a single fixed 1920px design canvas, and `DesignFrame`
+(`src/components/site/DesignFrame.tsx`) uniformly `transform: scale()`s that canvas to the viewport.
+This is why every element uses exact `px` values.
 
-Three canvases are chosen by viewport width via `useBreakpoint` (`src/components/site/useBreakpoint.ts`)
-and code-split with `React.lazy` in `App.tsx` (a phone visitor never downloads the desktop tree):
-
-| Breakpoint | Viewport   | Canvas width | Sections dir              |
-|------------|------------|--------------|---------------------------|
-| desktop    | ≥ 1024px   | 1920         | `src/sections/*`          |
-| tablet     | 640–1023px | 768          | `src/sections/tablet/*`   |
-| phone      | < 640px    | 390          | `src/sections/phone/*`    |
+There is ONE canvas: desktop 1920, `src/sections/*`. The old phone (390) / tablet (768) / HD (1440)
+adaptive trees were fully deleted on 2026-07-16 (code, assets, and the useBreakpoint switch) — a new,
+clean adaptive is to be designed **from scratch, based on this desktop version**, NOT by reproducing
+Figma adaptive frames (Figma is no longer the source of truth for adaptive work). Until that exists,
+every viewport gets the desktop canvas: below 1920 it scales down (`vw/1920`), which is unusable on
+phones — that is known and accepted for now.
 
 **Scaling contract (critical, easy to get wrong):** `scale = Math.min(viewportWidth / canvasWidth, maxScale)`.
-`App.tsx` passes `maxScale={1}` for the desktop canvas so that **above 1920px the canvas stops growing
-and centers** (`margin: 0 auto`) with side gutters — matching the Figma 2K (2560) / Full HD (1920)
-frames, which keep content at identical pixel sizes and only add gutters. Without the cap the whole
-page balloons (×1.33 at 2560, ×2 at 4K). Any future viewport-relative scaling MUST apply the same cap.
+`App.tsx` passes `maxScale={1}` so that **above 1920px the canvas stops growing and centers** with side
+gutters (body bg + BleedBg cover them). Without the cap the whole page balloons (×1.33 at 2560, ×2 at
+4K) — that was tried and rejected as too large on 2K. Any future viewport-relative scaling MUST apply
+the same cap.
 
 **Gotcha — elements outside the canvas transform.** `position: fixed` does not escape a scaled
 ancestor, so the scroll-shrunk compact navbar pill in `Navbar.tsx` is rendered through a
@@ -58,13 +56,12 @@ ancestor, so the scroll-shrunk compact navbar pill in `Navbar.tsx` is rendered t
 own copy of the same `Math.min(vw/1920, 1)` cap. If you add any other fixed/portalled overlay that
 must visually track the canvas, replicate that pattern.
 
-Crossing 640/1024 tears down and rebuilds the whole section tree + Lenis + reveal, so `useBreakpoint`
-debounces resize (150ms) and `DesignFrame` measures with `document.documentElement.clientWidth`
-(scrollbar-excluded, consistent across first paint and resize).
+`DesignFrame` measures with `document.documentElement.clientWidth` (scrollbar-excluded, consistent
+across first paint and resize).
 
 ## Animation system (data-attribute driven)
 
-Two init functions run once per canvas mount, from `CanvasEffects` inside the Suspense boundary in
+Two init functions run once per canvas mount, from `CanvasEffects` rendered after the landing tree in
 `App.tsx` (so the DOM exists before they hide elements for reveal):
 
 - `src/lib/reveal.ts` (`initReveal`) — GSAP `ScrollTrigger.batch` cascading fade/rise as elements
@@ -84,15 +81,14 @@ to native scroll + `scrollIntoView` for anchor links.
 - **Tokens** live in `src/index.css` under Tailwind 4's `@theme` — exact Figma color / type-scale /
   radius values. Use these tokens (and Figma `px`), not ad-hoc values, to preserve pixel parity.
 - **Images:** decorative visuals (mockups, glows, orbit rings) are 2× PNG/SVG exports in
-  `public/figma/**` (per-section folders, plus `phone/` and `tablet/`). Text, tables, buttons and
+  `public/figma/**` (per-section folders). Text, tables, buttons and
   lists are real HTML with exact geometry.
 - Use the `<Img>` component (`src/components/site/Img.tsx`), not bare `<img>`, for `/figma/**` rasters:
   it serves AVIF→WebP→PNG via `<picture class="contents">` (layout-transparent) and reserves box size
   from `src/generated/img-dimensions.ts` to avoid CLS. That manifest and the AVIF/WebP siblings are
   generated by `scripts/transcode-images.mjs` (auto-run on `prebuild`) — after adding a new raster to
   `public/figma/`, run `npm run transcode`.
-- Vite `manualChunks` splits `vendor-react` and `vendor-anim` (gsap/lenis) for cache stability; the
-  three canvases are already `React.lazy` code-split.
+- Vite `manualChunks` splits `vendor-react` and `vendor-anim` (gsap/lenis) for cache stability.
 
 ## Product context — Obsidian vault
 
