@@ -68,44 +68,43 @@ export function MobileWhy() {
           sub="Measured across real bookings. Based on real dispatcher workflows."
         />
 
-        {/* ---- phone: LoadHunter-focused list — big check per feature, the
-            Manual/Others verdicts as a caption line (per design decision) ---- */}
+        {/* ---- phone: LoadHunter-focused list as CARDS — the card fills sit
+            over the glow, so the beam never washes the text ---- */}
         <div className="relative mt-10 md:hidden">
           <GlowBg />
-          <div className="relative">
-            {ROWS.map((r, ri) => (
-              <div key={r.label}>
-                {ri > 0 && <div className="h-px w-full" style={DASH} />}
-                <div className="flex items-start gap-4 py-5">
-                  <img
-                    src="/figma/table-check.svg"
-                    alt="Included in LoadHunter"
-                    loading="lazy"
-                    decoding="async"
-                    className="mt-[-2px] h-[24px] w-7 shrink-0"
-                  />
-                  <div>
-                    <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
-                      {r.label}
-                    </p>
-                    <p className="mt-1.5 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
-                      Manual{" "}
-                      <span aria-hidden className={r.cells[1] ? "text-[#c79ffd]" : "text-ink-3"}>
-                        {r.cells[1] ? "✓" : "✕"}
-                      </span>
-                      <span aria-hidden className="mx-1.5 text-[#4a4c52]">·</span>
-                      Others{" "}
-                      <span aria-hidden className={r.cells[2] ? "text-[#c79ffd]" : "text-ink-3"}>
-                        {r.cells[2] ? "✓" : "✕"}
-                      </span>
-                    </p>
-                  </div>
+          <div className="relative flex flex-col gap-3">
+            {ROWS.map((r) => (
+              <div
+                key={r.label}
+                className="flex items-start gap-4 rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-5 py-5"
+              >
+                <img
+                  src="/figma/table-check.svg"
+                  alt="Included in LoadHunter"
+                  loading="lazy"
+                  decoding="async"
+                  className="mt-[-2px] h-[24px] w-7 shrink-0"
+                />
+                <div>
+                  <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+                    {r.label}
+                  </p>
+                  <p className="mt-1.5 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
+                    Manual{" "}
+                    <span aria-hidden className={r.cells[1] ? "text-[#c79ffd]" : "text-ink-3"}>
+                      {r.cells[1] ? "✓" : "✕"}
+                    </span>
+                    <span aria-hidden className="mx-1.5 text-[#4a4c52]">·</span>
+                    Others{" "}
+                    <span aria-hidden className={r.cells[2] ? "text-[#c79ffd]" : "text-ink-3"}>
+                      {r.cells[2] ? "✓" : "✕"}
+                    </span>
+                  </p>
                 </div>
               </div>
             ))}
 
-            <div className="h-px w-full" style={DASH} />
-            <div className="py-5">
+            <div className="rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-5 py-5">
               <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                 {SPEED_ROW[0]}
               </p>
@@ -124,12 +123,11 @@ export function MobileWhy() {
           </div>
         </div>
 
-        {/* ---- tablet: airy card rows (cards paint over the glow, so the
-            beam never washes the content) ---- */}
-        <div className="relative mt-12 hidden md:block">
+        {/* ---- tablet: desktop-style 4-column table (as before) ---- */}
+        <div className="relative mt-10 hidden md:block">
           <GlowBg />
-          <div className="relative flex flex-col gap-3">
-            <div className="grid grid-cols-[1.3fr_1fr_0.8fr_0.8fr] items-center gap-2 px-6 pb-2">
+          <div className="relative">
+            <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-3.5">
               <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
                 Feature
               </span>
@@ -149,20 +147,21 @@ export function MobileWhy() {
             </div>
 
             {ROWS.map((r) => (
-              <div
-                key={r.label}
-                className="grid grid-cols-[1.3fr_1fr_0.8fr_0.8fr] items-center gap-2 rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-6 py-6"
-              >
-                <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
-                  {r.label}
-                </span>
-                {r.cells.map((ok, i) => (
-                  <Cell key={i} ok={ok} />
-                ))}
+              <div key={r.label}>
+                <div className="h-px w-full" style={DASH} />
+                <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-4">
+                  <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+                    {r.label}
+                  </span>
+                  {r.cells.map((ok, i) => (
+                    <Cell key={i} ok={ok} />
+                  ))}
+                </div>
               </div>
             ))}
 
-            <div className="grid grid-cols-[1.3fr_1fr_0.8fr_0.8fr] items-center gap-2 rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-6 py-6">
+            <div className="h-px w-full" style={DASH} />
+            <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-4">
               <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                 {SPEED_ROW[0]}
               </span>

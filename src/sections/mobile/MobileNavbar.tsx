@@ -66,13 +66,15 @@ export function MobileNavbar() {
         >
           <a
             href="#"
-            className={`flex items-center gap-2 transition-opacity duration-300 ${
-              collapsed && !open ? "pointer-events-none opacity-0" : "opacity-100"
+            className={`flex items-center gap-2 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-500 ${
+              collapsed && !open
+                ? "pointer-events-none max-w-0 opacity-0"
+                : "max-w-[160px] opacity-100"
             }`}
             aria-label="LoadHunter — home"
           >
-            <Img src="/figma/logo-icon.svg" alt="" className="h-[26px] w-[27px]" />
-            <Img src="/figma/logo-text.svg" alt="loadhunter" className="h-[15px] w-[94px]" />
+            <Img src="/figma/logo-icon.svg" alt="" className="h-[26px] w-[27px] max-w-none" />
+            <Img src="/figma/logo-text.svg" alt="loadhunter" className="h-[15px] w-[94px] max-w-none" />
           </a>
           <button
             type="button"
