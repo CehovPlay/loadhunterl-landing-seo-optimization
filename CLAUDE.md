@@ -57,6 +57,21 @@ matchMedia `max-width: 1023px`) and code-split in `App.tsx`:
 `w-auto`/`h-auto` on an `<img>` falls back to the 300×150 replaced-element default and blows up the
 layout. Always give such images explicit width AND height (ratio from the viewBox).
 
+**Mobile gotcha — opaque glow PNGs paint over static text:** `why-glow.png` (and likely other
+baked-on-dark exports) is FULLY OPAQUE (alpha=1 everywhere; invisible on the dark canvas). Any
+absolutely-positioned decor that comes later in the DOM paints ABOVE plain static text — and reveal
+CLEARS its transforms when done, dropping text back into the static layer. Symptom: heading visible
+mid-animation, gone at rest. That's why `SectionHeader` (mobile ui.tsx) carries `relative z-10`; give
+any text that decorative absolutes can overlap the same treatment. Diagnose with
+`document.elementFromPoint` at the text's center AFTER animations settle, not with opacity checks.
+
+**Hero shader on the flow layout:** `MobileHeroShader` progressively enables the autonomous `drift`
+variant of `ShaderStack` (no cursor) — gated on `navigator.gpu` adapter probe at browser idle, skipped
+for reduced motion and `?noshader`. Static CSS gradients in `MobileHero` are the instant paint and the
+permanent fallback. The `shaders` engine self-throttles (DPR ≤1.5 on mobile GPUs, pauses offscreen via
+its own IntersectionObserver). NOTE: CDP screenshots that emulate reduced-motion will show the static
+fallback — that's the gate working, not a bug; screenshot without the emulation to see the shader.
+
 **Verifying mobile:** headless Chrome clamps windows to ≥~500px, so `--window-size=390,...` silently
 lays out at 500 and crops — do NOT use it for mobile shots. Use CDP device emulation instead
 (`Emulation.setDeviceMetricsOverride`); full-page captures taller than ~8000 CSS px must be taken in
