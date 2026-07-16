@@ -71,24 +71,27 @@ export function MobileNavbar() {
         aria-hidden={!open}
       >
         <nav className="mx-auto flex w-full max-w-[440px] flex-1 flex-col overflow-y-auto px-5">
-          {LINKS.map((l) => (
+          {LINKS.map((l, i) => (
             <a
               key={l.label}
               href={l.href}
+              style={{ transitionDelay: open ? `${80 + i * 40}ms` : "0ms" }}
               onClick={() => {
                 // unlock scroll synchronously — the anchor smooth-scroll fires
                 // in this same tick, before the effect cleanup would run
                 document.body.style.overflow = ""
                 setOpen(false)
               }}
-              className="flex h-14 items-center border-b border-[#f0f0f0] text-[17px] font-medium tracking-[-0.02em] text-[#454545]"
+              className={`flex h-14 items-center border-b border-[#f0f0f0] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#454545] transition-[opacity,transform] duration-300 ${
+                open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+              }`}
             >
               {l.label}
             </a>
           ))}
         </nav>
         <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-5 pt-4">
-          <PillButton href="#contact" variant="light">
+          <PillButton href="#contact" variant="white">
             Get Demo
           </PillButton>
           <PillButton href="#start" variant="violet">

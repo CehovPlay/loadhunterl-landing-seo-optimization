@@ -21,10 +21,10 @@ export function MobileCta() {
             <Img src="/figma/tail/logo-icon-white.svg" alt="" className="h-6 w-6" />
             <Img src="/figma/tail/logo-text-white.svg" alt="loadhunter" className="h-[19px] w-[116px]" />
           </div>
-          <h2 className="mt-24 text-[clamp(24px,6.6vw,30px)] font-medium leading-[1.2] tracking-[-0.03em] text-white">
+          <h2 className="mt-24 text-[clamp(24px,6.6vw,30px)] font-medium leading-[1.2] tracking-[-0.04em] text-white">
             Start your experience with LoadHunter
           </h2>
-          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.02em] text-white">
+          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-white">
             Search loads with efficiency and speed you never had before. LoadHunter: Ai-powered
             tool.
           </p>
@@ -40,7 +40,7 @@ export function MobileCta() {
               className="size-4"
             />
             <span
-              className="bg-clip-text text-[15px] font-medium tracking-[-0.01em] text-transparent"
+              className="bg-clip-text text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-transparent"
               style={{
                 backgroundImage: "linear-gradient(149.61deg, #6f5197 0%, #9779bf 100%)",
               }}

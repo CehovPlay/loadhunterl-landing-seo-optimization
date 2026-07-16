@@ -78,7 +78,7 @@ function FeatureRow({ text, clock }: { text: string; clock?: boolean }) {
         data-no-reveal={clock ? "" : undefined}
         className={clock ? "mt-[2px] h-3 w-3" : "mt-[5px] h-2 w-3"}
       />
-      <span className="whitespace-pre-line text-[12px] leading-[16px] tracking-[-0.02em] text-gray-50">
+      <span className="whitespace-pre-line text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-gray-50">
         {text}
       </span>
     </div>
@@ -116,7 +116,7 @@ function PlanCard({ plan, priceText }: { plan: Plan; priceText: string }) {
           </div>
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[19px] font-medium leading-[26px] tracking-[-0.03em] text-gray-50">
+              <span className="text-[20px] font-medium leading-[26px] tracking-[-0.8px] text-gray-50">
                 {plan.name}
               </span>
               {plan.recommended && (
@@ -132,14 +132,17 @@ function PlanCard({ plan, priceText }: { plan: Plan; priceText: string }) {
                 </span>
               )}
             </div>
-            <p className="mt-1.5 text-[12px] leading-[16px] tracking-[-0.02em] text-gray-50/90">
+            <p className="mt-1.5 text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-gray-50/90">
               {plan.blurb}
             </p>
           </div>
         </div>
         <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
         <div className="flex items-baseline gap-2.5">
-          <span className="text-[28px] font-medium leading-[36px] tracking-[-0.04em] text-gray-50">
+          <span
+            key={priceText}
+            className="lh-pop text-[28px] font-medium leading-[36px] tracking-[-1.12px] text-gray-50"
+          >
             {priceText}
           </span>
           {plan.unit && <span className="text-[12px] text-[#a2a2a2]">{plan.unit}</span>}
@@ -171,7 +174,7 @@ function PlanCard({ plan, priceText }: { plan: Plan; priceText: string }) {
               "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.55) 0%, rgba(111,81,151,0) 100%)",
           }}
         />
-        <span className="relative text-[14px] font-medium tracking-[-0.01em] text-gray-50">
+        <span className="relative text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-50">
           {plan.cta}
         </span>
         <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.18)]" />
@@ -246,7 +249,7 @@ export function MobilePricing() {
                     : undefined
                 }
               >
-                <span className="text-[14px] font-medium tracking-[-0.01em] text-white">
+                <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
                   {label}
                 </span>
                 {isAnnually && (
@@ -279,7 +282,7 @@ export function MobilePricing() {
             </button>
             <span
               aria-live="polite"
-              className="min-w-[130px] text-center text-[16px] font-medium tracking-[-0.01em] text-white"
+              className="min-w-[130px] text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
             >
               {n} {n === 1 ? "dispatcher" : "dispatchers"}
             </span>

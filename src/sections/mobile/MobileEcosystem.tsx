@@ -93,10 +93,10 @@ export function MobileEcosystem() {
           />
         </div>
 
-        <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.18] tracking-[-0.04em] text-ink">
+        <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink">
           Our ecosystem products
         </h2>
-        <p className="mt-4 text-[16px] font-medium leading-[21px] tracking-[-0.03em] text-ink">
+        <p className="mt-4 text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-ink">
           Everything you need to find, evaluate, and book loads — faster, smarter, and in one
           place.
         </p>
@@ -107,7 +107,7 @@ export function MobileEcosystem() {
         {PRODUCTS.map((p) => (
           <article
             key={p.name}
-            data-no-reveal
+            data-card
             className="relative flex w-[82vw] max-w-[380px] shrink-0 flex-col overflow-hidden rounded-[12px] border border-[#e8e8e8] bg-white p-6"
           >
             <Img

@@ -1,5 +1,4 @@
-import { Img } from "@/components/site/Img"
-import { Container, SectionHeader } from "./ui"
+import { Container, SectionHeader, Stars } from "./ui"
 
 const REVIEWS = [
   {
@@ -47,20 +46,35 @@ export function MobileTestimonials() {
           title="What client says"
           sub="Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials"
         />
-        {/* trust strip — same baked export as desktop */}
-        <Img
-          src="/figma/reviews-strip.png"
-          alt="5,000+ trusted users, 4.7 from 100+ reviews on Google, Trustpilot and G2"
-          loading="lazy"
-          decoding="async"
-          className="mx-auto mt-6 w-full max-w-[350px]"
-        />
+        {/* trust stats — real text (the desktop strip is a baked image) */}
+        <div className="mt-8 flex items-stretch justify-center gap-6">
+          <div className="flex flex-col items-center justify-center gap-1.5">
+            <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
+              5,000&thinsp;+
+            </span>
+            <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+              Trusted by users
+            </span>
+          </div>
+          <div aria-hidden className="w-px self-stretch bg-line-strong" />
+          <div className="flex flex-col items-center justify-center gap-1.5">
+            <span className="flex items-center gap-2">
+              <Stars score={4.7} className="text-[16px]" />
+              <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
+                4.7
+              </span>
+            </span>
+            <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+              from 100+ reviews
+            </span>
+          </div>
+        </div>
       </Container>
       <div className="lh-snap mt-10 flex gap-4 overflow-x-auto px-[9vw] pb-2">
         {REVIEWS.map((r) => (
           <figure
             key={r.name}
-            data-no-reveal
+            data-card
             className="relative flex w-[82vw] max-w-[380px] shrink-0 flex-col overflow-hidden rounded-[12px] border border-[rgba(229,229,229,0.1)] p-6"
           >
             {/* desktop card bg: dark radial from the top-right corner */}
@@ -72,12 +86,12 @@ export function MobileTestimonials() {
                   "radial-gradient(453px circle at 100% 6px, rgba(53,50,70,1), rgba(53,50,70,0))",
               }}
             />
-            <blockquote className="relative flex-1 text-[15px] font-medium leading-[20px] tracking-[-0.02em] text-gray-50">
+            <blockquote className="relative flex-1 text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-gray-50">
               {r.quote}
             </blockquote>
             <figcaption className="relative mt-8 flex items-center gap-3">
               <span
-                className="flex size-[42px] items-center justify-center rounded-[12px] border border-white text-[14px] font-medium text-ink-2"
+                className="flex size-[42px] items-center justify-center rounded-[12px] border border-white text-[14px] font-medium tracking-[-0.56px] text-ink-2"
                 style={{
                   backgroundImage:
                     "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
@@ -87,7 +101,7 @@ export function MobileTestimonials() {
               >
                 {r.initials}
               </span>
-              <span className="text-[15px] font-medium tracking-[-0.02em] text-white">
+              <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                 {r.name}
               </span>
             </figcaption>

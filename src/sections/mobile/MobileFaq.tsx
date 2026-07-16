@@ -56,7 +56,7 @@ export function MobileFaq() {
                   onClick={() => setOpen(expanded ? null : i)}
                   className="flex min-h-[56px] w-full items-center justify-between gap-4 py-4 text-left"
                 >
-                  <span className="text-[15px] font-medium leading-[21px] tracking-[-0.01em] text-white">
+                  <span className="text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-white">
                     {row.q}
                   </span>
                   <span
@@ -75,10 +75,10 @@ export function MobileFaq() {
                   style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
                 >
                   <div className="overflow-hidden">
-                    <p className="text-[14px] font-medium leading-[20px] tracking-[-0.01em] text-dark-text">
+                    <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-dark-text">
                       {row.a}
                     </p>
-                    <p className="whitespace-pre-line pb-5 pt-2 text-[13px] leading-[19px] tracking-[-0.01em] text-ink-2">
+                    <p className="whitespace-pre-line pb-5 pt-2 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
                       {row.d}
                     </p>
                   </div>

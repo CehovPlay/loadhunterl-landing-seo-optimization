@@ -1,6 +1,6 @@
 import { Img } from "@/components/site/Img"
 import { RotatingHeadline } from "@/components/site/RotatingHeadline"
-import { Container, PillButton, PILL_SHADOW } from "./ui"
+import { Container, PillButton, Stars } from "./ui"
 
 // explicit w+h: these SVGs carry no intrinsic size, so `w-auto` would fall
 // back to the 300×150 replaced-element default (ratios from the desktop strip)
@@ -34,43 +34,42 @@ export function MobileHero() {
       />
 
       <Container className="relative flex flex-col items-center pb-12 pt-[120px] text-center">
-        {/* eyebrow pill */}
-        <div
-          className="flex h-9 items-center rounded-full border border-[#ececec] bg-white px-4"
-          style={{ boxShadow: PILL_SHADOW }}
+        {/* eyebrow pill — desktop skin: soft white gradient, no border */}
+        <span
+          className="inline-flex w-fit items-center rounded-[99px] px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.5))",
+          }}
         >
-          <span className="text-[13px] font-medium tracking-[-0.01em] text-[#454545]">
-            The AI copilot for smarter dispatching.
-          </span>
-        </div>
+          The AI copilot for smarter dispatching.
+        </span>
 
         {/* rotating headline + sub (fixed box so the cycle can't shift layout) */}
         <div className="mt-8 flex min-h-[150px] flex-col items-center">
           <RotatingHeadline
-            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,44px)] font-medium leading-[1.12] tracking-[-0.035em]"
-            subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.02em] text-[#454545]"
+            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,44px)] font-medium leading-[1.12] tracking-[-0.04em]"
+            subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-[#454545]"
           />
         </div>
 
-        {/* trust line */}
-        <p className="mt-5 text-[13px] leading-[18px] tracking-[-0.01em] text-ink-2">
-          Trusted by 6K+ users&ensp;·&ensp;
-          <span aria-label="Rated 4.4 out of 5 on Google and Trustpilot">
-            <span aria-hidden className="text-[#6f5197]">
-              ★
-            </span>{" "}
+        {/* trust line — desktop copy, stacked in two rows for 390px */}
+        <p className="mt-5 flex flex-col items-center gap-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545] opacity-60">
+          Trusted by 6K+ users
+          <span className="flex items-center gap-2">
+            <Stars score={4.4} className="text-[13px]" />
             4.4 on Google &amp; Trustpilot
           </span>
         </p>
 
-        {/* CTAs — stacked, full width, 48px */}
+        {/* CTAs — stacked, full width, 48px; desktop order and skins */}
         <div className="mt-7 flex w-full flex-col gap-3">
-          <PillButton href="#start" variant="violet">
-            <Img src="/figma/icon-diamond.svg" alt="" className="size-5" />
-            Start booking in minutes
-          </PillButton>
-          <PillButton href="#pricing" variant="light">
+          <PillButton href="#pricing" variant="glass">
             Start free trial 14 days
+          </PillButton>
+          <PillButton href="#start" variant="violet-radial">
+            <Img src="/figma/icon-diamond.svg" alt="" className="size-6" />
+            Start booking in minutes
           </PillButton>
         </div>
       </Container>

@@ -64,7 +64,7 @@ export function MobileWhy() {
         <div className="relative mt-10">
           {/* header row */}
           <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-3.5">
-            <span className="text-[13px] font-medium tracking-[-0.01em] text-ink-2">Feature</span>
+            <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">Feature</span>
             <Img
               src="/figma/table-logo.svg"
               alt="loadhunter"
@@ -72,15 +72,15 @@ export function MobileWhy() {
               decoding="async"
               className="mx-auto h-[14px] w-[69px]"
             />
-            <span className="text-center text-[13px] font-medium text-ink-2">Manual</span>
-            <span className="text-center text-[13px] font-medium text-ink-2">Others</span>
+            <span className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">Manual</span>
+            <span className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">Others</span>
           </div>
 
           {ROWS.map((r) => (
             <div key={r.label}>
               <div className="h-px w-full" style={DASH} />
               <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-4">
-                <span className="text-[14px] font-medium leading-[19px] tracking-[-0.02em] text-white">
+                <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                   {r.label}
                 </span>
                 {r.cells.map((ok, i) => (
@@ -93,17 +93,17 @@ export function MobileWhy() {
           {/* speed row */}
           <div className="h-px w-full" style={DASH} />
           <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-4">
-            <span className="text-[14px] font-medium leading-[19px] tracking-[-0.02em] text-white">
+            <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
               {SPEED_ROW[0]}
             </span>
             <span
               data-countup
-              className="text-center text-[13px] font-medium leading-[16px] text-white"
+              className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
             >
               {SPEED_ROW[1]}
             </span>
-            <span className="text-center text-[12px] leading-[15px] text-ink-2">{SPEED_ROW[2]}</span>
-            <span className="text-center text-[12px] leading-[15px] text-ink-2">{SPEED_ROW[3]}</span>
+            <span className="text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">{SPEED_ROW[2]}</span>
+            <span className="text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">{SPEED_ROW[3]}</span>
           </div>
         </div>
       </Container>

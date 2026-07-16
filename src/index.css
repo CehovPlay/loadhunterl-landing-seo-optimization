@@ -151,3 +151,21 @@
 .lh-snap > * {
   scroll-snap-align: center;
 }
+
+/* mobile flow layout: anchor targets clear the fixed navbar */
+@media (max-width: 767px) {
+  [id] {
+    scroll-margin-top: 88px;
+  }
+}
+
+/* price re-render pop (Pricing calculator) */
+@keyframes lh-pop {
+  from {
+    opacity: 0.25;
+    transform: translateY(4px);
+  }
+}
+.lh-pop {
+  animation: lh-pop 0.3s ease-out;
+}

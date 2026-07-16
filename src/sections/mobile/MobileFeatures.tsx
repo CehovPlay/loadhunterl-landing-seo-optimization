@@ -22,10 +22,10 @@ export function MobileFeatures() {
               className="absolute left-[-9px] top-[-3px] w-[74px] max-w-none"
             />
           </div>
-          <h2 className="text-[clamp(26px,7.2vw,32px)] font-medium leading-[1.18] tracking-[-0.035em] text-ink">
+          <h2 className="text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink">
             Everything you need to book faster — nothing extra
           </h2>
-          <p className="mt-4 text-[14px] font-medium leading-[20px] tracking-[-0.02em] text-ink-2">
+          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
             New loads appear instantly — no refresh, no delay. Email or text brokers in seconds,
             not minutes.
           </p>
@@ -40,10 +40,10 @@ export function MobileFeatures() {
               className="overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0]"
             >
               <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center">
-                <p className="text-[19px] font-medium leading-[26px] tracking-[-0.03em] text-ink">
+                <p className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">
                   {c.title}
                 </p>
-                <p className="text-[13px] font-medium leading-[18px] tracking-[-0.02em] text-ink-2">
+                <p className="text-[14px] font-medium leading-[18px] tracking-[-0.56px] text-ink-2">
                   {c.body}
                 </p>
               </div>

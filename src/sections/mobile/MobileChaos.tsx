@@ -7,7 +7,7 @@ export function MobileChaos() {
   return (
     <section className="bg-[#fafafa]">
       <div className="mx-auto w-full max-w-[440px] px-5 py-16">
-        <p className="text-center text-[clamp(30px,8.5vw,38px)] font-medium leading-[1.15] tracking-[-0.035em] text-[#1a1a1a]">
+        <p className="text-center text-[clamp(30px,8.5vw,38px)] font-medium leading-[1.15] tracking-[-0.04em] text-[#1a1a1a]">
           From chaos to AI-Powered dispatch
         </p>
       </div>

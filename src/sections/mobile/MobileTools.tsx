@@ -215,11 +215,11 @@ export function MobileTools() {
           <div data-float className="mb-6 w-[72px]">
             <Img src="/figma/tools/intro-icon.png" alt="" loading="lazy" decoding="async" className="w-full" />
           </div>
-          <h2 className="text-[clamp(26px,7.2vw,32px)] font-medium leading-[1.18] tracking-[-0.035em] text-white">
+          <h2 className="text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-white">
             Book better loads faster — without missing opportunities with game-changing tools for
             dispatchers
           </h2>
-          <p className="mt-4 text-[14px] leading-[21px] tracking-[-0.01em] text-ink-2">
+          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
             LoadHunter finds high-RPM loads in real-time, filters the noise, and lets you contact
             brokers instantly — all in one place. Real-time load scanning, smart filters, and
             instant outreach — built for dispatchers who want results, not dashboards.
@@ -260,10 +260,10 @@ export function MobileTools() {
                 className="absolute left-[-32px] top-[9px] size-[10px] rounded-full transition-[background,box-shadow] duration-300"
                 style={{ background: "#434447" }}
               />
-              <h3 className="text-[22px] font-medium leading-[28px] tracking-[-0.03em] text-white">
+              <h3 className="text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
                 {b.title}
               </h3>
-              <p className="mt-3 text-[14px] leading-[21px] tracking-[-0.01em] text-ink-2">
+              <p className="mt-3 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
                 {b.desc}
               </p>
               {/* bare mockup, like desktop — the export carries its own chrome */}
@@ -281,10 +281,10 @@ export function MobileTools() {
                       <Img src={it.icon} alt="" loading="lazy" decoding="async" className="w-full" />
                     </div>
                     <div>
-                      <h4 className="text-[15px] font-medium leading-[20px] tracking-[-0.01em] text-white">
+                      <h4 className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                         {it.title}
                       </h4>
-                      <p className="mt-1.5 text-[13px] leading-[19px] tracking-[-0.01em] text-ink-2">
+                      <p className="mt-1.5 text-[14px] font-medium leading-[18px] tracking-[-0.56px] text-ink-2">
                         {it.sub}
                       </p>
                     </div>
