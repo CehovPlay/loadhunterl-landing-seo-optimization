@@ -32,17 +32,30 @@ screenshots with `sharp` (a devDependency) since full-page captures are ~19 000p
 
 ## Architecture — the fixed-canvas scaling model (read this first)
 
-The page is NOT responsive in the usual flow sense. Each section is **absolutely pixel-positioned**
-against a single fixed 1920px design canvas, and `DesignFrame`
-(`src/components/site/DesignFrame.tsx`) uniformly `transform: scale()`s that canvas to the viewport.
-This is why every element uses exact `px` values.
+There are TWO experiences, switched by `useIsMobile` (`src/components/site/useIsMobile.ts`,
+matchMedia `max-width: 767px`) and code-split in `App.tsx`:
 
-There is ONE canvas: desktop 1920, `src/sections/*`. The old phone (390) / tablet (768) / HD (1440)
-adaptive trees were fully deleted on 2026-07-16 (code, assets, and the useBreakpoint switch) — a new,
-clean adaptive is to be designed **from scratch, based on this desktop version**, NOT by reproducing
-Figma adaptive frames (Figma is no longer the source of truth for adaptive work). Until that exists,
-every viewport gets the desktop canvas: below 1920 it scales down (`vw/1920`), which is unusable on
-phones — that is known and accepted for now.
+- **≥ 768px — the fixed 1920 desktop canvas** (`src/sections/*`): NOT responsive in the usual flow
+  sense. Each section is **absolutely pixel-positioned** against the 1920px canvas, and `DesignFrame`
+  (`src/components/site/DesignFrame.tsx`) uniformly `transform: scale()`s it to the viewport. This is
+  why every element there uses exact `px` values.
+- **< 768px — the mobile flow layout** (`src/sections/mobile/*`): a real responsive layout built
+  from scratch on the desktop content (2026-07-16) — no canvas, no scaling. Conventions: content
+  column `px-5` capped at `max-w-[440px]`, sections `py-16`, touch targets ≥44px (buttons/pill rows
+  are 48-56px), type via `clamp()`, horizontal snap carousels (`.lh-snap` in index.css) for
+  ecosystem/testimonials, accordion FAQ, stepper instead of the drag slider in Pricing. Shared
+  content modules: `pricingFeatures.tsx`, `pricingLogic.ts`, `LINKS` from `Navbar.tsx`,
+  `RotatingHeadline` (type scale via `h1ClassName`/`subClassName` props). The old Figma adaptive
+  frames are NOT the source of truth for mobile — the desktop version is.
+
+**Mobile gotcha — SVGs without intrinsic size:** most `/figma/*.svg` exports carry only a viewBox, so
+`w-auto`/`h-auto` on an `<img>` falls back to the 300×150 replaced-element default and blows up the
+layout. Always give such images explicit width AND height (ratio from the viewBox).
+
+**Verifying mobile:** headless Chrome clamps windows to ≥~500px, so `--window-size=390,...` silently
+lays out at 500 and crops — do NOT use it for mobile shots. Use CDP device emulation instead
+(`Emulation.setDeviceMetricsOverride`); full-page captures taller than ~8000 CSS px must be taken in
+clips (Chrome's 16384px surface limit wraps/tiles beyond it, which looks like duplicated sections).
 
 **Scaling contract (critical, easy to get wrong):** `scale = Math.min(viewportWidth / canvasWidth, maxScale)`.
 `App.tsx` passes `maxScale={1}` so that **above 1920px the canvas stops growing and centers** with side

@@ -125,3 +125,29 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Mobile flow layout helpers (no scaled canvas on <768px, so plain   */
+/*  CSS keyframe animations are safe there)                            */
+/* ------------------------------------------------------------------ */
+@keyframes lh-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-lh-marquee {
+  animation: lh-marquee 24s linear infinite;
+}
+
+/* horizontal snap carousels (ecosystem / testimonials) */
+.lh-snap {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.lh-snap::-webkit-scrollbar {
+  display: none;
+}
+.lh-snap > * {
+  scroll-snap-align: center;
+}

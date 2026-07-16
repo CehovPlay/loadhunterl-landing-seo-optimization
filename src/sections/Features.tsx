@@ -15,7 +15,7 @@ import aiSvg from "@/assets/features/ai.svg?raw"
  * the window, aligned to match how the PNG was placed (top-anchored for the
  * gauge, centred for the others).
  */
-const CARDS = [
+export const CARDS = [
   {
     title: "All needs in one place",
     body: "Access every essential dispatching tool directly from your load board — emails, notifications, maps, and more, all seamlessly integrated.",
@@ -43,7 +43,7 @@ const CARDS = [
 ]
 
 /** Rewrite the exported <svg> tag to a given viewBox/alignment and cover the window. */
-function svgHtml(raw: string, viewBox: string, par: string) {
+export function svgHtml(raw: string, viewBox: string, par: string) {
   return raw.replace(
     /<svg\b[^>]*>/,
     `<svg viewBox="${viewBox}" preserveAspectRatio="${par}" fill="none" ` +

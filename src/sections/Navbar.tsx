@@ -2,7 +2,7 @@ import { Img } from "@/components/site/Img"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
-const LINKS = [
+export const LINKS = [
   { label: "Why us", href: "#why" },
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },

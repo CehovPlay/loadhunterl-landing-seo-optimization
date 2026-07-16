@@ -39,7 +39,14 @@ const H1_GRADIENT = "linear-gradient(100deg, rgb(26,26,26) 2%, rgb(120,120,120) 
 const nextIndex = (current: number) =>
   (current + 1 + Math.floor(Math.random() * (PHRASES.length - 1))) % PHRASES.length
 
-export function RotatingHeadline() {
+export function RotatingHeadline({
+  h1ClassName = "-mx-[10px] -my-[12px] whitespace-nowrap px-[10px] py-[12px] text-[83px] font-medium leading-[80px] tracking-[-3.32px]",
+  subClassName = "whitespace-nowrap text-[48px] font-medium leading-[80px] tracking-[-1.92px] text-[#454545]",
+}: {
+  /** type-scale overrides so the mobile flow layout can reuse the cycle */
+  h1ClassName?: string
+  subClassName?: string
+}) {
   const [index, setIndex] = useState(0)
   const [reduced] = useState(prefersReducedMotion)
   const h1Ref = useRef<HTMLHeadingElement>(null)
@@ -130,7 +137,7 @@ export function RotatingHeadline() {
         ref={h1Ref}
         data-no-reveal
         aria-label={`${phrase.lines[0]} ${phrase.lines[1]}`}
-        className="-mx-[10px] -my-[12px] whitespace-nowrap px-[10px] py-[12px] text-[83px] font-medium leading-[80px] tracking-[-3.32px]"
+        className={h1ClassName}
       >
         <span aria-hidden>
           {phrase.lines.map((line, li) => (
@@ -165,9 +172,7 @@ export function RotatingHeadline() {
         className="flex w-fit items-center justify-center"
         style={reduced ? { opacity: SUB_OPACITY } : { opacity: 0 }}
       >
-        <span className="whitespace-nowrap text-[48px] font-medium leading-[80px] tracking-[-1.92px] text-[#454545]">
-          {phrase.sub}
-        </span>
+        <span className={subClassName}>{phrase.sub}</span>
       </div>
     </>
   )
