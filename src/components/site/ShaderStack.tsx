@@ -19,13 +19,22 @@ import {
  */
 export default function ShaderStack({
   polarCenter,
+  drift = false,
+  onReady,
 }: {
   polarCenter?: { x: number; y: number }
+  /** Autonomous linear mode (flow-layout hero, touch devices): the violet
+   *  accent drifts on its own — the polar recipe without the polar bend —
+   *  instead of the cursor-driven ChromaFlow. */
+  drift?: boolean
+  /** Fires when the WebGPU renderer is up — used to cross-fade the canvas
+   *  over the static fallback gradients. */
+  onReady?: () => void
 }) {
   // Polar (orbit) mode animates on its own: a violet Swirl — a couple of
   // tones brighter/lighter than the brand #6F5197 — drifts continuously, no
   // cursor involvement. The linear (hero) mode keeps the cursor-driven violet
-  // ChromaFlow.
+  // ChromaFlow on desktop, or the same autonomous drift on touch (`drift`).
   const input = polarCenter ? (
     // Violet is radially fenced so it can NEVER flood the section: in
     // pre-polar space y = radius, and the white LinearGradient overlay
@@ -59,6 +68,34 @@ export default function ShaderStack({
         edges="stretch"
       />
     </Group>
+  ) : drift ? (
+    // Violet fenced to the upper band (echoes the static fallback tints):
+    // the luminance mask fades the drifting violet Swirl out by ~80% height,
+    // so the area above the CTAs stays calm and light.
+    <Group>
+      {/* lower contrast than the desktop input: without ChromaFlow's white
+          wash on top, a #eaeaea swirl through the fluted glass reads as loud
+          holographic rainbows — #f1f1f1 keeps it a soft pearl drift */}
+      <Swirl colorA="#ffffff" colorB="#f1f1f1" detail={1.7} speed={0.3} />
+      <Swirl
+        colorA="#9B79CE"
+        colorB="#ffffff"
+        detail={0.9}
+        speed={0.3}
+        opacity={0.3}
+        maskSource="drift-fence"
+        maskType="luminance"
+      />
+      <LinearGradient
+        id="drift-fence"
+        visible={false}
+        colorA="#ffffff"
+        colorB="#000000"
+        start={{ x: 0.5, y: 0.05 }}
+        end={{ x: 0.5, y: 0.8 }}
+        edges="stretch"
+      />
+    </Group>
   ) : (
     <ChromaFlow
       baseColor="#ffffff"
@@ -78,7 +115,7 @@ export default function ShaderStack({
   )
   const fluted = (
     <FlutedGlass
-      aberration={0.61}
+      aberration={drift ? 0.28 : 0.61}
       angle={polarCenter ? 90 : 31}
       frequency={8}
       highlight={0.12}
@@ -93,7 +130,11 @@ export default function ShaderStack({
     </FlutedGlass>
   )
   return (
-    <Shader className="h-full w-full" style={{ width: "100%", height: "100%" }}>
+    <Shader
+      className="h-full w-full"
+      style={{ width: "100%", height: "100%" }}
+      onReady={onReady}
+    >
       <FilmGrain strength={0.05}>
         {/* Polar mode: horizontal flutes (angle 90) become constant-radius
             bands = concentric circles around polarCenter. Mirror first makes

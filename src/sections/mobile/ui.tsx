@@ -24,7 +24,10 @@ export function Container({
   return <div className={`mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8 ${className}`}>{children}</div>
 }
 
-/** Centered section header: floating icon plate → h2 → sub copy. */
+/** Centered section header: floating icon plate → h2 → sub copy.
+ *  `relative z-10` because several sections hang absolutely-positioned
+ *  decor (the why-glow beam is a FULLY OPAQUE png) that would otherwise
+ *  paint over the static heading text. */
 export function SectionHeader({
   icon,
   title,
@@ -37,7 +40,7 @@ export function SectionHeader({
   dark?: boolean
 }) {
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="relative z-10 flex flex-col items-center text-center">
       {icon && (
         <div data-float className="mb-5 w-[72px]">
           <img src={icon} alt="" loading="lazy" decoding="async" className="w-full" />

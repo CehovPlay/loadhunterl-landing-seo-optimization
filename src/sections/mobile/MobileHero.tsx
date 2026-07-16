@@ -1,5 +1,6 @@
 import { Img } from "@/components/site/Img"
 import { RotatingHeadline } from "@/components/site/RotatingHeadline"
+import { MobileHeroShader } from "./MobileHeroShader"
 import { Container, PillButton, Stars } from "./ui"
 
 // explicit w+h: these SVGs carry no intrinsic size, so `w-auto` would fall
@@ -15,8 +16,9 @@ const PARTNERS = [
  * Mobile hero: the desktop copy column reflowed — eyebrow pill, rotating
  * headline (mobile type scale), trust line, two stacked full-width 48px CTAs,
  * and a CSS-keyframe partner marquee (no scaled canvas on mobile, so plain
- * CSS animations are safe). Background echoes the desktop shader with static
- * violet radial tints on #EFEFEF.
+ * CSS animations are safe). Background: static violet radial tints on #EFEFEF
+ * paint instantly; on WebGPU-capable devices MobileHeroShader cross-fades the
+ * autonomous drift shader over them (see that file for the gating).
  */
 export function MobileHero() {
   return (
@@ -32,6 +34,7 @@ export function MobileHero() {
             "linear-gradient(to bottom, rgba(250,250,250,0) 75%, #fafafa 100%)",
         }}
       />
+      <MobileHeroShader />
 
       <Container className="relative flex flex-col items-center pb-28 pt-[180px] text-center">
         {/* eyebrow pill — desktop skin: soft white gradient, no border */}
