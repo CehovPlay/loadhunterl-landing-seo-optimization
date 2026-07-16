@@ -55,8 +55,8 @@ function GlowBg() {
  * Phone: the 4-column table reads overloaded at 390px, so each feature gets
  * its own block — the feature name on a full-width line, the three compare
  * cells beneath it under a single shared column header. Tablet (md:) has the
- * room for the desktop-style 4-column grid. Both sit on the desktop glow,
- * anchored with the desktop offsets.
+ * room for the desktop-style 4-column grid and sits on the desktop glow;
+ * the phone cards go without the beam.
  */
 export function MobileWhy() {
   return (
@@ -68,10 +68,9 @@ export function MobileWhy() {
           sub="Measured across real bookings. Based on real dispatcher workflows."
         />
 
-        {/* ---- phone: LoadHunter-focused list as CARDS — the card fills sit
-            over the glow, so the beam never washes the text ---- */}
+        {/* ---- phone: LoadHunter-focused list as CARDS — no glow beam here,
+            the cards read cleaner on their own ---- */}
         <div className="relative mt-10 md:hidden">
-          <GlowBg />
           <div className="relative flex flex-col gap-3">
             {ROWS.map((r) => (
               <div
@@ -90,14 +89,14 @@ export function MobileWhy() {
                     {r.label}
                   </p>
                   <p className="mt-2.5 flex items-center gap-3 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
-                    <span className="flex items-center gap-1.5">
+                    <span className="flex items-center gap-2.5">
                       Manual{" "}
                       <span aria-hidden className={r.cells[1] ? "text-[#c79ffd]" : "text-ink-3"}>
                         {r.cells[1] ? "✓" : "✕"}
                       </span>
                     </span>
                     <span aria-hidden className="text-[#4a4c52]">·</span>
-                    <span className="flex items-center gap-1.5">
+                    <span className="flex items-center gap-2.5">
                       Others{" "}
                       <span aria-hidden className={r.cells[2] ? "text-[#c79ffd]" : "text-ink-3"}>
                         {r.cells[2] ? "✓" : "✕"}

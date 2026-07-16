@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Img } from "@/components/site/Img"
 import { BASIC_COLS, PRO_COLS, STANDARD_COLS, type FeatureCols } from "@/sections/pricingFeatures"
 import { knobToCount, planTotal } from "@/sections/pricingLogic"
@@ -236,6 +236,37 @@ export function MobilePricing() {
   const [annual, setAnnual] = useState(true)
   const [open, setOpen] = useState(0)
 
+  /* phone: the accordion is scroll-driven, no tap needed — the card entering
+     the viewport opens its features, and since the accordion is exclusive the
+     card scrolling out above closes. Active = the LAST card whose top has
+     crossed the gate line; height changes from open/close only ever push the
+     other cards further past their side of the gate, so it can't oscillate. */
+  const phoneListRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const list = phoneListRef.current
+    if (!list) return
+    const phone = window.matchMedia("(max-width: 767px)")
+    let raf = 0
+    const pick = () => {
+      raf = 0
+      if (!phone.matches) return
+      const gate = window.innerHeight * 0.8
+      let active = 0
+      Array.from(list.children).forEach((card, i) => {
+        if (card.getBoundingClientRect().top < gate) active = i
+      })
+      setOpen(active)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(pick)
+    }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
   /* dispatcher slider — desktop logic (pricingLogic.knobToCount) with the
      desktop zones expressed as fractions of the responsive track */
   const trackRef = useRef<HTMLDivElement>(null)
@@ -391,8 +422,8 @@ export function MobilePricing() {
           </div>
         </div>
 
-        {/* phone: vertical exclusive accordion */}
-        <div className="mt-10 flex flex-col gap-4 md:hidden">
+        {/* phone: vertical exclusive accordion, scroll-driven (see effect above) */}
+        <div ref={phoneListRef} className="mt-10 flex flex-col gap-4 md:hidden">
           {PLANS.map((plan, i) => {
             const expanded = open === i
             return (
