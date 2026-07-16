@@ -234,7 +234,7 @@ export function MobileTools() {
           </div>
 
           {/* line container — centered under the icon (icon centre x=36) */}
-          <div ref={lineRef} aria-hidden className="absolute bottom-2 left-[35px] top-[80px] w-[2px]">
+          <div ref={lineRef} aria-hidden className="absolute bottom-2 left-[35px] top-[64px] w-[2px]">
             {/* track — dim line for the full height */}
             <div className="absolute inset-0 rounded-full bg-[rgba(255,255,255,0.08)]" />
             {/* glow fill — height driven by scroll */}
