@@ -89,15 +89,19 @@ export function MobileWhy() {
                   <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                     {r.label}
                   </p>
-                  <p className="mt-1.5 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
-                    Manual{" "}
-                    <span aria-hidden className={r.cells[1] ? "text-[#c79ffd]" : "text-ink-3"}>
-                      {r.cells[1] ? "✓" : "✕"}
+                  <p className="mt-2.5 flex items-center gap-3 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
+                    <span className="flex items-center gap-1.5">
+                      Manual{" "}
+                      <span aria-hidden className={r.cells[1] ? "text-[#c79ffd]" : "text-ink-3"}>
+                        {r.cells[1] ? "✓" : "✕"}
+                      </span>
                     </span>
-                    <span aria-hidden className="mx-1.5 text-[#4a4c52]">·</span>
-                    Others{" "}
-                    <span aria-hidden className={r.cells[2] ? "text-[#c79ffd]" : "text-ink-3"}>
-                      {r.cells[2] ? "✓" : "✕"}
+                    <span aria-hidden className="text-[#4a4c52]">·</span>
+                    <span className="flex items-center gap-1.5">
+                      Others{" "}
+                      <span aria-hidden className={r.cells[2] ? "text-[#c79ffd]" : "text-ink-3"}>
+                        {r.cells[2] ? "✓" : "✕"}
+                      </span>
                     </span>
                   </p>
                 </div>
@@ -114,10 +118,10 @@ export function MobileWhy() {
               >
                 {SPEED_ROW[1]}
               </p>
-              <p className="mt-1.5 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
-                Manual {SPEED_ROW[2]}
-                <span aria-hidden className="mx-1.5 text-[#4a4c52]">·</span>
-                Others {SPEED_ROW[3]}
+              <p className="mt-2.5 flex items-center gap-3 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
+                <span>Manual {SPEED_ROW[2]}</span>
+                <span aria-hidden className="text-[#4a4c52]">·</span>
+                <span>Others {SPEED_ROW[3]}</span>
               </p>
             </div>
           </div>

@@ -6,7 +6,7 @@ const PANEL_H = 627
 /* the desktop composition carries generous empty margins — on the PHONE break
    zoom it inside the box and crop the edges so the content reads larger;
    tablet keeps the untouched desktop framing */
-const PHONE_ZOOM = 1.22
+const PHONE_ZOOM = 1.45
 
 /**
  * The REAL desktop "One click automation" panel (CtaAutomation — vector

@@ -310,7 +310,7 @@ export function MobilePricing() {
                 aria-pressed={active}
                 onClick={() => setAnnual(isAnnually)}
                 className={`flex h-11 items-center justify-center gap-2 rounded-full transition-all ${
-                  isAnnually ? "pl-4 pr-2" : "px-4"
+                  isAnnually ? "pl-4 pr-[7px]" : "px-4"
                 } ${active ? "border border-white backdrop-blur-[10px]" : ""}`}
                 style={
                   active

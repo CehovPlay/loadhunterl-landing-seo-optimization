@@ -138,13 +138,18 @@ export function initReveal() {
     show(batch)
   }
 
+  const remaining = new Set(all)
+
   const io = new IntersectionObserver(
     (entries) => {
       const fresh = entries
         .filter((e) => e.isIntersecting)
         .map((e) => e.target as HTMLElement)
       if (!fresh.length) return
-      fresh.forEach((el) => io.unobserve(el))
+      fresh.forEach((el) => {
+        io.unobserve(el)
+        remaining.delete(el)
+      })
       pending.push(...fresh)
       // merge entries landing within a couple of frames into one cascade
       flushTimer ??= setTimeout(flush, 80)
@@ -154,7 +159,34 @@ export function initReveal() {
   )
   all.forEach((el) => io.observe(el))
 
+  // A fast flick or an anchor jump can carry an element across the WHOLE
+  // viewport between IntersectionObserver updates — no transition is ever
+  // reported and the element would stay invisible forever. Sweep on scroll:
+  // anything already scrolled past gets shown instantly (it is off-screen at
+  // that moment, so no animation is missed).
+  let sweepRaf = 0
+  const sweep = () => {
+    sweepRaf = 0
+    if (!remaining.size) return
+    const skipped: HTMLElement[] = []
+    remaining.forEach((el) => {
+      if (el.getBoundingClientRect().bottom < 0) skipped.push(el)
+    })
+    if (!skipped.length) return
+    skipped.forEach((el) => {
+      remaining.delete(el)
+      io.unobserve(el)
+    })
+    gsap.set(skipped, { autoAlpha: 1, y: 0 })
+  }
+  const onScroll = () => {
+    if (!sweepRaf && remaining.size) sweepRaf = requestAnimationFrame(sweep)
+  }
+  window.addEventListener("scroll", onScroll, { passive: true })
+
   return () => {
+    window.removeEventListener("scroll", onScroll)
+    if (sweepRaf) cancelAnimationFrame(sweepRaf)
     io.disconnect()
     if (flushTimer) clearTimeout(flushTimer)
     // clear ONLY what the reveal set — never React-managed inline styles
