@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useCallback, useLayoutEffect, useRef, useState } from "react"
 import { Img } from "@/components/site/Img"
 import { BASIC_COLS, PRO_COLS, STANDARD_COLS, type FeatureCols } from "@/sections/pricingFeatures"
-import { planTotal } from "@/sections/pricingLogic"
+import { knobToCount, planTotal } from "@/sections/pricingLogic"
 import { Container, PILL_SHADOW, SectionHeader } from "./ui"
 
 type Plan = {
@@ -85,103 +85,125 @@ function FeatureRow({ text, clock }: { text: string; clock?: boolean }) {
   )
 }
 
-function PlanCard({ plan, priceText }: { plan: Plan; priceText: string }) {
-  const headStyle =
+/* full-card background: the plan accent gradient layered over the shared
+   dark card gradient, so pro/ai washes reach under the CTA too */
+function cardStyle(plan: Plan): React.CSSProperties {
+  const base = "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))"
+  const accent =
     plan.head === "pro"
-      ? {
-          backgroundImage:
-            "radial-gradient(ellipse 320px 360px at 6px 7px, rgba(53,50,70,1) 0%, rgba(53,50,70,0) 100%)",
-        }
+      ? "radial-gradient(ellipse 420px 500px at 6px 7px, rgba(53,50,70,1) 0%, rgba(53,50,70,0) 100%), "
       : plan.head === "ai"
-        ? {
-            backgroundImage:
-              "radial-gradient(220px 260px at 80% 90%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
-          }
-        : {}
+        ? "radial-gradient(130% 100% at 85% 80%, rgba(111,81,151,0.95) 0%, rgba(111,81,151,0) 100%), "
+        : ""
+  return { backgroundImage: accent + base }
+}
 
+function PlanIdentity({ plan, stacked = false }: { plan: Plan; stacked?: boolean }) {
+  // icon-ai is a PNG with a baked dark square around the rounded plate — the
+  // SVG icons are transparent. Crop the PNG to the plate so no bg shows.
+  const cropped = plan.icon.endsWith(".png")
   return (
-    <article
-      data-card
-      className="overflow-hidden rounded-2xl border border-[rgba(229,229,229,0.1)] p-[3px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-      style={{ backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))" }}
-    >
-      {/* head panel */}
-      <div className="relative rounded-xl p-5" style={headStyle}>
-        {plan.head === "border" && (
-          <div className="pointer-events-none absolute inset-0 rounded-xl border border-[rgba(229,229,229,0.2)]" />
-        )}
-        <div className="flex items-start gap-4">
-          <div className="size-14 shrink-0">
-            <Img src={plan.icon} alt="" loading="lazy" decoding="async" className="w-[72px] max-w-none -translate-x-2 -translate-y-1" />
-          </div>
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[20px] font-medium leading-[26px] tracking-[-0.8px] text-gray-50">
-                {plan.name}
-              </span>
-              {plan.recommended && (
-                <span className="flex h-6 items-center gap-1.5 rounded-full bg-[rgba(232,232,232,0.1)] px-2.5">
-                  <img
-                    src="/figma/pricing/crown.svg"
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className="h-[13px] w-[11px]"
-                  />
-                  <span className="text-[11px] leading-[13px] text-gray-50">Recommended</span>
-                </span>
-              )}
-            </div>
-            <p className="mt-1.5 text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-gray-50/90">
-              {plan.blurb}
-            </p>
-          </div>
-        </div>
-        <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
-        <div className="flex items-baseline gap-2.5">
-          <span
-            key={priceText}
-            className="lh-pop text-[28px] font-medium leading-[36px] tracking-[-1.12px] text-gray-50"
-          >
-            {priceText}
-          </span>
-          {plan.unit && <span className="text-[12px] text-[#a2a2a2]">{plan.unit}</span>}
-        </div>
-        <p className="mt-1 text-[12px] text-[#a2a2a2]">{plan.note}</p>
-      </div>
-
-      {/* feature list — two compact columns, same as the desktop card */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-5 py-5">
-        {plan.cols.map((col, ci) => (
-          <div key={ci} className="flex min-w-0 flex-col gap-3">
-            {col.map((item, i) => (
-              <FeatureRow key={i} text={item.text} clock={item.clock} />
-            ))}
-          </div>
-        ))}
-      </div>
-
-      {/* CTA — 48px touch target */}
-      <button
-        type="button"
-        className="relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl border border-[rgba(232,232,232,0.2)] transition-transform active:scale-[0.99]"
+    <div className={stacked ? "flex flex-col items-start gap-3" : "flex items-start gap-3"}>
+      <div
+        className={`relative size-12 shrink-0 ${cropped ? "overflow-hidden rounded-[11px]" : ""}`}
       >
-        <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
-        <span
-          className="pointer-events-none absolute inset-0 rounded-[11px]"
-          style={{
-            backgroundImage:
-              "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.55) 0%, rgba(111,81,151,0) 100%)",
-          }}
+        <Img
+          src={plan.icon}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className={
+            cropped
+              ? "absolute left-[-7.5px] top-[-3px] w-[63px] max-w-none"
+              : "w-[62px] max-w-none -translate-x-2 -translate-y-1"
+          }
         />
-        <span className="relative text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-50">
-          {plan.cta}
-        </span>
-        <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.18)]" />
-      </button>
-    </article>
+      </div>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="whitespace-nowrap text-[18px] font-medium leading-[24px] tracking-[-0.72px] text-gray-50">
+            {plan.name}
+          </span>
+          {plan.recommended && (
+            <span className="flex h-6 items-center gap-1.5 rounded-full bg-[rgba(232,232,232,0.1)] px-2.5">
+              <img
+                src="/figma/pricing/crown.svg"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="h-[13px] w-[11px]"
+              />
+              <span className="whitespace-nowrap text-[11px] leading-[13px] text-gray-50">
+                Recommended
+              </span>
+            </span>
+          )}
+        </div>
+        <p className="mt-1 text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-gray-50/90">
+          {plan.blurb}
+        </p>
+      </div>
+    </div>
   )
 }
+
+function PlanPrice({ plan, priceText }: { plan: Plan; priceText: string }) {
+  return (
+    <div>
+      <div className="flex items-baseline gap-2.5">
+        <span
+          key={priceText}
+          className="lh-pop whitespace-nowrap text-[26px] font-medium leading-[32px] tracking-[-1.04px] text-gray-50"
+        >
+          {priceText}
+        </span>
+        {plan.unit && (
+          <span className="whitespace-nowrap text-[12px] text-[#a2a2a2]">{plan.unit}</span>
+        )}
+      </div>
+      <p className="mt-1 whitespace-nowrap text-[12px] text-[#a2a2a2]">{plan.note}</p>
+    </div>
+  )
+}
+
+function PlanFeatures({ plan }: { plan: Plan }) {
+  return (
+    <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+      {plan.cols.map((col, ci) => (
+        <div key={ci} className="flex min-w-0 flex-col gap-3">
+          {col.map((item, i) => (
+            <FeatureRow key={i} text={item.text} clock={item.clock} />
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function PlanCta({ plan }: { plan: Plan }) {
+  return (
+    <button
+      type="button"
+      className="relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl border border-[rgba(232,232,232,0.2)] transition-transform active:scale-[0.99]"
+    >
+      <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
+      <span
+        className="pointer-events-none absolute inset-0 rounded-[11px]"
+        style={{
+          backgroundImage:
+            "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.55) 0%, rgba(111,81,151,0) 100%)",
+        }}
+      />
+      <span className="relative whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-50">
+        {plan.cta}
+      </span>
+      <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.18)]" />
+    </button>
+  )
+}
+
+const cardShell =
+  "overflow-hidden rounded-2xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
 
 function DiscountBadge({ text, active }: { text: string; active: boolean }) {
   return (
@@ -201,14 +223,65 @@ function DiscountBadge({ text, active }: { text: string; active: boolean }) {
 }
 
 /**
- * Mobile Pricing: same loadhunter.io price logic as desktop, with the drag
- * slider replaced by a stepper (48px − / + buttons — the touch-canonical
- * control for a discrete count) and the billing toggle at 44px height.
- * Cards stack vertically.
+ * Mobile/tablet Pricing — the Figma accordion structure (921:88128 tablet /
+ * 942:110506 phone): the first plan is open by default; opening another plan
+ * closes the previous one.
+ *  - phone: vertical accordion — every card keeps its head (identity, price)
+ *    and CTA visible; the feature grid expands in between
+ *  - tablet: horizontal accordion — the open plan takes the row, the others
+ *    collapse into narrow clipped strips
+ * Prices stay live from the billing toggle + dispatcher stepper above.
  */
 export function MobilePricing() {
   const [annual, setAnnual] = useState(true)
-  const [n, setN] = useState(1)
+  const [open, setOpen] = useState(0)
+
+  /* dispatcher slider — desktop logic (pricingLogic.knobToCount) with the
+     desktop zones expressed as fractions of the responsive track */
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [trackW, setTrackW] = useState(0)
+  const [frac, setFrac] = useState(0.013) // knob at min → 1 dispatcher
+
+  useLayoutEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const measure = () => setTrackW(track.getBoundingClientRect().width)
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(track)
+    return () => ro.disconnect()
+  }, [])
+
+  const zones = {
+    min: 0.013 * trackW,
+    at3: 0.32 * trackW,
+    at4: 0.588 * trackW,
+    max: 0.987 * trackW,
+  }
+  const n = trackW ? knobToCount(frac * trackW, zones) : 1
+
+  const moveTo = useCallback((clientX: number) => {
+    const track = trackRef.current
+    if (!track) return
+    const r = track.getBoundingClientRect()
+    const f = Math.min(0.987, Math.max(0.013, (clientX - r.left) / r.width))
+    setFrac(f)
+  }, [])
+
+  const onPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+      moveTo(e.clientX)
+      const onMove = (ev: PointerEvent) => moveTo(ev.clientX)
+      const onUp = () => {
+        window.removeEventListener("pointermove", onMove)
+        window.removeEventListener("pointerup", onUp)
+      }
+      window.addEventListener("pointermove", onMove)
+      window.addEventListener("pointerup", onUp)
+    },
+    [moveTo],
+  )
 
   const priceFor = (plan: Plan) =>
     plan.base != null ? `From $${planTotal(plan.base, n, annual).toFixed(2)}` : (plan.price ?? "")
@@ -236,9 +309,9 @@ export function MobilePricing() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setAnnual(isAnnually)}
-                className={`flex h-11 items-center justify-center gap-2 rounded-full px-4 transition-all ${
-                  active ? "border border-white backdrop-blur-[10px]" : ""
-                }`}
+                className={`flex h-11 items-center justify-center gap-2 rounded-full transition-all ${
+                  isAnnually ? "pl-4 pr-2" : "px-4"
+                } ${active ? "border border-white backdrop-blur-[10px]" : ""}`}
                 style={
                   active
                     ? {
@@ -254,7 +327,7 @@ export function MobilePricing() {
                 </span>
                 {isAnnually && (
                   <span
-                    className="flex items-center rounded-full border border-white px-1.5 py-0.5 text-[11px] leading-[13px] text-white"
+                    className="flex h-[28px] items-center rounded-full border border-white px-2.5 text-[11px] leading-[13px] text-white"
                     style={{
                       backgroundImage:
                         "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
@@ -268,45 +341,139 @@ export function MobilePricing() {
           })}
         </div>
 
-        {/* dispatcher stepper */}
-        <div className="mt-6 flex flex-col items-center gap-3">
-          <div className="flex items-center gap-5">
-            <button
-              type="button"
-              aria-label="Fewer dispatchers"
-              onClick={() => setN((v) => Math.max(1, v - 1))}
-              disabled={n <= 1}
-              className="flex size-12 items-center justify-center rounded-full border border-line-strong bg-[rgba(231,231,231,0.1)] text-[22px] leading-none text-white transition-opacity disabled:opacity-35"
+        {/* dispatcher slider — same control as desktop */}
+        <div className="mt-8 w-full select-none">
+          <p
+            className="w-[130px] whitespace-nowrap text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
+            aria-live="polite"
+            style={{
+              marginLeft: `clamp(0px, calc(${frac * 100}% - 65px), calc(100% - 130px))`,
+            }}
+          >
+            {n} {n === 1 ? "dispatcher" : "dispatchers"}
+          </p>
+          <div
+            ref={trackRef}
+            onPointerDown={onPointerDown}
+            role="slider"
+            aria-label="Number of dispatchers"
+            aria-valuemin={1}
+            aria-valuemax={50}
+            aria-valuenow={n}
+            className="relative mt-3.5 h-4 w-full cursor-pointer touch-none rounded-[200px] bg-[rgba(231,231,231,0.1)]"
+          >
+            <div
+              className="absolute left-[2px] top-[2px] h-3 rounded-lg bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
+              style={{ width: `max(12px, calc(${frac * 100}% - 2px))` }}
+            />
+            <div
+              className="absolute top-[-3px] size-[22px] cursor-grab active:cursor-grabbing"
+              style={{ left: `calc(${frac * 100}% - 11px)` }}
             >
-              −
-            </button>
-            <span
-              aria-live="polite"
-              className="min-w-[130px] text-center text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
-            >
-              {n} {n === 1 ? "dispatcher" : "dispatchers"}
-            </span>
-            <button
-              type="button"
-              aria-label="More dispatchers"
-              onClick={() => setN((v) => Math.min(50, v + 1))}
-              disabled={n >= 50}
-              className="flex size-12 items-center justify-center rounded-full border border-line-strong bg-[rgba(231,231,231,0.1)] text-[22px] leading-none text-white transition-opacity disabled:opacity-35"
-            >
-              +
-            </button>
+              <img
+                loading="lazy"
+                decoding="async"
+                src="/figma/pricing/knob.svg"
+                alt=""
+                draggable={false}
+                className="absolute max-w-none"
+                style={{ left: -9.43, top: -4.71, width: 40.86, height: 40.86 }}
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <DiscountBadge text="-10% OFF" active={n >= 3} />
-            <DiscountBadge text="-20% OFF" active={n >= 4} />
+          <div className="relative mt-3.5 h-[26px]">
+            <div className="absolute left-[28%] -translate-x-1/2">
+              <DiscountBadge text="-10% OFF" active={n >= 3} />
+            </div>
+            <div className="absolute left-[55%] -translate-x-1/2">
+              <DiscountBadge text="-20% OFF" active={n >= 4} />
+            </div>
           </div>
         </div>
 
-        {/* plan cards */}
-        <div className="mt-10 flex flex-col gap-5">
-          {PLANS.map((plan) => (
-            <PlanCard key={plan.name} plan={plan} priceText={priceFor(plan)} />
-          ))}
+        {/* phone: vertical exclusive accordion */}
+        <div className="mt-10 flex flex-col gap-4 md:hidden">
+          {PLANS.map((plan, i) => {
+            const expanded = open === i
+            return (
+              <article
+                key={plan.name}
+                data-no-reveal
+                onClick={() => setOpen(i)}
+                className={`${cardShell} cursor-pointer`}
+                style={cardStyle(plan)}
+              >
+                {/* head — identity + price (Figma 942:110506: the whole card
+                    toggles, no chevron; head content is always visible) */}
+                <button
+                  type="button"
+                  aria-expanded={expanded}
+                  className="relative w-full p-5 pb-0 text-left"
+                >
+                  <PlanIdentity plan={plan} stacked />
+                  <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
+                  <PlanPrice plan={plan} priceText={priceFor(plan)} />
+                </button>
+                {/* features expand between the price and the CTA */}
+                <div
+                  className="grid transition-[grid-template-rows] duration-300 ease-out"
+                  style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-5 pt-5">
+                      <PlanFeatures plan={plan} />
+                    </div>
+                  </div>
+                </div>
+                <div className="p-3">
+                  <PlanCta plan={plan} />
+                </div>
+              </article>
+            )
+          })}
+        </div>
+
+        {/* tablet: horizontal exclusive accordion — open plan takes the row,
+            the rest collapse to clipped strips */}
+        <div className="mt-10 hidden gap-3 md:flex">
+          {PLANS.map((plan, i) => {
+            const expanded = open === i
+            return (
+              <article
+                key={plan.name}
+                data-no-reveal
+                onClick={() => setOpen(i)}
+                aria-expanded={expanded}
+                className={`${cardShell} relative min-w-0 cursor-pointer transition-[flex-grow] duration-500 ease-out`}
+                style={{
+                  ...cardStyle(plan),
+                  flexBasis: expanded ? 0 : 76,
+                  flexGrow: expanded ? 1 : 0,
+                  flexShrink: 0,
+                }}
+              >
+                {/* inner spans the card when open; keeps min width so the
+                    collapsed strip clips instead of squishing */}
+                <div className="flex h-full w-full min-w-[416px] flex-col">
+                  <div className="relative m-[3px] rounded-xl p-5">
+                    <PlanIdentity plan={plan} />
+                    <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
+                    <PlanPrice plan={plan} priceText={priceFor(plan)} />
+                  </div>
+                  <div
+                    className={`flex-1 px-6 py-4 transition-opacity duration-300 ${
+                      expanded ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <PlanFeatures plan={plan} />
+                  </div>
+                  <div className="p-[3px]">
+                    <PlanCta plan={plan} />
+                  </div>
+                </div>
+              </article>
+            )
+          })}
         </div>
       </Container>
     </section>

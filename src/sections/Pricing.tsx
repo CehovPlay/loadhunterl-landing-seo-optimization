@@ -231,8 +231,12 @@ function PlanCard({
         {plan.head === "border" && (
           <div className="pointer-events-none absolute inset-0 rounded-[12px] border border-[rgba(229,229,229,0.2)]" />
         )}
-        {/* icon */}
-        <div className="absolute left-[24px] top-[24px] size-[64px]">
+        {/* icon — the AI png carries a baked dark square, crop it to the plate */}
+        <div
+          className={`absolute left-[24px] top-[24px] size-[64px] ${
+            plan.icon.endsWith(".png") ? "overflow-hidden rounded-[14px]" : ""
+          }`}
+        >
           <Img src={plan.icon} alt="" loading="lazy" decoding="async" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
         </div>
         {/* name + badge */}

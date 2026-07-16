@@ -4,7 +4,9 @@ import { LINKS } from "@/sections/Navbar"
 import { PILL_SHADOW, PillButton } from "./ui"
 
 /**
- * Mobile navbar: fixed frosted pill bar (logo + 48px hamburger) and a
+ * Mobile/tablet navbar: fixed frosted pill bar (logo + 48px hamburger) that
+ * folds into a small round button in the top-right corner while scrolling
+ * down and expands back on any upward scroll, and a
  * full-screen dropdown menu — 56px-tall link rows (comfortably above the
  * 44px touch minimum), CTA buttons pinned at the bottom above the home
  * indicator (safe-area padding). Body scroll is locked while open; the menu
@@ -12,6 +14,31 @@ import { PILL_SHADOW, PillButton } from "./ui"
  */
 export function MobileNavbar() {
   const [open, setOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+
+  // scroll-direction collapse: scrolling DOWN past the hero folds the bar into
+  // a small pill (just the menu button) in the top-right corner; any upward
+  // scroll (or being near the top) expands it back to full width.
+  useEffect(() => {
+    let lastY = window.scrollY
+    let raf = 0
+    const onScroll = () => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = 0
+        const y = window.scrollY
+        const dy = y - lastY
+        if (Math.abs(dy) < 6) return
+        setCollapsed(y > 140 && dy > 0)
+        lastY = y
+      })
+    }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 
   useEffect(() => {
     if (!open) return
@@ -30,12 +57,20 @@ export function MobileNavbar() {
       className="fixed inset-x-0 top-0 z-[100]"
       style={{ paddingTop: "max(10px, env(safe-area-inset-top))" }}
     >
-      <div className="mx-auto w-full max-w-[440px] px-4">
+      <div className="mx-auto flex w-full max-w-[440px] justify-end px-4 md:max-w-[768px] md:px-8">
         <div
-          className="flex h-14 items-center justify-between rounded-full border border-[#ececec] bg-white/85 pl-4 pr-1.5 backdrop-blur-[10px]"
-          style={{ boxShadow: PILL_SHADOW }}
+          className={`flex h-14 items-center justify-between overflow-hidden rounded-full border border-[#ececec] bg-white/85 backdrop-blur-[10px] transition-[width,padding] duration-500 ease-out ${
+            collapsed && !open ? "px-[3px]" : "pl-4 pr-1.5"
+          }`}
+          style={{ boxShadow: PILL_SHADOW, width: collapsed && !open ? 56 : "100%" }}
         >
-          <a href="#" className="flex items-center gap-2" aria-label="LoadHunter — home">
+          <a
+            href="#"
+            className={`flex items-center gap-2 transition-opacity duration-300 ${
+              collapsed && !open ? "pointer-events-none opacity-0" : "opacity-100"
+            }`}
+            aria-label="LoadHunter — home"
+          >
             <Img src="/figma/logo-icon.svg" alt="" className="h-[26px] w-[27px]" />
             <Img src="/figma/logo-text.svg" alt="loadhunter" className="h-[15px] w-[94px]" />
           </a>
@@ -70,7 +105,7 @@ export function MobileNavbar() {
         }}
         aria-hidden={!open}
       >
-        <nav className="mx-auto flex w-full max-w-[440px] flex-1 flex-col overflow-y-auto px-5">
+        <nav className="mx-auto flex w-full max-w-[440px] flex-1 flex-col overflow-y-auto px-5 md:max-w-[768px] md:px-8">
           {LINKS.map((l, i) => (
             <a
               key={l.label}
@@ -90,7 +125,7 @@ export function MobileNavbar() {
             </a>
           ))}
         </nav>
-        <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-5 pt-4">
+        <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-5 pt-4 md:max-w-[768px] md:flex-row md:px-8">
           <PillButton href="#contact" variant="white">
             Get Demo
           </PillButton>

@@ -1,4 +1,5 @@
 import { Img } from "@/components/site/Img"
+import { Stars } from "@/components/site/Stars"
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
@@ -185,14 +186,30 @@ export function Testimonials() {
         Here are some of their testimonials
       </p>
 
-      {/* trust strip: 5,000+ users, 4.7 rating, Google Reviews / Trustpilot / G2 */}
-      <Img
-        src="/figma/reviews-strip.png"
-        alt="5,000+ trusted users, 4.7 from 100+ reviews on Google, Trustpilot and G2"
-        loading="lazy"
-        decoding="async"
-        className="absolute left-[638.5px] top-[278px] w-[643.5px] max-w-none"
-      />
+      {/* trust stats — real text (was a baked reviews-strip.png export);
+          logos dropped per design feedback, stats enlarged */}
+      <div className="absolute left-[418px] top-[266px] flex w-[1084px] items-stretch justify-center gap-8">
+        <div className="flex flex-col items-center justify-center gap-[6px]">
+          <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
+            5,000&thinsp;+
+          </span>
+          <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+            Trusted by users
+          </span>
+        </div>
+        <div aria-hidden className="w-px self-stretch bg-line-strong" />
+        <div className="flex flex-col items-center justify-center gap-[6px]">
+          <span className="flex items-center gap-[10px]">
+            <Stars score={4.7} className="text-[16px]" />
+            <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
+              4.7
+            </span>
+          </span>
+          <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+            from 100+ reviews
+          </span>
+        </div>
+      </div>
 
       {/* marquee: initial offset matches the design frame (first card @ x=-82) */}
       <div className="absolute left-[-82px] top-[440px] h-[524px] w-[6225px]">

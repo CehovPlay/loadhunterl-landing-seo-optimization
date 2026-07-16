@@ -130,10 +130,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     168,
     168
   ],
-  "/figma/reviews-strip.png": [
-    1287,
-    84
-  ],
   "/figma/tail/cta-right.png": [
     2258,
     1734

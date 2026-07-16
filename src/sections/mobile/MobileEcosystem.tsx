@@ -75,7 +75,7 @@ const PRODUCTS: Product[] = [
 export function MobileEcosystem() {
   return (
     <section id="offers" className="bg-[#e9e9eb] py-16">
-      <div className="mx-auto w-full max-w-[440px] px-5">
+      <div className="mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8">
         {/* icon plate — desktop composition */}
         <div
           data-float
@@ -93,7 +93,7 @@ export function MobileEcosystem() {
           />
         </div>
 
-        <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink">
+        <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px]">
           Our ecosystem products
         </h2>
         <p className="mt-4 text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-ink">
@@ -103,12 +103,12 @@ export function MobileEcosystem() {
       </div>
 
       {/* product rows — white cards like the desktop list, snap carousel */}
-      <div className="lh-snap mt-10 flex gap-4 overflow-x-auto px-[9vw] pb-2">
+      <div className="lh-snap mt-10 flex gap-4 overflow-x-auto pb-2 px-[max(20px,calc((100vw-440px)/2+20px))] md:px-[max(32px,calc((100vw-768px)/2+32px))]">
         {PRODUCTS.map((p) => (
           <article
             key={p.name}
             data-card
-            className="relative flex w-[82vw] max-w-[380px] shrink-0 flex-col overflow-hidden rounded-[12px] border border-[#e8e8e8] bg-white p-6"
+            className="relative flex w-[82vw] max-w-[380px] shrink-0 flex-col overflow-hidden rounded-[12px] border border-[#e8e8e8] bg-white p-6 md:w-[420px] md:max-w-[420px]"
           >
             <Img
               src={p.logo}
@@ -130,14 +130,16 @@ export function MobileEcosystem() {
             ) : (
               <div className="mt-1 h-[28px]" aria-hidden />
             )}
-            {/* mockup — clipped by the card edge like the desktop row */}
-            <div className="-mx-6 -mb-6 mt-4">
+            {/* mockup — clipped by the card edge like the desktop row; the export
+                carries a thin baked gray-800 strip on its right/top edges, so the
+                image is oversized ~2% and the wrapper clips it away */}
+            <div className="-mx-6 -mb-6 mt-4 overflow-hidden">
               <Img
                 src={p.mockup}
                 alt={`${p.name} product preview`}
                 loading="lazy"
                 decoding="async"
-                className="block w-full"
+                className="-mt-px block w-[102%] max-w-none"
               />
             </div>
           </article>

@@ -32,12 +32,12 @@ export function MobileFeatures() {
         </div>
 
         {/* cards — desktop card skin, stacked */}
-        <div className="mt-12 flex flex-col gap-5">
+        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
           {CARDS.map((c) => (
             <div
               key={c.title}
               data-card
-              className="overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0]"
+              className="overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0] md:last:col-span-2"
             >
               <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center">
                 <p className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">
@@ -47,8 +47,17 @@ export function MobileFeatures() {
                   {c.body}
                 </p>
               </div>
-              {/* the Figma vector scene, covering the card window like desktop */}
-              <div className="relative mt-2 h-[250px] w-full overflow-hidden">
+              {/* the Figma vector scene — window keeps the viewBox aspect, so the
+                  full illustration is always visible (nothing important cropped) */}
+              <div
+                className="relative mt-2 w-full overflow-hidden"
+                style={{
+                  aspectRatio: (() => {
+                    const [, , w, h] = c.viewBox.split(" ").map(Number)
+                    return `${w} / ${h}`
+                  })(),
+                }}
+              >
                 <div
                   data-no-reveal
                   className="absolute inset-0"

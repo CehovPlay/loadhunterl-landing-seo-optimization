@@ -1,7 +1,6 @@
 import { MobileNavbar } from "./MobileNavbar"
 import { MobileHero } from "./MobileHero"
 import { MobileFeatures } from "./MobileFeatures"
-import { MobileChaos } from "./MobileChaos"
 import { MobileTools } from "./MobileTools"
 import { MobileEcosystem } from "./MobileEcosystem"
 import { MobileWhy } from "./MobileWhy"
@@ -24,7 +23,6 @@ export function MobileLanding() {
       <main>
         <MobileHero />
         <MobileFeatures />
-        <MobileChaos />
         <MobileTools />
         <MobileEcosystem />
         <MobileWhy />

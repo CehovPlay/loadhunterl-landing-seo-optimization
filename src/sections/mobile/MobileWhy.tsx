@@ -36,50 +36,123 @@ function Cell({ ok }: { ok: boolean }) {
   )
 }
 
+function GlowBg() {
+  return (
+    <Img
+      src="/figma/why-glow.png"
+      alt=""
+      aria-hidden
+      loading="lazy"
+      decoding="async"
+      className="pointer-events-none absolute left-[-3.8%] top-[-48%] h-[157%] w-auto max-w-none"
+    />
+  )
+}
+
 /**
- * Mobile "Why LoadHunter": the desktop comparison table compacted — same
- * why-glow.png panel behind it and the same dashed hairlines between rows
- * (no extra card chrome), 4 columns: feature | loadhunter | Manual | Others.
+ * "Why LoadHunter" comparison.
+ *
+ * Phone: the 4-column table reads overloaded at 390px, so each feature gets
+ * its own block — the feature name on a full-width line, the three compare
+ * cells beneath it under a single shared column header. Tablet (md:) has the
+ * room for the desktop-style 4-column grid. Both sit on the desktop glow,
+ * anchored with the desktop offsets.
  */
 export function MobileWhy() {
   return (
     <section className="relative overflow-hidden bg-gray-800 py-16">
       <Container className="relative">
-        {/* the desktop glow panel, centered behind the table */}
-        <Img
-          src="/figma/why-glow.png"
-          alt=""
-          aria-hidden
-          loading="lazy"
-          decoding="async"
-          className="pointer-events-none absolute left-1/2 top-[150px] w-[560px] max-w-none -translate-x-1/2"
-        />
-
         <SectionHeader
           icon="/figma/why-icon.png"
           title="Why LoadHunter"
           sub="Measured across real bookings. Based on real dispatcher workflows."
         />
 
-        <div className="relative mt-10">
-          {/* header row */}
-          <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-3.5">
-            <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">Feature</span>
-            <Img
-              src="/figma/table-logo.svg"
-              alt="loadhunter"
-              loading="lazy"
-              decoding="async"
-              className="mx-auto h-[14px] w-[69px]"
-            />
-            <span className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">Manual</span>
-            <span className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">Others</span>
-          </div>
+        {/* ---- phone: LoadHunter-focused list — big check per feature, the
+            Manual/Others verdicts as a caption line (per design decision) ---- */}
+        <div className="relative mt-10 md:hidden">
+          <GlowBg />
+          <div className="relative">
+            {ROWS.map((r, ri) => (
+              <div key={r.label}>
+                {ri > 0 && <div className="h-px w-full" style={DASH} />}
+                <div className="flex items-start gap-4 py-5">
+                  <img
+                    src="/figma/table-check.svg"
+                    alt="Included in LoadHunter"
+                    loading="lazy"
+                    decoding="async"
+                    className="mt-[-2px] h-[24px] w-7 shrink-0"
+                  />
+                  <div>
+                    <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+                      {r.label}
+                    </p>
+                    <p className="mt-1.5 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
+                      Manual{" "}
+                      <span aria-hidden className={r.cells[1] ? "text-[#c79ffd]" : "text-ink-3"}>
+                        {r.cells[1] ? "✓" : "✕"}
+                      </span>
+                      <span aria-hidden className="mx-1.5 text-[#4a4c52]">·</span>
+                      Others{" "}
+                      <span aria-hidden className={r.cells[2] ? "text-[#c79ffd]" : "text-ink-3"}>
+                        {r.cells[2] ? "✓" : "✕"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
 
-          {ROWS.map((r) => (
-            <div key={r.label}>
-              <div className="h-px w-full" style={DASH} />
-              <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-4">
+            <div className="h-px w-full" style={DASH} />
+            <div className="py-5">
+              <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+                {SPEED_ROW[0]}
+              </p>
+              <p
+                data-countup
+                className="mt-2 text-[26px] font-medium leading-[32px] tracking-[-1.04px] text-white"
+              >
+                {SPEED_ROW[1]}
+              </p>
+              <p className="mt-1.5 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
+                Manual {SPEED_ROW[2]}
+                <span aria-hidden className="mx-1.5 text-[#4a4c52]">·</span>
+                Others {SPEED_ROW[3]}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* ---- tablet: airy card rows (cards paint over the glow, so the
+            beam never washes the content) ---- */}
+        <div className="relative mt-12 hidden md:block">
+          <GlowBg />
+          <div className="relative flex flex-col gap-3">
+            <div className="grid grid-cols-[1.3fr_1fr_0.8fr_0.8fr] items-center gap-2 px-6 pb-2">
+              <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+                Feature
+              </span>
+              <Img
+                src="/figma/table-logo.svg"
+                alt="loadhunter"
+                loading="lazy"
+                decoding="async"
+                className="mx-auto h-[14px] w-[69px]"
+              />
+              <span className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+                Manual
+              </span>
+              <span className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+                Others
+              </span>
+            </div>
+
+            {ROWS.map((r) => (
+              <div
+                key={r.label}
+                className="grid grid-cols-[1.3fr_1fr_0.8fr_0.8fr] items-center gap-2 rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-6 py-6"
+              >
                 <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                   {r.label}
                 </span>
@@ -87,23 +160,22 @@ export function MobileWhy() {
                   <Cell key={i} ok={ok} />
                 ))}
               </div>
-            </div>
-          ))}
+            ))}
 
-          {/* speed row */}
-          <div className="h-px w-full" style={DASH} />
-          <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-4">
-            <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
-              {SPEED_ROW[0]}
-            </span>
-            <span
-              data-countup
-              className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
-            >
-              {SPEED_ROW[1]}
-            </span>
-            <span className="text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">{SPEED_ROW[2]}</span>
-            <span className="text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">{SPEED_ROW[3]}</span>
+            <div className="grid grid-cols-[1.3fr_1fr_0.8fr_0.8fr] items-center gap-2 rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-6 py-6">
+              <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+                {SPEED_ROW[0]}
+              </span>
+              <span data-countup className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+                {SPEED_ROW[1]}
+              </span>
+              <span className="text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">
+                {SPEED_ROW[2]}
+              </span>
+              <span className="text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">
+                {SPEED_ROW[3]}
+              </span>
+            </div>
           </div>
         </div>
       </Container>

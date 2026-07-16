@@ -111,7 +111,13 @@ function BeamDefs({ side, lines }: { side: "l" | "r"; lines: Line[] }) {
   )
 }
 
-export function CtaAutomation() {
+export function CtaAutomation({
+  className = "absolute left-[671px] top-[240px]",
+}: {
+  /** placement wrapper classes — the flow layout renders it `relative` inside
+   *  a scale-transformed box instead of the desktop canvas position */
+  className?: string
+}) {
   const beamsRef = useRef<SVGSVGElement>(null)
 
   useEffect(() => {
@@ -156,7 +162,7 @@ export function CtaAutomation() {
 
   return (
     <div
-      className="absolute left-[671px] top-[240px] h-[627px] w-[1129px] isolate overflow-hidden rounded-[12px]"
+      className={`${className} h-[627px] w-[1129px] isolate overflow-hidden rounded-[12px]`}
       style={{ backgroundImage: PANEL_BG }}
     >
       {/* dashed connectors + centre rect — original geometry and fade gradients */}

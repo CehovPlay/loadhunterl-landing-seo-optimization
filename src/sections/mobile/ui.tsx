@@ -21,7 +21,7 @@ export function Container({
   className?: string
   children: React.ReactNode
 }) {
-  return <div className={`mx-auto w-full max-w-[440px] px-5 ${className}`}>{children}</div>
+  return <div className={`mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8 ${className}`}>{children}</div>
 }
 
 /** Centered section header: floating icon plate → h2 → sub copy. */
@@ -44,14 +44,14 @@ export function SectionHeader({
         </div>
       )}
       <h2
-        className={`text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] ${
+        className={`text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] md:text-[40px] md:leading-[48px] ${
           dark ? "text-white" : "text-ink"
         }`}
       >
         {title}
       </h2>
       {sub && (
-        <p className="mt-3 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
+        <p className="mt-3 max-w-[560px] text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
           {sub}
         </p>
       )}
@@ -96,7 +96,7 @@ export function PillButton({
       style: {
         backgroundImage:
           "radial-gradient(60% 140% at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
-        boxShadow: "0px 34px 74px -20px rgba(111,81,151,0.5)",
+        boxShadow: `${PILL_SHADOW}, 0px 34px 74px -20px rgba(111,81,151,0.5)`,
       },
     },
     white: {
@@ -116,22 +116,4 @@ export function PillButton({
   )
 }
 
-/** Desktop hero star rating: gray track, violet fill clipped to the score. */
-export function Stars({ score, className = "" }: { score: number; className?: string }) {
-  return (
-    <span
-      className={`relative inline-flex leading-none tracking-[2px] ${className}`}
-      role="img"
-      aria-label={`Rated ${score} out of 5`}
-    >
-      <span className="text-[#c9c9c9]">★★★★★</span>
-      <span
-        aria-hidden
-        className="absolute inset-0 overflow-hidden whitespace-nowrap text-[#6f5197]"
-        style={{ width: `${(score / 5) * 100}%` }}
-      >
-        ★★★★★
-      </span>
-    </span>
-  )
-}
+export { Stars } from "@/components/site/Stars"

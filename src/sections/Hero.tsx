@@ -73,7 +73,8 @@ export function Hero() {
             style={{
               backgroundImage:
                 "radial-gradient(60% 140% at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
-              boxShadow: "0px 34px 74px -20px rgba(111,81,151,0.5)",
+              boxShadow:
+                "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1), 0px 34px 74px -20px rgba(111,81,151,0.5)",
             }}
           >
             <Img src={diamondIcon} alt="" decoding="async" className="size-[25px]" />

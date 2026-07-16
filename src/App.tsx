@@ -5,7 +5,7 @@ import { initReveal } from "@/lib/reveal"
 import { initMicro } from "@/lib/micro"
 import { initEcosystemPin } from "@/lib/ecosystemPin"
 import { DesignFrame } from "@/components/site/DesignFrame"
-import { useIsMobile } from "@/components/site/useIsMobile"
+import { useFlowLayout } from "@/components/site/useFlowLayout"
 import { isCoarsePointer, prefersReducedMotion } from "@/lib/inview"
 
 // Code-split the two experiences: a phone visitor never downloads the desktop
@@ -86,14 +86,15 @@ function CanvasEffects({ mobile }: { mobile: boolean }) {
 
 /**
  * Two experiences:
- *  - < 768px — MobileLanding: a real flow-responsive layout (fluid widths,
- *    stacked sections, 44px+ touch targets), built from scratch on top of the
- *    desktop content. No DesignFrame, no scaling.
- *  - ≥ 768px — the fixed 1920 desktop canvas: below 1920 it scales down
+ *  - < 1024px — the flow landing (src/sections/mobile/*): a real responsive
+ *    layout (fluid widths, stacked sections, 44px+ touch targets) built on the
+ *    desktop content. Mobile-first; `md:` (≥768) modifiers add the tablet
+ *    refinements. No DesignFrame, no scaling.
+ *  - ≥ 1024px — the fixed 1920 desktop canvas: below 1920 it scales down
  *    (vw/1920), above 1920 maxScale={1} holds it at pixel size and centers it.
  */
 function App() {
-  const mobile = useIsMobile()
+  const mobile = useFlowLayout()
   useLenis(mobile)
 
   if (mobile) {

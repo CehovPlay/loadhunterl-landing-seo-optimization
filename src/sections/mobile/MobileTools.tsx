@@ -136,20 +136,23 @@ const BLOCKS: Block[] = [
  * IntersectionObserver; reduced-motion gets the fully-drawn state).
  */
 export function MobileTools() {
-  const spineRef = useRef<HTMLDivElement>(null)
+  const areaRef = useRef<HTMLDivElement>(null)
+  const lineRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
   const tipRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const spine = spineRef.current
+    const area = areaRef.current
+    const line = lineRef.current
     const fill = fillRef.current
     const tip = tipRef.current
-    if (!spine || !fill || !tip) return
-    const nodes = Array.from(spine.querySelectorAll<HTMLElement>("[data-spine-node]"))
+    if (!area || !line || !fill || !tip) return
+    const nodes = Array.from(area.querySelectorAll<HTMLElement>("[data-spine-node]"))
 
-    const litNow = (px: number) => {
+    const litNow = (px: number, lineTop: number) => {
       for (const n of nodes) {
-        const y = n.offsetTop + n.offsetHeight / 2
+        const r = n.getBoundingClientRect()
+        const y = r.top - lineTop + r.height / 2
         const lit = px >= y
         n.style.background = lit ? "#C9B3EC" : "#434447"
         n.style.boxShadow = lit ? "0 0 10px rgba(201,179,236,0.9)" : "none"
@@ -159,20 +162,20 @@ export function MobileTools() {
     if (prefersReducedMotion()) {
       fill.style.height = "100%"
       tip.style.opacity = "0"
-      litNow(Infinity)
+      litNow(Infinity, 0)
       return
     }
 
     let raf = 0
     const update = () => {
       raf = 0
-      const rect = spine.getBoundingClientRect()
+      const rect = line.getBoundingClientRect()
       // the glow tip tracks 60% of the viewport height
       const px = Math.min(rect.height, Math.max(0, window.innerHeight * 0.6 - rect.top))
       fill.style.height = `${px}px`
       tip.style.transform = `translateY(${px}px)`
       tip.style.opacity = px > 4 && px < rect.height - 4 ? "1" : "0"
-      litNow(px)
+      litNow(px, rect.top)
     }
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update)
@@ -197,7 +200,7 @@ export function MobileTools() {
       (entries) => (entries[entries.length - 1].isIntersecting ? start() : stop()),
       { rootMargin: "200px 0px 200px 0px" },
     )
-    io.observe(spine)
+    io.observe(area)
     update()
 
     return () => {
@@ -210,54 +213,56 @@ export function MobileTools() {
   return (
     <section id="features" className="bg-gray-800 py-16">
       <Container>
-        {/* intro */}
+        {/* intro — desktop order: heading, subtitle, then the gear icon */}
         <div className="flex flex-col">
-          <div data-float className="mb-6 w-[72px]">
-            <Img src="/figma/tools/intro-icon.png" alt="" loading="lazy" decoding="async" className="w-full" />
-          </div>
-          <h2 className="text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-white">
+          <h2 className="text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-white md:text-[40px] md:leading-[48px]">
             Book better loads faster — without missing opportunities with game-changing tools for
             dispatchers
           </h2>
-          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
+          <p className="mt-4 max-w-[600px] text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
             LoadHunter finds high-RPM loads in real-time, filters the noise, and lets you contact
             brokers instantly — all in one place. Real-time load scanning, smart filters, and
             instant outreach — built for dispatchers who want results, not dashboards.
           </p>
         </div>
 
-        {/* spine + blocks */}
-        <div ref={spineRef} className="relative mt-14 flex flex-col gap-24 pl-8">
-          {/* track — dim line for the full height */}
-          <div
-            aria-hidden
-            className="absolute bottom-0 left-[4px] top-0 w-[2px] rounded-full bg-[rgba(255,255,255,0.08)]"
-          />
-          {/* glow fill — height driven by scroll */}
-          <div
-            ref={fillRef}
-            aria-hidden
-            className="absolute left-[4px] top-0 w-[2px] rounded-full"
-            style={{
-              height: 0,
-              background: "linear-gradient(to bottom, rgba(155,121,206,0.35) 0%, #9B79CE 100%)",
-              boxShadow: "0 0 12px rgba(155,121,206,0.55)",
-            }}
-          />
-          {/* luminous tip */}
-          <div
-            ref={tipRef}
-            aria-hidden
-            className="absolute left-[5px] top-[-3px] size-[6px] -translate-x-1/2 rounded-full bg-[#E3D5FA]"
-            style={{ opacity: 0, boxShadow: "0 0 14px 4px rgba(201,179,236,0.85)" }}
-          />
+        {/* spine area: the gear icon at the line's origin, the glowing line
+            born straight out of it, blocks shifted right of the line */}
+        <div ref={areaRef} className="relative mt-14">
+          <div data-float className="w-[72px]">
+            <Img src="/figma/tools/intro-icon.png" alt="" loading="lazy" decoding="async" className="w-full" />
+          </div>
+
+          {/* line container — centered under the icon (icon centre x=36) */}
+          <div ref={lineRef} aria-hidden className="absolute bottom-2 left-[35px] top-[80px] w-[2px]">
+            {/* track — dim line for the full height */}
+            <div className="absolute inset-0 rounded-full bg-[rgba(255,255,255,0.08)]" />
+            {/* glow fill — height driven by scroll */}
+            <div
+              ref={fillRef}
+              className="absolute left-0 top-0 w-full rounded-full"
+              style={{
+                height: 0,
+                background: "linear-gradient(to bottom, rgba(155,121,206,0.35) 0%, #9B79CE 100%)",
+                boxShadow: "0 0 12px rgba(155,121,206,0.55)",
+              }}
+            />
+            {/* luminous tip */}
+            <div
+              ref={tipRef}
+              className="absolute left-1/2 top-[-3px] size-[6px] -translate-x-1/2 rounded-full bg-[#E3D5FA]"
+              style={{ opacity: 0, boxShadow: "0 0 14px 4px rgba(201,179,236,0.85)" }}
+            />
+          </div>
+
+          <div className="mt-12 flex flex-col gap-48 pl-[76px] md:pl-[92px]">
           {BLOCKS.map((b) => (
             <article key={b.title} data-card className="relative">
-              {/* ignite node — centered on the 2px line at left 5px */}
+              {/* ignite node — centered on the line (x=36 of the area) */}
               <span
                 data-spine-node
                 aria-hidden
-                className="absolute left-[-32px] top-[9px] size-[10px] rounded-full transition-[background,box-shadow] duration-300"
+                className="absolute left-[-45px] top-[9px] size-[10px] rounded-full transition-[background,box-shadow] duration-300 md:left-[-61px]"
                 style={{ background: "#434447" }}
               />
               <h3 className="text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
@@ -266,17 +271,10 @@ export function MobileTools() {
               <p className="mt-3 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
                 {b.desc}
               </p>
-              {/* bare mockup, like desktop — the export carries its own chrome */}
-              <Img
-                src={b.mockup}
-                alt={`${b.title} interface`}
-                loading="lazy"
-                decoding="async"
-                className="mt-6 block w-full"
-              />
-              <div className="mt-6 flex flex-col gap-5">
+              {/* bullets first, stacked on every breakpoint, then the mockup */}
+              <div className="mt-8 flex flex-col gap-8">
                 {b.items.map((it) => (
-                  <div key={it.title} className="flex gap-4">
+                  <div key={it.title} className="flex flex-col gap-4 md:flex-row md:gap-5">
                     <div className="size-10 shrink-0">
                       <Img src={it.icon} alt="" loading="lazy" decoding="async" className="w-full" />
                     </div>
@@ -284,15 +282,24 @@ export function MobileTools() {
                       <h4 className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                         {it.title}
                       </h4>
-                      <p className="mt-1.5 text-[14px] font-medium leading-[18px] tracking-[-0.56px] text-ink-2">
+                      <p className="mt-2.5 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
                         {it.sub}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
+              {/* bare mockup, like desktop — the export carries its own chrome */}
+              <Img
+                src={b.mockup}
+                alt={`${b.title} interface`}
+                loading="lazy"
+                decoding="async"
+                className="mt-8 block w-full"
+              />
             </article>
           ))}
+          </div>
         </div>
       </Container>
     </section>
