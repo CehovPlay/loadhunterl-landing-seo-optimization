@@ -466,7 +466,7 @@ export function MobilePricing() {
 
         {/* tablet: horizontal exclusive accordion — open plan takes the row,
             the rest collapse to clipped strips */}
-        <div className="mt-10 hidden gap-3 md:flex">
+        <div className="mt-10 hidden gap-3 md:flex lg:hidden">
           {PLANS.map((plan, i) => {
             const expanded = open === i
             return (
@@ -505,6 +505,30 @@ export function MobilePricing() {
               </article>
             )
           })}
+        </div>
+
+        {/* laptop: all four plans expanded side by side, like desktop */}
+        <div className="mt-12 hidden gap-5 lg:grid lg:grid-cols-4">
+          {PLANS.map((plan) => (
+            <article
+              key={plan.name}
+              data-card
+              className={`${cardShell} flex flex-col`}
+              style={cardStyle(plan)}
+            >
+              <div className="p-5">
+                <PlanIdentity plan={plan} stacked />
+                <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
+                <PlanPrice plan={plan} priceText={priceFor(plan)} />
+              </div>
+              <div className="flex-1 px-5 pb-2">
+                <PlanFeatures plan={plan} />
+              </div>
+              <div className="p-3">
+                <PlanCta plan={plan} />
+              </div>
+            </article>
+          ))}
         </div>
       </Container>
     </section>

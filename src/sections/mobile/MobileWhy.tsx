@@ -126,8 +126,9 @@ export function MobileWhy() {
           </div>
         </div>
 
-        {/* ---- tablet: desktop-style 4-column table (as before) ---- */}
-        <div className="relative mt-10 hidden md:block">
+        {/* ---- tablet + laptop: desktop-style 4-column table (capped width so
+            it never stretches thin on wide laptops) ---- */}
+        <div className="relative mt-10 hidden md:block lg:mx-auto lg:mt-16 lg:max-w-[1040px]">
           <GlowBg />
           <div className="relative">
             <div className="grid grid-cols-[1.4fr_1fr_0.8fr_0.8fr] items-center gap-2 py-3.5">
