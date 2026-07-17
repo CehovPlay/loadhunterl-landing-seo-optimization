@@ -139,12 +139,12 @@ const PLANS: Plan[] = [
 ]
 
 const PILL_SHADOW =
-  "0px 1px 0px rgba(0,0,0,0.05), 0px 4px 4px rgba(0,0,0,0.05), 0px 10px 10px rgba(0,0,0,0.1)"
+  "var(--shadow-pill)"
 
 function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean }) {
   return (
     <div
-      className="flex items-center rounded-[99px] border border-[rgba(232,232,232,0.75)] px-[6px] py-[1px]"
+      className="flex items-center rounded-full border border-[rgba(232,232,232,0.75)] px-[6px] py-[1px]"
       style={{
         backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
         boxShadow: shadow ? PILL_SHADOW : undefined,
@@ -243,7 +243,7 @@ function PlanCard({
         <div className="absolute left-[112px] top-[24px] h-[32px] w-[273px]">
           <span className="whitespace-nowrap text-[20px] leading-[32px] tracking-[-0.8px] text-gray-50">{plan.name}</span>
           {plan.recommended && (
-            <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-[200px] bg-[rgba(232,232,232,0.1)] px-[10px]">
+            <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-full bg-[rgba(232,232,232,0.1)] px-[10px]">
               <img loading="lazy" decoding="async" src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
               <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">Recommended</span>
             </div>
@@ -385,7 +385,7 @@ export function Pricing() {
           excluded from the scroll-reveal cascade */}
       <div
         data-no-reveal
-        className="absolute left-[832.5px] top-[278px] flex h-[40px] items-center gap-[12px] rounded-[2000px] bg-[rgba(231,231,231,0.1)] p-[6px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
+        className="absolute left-[832.5px] top-[278px] flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] p-[6px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
       >
         {(["Monthly", "Annually"] as const).map((label) => {
           const active = (label === "Annually") === annual
@@ -397,7 +397,7 @@ export function Pricing() {
               aria-pressed={active}
               onClick={() => setAnnual(isAnnually)}
               className={
-                "flex h-[28px] items-center justify-center gap-[8px] rounded-[99px] py-[4px] transition-all " +
+                "flex h-[28px] items-center justify-center gap-[8px] rounded-full py-[4px] transition-all " +
                 (isAnnually ? "pl-[12px] pr-[4px] " : "px-[12px] ") +
                 (active ? "border border-white backdrop-blur-[10px]" : "")
               }
@@ -415,7 +415,7 @@ export function Pricing() {
               {/* the discount badge lives INSIDE the Annually pill */}
               {isAnnually && (
                 <span
-                  className="flex items-center rounded-[99px] border border-white px-[6px] py-[2px]"
+                  className="flex items-center rounded-full border border-[rgba(232,232,232,0.75)] px-[6px] py-[1px]"
                   style={{
                     backgroundImage:
                       "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
@@ -448,7 +448,7 @@ export function Pricing() {
           aria-valuemin={1}
           aria-valuemax={10}
           aria-valuenow={n}
-          className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-[200px] bg-[rgba(231,231,231,0.1)]"
+          className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-full bg-[rgba(231,231,231,0.1)]"
         >
           <div
             className="absolute left-[2px] top-[2px] h-[12px] rounded-md bg-violet shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"

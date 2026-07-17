@@ -32,7 +32,7 @@ export function Orbit() {
         src="/figma/orbit-center-mark.svg"
         alt=""
         aria-hidden
-        data-pulse
+        data-float
         loading="lazy"
         decoding="async"
         className="absolute size-[120px] max-w-none"

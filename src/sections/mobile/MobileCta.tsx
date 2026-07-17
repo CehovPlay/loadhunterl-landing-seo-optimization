@@ -34,7 +34,7 @@ export function MobileCta() {
           </p>
           <a
             href="#start"
-            className="mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white bg-white shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] transition-transform active:scale-[0.98] md:w-[220px] lg:mt-10 lg:h-14"
+            className="mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white bg-white shadow-pill transition-transform active:scale-[0.98] md:w-[220px] lg:mt-10 lg:h-14"
           >
             <img
               src="/figma/tail/cta-chrome.svg"

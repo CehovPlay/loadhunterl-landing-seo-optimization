@@ -128,7 +128,7 @@ function ProductRow({ product }: { product: Product }) {
           {product.description}
         </p>
         {product.comingSoon && (
-          <div className="mt-[24px] inline-flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-violet px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)]">
+          <div className="mt-[24px] inline-flex h-[28px] items-center justify-center rounded-full border border-white bg-violet px-[12px] shadow-pill">
             <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
               Coming soon
             </span>

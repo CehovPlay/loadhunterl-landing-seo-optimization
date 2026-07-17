@@ -63,8 +63,7 @@ export function Cta() {
 
         <button
           data-lift
-          data-magnetic
-          className="absolute left-[40px] top-[545px] inline-flex h-[42px] items-center gap-[8px] rounded-full border border-white bg-white px-[24px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] transition-opacity hover:opacity-90"
+          className="absolute left-[40px] top-[545px] inline-flex h-[42px] items-center gap-[8px] rounded-full border border-white bg-white px-[24px] shadow-pill"
         >
           <Img
             src="/figma/tail/cta-chrome.svg"

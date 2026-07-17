@@ -77,7 +77,7 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
             boxShadow:
-              "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
+              "var(--shadow-pill)",
           }}
         >
           {r.initials}

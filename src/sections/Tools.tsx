@@ -507,7 +507,7 @@ export function Tools() {
       style={{ height: SECTION_H, containIntrinsicSize: `1920px ${SECTION_H}px` }}
     >
       {/* intro — left-aligned heading + subtitle, 220px from the top */}
-      <h2 className="absolute left-[120px] top-[220px] w-[1680px] text-left text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-gray-50">
+      <h2 className="absolute left-[120px] top-[220px] w-[1680px] text-left text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
         Book better loads faster — without missing opportunities with
         <br />
         game-changing tools for dispatchers

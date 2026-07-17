@@ -23,7 +23,7 @@ const PHRASES: Phrase[] = [
   { lines: ["Dispatch smarter", "not harder"], sub: "AI does the heavy lifting" },
   { lines: ["Only the loads", "that matter"], sub: "AI filters out the noise" },
   { lines: ["Email brokers", "in one click"], sub: "No more copy-paste" },
-  { lines: ["Loads find you", "on Telegram"], sub: "Instant alerts, anywhere" },
+  { lines: ["Loads find you", "on your phone"], sub: "Instant alerts, anywhere" },
   { lines: ["Know your profit", "before you call"], sub: "RPM+ does the math" },
 ]
 

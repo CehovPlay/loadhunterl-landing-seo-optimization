@@ -104,7 +104,7 @@ function ReviewCard({ r }: { r: Review }) {
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
             boxShadow:
-              "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
+              "var(--shadow-pill)",
           }}
         >
           <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">

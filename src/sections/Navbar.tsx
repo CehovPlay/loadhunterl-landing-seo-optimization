@@ -13,7 +13,7 @@ export const LINKS = [
 ]
 
 const PILL_SHADOW =
-  "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)"
+  "var(--shadow-pill)"
 
 /**
  * Figma component 482:51856 "Navigation bar":
@@ -73,7 +73,7 @@ export function Navbar() {
           <div className="relative flex items-center">
             <a
               href="#"
-              className="flex h-[34px] items-center gap-[8px] rounded-[99px] border border-border-light bg-white py-[4px] pl-[4px] pr-[8px]"
+              className="flex h-[34px] items-center gap-[8px] rounded-full border border-border-light bg-white py-[4px] pl-[4px] pr-[8px]"
               style={{ boxShadow: PILL_SHADOW }}
             >
               <Img
@@ -90,7 +90,7 @@ export function Navbar() {
           </div>
 
           {/* nav links */}
-          <nav className="relative flex items-center justify-center gap-[2px] rounded-[99px]">
+          <nav className="relative flex items-center justify-center gap-[2px] rounded-full">
             {LINKS.map((l, i) => (
               <a
                 key={l.label}
@@ -116,7 +116,7 @@ export function Navbar() {
           style={{ transformOrigin: "top center", transform: `scale(${scale})` }}
         >
           <div
-            className="relative mt-[16px] flex items-center gap-[60px] rounded-[2000px] py-[6px] pl-[6px] pr-[10px]"
+            className="relative mt-[16px] flex items-center gap-[60px] rounded-full py-[6px] pl-[6px] pr-[10px]"
             style={{
               // isolate so the surviving backdrop-filter samples a small region,
               // not the whole scrolling page behind the fixed pill
@@ -138,12 +138,12 @@ export function Navbar() {
             {/* frosted white pill — same style family as the top navbar */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-[2000px] bg-white/70 backdrop-blur-[10px]"
+              className="pointer-events-none absolute inset-0 rounded-full bg-white/70 backdrop-blur-[10px]"
             />
             {/* logo mark pill */}
             <a
               href="#"
-              className="relative flex h-[34px] items-center rounded-[99px] border border-border-light bg-white px-[4px]"
+              className="relative flex h-[34px] items-center rounded-full border border-border-light bg-white px-[4px]"
               style={{ boxShadow: PILL_SHADOW }}
             >
               <Img
@@ -157,7 +157,7 @@ export function Navbar() {
               <a
                 href="#contact"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] border border-border-light bg-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black"
+                className="flex h-[28px] items-center justify-center rounded-full border border-border-light bg-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black"
                 style={{ boxShadow: PILL_SHADOW }}
               >
                 Get Demo
@@ -165,7 +165,7 @@ export function Navbar() {
               <a
                 href="#start"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] bg-violet px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
+                className="flex h-[28px] items-center justify-center rounded-full bg-violet px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
                 style={{ boxShadow: PILL_SHADOW }}
               >
                 Add to Chrome
