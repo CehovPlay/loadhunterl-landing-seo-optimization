@@ -76,8 +76,8 @@ type PillVariant = "glass" | "violet-radial" | "white" | "violet"
  *                    backdrop blur, pill shadow
  *  - violet-radial — hero "Start booking": bottom violet radial, white border,
  *                    violet drop glow
- *  - white         — navbar "Get Demo": solid white, #ececec border
- *  - violet        — navbar "Add to Chrome": solid #6f5197
+ *  - white         — navbar "Get Demo": solid white, var(--color-border-light) border
+ *  - violet        — navbar "Add to Chrome": solid var(--color-violet)
  */
 export function PillButton({
   href,
@@ -94,9 +94,9 @@ export function PillButton({
     "flex h-12 w-full items-center justify-center gap-2 rounded-[99px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] transition-transform active:scale-[0.98]"
   const skin: Record<PillVariant, { cls: string; style: React.CSSProperties }> = {
     glass: {
-      cls: "border border-white text-[#454545] backdrop-blur-[10px]",
+      cls: "border border-white text-ink backdrop-blur-[10px]",
       style: {
-        backgroundImage: "linear-gradient(to bottom, #ffffff, rgba(255,255,255,0.5))",
+        backgroundImage: "linear-gradient(to bottom, var(--color-white), rgba(255,255,255,0.5))",
         boxShadow: PILL_SHADOW,
       },
     },
@@ -109,11 +109,11 @@ export function PillButton({
       },
     },
     white: {
-      cls: "border border-[#ececec] bg-white text-[#454545]",
+      cls: "border border-border-light bg-white text-ink",
       style: { boxShadow: PILL_SHADOW },
     },
     violet: {
-      cls: "bg-[#6f5197] text-white",
+      cls: "bg-violet text-white",
       style: { boxShadow: PILL_SHADOW },
     },
   }

@@ -300,8 +300,8 @@ function Spine() {
             y2={SPINE_BOTTOM}
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0" stopColor="#6f5197" />
-            <stop offset="1" stopColor="#9B79CE" />
+            <stop offset="0" stopColor="var(--color-violet)" />
+            <stop offset="1" stopColor="var(--color-violet-400)" />
           </linearGradient>
         </defs>
       </svg>
@@ -312,7 +312,7 @@ function Spine() {
         style={{
           left: CENTER_X - 5,
           top: CURVE_END_Y - 5,
-          background: "#C9B3EC",
+          background: "var(--color-violet-200)",
           boxShadow: "0 0 22px 6px rgba(155,121,206,0.65)",
           opacity: 0,
         }}
@@ -326,7 +326,7 @@ function Spine() {
           style={{
             left: CENTER_X - 7,
             top: BLOCK0_Y + i * PITCH + NODE_OFFSET - 7,
-            background: "#101114",
+            background: "var(--color-gray-900)",
           }}
         />
       ))}
@@ -348,7 +348,7 @@ export function Tools() {
       const node = section.querySelector<HTMLElement>(`[data-tool-node="${key}"]`)
       if (!node) return
       gsap.to(node, {
-        backgroundColor: on ? "#9B79CE" : "#101114",
+        backgroundColor: on ? "var(--color-violet-400)" : "var(--color-gray-900)",
         borderColor: on ? "rgba(201,179,236,0.9)" : "rgba(255,255,255,0.15)",
         boxShadow: on ? "0 0 18px 4px rgba(155,121,206,0.55)" : "0 0 0px 0px rgba(155,121,206,0)",
         scale: on ? 1.25 : 1,

@@ -16,9 +16,9 @@ export function MobileCta() {
         <div className="lg:grid lg:grid-cols-2 lg:items-center lg:gap-8">
         <div
           data-card
-          className="rounded-[12px] p-6 md:p-10 lg:h-full lg:p-12"
+          className="rounded-lg p-6 md:p-10 lg:h-full lg:p-12"
           style={{
-            background: "linear-gradient(40.26deg, #6f5197 0%, rgba(111, 81, 151, 0) 100%)",
+            background: "linear-gradient(40.26deg, var(--color-violet) 0%, rgba(111, 81, 151, 0) 100%)",
           }}
         >
           <div className="flex items-center gap-2.5">
@@ -46,7 +46,7 @@ export function MobileCta() {
             <span
               className="bg-clip-text text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-transparent"
               style={{
-                backgroundImage: "linear-gradient(149.61deg, #6f5197 0%, #9779bf 100%)",
+                backgroundImage: "linear-gradient(149.61deg, var(--color-violet) 0%, var(--color-violet-cta) 100%)",
               }}
             >
               Add to Chrome

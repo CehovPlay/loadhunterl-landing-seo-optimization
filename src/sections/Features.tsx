@@ -107,8 +107,8 @@ export function Features() {
           })}
         </div>
         {/* edge fades */}
-        <div className="pointer-events-none absolute left-0 top-0 h-[136px] w-[189px] bg-gradient-to-r from-[#fafafa] to-[rgba(250,250,250,0)]" />
-        <div className="pointer-events-none absolute right-0 top-0 h-[136px] w-[189px] bg-gradient-to-l from-[#fafafa] to-[rgba(250,250,250,0)]" />
+        <div className="pointer-events-none absolute left-0 top-0 h-[136px] w-[189px] bg-gradient-to-r from-bg-light to-[rgba(250,250,250,0)]" />
+        <div className="pointer-events-none absolute right-0 top-0 h-[136px] w-[189px] bg-gradient-to-l from-bg-light to-[rgba(250,250,250,0)]" />
       </div>
 
       <div className="flex w-full flex-col items-center gap-[120px] pb-[120px] pt-[80px]">
@@ -141,7 +141,7 @@ export function Features() {
             <div
               key={c.title}
               data-lift
-              className="relative h-[440px] w-[546px] overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0]"
+              className="relative h-[440px] w-[546px] overflow-hidden rounded-lg border border-border-light bg-gray-75"
             >
               <div className="absolute left-[-1px] top-[-1px] flex w-[546px] items-center px-[14px] py-[20px]">
                 <div className="flex w-[518px] flex-col items-start gap-[12px]">

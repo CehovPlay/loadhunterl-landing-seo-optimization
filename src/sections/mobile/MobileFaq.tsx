@@ -61,7 +61,7 @@ export function MobileFaq() {
                   </span>
                   <span
                     aria-hidden
-                    className={`flex size-6 shrink-0 items-center justify-center text-[#c79ffd] transition-transform duration-300 ${
+                    className={`flex size-6 shrink-0 items-center justify-center text-violet-300 transition-transform duration-300 ${
                       expanded ? "rotate-45" : ""
                     }`}
                   >

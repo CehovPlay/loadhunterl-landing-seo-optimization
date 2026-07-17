@@ -32,7 +32,7 @@ export default function ShaderStack({
   onReady?: () => void
 }) {
   // Polar (orbit) mode animates on its own: a violet Swirl — a couple of
-  // tones brighter/lighter than the brand #6F5197 — drifts continuously, no
+  // tones brighter/lighter than the brand var(--color-violet) — drifts continuously, no
   // cursor involvement. The linear (hero) mode keeps the cursor-driven violet
   // ChromaFlow on desktop, or the same autonomous drift on touch (`drift`).
   const input = polarCenter ? (
@@ -43,13 +43,13 @@ export default function ShaderStack({
     // stay white; the drifting violet lives only around the centre.
     <Group>
       {/* base: neutral drifting swirl — drives the ring fluting */}
-      <Swirl colorA="#ffffff" colorB="#e2e2e2" detail={1.7} speed={0.35} />
+      <Swirl colorA="var(--color-white)" colorB="#e2e2e2" detail={1.7} speed={0.35} />
       {/* violet accent, luminance-masked by the fence below: visible only
           where the fence is bright (inner radius), so it can never flood the
           whole section */}
       <Swirl
-        colorA="#9B79CE"
-        colorB="#ffffff"
+        colorA="var(--color-violet-400)"
+        colorB="var(--color-white)"
         detail={0.9}
         speed={0.35}
         opacity={0.35}
@@ -61,7 +61,7 @@ export default function ShaderStack({
       <LinearGradient
         id="violet-fence"
         visible={false}
-        colorA="#ffffff"
+        colorA="var(--color-white)"
         colorB="#000000"
         start={{ x: 0.5, y: 0.3 }}
         end={{ x: 0.5, y: 0.72 }}
@@ -75,11 +75,11 @@ export default function ShaderStack({
     <Group>
       {/* lower contrast than the desktop input: without ChromaFlow's white
           wash on top, a #eaeaea swirl through the fluted glass reads as loud
-          holographic rainbows — #f1f1f1 keeps it a soft pearl drift */}
-      <Swirl colorA="#ffffff" colorB="#f1f1f1" detail={1.7} speed={0.3} />
+          holographic rainbows — var(--color-gray-75) keeps it a soft pearl drift */}
+      <Swirl colorA="var(--color-white)" colorB="var(--color-gray-75)" detail={1.7} speed={0.3} />
       <Swirl
-        colorA="#9B79CE"
-        colorB="#ffffff"
+        colorA="var(--color-violet-400)"
+        colorB="var(--color-white)"
         detail={0.9}
         speed={0.3}
         opacity={0.3}
@@ -89,7 +89,7 @@ export default function ShaderStack({
       <LinearGradient
         id="drift-fence"
         visible={false}
-        colorA="#ffffff"
+        colorA="var(--color-white)"
         colorB="#000000"
         start={{ x: 0.5, y: 0.05 }}
         end={{ x: 0.5, y: 0.8 }}
@@ -98,11 +98,11 @@ export default function ShaderStack({
     </Group>
   ) : (
     <ChromaFlow
-      baseColor="#ffffff"
-      downColor="#6f5197"
-      leftColor="#6f5197"
-      rightColor="#6f5197"
-      upColor="#6f5197"
+      baseColor="var(--color-white)"
+      downColor="var(--color-violet)"
+      leftColor="var(--color-violet)"
+      rightColor="var(--color-violet)"
+      upColor="var(--color-violet)"
       momentum={13}
       radius={3.5}
       opacity={0.55}
@@ -110,7 +110,7 @@ export default function ShaderStack({
       {/* colorB stays slightly darker than white even on white bands — a
           flat input gives FlutedGlass nothing to refract and the whole
           effect vanishes */}
-      <Swirl colorA="#ffffff" colorB="#eaeaea" detail={1.7} />
+      <Swirl colorA="var(--color-white)" colorB="#eaeaea" detail={1.7} />
     </ChromaFlow>
   )
   const fluted = (

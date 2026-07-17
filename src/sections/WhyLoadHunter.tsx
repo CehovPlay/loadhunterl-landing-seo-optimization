@@ -22,7 +22,7 @@ export function WhyLoadHunter() {
   return (
     <section className="relative h-[1118px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1118px]">
       {/* panel glow + rounded panel background — FIRST in DOM: the export is
-          fully opaque (baked #181A1F bg) and would cover the heading otherwise */}
+          fully opaque (baked var(--color-gray-800) bg) and would cover the heading otherwise */}
       <Img
         src="/figma/why-glow.png"
         alt=""

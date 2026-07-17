@@ -16,7 +16,7 @@ import { gateLoops } from "@/lib/inview"
  *
  * Path + gradient data exported from Figma (Vectors 6923–6928, both sides).
  * The background is the frame's 0.4-opacity radial pre-blended into the
- * section bg (#181a1f) so it fully covers the old bitmap underneath.
+ * section bg (var(--color-gray-800)) so it fully covers the old bitmap underneath.
  */
 
 interface Line {
@@ -59,7 +59,7 @@ const BEAM = 64 // pulse length, px along the path
 const DURATION = 2.6 // s — all beams travel out together (synchronous)
 const REPEAT_DELAY = 1.6 // s — equal pause between every volley
 
-/* frame radial (0.4 opacity) pre-blended into the section bg #181a1f */
+/* frame radial (0.4 opacity) pre-blended into the section bg var(--color-gray-800) */
 const PANEL_BG = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 1129 627' xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='none'><rect width='100%' height='100%' fill='url(%23g)'/><defs><radialGradient id='g' gradientUnits='userSpaceOnUse' cx='0' cy='0' r='10' gradientTransform='matrix(-20.75 55.45 -64.003 -23.951 686 27)'><stop stop-color='rgb(36,38,43)' offset='0'/><stop stop-color='rgb(30,32,37)' offset='0.5'/><stop stop-color='rgb(24,26,31)' offset='1'/></radialGradient></defs></svg>")`
 
 /* hidden until the effect measures paths and starts the loops */
@@ -81,8 +81,8 @@ function LineDefs({ side, lines }: { side: "l" | "r"; lines: Line[] }) {
           x2={l.g[2]}
           y2={l.g[3]}
         >
-          <stop stopColor="#A2A2A2" />
-          <stop offset="1" stopColor={l.fadeSame ? "#A2A2A2" : "#3C3C3C"} stopOpacity="0" />
+          <stop stopColor="var(--color-ink-3)" />
+          <stop offset="1" stopColor={l.fadeSame ? "var(--color-ink-3)" : "#3C3C3C"} stopOpacity="0" />
         </linearGradient>
       ))}
     </defs>
@@ -102,9 +102,9 @@ function BeamDefs({ side, lines }: { side: "l" | "r"; lines: Line[] }) {
           x2={l.g[2]}
           y2={l.g[3]}
         >
-          <stop stopColor="#a875ff" />
-          <stop offset="0.75" stopColor="#925cff" stopOpacity="0.35" />
-          <stop offset="1" stopColor="#925cff" stopOpacity="0" />
+          <stop stopColor="var(--color-violet-glow-2)" />
+          <stop offset="0.75" stopColor="var(--color-violet-glow)" stopOpacity="0.35" />
+          <stop offset="1" stopColor="var(--color-violet-glow)" stopOpacity="0" />
         </linearGradient>
       ))}
     </defs>
@@ -162,7 +162,7 @@ export function CtaAutomation({
 
   return (
     <div
-      className={`${className} h-[627px] w-[1129px] isolate overflow-hidden rounded-[12px]`}
+      className={`${className} h-[627px] w-[1129px] isolate overflow-hidden rounded-lg`}
       style={{ backgroundImage: PANEL_BG }}
     >
       {/* dashed connectors + centre rect — original geometry and fade gradients */}
@@ -187,10 +187,10 @@ export function CtaAutomation({
         <defs>
           {/* the rect stroke lives only near the left/right edges, as in Figma */}
           <linearGradient id="cta-rect" gradientUnits="userSpaceOnUse" x1={778} y1={314} x2={338} y2={314}>
-            <stop stopColor="#A2A2A2" />
-            <stop offset="0.15" stopColor="#A2A2A2" stopOpacity="0" />
-            <stop offset="0.9" stopColor="#A2A2A2" stopOpacity="0" />
-            <stop offset="1" stopColor="#A2A2A2" />
+            <stop stopColor="var(--color-ink-3)" />
+            <stop offset="0.15" stopColor="var(--color-ink-3)" stopOpacity="0" />
+            <stop offset="0.9" stopColor="var(--color-ink-3)" stopOpacity="0" />
+            <stop offset="1" stopColor="var(--color-ink-3)" />
           </linearGradient>
         </defs>
         <rect
@@ -248,7 +248,7 @@ export function CtaAutomation({
           <p className="whitespace-nowrap text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
             One click automation
           </p>
-          <p className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#686b6f]">
+          <p className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
             Book faster. Miss less. Earn more.
           </p>
         </div>

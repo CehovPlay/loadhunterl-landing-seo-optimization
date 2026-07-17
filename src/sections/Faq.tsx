@@ -85,10 +85,10 @@ export function Faq() {
       <div className="absolute left-[120px] top-[474px] h-[572px] w-[1680px]">
         {ROWS.map((r) => (
           <div key={r.q} className="absolute left-0 w-full" style={{ top: r.top }}>
-            <h3 className="absolute left-0 top-[25px] w-[780px] text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-[#e8e8e8]">
+            <h3 className="absolute left-0 top-[25px] w-[780px] text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-border-light">
               {r.q}
             </h3>
-            <p className="absolute left-[860px] top-[24px] w-[820px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#e8e8e8]">
+            <p className="absolute left-[860px] top-[24px] w-[820px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-border-light">
               {r.a}
             </p>
             <p className="absolute left-[860px] top-[68px] w-[820px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">

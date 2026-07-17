@@ -3,7 +3,7 @@ import { CARDS, svgHtml } from "@/sections/Features"
 import { Container } from "./ui"
 
 /**
- * Mobile Features: the desktop cards reflowed full-width — same #f0f0f0
+ * Mobile Features: the desktop cards reflowed full-width — same var(--color-gray-75)
  * card, same border/radius, same inlined Figma SVG scene covering the lower
  * window (identical viewBox crop + preserveAspectRatio), text block on top.
  */
@@ -37,7 +37,7 @@ export function MobileFeatures() {
             <div
               key={c.title}
               data-card
-              className="overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0] md:last:col-span-2 lg:last:col-span-1"
+              className="overflow-hidden rounded-lg border border-border-light bg-gray-75 md:last:col-span-2 lg:last:col-span-1"
             >
               <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center">
                 <h3 className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">

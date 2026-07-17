@@ -22,7 +22,7 @@ export function Orbit() {
           section; carries the white base. Its concentric circles share the
           old orbit system centre. */}
       <ShaderBand
-        baseColor="#ffffff"
+        baseColor="var(--color-white)"
         polarCenter={{ x: 0.5, y: CY / (1389 + EXTEND) }}
         extendBottom={EXTEND}
       />

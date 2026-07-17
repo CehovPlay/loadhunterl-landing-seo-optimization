@@ -88,7 +88,7 @@ function FeatureRow({ text, clock }: { text: string; clock?: boolean }) {
 /* full-card background: the plan accent gradient layered over the shared
    dark card gradient, so pro/ai washes reach under the CTA too */
 function cardStyle(plan: Plan): React.CSSProperties {
-  const base = "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))"
+  const base = "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))"
   const accent =
     plan.head === "pro"
       ? "radial-gradient(ellipse 420px 500px at 6px 7px, rgba(53,50,70,1) 0%, rgba(53,50,70,0) 100%), "
@@ -158,10 +158,10 @@ function PlanPrice({ plan, priceText }: { plan: Plan; priceText: string }) {
           {priceText}
         </span>
         {plan.unit && (
-          <span className="whitespace-nowrap text-[12px] text-[#a2a2a2]">{plan.unit}</span>
+          <span className="whitespace-nowrap text-[12px] text-ink-3">{plan.unit}</span>
         )}
       </div>
-      <p className="mt-1 whitespace-nowrap text-[12px] text-[#a2a2a2]">{plan.note}</p>
+      <p className="mt-1 whitespace-nowrap text-[12px] text-ink-3">{plan.note}</p>
     </div>
   )
 }
@@ -420,10 +420,10 @@ export function MobilePricing() {
             aria-valuemax={50}
             aria-valuenow={n}
             aria-valuetext={`${n} ${n === 1 ? "dispatcher" : "dispatchers"}`}
-            className="relative mt-3.5 h-4 w-full cursor-pointer touch-none rounded-[200px] bg-[rgba(231,231,231,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9B79CE]"
+            className="relative mt-3.5 h-4 w-full cursor-pointer touch-none rounded-[200px] bg-[rgba(231,231,231,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-violet-400)]"
           >
             <div
-              className="absolute left-[2px] top-[2px] h-3 rounded-lg bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
+              className="absolute left-[2px] top-[2px] h-3 rounded-lg bg-violet shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
               style={{ width: `max(12px, calc(${frac * 100}% - 2px))` }}
             />
             <div
@@ -513,7 +513,7 @@ export function MobilePricing() {
                 tabIndex={0}
                 aria-expanded={expanded}
                 aria-label={`${plan.name} plan`}
-                className={`${cardShell} relative min-w-0 cursor-pointer transition-[flex-grow] duration-500 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9B79CE]`}
+                className={`${cardShell} relative min-w-0 cursor-pointer transition-[flex-grow] duration-500 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-violet-400)]`}
                 style={{
                   ...cardStyle(plan),
                   flexBasis: expanded ? 0 : 76,

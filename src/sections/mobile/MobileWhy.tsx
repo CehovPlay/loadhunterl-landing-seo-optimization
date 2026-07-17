@@ -75,7 +75,7 @@ export function MobileWhy() {
             {ROWS.map((r) => (
               <div
                 key={r.label}
-                className="flex items-start gap-4 rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-5 py-5"
+                className="flex items-start gap-4 rounded-lg border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-5 py-5"
               >
                 <img
                   src="/figma/table-check.svg"
@@ -91,14 +91,14 @@ export function MobileWhy() {
                   <p className="mt-2.5 flex items-center gap-3 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
                     <span className="flex items-center gap-2.5">
                       Manual{" "}
-                      <span aria-hidden className={r.cells[1] ? "text-[#c79ffd]" : "text-ink-3"}>
+                      <span aria-hidden className={r.cells[1] ? "text-violet-300" : "text-ink-3"}>
                         {r.cells[1] ? "✓" : "✕"}
                       </span>
                     </span>
-                    <span aria-hidden className="text-[#4a4c52]">·</span>
+                    <span aria-hidden className="text-gray-550">·</span>
                     <span className="flex items-center gap-2.5">
                       Others{" "}
-                      <span aria-hidden className={r.cells[2] ? "text-[#c79ffd]" : "text-ink-3"}>
+                      <span aria-hidden className={r.cells[2] ? "text-violet-300" : "text-ink-3"}>
                         {r.cells[2] ? "✓" : "✕"}
                       </span>
                     </span>
@@ -107,7 +107,7 @@ export function MobileWhy() {
               </div>
             ))}
 
-            <div className="rounded-[12px] border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-5 py-5">
+            <div className="rounded-lg border border-[rgba(229,229,229,0.1)] bg-[rgba(29,31,36,0.75)] px-5 py-5">
               <p className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                 {SPEED_ROW[0]}
               </p>
@@ -119,7 +119,7 @@ export function MobileWhy() {
               </p>
               <p className="mt-2.5 flex items-center gap-3 text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-ink-2">
                 <span>Manual {SPEED_ROW[2]}</span>
-                <span aria-hidden className="text-[#4a4c52]">·</span>
+                <span aria-hidden className="text-gray-550">·</span>
                 <span>Others {SPEED_ROW[3]}</span>
               </p>
             </div>

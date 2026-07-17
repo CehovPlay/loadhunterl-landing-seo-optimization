@@ -154,7 +154,7 @@ export function MobileTools() {
         const r = n.getBoundingClientRect()
         const y = r.top - lineTop + r.height / 2
         const lit = px >= y
-        n.style.background = lit ? "#C9B3EC" : "#434447"
+        n.style.background = lit ? "var(--color-violet-200)" : "var(--color-gray-500)"
         n.style.boxShadow = lit ? "0 0 10px rgba(201,179,236,0.9)" : "none"
       }
     }
@@ -243,14 +243,14 @@ export function MobileTools() {
               className="absolute left-0 top-0 w-full rounded-full"
               style={{
                 height: 0,
-                background: "linear-gradient(to bottom, rgba(155,121,206,0.35) 0%, #9B79CE 100%)",
+                background: "linear-gradient(to bottom, rgba(155,121,206,0.35) 0%, var(--color-violet-400) 100%)",
                 boxShadow: "0 0 12px rgba(155,121,206,0.55)",
               }}
             />
             {/* luminous tip */}
             <div
               ref={tipRef}
-              className="absolute left-1/2 top-[-3px] size-[6px] -translate-x-1/2 rounded-full bg-[#E3D5FA]"
+              className="absolute left-1/2 top-[-3px] size-[6px] -translate-x-1/2 rounded-full bg-violet-100"
               style={{ opacity: 0, boxShadow: "0 0 14px 4px rgba(201,179,236,0.85)" }}
             />
           </div>
@@ -267,7 +267,7 @@ export function MobileTools() {
                 data-spine-node
                 aria-hidden
                 className="absolute left-[-45px] top-[9px] size-[10px] rounded-full transition-[background,box-shadow] duration-300 md:left-[-61px]"
-                style={{ background: "#434447" }}
+                style={{ background: "var(--color-gray-500)" }}
               />
               {/* text column — on laptop it alternates sides with the mockup */}
               <div className={bi % 2 === 1 ? "lg:order-2" : ""}>
