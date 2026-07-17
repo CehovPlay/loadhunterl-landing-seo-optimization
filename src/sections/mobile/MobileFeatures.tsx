@@ -40,9 +40,9 @@ export function MobileFeatures() {
               className="overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0] md:last:col-span-2 lg:last:col-span-1"
             >
               <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center">
-                <p className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">
+                <h3 className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">
                   {c.title}
-                </p>
+                </h3>
                 <p className="text-[14px] font-medium leading-[18px] tracking-[-0.56px] text-ink-2">
                   {c.body}
                 </p>

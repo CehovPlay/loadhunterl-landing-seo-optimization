@@ -371,10 +371,10 @@ export function Pricing() {
       </div>
 
       {/* heading */}
-      <h2 className="absolute left-[442px] top-[124px] w-[1036px] text-center text-[48px] leading-[58px] tracking-[-1.92px] text-white">
+      <h2 className="absolute left-[442px] top-[124px] w-[1036px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
         Choose the plan that&rsquo;s perfect for your business
       </h2>
-      <p className="absolute left-[632px] top-[202px] w-[656px] whitespace-nowrap text-center text-[14px] leading-[16px] tracking-[-0.56px] text-ink-2">
+      <p className="absolute left-[632px] top-[202px] w-[656px] whitespace-nowrap text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
         Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!
       </p>
 
@@ -394,6 +394,7 @@ export function Pricing() {
             <button
               key={label}
               type="button"
+              aria-pressed={active}
               onClick={() => setAnnual(isAnnually)}
               className={
                 "flex h-[28px] items-center justify-center gap-[8px] rounded-[99px] py-[4px] transition-all " +

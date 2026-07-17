@@ -14,7 +14,7 @@ import { IMG_DIMENSIONS } from "@/generated/img-dimensions"
  */
 type Props = ImgHTMLAttributes<HTMLImageElement> & { src: string }
 
-export function Img({ src, ...rest }: Props) {
+export function Img({ src, alt = "", ...rest }: Props) {
   // reserve layout space from the intrinsic size (Tailwind preflight keeps
   // height:auto, so these become an aspect-ratio hint — no visual change, but
   // the box is reserved before load → no CLS). Skip if the caller set its own.
@@ -25,13 +25,13 @@ export function Img({ src, ...rest }: Props) {
       : undefined
 
   const upgradable = src.startsWith("/figma/") && /\.(png|jpe?g)$/i.test(src)
-  if (!upgradable) return <img src={src} {...sized} {...rest} />
+  if (!upgradable) return <img src={src} alt={alt} {...sized} {...rest} />
   const base = src.replace(/\.(png|jpe?g)$/i, "")
   return (
     <picture className="contents">
       <source srcSet={`${base}.avif`} type="image/avif" />
       <source srcSet={`${base}.webp`} type="image/webp" />
-      <img src={src} {...sized} {...rest} />
+      <img src={src} alt={alt} {...sized} {...rest} />
     </picture>
   )
 }

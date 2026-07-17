@@ -145,9 +145,9 @@ export function Features() {
             >
               <div className="absolute left-[-1px] top-[-1px] flex w-[546px] items-center px-[14px] py-[20px]">
                 <div className="flex w-[518px] flex-col items-start gap-[12px]">
-                  <p className="w-full text-center text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-ink">
+                  <h3 className="w-full text-center text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-ink">
                     {c.title}
-                  </p>
+                  </h3>
                   <p className="w-full text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
                     {c.body}
                   </p>
