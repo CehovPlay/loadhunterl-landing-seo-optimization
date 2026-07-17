@@ -39,7 +39,7 @@ export function MobileHero() {
       <Container className="relative flex flex-col items-center pb-28 pt-[180px] text-center lg:pb-36 lg:pt-[240px]">
         {/* eyebrow pill — desktop skin: soft white gradient, no border */}
         <span
-          className="inline-flex w-fit items-center rounded-[99px] px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-ink lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]"
+          className="inline-flex w-fit items-center rounded-full px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-ink lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.5))",

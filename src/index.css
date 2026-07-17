@@ -75,6 +75,11 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
 
+  /* Shadows ------------------------------------------------------- */
+  /* the canonical pill/button shadow (was duplicated ~10× inline) */
+  --shadow-pill: 0px 1px 0px 0px rgba(0, 0, 0, 0.05), 0px 4px 4px 0px rgba(0, 0, 0, 0.05),
+    0px 10px 10px 0px rgba(0, 0, 0, 0.1);
+
   /* Type scale (Inter Medium 500) — size / line-height ------------ */
   --text-subtle: 12px;     --text-subtle--line-height: 14px;
   --text-small: 14px;      --text-small--line-height: 16px;

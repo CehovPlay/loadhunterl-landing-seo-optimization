@@ -384,7 +384,7 @@ export function MobilePricing() {
                 </span>
                 {isAnnually && (
                   <span
-                    className="flex h-[28px] items-center rounded-full border border-white px-2.5 text-[11px] leading-[13px] text-white"
+                    className="flex h-[28px] items-center rounded-full border border-[rgba(232,232,232,0.75)] px-2.5 text-[12px] leading-[13px] text-white"
                     style={{
                       backgroundImage:
                         "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
@@ -420,7 +420,7 @@ export function MobilePricing() {
             aria-valuemax={50}
             aria-valuenow={n}
             aria-valuetext={`${n} ${n === 1 ? "dispatcher" : "dispatchers"}`}
-            className="relative mt-3.5 h-4 w-full cursor-pointer touch-none rounded-[200px] bg-[rgba(231,231,231,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-violet-400)]"
+            className="relative mt-3.5 h-4 w-full cursor-pointer touch-none rounded-full bg-[rgba(231,231,231,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-violet-400)]"
           >
             <div
               className="absolute left-[2px] top-[2px] h-3 rounded-lg bg-violet shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"

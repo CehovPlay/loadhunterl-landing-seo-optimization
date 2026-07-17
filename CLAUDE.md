@@ -102,7 +102,7 @@ Two init functions run once per canvas mount, from `CanvasEffects` rendered afte
   `[data-no-reveal]`; `[data-marquee-track]` children are skipped but `[data-card]` items reveal as
   whole blocks. It only clears the inline styles it set — never React-managed ones.
 - `src/lib/micro.ts` (`initMicro`) — hover/scroll micro-animations wired purely via data-attributes:
-  `data-float`, `data-pulse`, `data-parallax="k"`, `data-lift`, `data-magnetic`, `data-tilt="deg"`,
+  `data-float`, `data-pulse`, `data-parallax="k"`, `data-lift`, `data-magnetic`,
   `data-countup`. To add one, put the attribute on the element — no per-element JS.
 
 `src/lib/inview.ts` exposes `isCoarsePointer()` / `prefersReducedMotion()`. Lenis is created only for
