@@ -26,6 +26,11 @@ export function MobileNavbar() {
       if (raf) return
       raf = requestAnimationFrame(() => {
         raf = 0
+        // laptops (≥1024) show the full inline nav bar — never collapse there
+        if (window.innerWidth >= 1024) {
+          setCollapsed(false)
+          return
+        }
         const y = window.scrollY
         const dy = y - lastY
         if (Math.abs(dy) < 6) return
@@ -57,16 +62,16 @@ export function MobileNavbar() {
       className="fixed inset-x-0 top-0 z-[100]"
       style={{ paddingTop: "max(10px, env(safe-area-inset-top))" }}
     >
-      <div className="mx-auto flex w-full max-w-[440px] justify-end px-4 md:max-w-[768px] md:px-8">
+      <div className="mx-auto flex w-full max-w-[440px] justify-end px-4 md:max-w-[768px] md:px-8 lg:max-w-[1024px] lg:px-10 xl:max-w-[1200px]">
         <div
-          className={`flex h-14 items-center justify-between overflow-hidden rounded-full border border-[#ececec] bg-white/85 backdrop-blur-[10px] transition-[width,padding] duration-500 ease-out ${
+          className={`flex h-14 items-center justify-between overflow-hidden rounded-full border border-[#ececec] bg-white/85 backdrop-blur-[10px] transition-[width,padding] duration-500 ease-out lg:h-[60px] lg:!w-full lg:!pl-5 lg:!pr-2 ${
             collapsed && !open ? "px-[3px]" : "pl-4 pr-1.5"
           }`}
           style={{ boxShadow: PILL_SHADOW, width: collapsed && !open ? 56 : "100%" }}
         >
           <a
             href="#"
-            className={`flex items-center gap-2 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-500 ${
+            className={`flex items-center gap-2 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-500 lg:!max-w-[160px] lg:!opacity-100 ${
               collapsed && !open
                 ? "pointer-events-none max-w-0 opacity-0"
                 : "max-w-[160px] opacity-100"
@@ -76,14 +81,36 @@ export function MobileNavbar() {
             <Img src="/figma/logo-icon.svg" alt="" className="h-[26px] w-[27px] max-w-none" />
             <Img src="/figma/logo-text.svg" alt="loadhunter" className="h-[15px] w-[94px] max-w-none" />
           </a>
+
+          {/* laptop: inline nav links (desktop treatment) */}
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 px-4 lg:flex">
+            {LINKS.map((l) => (
+              <a
+                key={l.label}
+                href={l.href}
+                className="whitespace-nowrap rounded-full px-3 py-2 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-[#454545] transition-colors hover:bg-black/[0.04]"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* laptop: compact CTA on the right */}
+          <a
+            href="#start"
+            className="hidden h-10 shrink-0 items-center gap-2 rounded-full bg-[#6f5197] px-5 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-white transition-transform active:scale-[0.98] lg:flex"
+          >
+            Add to Chrome
+          </a>
+
+          {/* phone/tablet: hamburger ⇄ cross */}
           <button
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="relative flex size-12 items-center justify-center rounded-full"
+            className="relative flex size-12 items-center justify-center rounded-full lg:hidden"
           >
-            {/* hamburger ⇄ cross, two bars */}
             <span
               className="absolute h-[2px] w-5 rounded-full bg-[#454545] transition-transform duration-300"
               style={{ transform: open ? "rotate(45deg)" : "translateY(-3.5px)" }}
