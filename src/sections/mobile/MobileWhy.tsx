@@ -2,10 +2,10 @@ import { Img } from "@/components/site/Img"
 import { Container, SectionHeader } from "./ui"
 
 const ROWS: { label: string; cells: [boolean, boolean, boolean] }[] = [
-  { label: "Smart - board view", cells: [true, false, false] },
+  { label: "Smart-board view", cells: [true, false, false] },
   { label: "Telegram alerts", cells: [true, false, false] },
   { label: "Integrated TMS", cells: [true, false, false] },
-  { label: "Auto - emailing", cells: [true, false, true] },
+  { label: "Auto-emailing", cells: [true, false, true] },
 ]
 
 const SPEED_ROW = ["Booking speed", "47 seconds", "~ 2-3 minutes", "~1 minute"] as const
@@ -137,7 +137,7 @@ export function MobileWhy() {
               </span>
               <Img
                 src="/figma/table-logo.svg"
-                alt="loadhunter"
+                alt="LoadHunter"
                 loading="lazy"
                 decoding="async"
                 className="mx-auto h-[14px] w-[69px]"

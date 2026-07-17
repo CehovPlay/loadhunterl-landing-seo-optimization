@@ -79,7 +79,7 @@ export function MobileNavbar() {
             aria-label="LoadHunter — home"
           >
             <Img src="/figma/logo-icon.svg" alt="" className="h-[26px] w-[27px] max-w-none" />
-            <Img src="/figma/logo-text.svg" alt="loadhunter" className="h-[15px] w-[94px] max-w-none" />
+            <Img src="/figma/logo-text.svg" alt="LoadHunter" className="h-[15px] w-[94px] max-w-none" />
           </a>
 
           {/* laptop: inline nav links (desktop treatment) */}

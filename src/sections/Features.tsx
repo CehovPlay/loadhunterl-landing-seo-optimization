@@ -26,15 +26,15 @@ export const CARDS = [
   },
   {
     title: "Time saver",
-    body: "Save hours every day by automating repetitive tasks, streamlining workflows, and focusing on what matters most— booking the best loads.",
+    body: "Save hours every day by automating repetitive tasks, streamlining workflows, and focusing on what matters most — booking the best loads.",
     svg: gaugeSvg,
     imgBox: { top: 97, height: 342 },
     viewBox: "140 116 523 342",
     par: "xMidYMin slice",
   },
   {
-    title: "AI-Powered automation",
-    body: "Automate your workflow with AI-driven features like Telegram notifications and auto-emailing, reducing manual tasks and saving valuable time.",
+    title: "AI-powered automation",
+    body: "Automate your workflow with AI features like Telegram notifications and auto-emailing, reducing manual tasks and saving valuable time.",
     svg: aiSvg,
     imgBox: { top: 83, height: 356 },
     viewBox: "183 152 524 342",
@@ -145,9 +145,9 @@ export function Features() {
             >
               <div className="absolute left-[-1px] top-[-1px] flex w-[546px] items-center px-[14px] py-[20px]">
                 <div className="flex w-[518px] flex-col items-start gap-[12px]">
-                  <p className="w-full text-center text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-ink">
+                  <h3 className="w-full text-center text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-ink">
                     {c.title}
-                  </p>
+                  </h3>
                   <p className="w-full text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
                     {c.body}
                   </p>

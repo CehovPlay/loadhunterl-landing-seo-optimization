@@ -13,7 +13,7 @@ export function MobileFooter() {
         <div className="flex flex-col gap-6 pt-8 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center justify-center gap-2 md:justify-start">
             <Img src="/figma/tail/logo-icon-white.svg" alt="" className="h-6 w-6" />
-            <Img src="/figma/tail/logo-text-white.svg" alt="loadhunter" className="h-[17px] w-[105px]" />
+            <Img src="/figma/tail/logo-text-white.svg" alt="LoadHunter" className="h-[17px] w-[105px]" />
           </div>
           <form
             className="flex h-12 items-center gap-1 rounded-full border border-line-strong bg-gray-750 p-1 pl-4 md:w-[400px]"
@@ -24,7 +24,7 @@ export function MobileFooter() {
               inputMode="email"
               autoComplete="email"
               aria-label="Email address"
-              placeholder="Enter your e-mail address"
+              placeholder="Enter your email address"
               className="h-full min-w-0 flex-1 bg-transparent text-[14px] text-dark-text placeholder:text-placeholder focus:outline-none"
             />
             <button

@@ -24,3 +24,11 @@ export function knobToCount(px: number, z: SliderZones): number {
   if (px <= z.at4) return px < (z.at3 + z.at4) / 2 ? 3 : 4
   return Math.round(4 + ((px - z.at4) / (z.max - z.at4)) * 46)
 }
+
+/** Inverse of knobToCount: the knob px for a dispatcher count (used by keyboard
+ *  stepping so the slider lands exactly on the target count). */
+export function countToKnob(n: number, z: SliderZones): number {
+  const c = Math.min(50, Math.max(1, n))
+  if (c <= 3) return z.min + ((c - 1) / 2) * (z.at3 - z.min)
+  return z.at4 + ((c - 4) / 46) * (z.max - z.at4)
+}

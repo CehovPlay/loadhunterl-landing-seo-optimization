@@ -32,12 +32,12 @@ const clock = (text: string): Feature => ({ text, clock: true, twoLine: true })
 
 const PRO_COLS: [Feature[], Feature[]] = [
   [
-    f("SmartBoard View"),
-    f("Full LoadBoard Customization", true),
+    f("Smart-board view"),
+    f("Full load board customization", true),
     f("Auto-Refresh Button"),
     f("Pin to Top"),
     f("Performance Boost"),
-    f("Redesigned LoadBoard"),
+    f("Redesigned load board"),
     f("Search Tabs Reorder"),
     f("Up to 2 Factoring Connections", true),
     f("FMCSA Broker Lookup"),
@@ -46,10 +46,10 @@ const PRO_COLS: [Feature[], Feature[]] = [
     f("Team Management"),
     f("Advanced Filtering Modes", true),
     f("Driver Profile Setup"),
-    clock("CC Support for Emails (Coming Soon)"),
-    clock("Dispatcher Analytics (Coming Soon)"),
-    clock("Idle Driver Email Alerts (Coming Soon)"),
-    clock("Email Read Notifications (Coming Soon)"),
+    clock("CC Support for Emails (Coming soon)"),
+    clock("Dispatcher Analytics (Coming soon)"),
+    clock("Idle Driver Email Alerts (Coming soon)"),
+    clock("Email Read Notifications (Coming soon)"),
   ],
 ]
 
@@ -65,7 +65,7 @@ const PLANS: Plan[] = [
       [f("Unlimited Emails"), f("1 Connected Email"), f("1 Email Template"), f("Google Maps Integration"), f("Load Filters")],
       [f("RPM+"), f("Click to Call"), f("Copy Load Info"), f("Weather Integration"), f("Profit Calculator")],
     ],
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "border",
     listX: 28,
     listY: 260,
@@ -98,11 +98,11 @@ const PLANS: Plan[] = [
         f("Load Notes"),
         f("Ignore Brokers/States"),
         f("Hide cancelled loads"),
-        f("Hide CA/MX Loads"),
+        f("Hide CA/MX loads"),
         f("Advanced Profit Calculator", true),
       ],
     ],
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "border",
     listX: 32,
     listY: 250,
@@ -116,7 +116,7 @@ const PLANS: Plan[] = [
     unit: "/per month",
     note: "Best value for 10+ dispatchers.",
     cols: PRO_COLS,
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "pro",
     recommended: true,
     listX: 32,
@@ -371,10 +371,10 @@ export function Pricing() {
       </div>
 
       {/* heading */}
-      <h2 className="absolute left-[442px] top-[124px] w-[1036px] text-center text-[48px] leading-[58px] tracking-[-1.92px] text-white">
-        Choose the plans that&rsquo;s perfect for your business
+      <h2 className="absolute left-[442px] top-[124px] w-[1036px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
+        Choose the plan that&rsquo;s perfect for your business
       </h2>
-      <p className="absolute left-[632px] top-[202px] w-[656px] whitespace-nowrap text-center text-[14px] leading-[16px] tracking-[-0.56px] text-ink-2">
+      <p className="absolute left-[632px] top-[202px] w-[656px] whitespace-nowrap text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
         Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!
       </p>
 
@@ -394,6 +394,7 @@ export function Pricing() {
             <button
               key={label}
               type="button"
+              aria-pressed={active}
               onClick={() => setAnnual(isAnnually)}
               className={
                 "flex h-[28px] items-center justify-center gap-[8px] rounded-[99px] py-[4px] transition-all " +
@@ -422,7 +423,7 @@ export function Pricing() {
                   }}
                 >
                   <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-white">
-                    save up -10%
+                    save up to 10%
                   </span>
                 </span>
               )}

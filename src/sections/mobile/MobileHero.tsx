@@ -58,7 +58,7 @@ export function MobileHero() {
 
         {/* trust line — desktop copy, stacked in two rows for 390px */}
         <p className="mt-8 flex flex-col items-center gap-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545] opacity-60 lg:mt-10 lg:flex-row lg:gap-3 lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]">
-          Trusted by 6K+ users
+          Trusted by 6,000+ users
           <span className="flex items-center gap-2">
             <span className="hidden lg:inline" aria-hidden>
               ·
@@ -71,7 +71,7 @@ export function MobileHero() {
         {/* CTAs — stacked, full width, 48px; desktop order and skins */}
         <div className="mt-12 flex w-full flex-col gap-3 md:w-auto md:flex-row md:justify-center lg:mt-14 lg:gap-4">
           <PillButton href="#pricing" variant="glass" className="md:w-[248px] lg:h-14 lg:w-[264px]">
-            Start free trial 14 days
+            Start 14-day free trial
           </PillButton>
           <PillButton
             href="#start"
@@ -79,7 +79,7 @@ export function MobileHero() {
             className="md:w-[248px] lg:h-14 lg:w-[264px]"
           >
             <Img src="/figma/icon-diamond.svg" alt="" className="size-6" />
-            Start booking in minutes
+            Start booking in seconds
           </PillButton>
         </div>
       </Container>

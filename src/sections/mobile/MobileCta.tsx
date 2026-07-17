@@ -23,13 +23,13 @@ export function MobileCta() {
         >
           <div className="flex items-center gap-2.5">
             <Img src="/figma/tail/logo-icon-white.svg" alt="" className="h-6 w-6" />
-            <Img src="/figma/tail/logo-text-white.svg" alt="loadhunter" className="h-[19px] w-[116px]" />
+            <Img src="/figma/tail/logo-text-white.svg" alt="LoadHunter" className="h-[19px] w-[116px]" />
           </div>
           <h2 className="mt-16 text-[clamp(24px,6.6vw,30px)] font-medium leading-[1.2] tracking-[-0.04em] text-white md:mt-12 md:text-[24px] md:leading-[32px] lg:text-[40px] lg:leading-[48px]">
             Start your experience with LoadHunter
           </h2>
           <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-white lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]">
-            Search loads with efficiency and speed you never had before. LoadHunter: Ai-powered
+            Search loads with efficiency and speed you never had before. LoadHunter: AI-powered
             tool.
           </p>
           <a

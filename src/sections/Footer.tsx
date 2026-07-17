@@ -24,7 +24,7 @@ export function Footer() {
           />
           <img loading="lazy" decoding="async"
             src="/figma/tail/logo-text-white.svg"
-            alt="loadhunter"
+            alt="LoadHunter"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
           />
         </div>
@@ -36,7 +36,7 @@ export function Footer() {
           <input
             type="email"
             aria-label="Email address"
-            placeholder="Enter your e-mail address"
+            placeholder="Enter your email address"
             className="h-[24px] w-[241px] rounded-full bg-gradient-to-b from-[rgba(255,255,255,0.06)] to-[rgba(255,255,255,0.05)] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] placeholder:text-ink-2 focus:outline-none"
           />
           <button className="flex h-[28px] items-center justify-center rounded-full border border-white bg-[#6f5197] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)] transition-opacity hover:opacity-90">

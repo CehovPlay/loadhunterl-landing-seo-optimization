@@ -43,7 +43,7 @@ export function Cta() {
           />
           <Img
             src="/figma/tail/logo-text-white.svg"
-            alt="loadhunter"
+            alt="LoadHunter"
             loading="lazy"
             decoding="async"
             className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
@@ -58,7 +58,7 @@ export function Cta() {
 
         <p className="absolute left-[40px] top-[473px] w-[451px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
           Search loads with efficiency and speed you never had before.
-          LoadHunter: Ai-powered tool.
+          LoadHunter: AI-powered tool.
         </p>
 
         <button

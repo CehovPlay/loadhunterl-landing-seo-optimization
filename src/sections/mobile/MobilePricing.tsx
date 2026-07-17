@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Img } from "@/components/site/Img"
 import { BASIC_COLS, PRO_COLS, STANDARD_COLS, type FeatureCols } from "@/sections/pricingFeatures"
-import { knobToCount, planTotal } from "@/sections/pricingLogic"
+import { countToKnob, knobToCount, planTotal } from "@/sections/pricingLogic"
 import { Container, PILL_SHADOW, SectionHeader } from "./ui"
 
 type Plan = {
@@ -27,7 +27,7 @@ const PLANS: Plan[] = [
     unit: "/per month",
     note: "Save 20% with team rate.",
     cols: BASIC_COLS,
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "border",
   },
   {
@@ -38,7 +38,7 @@ const PLANS: Plan[] = [
     unit: "/per month",
     note: "Save 20% with team rate.",
     cols: STANDARD_COLS,
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "border",
   },
   {
@@ -49,7 +49,7 @@ const PLANS: Plan[] = [
     unit: "/per month",
     note: "Best value for 10+ dispatchers.",
     cols: PRO_COLS,
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "pro",
     recommended: true,
   },
@@ -121,9 +121,9 @@ function PlanIdentity({ plan, stacked = false }: { plan: Plan; stacked?: boolean
       </div>
       <div className="min-w-0">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="whitespace-nowrap text-[18px] font-medium leading-[24px] tracking-[-0.72px] text-gray-50">
+          <h3 className="whitespace-nowrap text-[18px] font-medium leading-[24px] tracking-[-0.72px] text-gray-50">
             {plan.name}
-          </span>
+          </h3>
           {plan.recommended && (
             <span className="flex h-6 items-center gap-1.5 rounded-full bg-[rgba(232,232,232,0.1)] px-2.5">
               <img
@@ -314,6 +314,32 @@ export function MobilePricing() {
     [moveTo],
   )
 
+  // keyboard support for the slider: arrows ±1, PageUp/Down ±10, Home/End clamp
+  const stepTo = useCallback(
+    (count: number) => {
+      if (!trackW) return
+      setFrac(countToKnob(count, zones) / trackW)
+    },
+    [trackW, zones],
+  )
+  const onSliderKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const k = e.key
+      let next: number | null = null
+      if (k === "ArrowLeft" || k === "ArrowDown") next = n - 1
+      else if (k === "ArrowRight" || k === "ArrowUp") next = n + 1
+      else if (k === "PageDown") next = n - 10
+      else if (k === "PageUp") next = n + 10
+      else if (k === "Home") next = 1
+      else if (k === "End") next = 50
+      if (next != null) {
+        e.preventDefault()
+        stepTo(Math.min(50, Math.max(1, next)))
+      }
+    },
+    [n, stepTo],
+  )
+
   const priceFor = (plan: Plan) =>
     plan.base != null ? `From $${planTotal(plan.base, n, annual).toFixed(2)}` : (plan.price ?? "")
 
@@ -322,7 +348,7 @@ export function MobilePricing() {
       <Container>
         <SectionHeader
           icon="/figma/pricing/header-icon.svg"
-          title={<>Choose the plans that&rsquo;s perfect for your business</>}
+          title={<>Choose the plan that&rsquo;s perfect for your business</>}
           sub="Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!"
         />
 
@@ -364,7 +390,7 @@ export function MobilePricing() {
                         "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
                     }}
                   >
-                    save up -10%
+                    save up to 10%
                   </span>
                 )}
               </button>
@@ -386,12 +412,15 @@ export function MobilePricing() {
           <div
             ref={trackRef}
             onPointerDown={onPointerDown}
+            onKeyDown={onSliderKeyDown}
             role="slider"
+            tabIndex={0}
             aria-label="Number of dispatchers"
             aria-valuemin={1}
             aria-valuemax={50}
             aria-valuenow={n}
-            className="relative mt-3.5 h-4 w-full cursor-pointer touch-none rounded-[200px] bg-[rgba(231,231,231,0.1)]"
+            aria-valuetext={`${n} ${n === 1 ? "dispatcher" : "dispatchers"}`}
+            className="relative mt-3.5 h-4 w-full cursor-pointer touch-none rounded-[200px] bg-[rgba(231,231,231,0.1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9B79CE]"
           >
             <div
               className="absolute left-[2px] top-[2px] h-3 rounded-lg bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
@@ -474,8 +503,17 @@ export function MobilePricing() {
                 key={plan.name}
                 data-no-reveal
                 onClick={() => setOpen(i)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault()
+                    setOpen(i)
+                  }
+                }}
+                role="button"
+                tabIndex={0}
                 aria-expanded={expanded}
-                className={`${cardShell} relative min-w-0 cursor-pointer transition-[flex-grow] duration-500 ease-out`}
+                aria-label={`${plan.name} plan`}
+                className={`${cardShell} relative min-w-0 cursor-pointer transition-[flex-grow] duration-500 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9B79CE]`}
                 style={{
                   ...cardStyle(plan),
                   flexBasis: expanded ? 0 : 76,

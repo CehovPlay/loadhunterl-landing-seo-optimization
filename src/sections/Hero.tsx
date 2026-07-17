@@ -34,7 +34,7 @@ export function Hero() {
           {/* trust line: 6K+ users + weighted rating across Google (4.6/28) and
               Trustpilot (3.8/9) = 4.4 */}
           <p className="flex items-center gap-[10px] text-[17px] font-medium leading-[24px] tracking-[-0.68px] text-[#454545] opacity-60">
-            Trusted by 6K+ users
+            Trusted by 6,000+ users
             <span aria-hidden className="text-[#b8b8b8]">·</span>
             <span
               className="relative inline-flex text-[15px] leading-none tracking-[2px]"
@@ -65,7 +65,7 @@ export function Hero() {
                 "0px 1px 0px 0px rgba(0,0,0,0.05), 0px 4px 4px 0px rgba(0,0,0,0.05), 0px 10px 10px 0px rgba(0,0,0,0.1)",
             }}
           >
-            Start free trial 14 days
+            Start 14-day free trial
           </button>
           <button
             data-lift
@@ -78,7 +78,7 @@ export function Hero() {
             }}
           >
             <Img src={diamondIcon} alt="" decoding="async" className="size-[25px]" />
-            Start booking in minutes
+            Start booking in seconds
           </button>
         </div>
       </div>
