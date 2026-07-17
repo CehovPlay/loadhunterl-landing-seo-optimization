@@ -70,13 +70,13 @@ export function MobileHero() {
 
         {/* CTAs — stacked, full width, 48px; desktop order and skins */}
         <div className="mt-12 flex w-full flex-col gap-3 md:w-auto md:flex-row md:justify-center lg:mt-14 lg:gap-4">
-          <PillButton href="#pricing" variant="glass" className="md:w-[248px] lg:h-14 lg:w-[264px]">
+          <PillButton href="#pricing" variant="glass" className="md:w-[264px] lg:h-14 lg:w-[280px]">
             Start 14-day free trial
           </PillButton>
           <PillButton
             href="#start"
             variant="violet-radial"
-            className="md:w-[248px] lg:h-14 lg:w-[264px]"
+            className="md:w-[264px] lg:h-14 lg:w-[280px]"
           >
             <Img src="/figma/icon-diamond.svg" alt="" className="size-6" />
             Start booking in seconds

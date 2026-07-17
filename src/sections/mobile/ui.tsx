@@ -91,7 +91,7 @@ export function PillButton({
   className?: string
 }) {
   const base =
-    "flex h-12 w-full items-center justify-center gap-2 rounded-full text-[16px] font-medium leading-[20px] tracking-[-0.64px] transition-transform active:scale-[0.98]"
+    "flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full text-[16px] font-medium leading-[20px] tracking-[-0.64px] transition-transform active:scale-[0.98]"
   const skin: Record<PillVariant, { cls: string; style: React.CSSProperties }> = {
     glass: {
       cls: "border border-white text-ink backdrop-blur-[10px]",

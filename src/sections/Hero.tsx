@@ -57,7 +57,7 @@ export function Hero() {
         <div className="flex items-center gap-[12px]">
           <button
             data-lift
-            className="flex h-[42px] w-[228px] items-center justify-center rounded-full border border-white text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-ink backdrop-blur-[10px]"
+            className="flex h-[42px] w-[288px] items-center justify-center whitespace-nowrap rounded-full border border-white text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-ink backdrop-blur-[10px]"
             style={{
               backgroundImage:
                 "linear-gradient(to bottom, var(--color-white), rgba(255,255,255,0.5))",
@@ -69,7 +69,7 @@ export function Hero() {
           </button>
           <button
             data-lift
-            className="flex h-[42px] w-[228px] items-center justify-center gap-[8px] overflow-hidden rounded-full border border-white py-[4px] pl-[9px] pr-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
+            className="flex h-[42px] w-[288px] items-center justify-center gap-[8px] overflow-hidden whitespace-nowrap rounded-full border border-white py-[4px] pl-[9px] pr-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
             style={{
               backgroundImage:
                 "radial-gradient(60% 140% at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
