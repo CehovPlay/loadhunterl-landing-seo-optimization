@@ -86,12 +86,12 @@ function CanvasEffects({ mobile }: { mobile: boolean }) {
 
 /**
  * Two experiences:
- *  - < 1024px — the flow landing (src/sections/mobile/*): a real responsive
+ *  - < 1920px — the flow landing (src/sections/mobile/*): a real responsive
  *    layout (fluid widths, stacked sections, 44px+ touch targets) built on the
- *    desktop content. Mobile-first; `md:` (≥768) modifiers add the tablet
- *    refinements. No DesignFrame, no scaling.
- *  - ≥ 1024px — the fixed 1920 desktop canvas: below 1920 it scales down
- *    (vw/1920), above 1920 maxScale={1} holds it at pixel size and centers it.
+ *    desktop content. Mobile-first; `md:` (≥768) adds tablet, `lg:`/`xl:`/`2xl:`
+ *    add the laptop-desktop refinements. No DesignFrame, no scaling.
+ *  - ≥ 1920px — the pixel-perfect 1920 desktop canvas, held at native size by
+ *    maxScale={1} and centered with side gutters.
  */
 function App() {
   const mobile = useFlowLayout()

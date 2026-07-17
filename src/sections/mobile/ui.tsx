@@ -21,7 +21,13 @@ export function Container({
   className?: string
   children: React.ReactNode
 }) {
-  return <div className={`mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8 ${className}`}>{children}</div>
+  return (
+    <div
+      className={`mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8 lg:max-w-[1024px] lg:px-10 xl:max-w-[1200px] 2xl:max-w-[1320px] ${className}`}
+    >
+      {children}
+    </div>
+  )
 }
 
 /** Centered section header: floating icon plate → h2 → sub copy.
@@ -47,14 +53,14 @@ export function SectionHeader({
         </div>
       )}
       <h2
-        className={`text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] md:text-[40px] md:leading-[48px] ${
+        className={`text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] md:text-[40px] md:leading-[48px] lg:text-[48px] lg:leading-[56px] xl:text-[56px] xl:leading-[64px] ${
           dark ? "text-white" : "text-ink"
         }`}
       >
         {title}
       </h2>
       {sub && (
-        <p className="mt-3 max-w-[560px] text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
+        <p className="mt-3 max-w-[560px] text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2 lg:mt-4 lg:max-w-[640px] lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]">
           {sub}
         </p>
       )}

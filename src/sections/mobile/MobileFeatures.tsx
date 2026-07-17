@@ -22,22 +22,22 @@ export function MobileFeatures() {
               className="absolute left-[-9px] top-[-3px] w-[74px] max-w-none"
             />
           </div>
-          <h2 className="text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink">
+          <h2 className="text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px] lg:text-[48px] lg:leading-[56px] xl:text-[56px] xl:leading-[64px] lg:max-w-[900px]">
             Everything you need to book faster — nothing extra
           </h2>
-          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
+          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2 lg:max-w-[640px] lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]">
             New loads appear instantly — no refresh, no delay. Email or text brokers in seconds,
             not minutes.
           </p>
         </div>
 
-        {/* cards — desktop card skin, stacked */}
-        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
+        {/* cards — desktop card skin: stacked → 2-up (tablet) → 3-up (laptop) */}
+        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-6">
           {CARDS.map((c) => (
             <div
               key={c.title}
               data-card
-              className="overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0] md:last:col-span-2"
+              className="overflow-hidden rounded-[12px] border border-border-light bg-[#f0f0f0] md:last:col-span-2 lg:last:col-span-1"
             >
               <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center">
                 <p className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">

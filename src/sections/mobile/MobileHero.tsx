@@ -36,10 +36,10 @@ export function MobileHero() {
       />
       <MobileHeroShader />
 
-      <Container className="relative flex flex-col items-center pb-28 pt-[180px] text-center">
+      <Container className="relative flex flex-col items-center pb-28 pt-[180px] text-center lg:pb-36 lg:pt-[240px]">
         {/* eyebrow pill — desktop skin: soft white gradient, no border */}
         <span
-          className="inline-flex w-fit items-center rounded-[99px] px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545]"
+          className="inline-flex w-fit items-center rounded-[99px] px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545] lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.5))",
@@ -49,28 +49,35 @@ export function MobileHero() {
         </span>
 
         {/* rotating headline + sub (fixed box so the cycle can't shift layout) */}
-        <div className="mt-12 flex min-h-[180px] flex-col items-center md:min-h-[240px]">
+        <div className="mt-12 flex min-h-[180px] flex-col items-center md:min-h-[240px] lg:mt-14 lg:min-h-[220px]">
           <RotatingHeadline
-            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em]"
-            subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-[#454545]"
+            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em] lg:text-[72px] lg:leading-[1.08] xl:text-[83px] xl:leading-[80px] xl:tracking-[-3.32px]"
+            subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-[#454545] lg:text-[40px] lg:leading-[52px] lg:tracking-[-1.6px]"
           />
         </div>
 
         {/* trust line — desktop copy, stacked in two rows for 390px */}
-        <p className="mt-8 flex flex-col items-center gap-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545] opacity-60">
+        <p className="mt-8 flex flex-col items-center gap-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545] opacity-60 lg:mt-10 lg:flex-row lg:gap-3 lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]">
           Trusted by 6K+ users
           <span className="flex items-center gap-2">
-            <Stars score={4.4} className="text-[13px]" />
+            <span className="hidden lg:inline" aria-hidden>
+              ·
+            </span>
+            <Stars score={4.4} className="text-[13px] lg:text-[15px]" />
             4.4 on Google &amp; Trustpilot
           </span>
         </p>
 
         {/* CTAs — stacked, full width, 48px; desktop order and skins */}
-        <div className="mt-12 flex w-full flex-col gap-3 md:w-auto md:flex-row md:justify-center">
-          <PillButton href="#pricing" variant="glass" className="md:w-[248px]">
+        <div className="mt-12 flex w-full flex-col gap-3 md:w-auto md:flex-row md:justify-center lg:mt-14 lg:gap-4">
+          <PillButton href="#pricing" variant="glass" className="md:w-[248px] lg:h-14 lg:w-[264px]">
             Start free trial 14 days
           </PillButton>
-          <PillButton href="#start" variant="violet-radial" className="md:w-[248px]">
+          <PillButton
+            href="#start"
+            variant="violet-radial"
+            className="md:w-[248px] lg:h-14 lg:w-[264px]"
+          >
             <Img src="/figma/icon-diamond.svg" alt="" className="size-6" />
             Start booking in minutes
           </PillButton>

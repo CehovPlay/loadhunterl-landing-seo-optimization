@@ -45,7 +45,7 @@ export function MobileFaq() {
           sub="Access a wealth of information and resources to ensure you find the solutions you need quickly and effectively, empowering you to make informed decisions Contact us."
         />
 
-        <div className="mt-10 flex flex-col">
+        <div className="mt-10 flex flex-col lg:mx-auto lg:mt-14 lg:max-w-[900px]">
           {ROWS.map((row, i) => {
             const expanded = open === i
             return (
