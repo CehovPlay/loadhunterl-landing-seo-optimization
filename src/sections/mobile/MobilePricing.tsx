@@ -27,7 +27,7 @@ const PLANS: Plan[] = [
     unit: "/per month",
     note: "Save 20% with team rate.",
     cols: BASIC_COLS,
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "border",
   },
   {
@@ -38,7 +38,7 @@ const PLANS: Plan[] = [
     unit: "/per month",
     note: "Save 20% with team rate.",
     cols: STANDARD_COLS,
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "border",
   },
   {
@@ -49,7 +49,7 @@ const PLANS: Plan[] = [
     unit: "/per month",
     note: "Best value for 10+ dispatchers.",
     cols: PRO_COLS,
-    cta: "Start 14 days trial",
+    cta: "Start 14-day free trial",
     head: "pro",
     recommended: true,
   },
@@ -322,7 +322,7 @@ export function MobilePricing() {
       <Container>
         <SectionHeader
           icon="/figma/pricing/header-icon.svg"
-          title={<>Choose the plans that&rsquo;s perfect for your business</>}
+          title={<>Choose the plan that&rsquo;s perfect for your business</>}
           sub="Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!"
         />
 
@@ -364,7 +364,7 @@ export function MobilePricing() {
                         "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
                     }}
                   >
-                    save up -10%
+                    save up to 10%
                   </span>
                 )}
               </button>

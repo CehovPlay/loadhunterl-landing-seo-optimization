@@ -48,19 +48,19 @@ export const STANDARD_COLS: FeatureCols = [
     f("Load Notes"),
     f("Ignore Brokers/States"),
     f("Hide cancelled loads"),
-    f("Hide CA/MX Loads"),
+    f("Hide CA/MX loads"),
     f("Advanced Profit Calculator", true),
   ],
 ]
 
 export const PRO_COLS: FeatureCols = [
   [
-    f("SmartBoard View"),
-    f("Full LoadBoard Customization", true),
+    f("Smart-board view"),
+    f("Full load board customization", true),
     f("Auto-Refresh Button"),
     f("Pin to Top"),
     f("Performance Boost"),
-    f("Redesigned LoadBoard"),
+    f("Redesigned load board"),
     f("Search Tabs Reorder"),
     f("Up to 2 Factoring Connections", true),
     f("FMCSA Broker Lookup"),
@@ -69,10 +69,10 @@ export const PRO_COLS: FeatureCols = [
     f("Team Management"),
     f("Advanced Filtering Modes", true),
     f("Driver Profile Setup"),
-    clock("CC Support for Emails (Coming Soon)"),
-    clock("Dispatcher Analytics (Coming Soon)"),
-    clock("Idle Driver Email Alerts (Coming Soon)"),
-    clock("Email Read Notifications (Coming Soon)"),
+    clock("CC Support for Emails (Coming soon)"),
+    clock("Dispatcher Analytics (Coming soon)"),
+    clock("Idle Driver Email Alerts (Coming soon)"),
+    clock("Email Read Notifications (Coming soon)"),
   ],
 ]
 

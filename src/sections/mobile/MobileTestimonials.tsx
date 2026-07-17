@@ -156,14 +156,14 @@ export function MobileTestimonials() {
       <Container>
         <SectionHeader
           icon="/figma/tools/intro-icon.png"
-          title="What client says"
+          title="What clients say"
           sub="Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials"
         />
         {/* trust stats — real text (the desktop strip is a baked image) */}
         <div className="mt-8 flex items-stretch justify-center gap-6">
           <div className="flex flex-col items-center justify-center gap-1.5">
             <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-              5,000&thinsp;+
+              6,000&thinsp;+
             </span>
             <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
               Trusted by users
@@ -172,9 +172,9 @@ export function MobileTestimonials() {
           <div aria-hidden className="w-px self-stretch bg-line-strong" />
           <div className="flex flex-col items-center justify-center gap-1.5">
             <span className="flex items-center gap-2">
-              <Stars score={4.7} className="text-[16px]" />
+              <Stars score={4.4} className="text-[16px]" />
               <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-                4.7
+                4.4
               </span>
             </span>
             <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">

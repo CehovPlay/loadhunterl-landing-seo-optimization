@@ -65,19 +65,19 @@ const BLOCKS: Block[] = [
   {
     key: "a",
     title: "Smart-board view",
-    desc: "We’ve completely redesigned how LoadBoards are displayed by replacing the default DAT  view with our custom high-performance interface. This allows users to fully customize column layout, hide or show fields, and experience a smoother, faster workflow — without any of the typical lags or freezing.",
+    desc: "We’ve completely redesigned how load boards are displayed by replacing the default DAT view with our custom high-performance interface. This allows users to fully customize column layout, hide or show fields, and experience a smoother, faster workflow — without any of the typical lags or freezing.",
     items: [
       {
         icon: "/figma/tools/a-icon1.png",
         iconW: 62,
         title: "Performance optimization",
-        sub: "Our custom view eliminates the slowdowns and UI glitches of traditional integration, delivering a smooth and responsive experience across all supported loadboards.",
+        sub: "Our custom view eliminates the slowdowns and UI glitches of traditional integration, delivering a smooth and responsive experience across all supported load boards.",
       },
       {
         icon: "/figma/tools/a-icon2.png",
         iconW: 62,
         title: "Workflow customization",
-        sub: "You can drag, resize, reorder, hide, or pin any load — customizing the loadboard interface to fit their unique dispatching flow.",
+        sub: "You can drag, resize, reorder, hide, or pin any load — customizing the load board interface to fit their unique dispatching flow.",
       },
     ],
     mockup: "/figma/tools/a-mockup.png",
@@ -170,13 +170,13 @@ const BLOCKS: Block[] = [
       {
         icon: "/figma/tools/f-icon1.png",
         iconW: 52,
-        title: "Verified Payment History",
+        title: "Verified payment history",
         sub: "See how long brokers actually take to pay and if they respect detention or layover agreements.",
       },
       {
         icon: "/figma/tools/f-icon2.png",
         iconW: 52,
-        title: "Real-time Red Flags",
+        title: "Real-time red flags",
         sub: "Get instant alerts on brokers who frequently cancel loads at the last minute or have low credit scores.",
       },
     ],
@@ -190,13 +190,13 @@ const BLOCKS: Block[] = [
       {
         icon: "/figma/tools/g-icon1.png",
         iconW: 62,
-        title: "Full Expense Breakdown",
+        title: "Full expense breakdown",
         sub: "Account for fuel consumption, current diesel prices, and tolls automatically. Know your true net profit before you even call the broker.",
       },
       {
         icon: "/figma/tools/g-icon2.png",
         iconW: 62,
-        title: "Smart RPM+ Evaluation",
+        title: "Smart RPM+ evaluation",
         sub: "Evaluate load profitability including deadhead miles (DHO/DHD). Don't settle for high gross if the Rate Per Mile doesn't meet your margin goals.",
       },
     ],

@@ -15,12 +15,12 @@ const ROWS = [
   {
     q: "Can I connect my factoring company account to LoadHunter?",
     a: "Yes! With LoadHunter, you can integrate your Factoring Company account directly into the dashboard.",
-    d: "This allows you to see factoring ratings right on your LoadBoard, making it easier to evaluate brokers and streamline decision-making.",
+    d: "This allows you to see factoring ratings right on your load board, making it easier to evaluate brokers and streamline decision-making.",
   },
   {
-    q: "Does LoadHunter work with VOIP for SMS and calls?",
+    q: "Does LoadHunter work with VoIP for SMS and calls?",
     a: "Absolutely!",
-    d: "You can connect your VOIP service and use LoadHunter to send pre-built SMS templates and make calls directly from the extension.",
+    d: "You can connect your VoIP service and use LoadHunter to send pre-built SMS templates and make calls directly from the extension.",
   },
   {
     q: "Can I cancel my LoadHunter subscription anytime?",
@@ -41,8 +41,8 @@ export function MobileFaq() {
       <Container>
         <SectionHeader
           icon="/figma/tail/faq-icon.png"
-          title="Frequently Asked Questions"
-          sub="Access a wealth of information and resources to ensure you find the solutions you need quickly and effectively, empowering you to make informed decisions Contact us."
+          title="Frequently asked questions"
+          sub="Access a wealth of information and resources to ensure you find the solutions you need quickly and effectively, empowering you to make informed decisions."
         />
 
         <div className="mt-10 flex flex-col lg:mx-auto lg:mt-14 lg:max-w-[900px]">

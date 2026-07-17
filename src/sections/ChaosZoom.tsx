@@ -6,7 +6,7 @@ import { prefersReducedMotion } from "@/lib/inview"
 /**
  * Scroll-scrubbed zoom-through transition (clearstreet.io-style) between the
  * light Features band and the dark Tools section: the camera dives straight
- * into the HYPHEN of "AI-Powered".
+ * into the HYPHEN of "AI-powered".
  *
  * The heading lives in an SVG and the zoom is done by animating the viewBox
  * — the browser re-renders the vector glyphs at native resolution every
@@ -32,7 +32,7 @@ const CY0 = SVG_H / 2
 const FONT = 96
 const BASELINE_Y = CY0 + FONT * 0.354 // optically centred cap height
 const HYPHEN_RISE = 0.31 // Inter hyphen ink-bar centre, em above baseline
-const TEXT = "From chaos to AI-Powered dispatch"
+const TEXT = "From chaos to AI-powered dispatch"
 const HYPHEN_I = TEXT.indexOf("-")
 const FINAL_VBW = 14 // viewBox width at full zoom — inside the hyphen bar
 const RUNWAY = 1600 // canvas px of scroll consumed by the dive

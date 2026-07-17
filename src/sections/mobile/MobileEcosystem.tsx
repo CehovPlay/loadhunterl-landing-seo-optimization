@@ -13,7 +13,7 @@ const PRODUCTS: Product[] = [
   {
     name: "loadhunter",
     description:
-      "LoadHunter Extension is a AI browser tool that enhances the load booking process on major LoadBoards (DAT, Truckstop, etc.).",
+      "LoadHunter Extension is an AI browser tool that enhances the load booking process on major load boards (DAT, Truckstop, etc.).",
     logo: "/figma/eco/logo1.png",
     logoWidth: 150.5,
     mockup: "/figma/eco/row1.png",
@@ -21,7 +21,7 @@ const PRODUCTS: Product[] = [
   {
     name: "huntTMS",
     description:
-      "Comprehensive transport management system providing a single platform to manage all aspects.",
+      "A complete transport management system — dispatch, driver timelines and operations on one platform.",
     logo: "/figma/eco/logo2.png",
     logoWidth: 113,
     mockup: "/figma/eco/row2.png",
@@ -29,7 +29,7 @@ const PRODUCTS: Product[] = [
   {
     name: "huntPAY",
     description:
-      "Comprehensive transport management system providing a single platform to manage all aspects.",
+      "Faster settlements and factoring — automated invoicing and payment tracking so you get paid sooner.",
     logo: "/figma/eco/logo3.png",
     logoWidth: 109,
     mockup: "/figma/eco/row3.png",
@@ -38,7 +38,7 @@ const PRODUCTS: Product[] = [
   {
     name: "huntDRIVE",
     description:
-      "Comprehensive transport management system providing a single platform to manage all aspects.",
+      "The driver companion app — trips, documents and dispatch chat, right from the cab.",
     logo: "/figma/eco/logo4.png",
     logoWidth: 130,
     mockup: "/figma/eco/row4.png",
@@ -47,7 +47,7 @@ const PRODUCTS: Product[] = [
   {
     name: "fleetHUNT",
     description:
-      "Comprehensive transport management system providing a single platform to manage all aspects.",
+      "Fleet management at scale — track trucks, maintenance and utilization across your whole fleet.",
     logo: "/figma/eco/logo5.png",
     logoWidth: 126,
     mockup: "/figma/eco/row5.png",
@@ -56,7 +56,7 @@ const PRODUCTS: Product[] = [
   {
     name: "huntONE",
     description:
-      "Comprehensive transport management system providing a single platform to manage all aspects.",
+      "Every load board in one place — unified search across DAT, Truckstop and more.",
     logo: "/figma/eco/logo6.png",
     logoWidth: 114,
     mockup: "/figma/eco/row6.png",

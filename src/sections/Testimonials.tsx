@@ -179,7 +179,7 @@ export function Testimonials() {
         />
       </div>
       <h2 className="absolute left-[418px] top-[124px] w-[1084px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
-        What client says
+        What clients say
       </h2>
       <p className="absolute left-[418px] top-[202px] w-[1084px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
         Our clients appreciate our attention to their needs and professionalism.
@@ -191,7 +191,7 @@ export function Testimonials() {
       <div className="absolute left-[418px] top-[266px] flex w-[1084px] items-stretch justify-center gap-8">
         <div className="flex flex-col items-center justify-center gap-[6px]">
           <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-            5,000&thinsp;+
+            6,000&thinsp;+
           </span>
           <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
             Trusted by users
@@ -200,9 +200,9 @@ export function Testimonials() {
         <div aria-hidden className="w-px self-stretch bg-line-strong" />
         <div className="flex flex-col items-center justify-center gap-[6px]">
           <span className="flex items-center gap-[10px]">
-            <Stars score={4.7} className="text-[16px]" />
+            <Stars score={4.4} className="text-[16px]" />
             <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-              4.7
+              4.4
             </span>
           </span>
           <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">

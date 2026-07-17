@@ -23,7 +23,7 @@ const ROWS: Row[] = [
         Once installed, click on the puzzle icon in the top-right corner and
         pin LoadHunter.
         <br />
-        Log in with your email, visit your Load Board, and you&rsquo;ll
+        Log in with your email, visit your load board, and you&rsquo;ll
         immediately see all the LoadHunter features!
       </>
     ),
@@ -38,13 +38,13 @@ const ROWS: Row[] = [
     top: 248,
     q: "Can I connect my factoring company account to LoadHunter?",
     a: "Yes! With LoadHunter, you can integrate your Factoring Company account directly into the dashboard.",
-    d: "This allows you to see factoring ratings right on your LoadBoard, making it easier to evaluate brokers and streamline decision-making.",
+    d: "This allows you to see factoring ratings right on your load board, making it easier to evaluate brokers and streamline decision-making.",
   },
   {
     top: 356,
-    q: "Does LoadHunter work with VOIP for SMS and calls?",
+    q: "Does LoadHunter work with VoIP for SMS and calls?",
     a: "Absolutely!",
-    d: "You can connect your VOIP service and use LoadHunter to send pre-built SMS templates and make calls directly from the extension.",
+    d: "You can connect your VoIP service and use LoadHunter to send pre-built SMS templates and make calls directly from the extension.",
   },
   {
     top: 464,
@@ -72,13 +72,13 @@ export function Faq() {
       </div>
 
       <h2 className="absolute left-[119px] top-[244px] w-[1680px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
-        Frequently Asked Questions
+        Frequently asked questions
       </h2>
 
       <p className="absolute left-[119px] top-[322px] w-[1680px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
         Access a wealth of information and resources to ensure you find the
         solutions you need quickly and effectively, empowering you to make
-        informed decisions Contact us.
+        informed decisions.
       </p>
 
       {/* FAQ list — questions left (780), answers right @ x=860 (820) */}

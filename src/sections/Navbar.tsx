@@ -83,7 +83,7 @@ export function Navbar() {
               />
               <Img
                 src="/figma/logo-text.svg"
-                alt="loadhunter"
+                alt="LoadHunter"
                 className="h-[15.736px] w-[97.034px]"
               />
             </a>
@@ -148,7 +148,7 @@ export function Navbar() {
             >
               <Img
                 src="/figma/logo-icon.svg"
-                alt="loadhunter"
+                alt="LoadHunter"
                 className="h-[26.173px] w-[27.679px]"
               />
             </a>

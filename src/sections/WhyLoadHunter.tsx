@@ -10,10 +10,10 @@ import { Img } from "@/components/site/Img"
 type CellIcon = "check" | "cross"
 
 const ROWS: { label: string; cells: CellIcon[] }[] = [
-  { label: "Smart - board view", cells: ["check", "cross", "cross"] },
+  { label: "Smart-board view", cells: ["check", "cross", "cross"] },
   { label: "Telegram alerts", cells: ["check", "cross", "cross"] },
   { label: "Integrated TMS", cells: ["check", "cross", "cross"] },
-  { label: "Auto - emailing", cells: ["check", "cross", "check"] },
+  { label: "Auto-emailing", cells: ["check", "cross", "check"] },
 ]
 
 const SPEED_ROW = ["Booking speed", "47 seconds", "~ 2-3 minutes", "~1 minute"]
@@ -61,7 +61,7 @@ export function WhyLoadHunter() {
           <div className="flex w-[251px] justify-center pt-[7px]">
             <Img
               src="/figma/table-logo.svg"
-              alt="loadhunter"
+              alt="LoadHunter"
               loading="lazy"
               decoding="async"
               className="h-[26.17px] w-[132.71px]"
