@@ -3,19 +3,17 @@ import { useSyncExternalStore } from "react"
 /**
  * Breakpoint switch between the two experiences:
  *
- * < 1920px  → the flow-responsive landing (src/sections/mobile/*): mobile-first
- *             layout, with `md:` (≥768px) tablet and `lg:` (≥1024px) / `xl:`
- *             (≥1280px) / `2xl:` (≥1536px) laptop-desktop refinements — one
- *             codebase for phone → tablet → laptop. Adapted from the desktop
- *             design so laptops read as a real desktop layout, not a shrunk
- *             canvas or a stretched tablet column.
- * ≥ 1920px  → the pixel-perfect 1920 desktop canvas in DesignFrame, held at
- *             native size (maxScale={1}) and centered with side gutters.
+ * < 1280px  → the flow-responsive landing (src/sections/mobile/*): mobile-first
+ *             layout, with `md:` (≥768px) tablet refinements — phone + tablet.
+ * ≥ 1280px  → the 1920 desktop canvas in DesignFrame: it fills the width by
+ *             scaling down (vw/1920 ≈ 0.67 at 1280 → 1.0 at 1920) and holds at
+ *             native size above 1920 (maxScale={1}), centered with gutters. So
+ *             1280–1920 is the desktop design, adapted by uniform scale.
  *
  * matchMedia change events fire exactly at the threshold crossing, so no
  * debounce is needed (unlike the old resize-driven useBreakpoint).
  */
-const QUERY = "(max-width: 1919px)"
+const QUERY = "(max-width: 1279px)"
 
 const subscribe = (onChange: () => void) => {
   const mql = window.matchMedia(QUERY)

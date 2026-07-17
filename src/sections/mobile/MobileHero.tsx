@@ -51,7 +51,7 @@ export function MobileHero() {
         {/* rotating headline + sub (fixed box so the cycle can't shift layout) */}
         <div className="mt-12 flex min-h-[180px] flex-col items-center md:min-h-[240px] lg:mt-14 lg:min-h-[220px]">
           <RotatingHeadline
-            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em] lg:text-[72px] lg:leading-[1.08] xl:text-hero xl:leading-[80px] xl:tracking-[-3.32px]"
+            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em] lg:text-[72px] lg:leading-[1.08] xl:text-[83px] xl:leading-[80px] xl:tracking-[-3.32px]"
             subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-ink lg:text-[40px] lg:leading-[52px] lg:tracking-[-1.6px]"
           />
         </div>

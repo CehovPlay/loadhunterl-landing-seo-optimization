@@ -10,10 +10,14 @@ import { prefersReducedMotion } from "@/lib/inview"
  * the next (random, non-repeating) pair enters. Reduced-motion visitors get
  * the first pair, static.
  *
- * Chromium gotcha: bg-clip-text on the H1 breaks the moment descendant spans
- * carry transforms (glyphs collapse to the line start), so each WORD clips
- * its own copy of the gradient, sized to the whole H1 box and offset to the
- * word's position — one continuous gradient visually, transform-safe.
+ * The headline fades left→right (dark → light), like the Figma gradient. It is
+ * NOT painted with `background-clip: text`: on the desktop canvas the whole
+ * page sits inside DesignFrame's `transform: scale()`, and a transformed
+ * ancestor collapses a bg-clip-text gradient (glyphs stack at the line start).
+ * Instead each WORD is filled with a SOLID colour sampled from the gradient at
+ * its horizontal position — visually the same continuous fade, but immune to
+ * transforms/filters, so the rise/blur animation and the scaled canvas are both
+ * safe.
  */
 
 type Phrase = { lines: [string, string]; sub: string }
@@ -34,13 +38,19 @@ const SUB_OPACITY = 0.8
 const HOLD = 3 // s a finished pair stays on screen
 const EXIT = 0.4 // s blur/lift out
 
-const H1_GRADIENT = "linear-gradient(100deg, rgb(26,26,26) 2%, rgb(120,120,120) 100%)"
+// the Figma headline gradient, as endpoints we interpolate per word
+const GRAD_DARK = 26 // rgb(26,26,26) at the left
+const GRAD_LIGHT = 120 // rgb(120,120,120) at the right
+const headlineColor = (t: number) => {
+  const v = Math.round(GRAD_DARK + (GRAD_LIGHT - GRAD_DARK) * Math.min(1, Math.max(0, t)))
+  return `rgb(${v},${v},${v})`
+}
 
 const nextIndex = (current: number) =>
   (current + 1 + Math.floor(Math.random() * (PHRASES.length - 1))) % PHRASES.length
 
 export function RotatingHeadline({
-  h1ClassName = "-mx-[10px] -my-[12px] whitespace-nowrap px-[10px] py-[12px] text-hero font-medium leading-[80px] tracking-[-3.32px]",
+  h1ClassName = "-mx-[10px] -my-[12px] whitespace-nowrap px-[10px] py-[12px] text-[83px] font-medium leading-[80px] tracking-[-3.32px]",
   subClassName = "whitespace-nowrap text-[48px] font-medium leading-[80px] tracking-[-1.92px] text-ink",
 }: {
   /** type-scale overrides so the mobile flow layout can reuse the cycle */
@@ -55,15 +65,15 @@ export function RotatingHeadline({
   const inViewRef = useRef(true)
   const phrase = PHRASES[index]
 
-  // slice the shared gradient into per-word windows (see header comment)
+  // paint each word a solid colour sampled from the L→R gradient at its centre
+  // (clientWidth/offsetLeft are layout px, unaffected by the DesignFrame scale)
   useLayoutEffect(() => {
     const h1 = h1Ref.current
     if (!h1) return
-    const w = h1.clientWidth
-    const h = h1.clientHeight
+    const w = h1.clientWidth || 1
     h1.querySelectorAll<HTMLElement>("[data-w]").forEach((word) => {
-      word.style.backgroundSize = `${w}px ${h}px`
-      word.style.backgroundPosition = `-${word.offsetLeft}px -${word.offsetTop}px`
+      const t = (word.offsetLeft + word.offsetWidth / 2) / w
+      word.style.color = headlineColor(t)
     })
   }, [index])
 
@@ -132,7 +142,7 @@ export function RotatingHeadline({
 
   return (
     <>
-      {/* H1 — gradient painted per word (see header comment) */}
+      {/* H1 — each word solid-filled from the gradient (see header comment) */}
       <h1
         ref={h1Ref}
         data-no-reveal
@@ -145,16 +155,10 @@ export function RotatingHeadline({
               {line.split(" ").map((word, wi) => (
                 <span key={wi}>
                   {wi > 0 && " "}
-                  {/* padding + negative margins widen each word's paint box so
-                      bg-clip-text doesn't crop ascenders/descenders; the gradient
-                      slicing uses measured offsets, so it stays aligned */}
                   <span
                     data-w
-                    className="-mx-[8px] -my-[16px] inline-block bg-clip-text px-[8px] py-[16px] text-transparent"
-                    style={{
-                      backgroundImage: H1_GRADIENT,
-                      ...(reduced ? undefined : { opacity: 0 }),
-                    }}
+                    className="inline-block"
+                    style={reduced ? undefined : { opacity: 0 }}
                   >
                     {word}
                   </span>

@@ -12,7 +12,7 @@ export function Hero() {
     <section className="relative h-[1080px] w-full">
       {/* animated shader background (experiment) — portalled full-bleed behind
           the page; also paints the hero's var(--color-hero) base into the side gutters */}
-      <ShaderBand baseColor="var(--color-hero)" />
+      <ShaderBand baseColor="#efefef" />
 
       {/* copy — centered */}
       <div className="absolute inset-x-0 top-[203px] z-20 flex flex-col items-center gap-[70px] px-[120px] text-center">
