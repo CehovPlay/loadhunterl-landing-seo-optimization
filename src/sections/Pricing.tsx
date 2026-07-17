@@ -193,14 +193,14 @@ function FeatureItem({ item }: { item: Feature }) {
     return (
       <div className="flex w-full items-start gap-[12px] opacity-50">
         <ClockIcon />
-        <p className="min-w-px flex-1 whitespace-pre-line text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">{item.text}</p>
+        <p className="min-w-px flex-1 whitespace-pre-line text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">{item.text}</p>
       </div>
     )
   }
   return (
-    <div className={`flex w-full items-center gap-[12px] ${item.twoLine ? "h-[28px]" : "h-[14px]"}`}>
+    <div className={`flex w-full items-center gap-[12px] ${item.twoLine ? "h-[32px]" : "h-[16px]"}`}>
       <CheckIcon />
-      <p className="min-w-px flex-1 whitespace-pre-line text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">{item.text}</p>
+      <p className="min-w-px flex-1 whitespace-pre-line text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">{item.text}</p>
     </div>
   )
 }
@@ -250,7 +250,7 @@ function PlanCard({
           )}
         </div>
         {/* description */}
-        <p className="absolute left-[112px] top-[60px] w-[273px] text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">
+        <p className="absolute left-[112px] top-[60px] w-[273px] text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">
           {plan.blurb}
         </p>
         {/* separator */}
@@ -260,10 +260,10 @@ function PlanCard({
           <div className="flex items-center gap-[12px]">
             <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">{priceText}</span>
             {plan.unit && (
-              <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-ink-3">{plan.unit}</span>
+              <span className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{plan.unit}</span>
             )}
           </div>
-          <p className="mt-[4px] whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-ink-3">{plan.note}</p>
+          <p className="mt-[4px] whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{plan.note}</p>
         </div>
       </div>
 
