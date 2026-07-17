@@ -9,7 +9,7 @@ export function MobileFooter() {
   return (
     <footer id="token" className="bg-gray-800 pb-10 pt-4" data-no-reveal>
       <Container>
-        <div className="h-px w-full bg-[#33353a]" />
+        <div className="h-px w-full bg-gray-650" />
         <div className="flex flex-col gap-6 pt-8 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center justify-center gap-2 md:justify-start">
             <Img src="/figma/tail/logo-icon-white.svg" alt="" className="h-6 w-6" />
@@ -29,7 +29,7 @@ export function MobileFooter() {
             />
             <button
               type="submit"
-              className="flex h-10 shrink-0 items-center justify-center rounded-full bg-[#6f5197] px-5 text-[14px] font-medium text-white transition-transform active:scale-[0.98]"
+              className="flex h-10 shrink-0 items-center justify-center rounded-full bg-violet px-5 text-[14px] font-medium text-white transition-transform active:scale-[0.98]"
             >
               Subscribe
             </button>

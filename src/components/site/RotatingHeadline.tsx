@@ -40,8 +40,8 @@ const nextIndex = (current: number) =>
   (current + 1 + Math.floor(Math.random() * (PHRASES.length - 1))) % PHRASES.length
 
 export function RotatingHeadline({
-  h1ClassName = "-mx-[10px] -my-[12px] whitespace-nowrap px-[10px] py-[12px] text-[83px] font-medium leading-[80px] tracking-[-3.32px]",
-  subClassName = "whitespace-nowrap text-[48px] font-medium leading-[80px] tracking-[-1.92px] text-[#454545]",
+  h1ClassName = "-mx-[10px] -my-[12px] whitespace-nowrap px-[10px] py-[12px] text-hero font-medium leading-[80px] tracking-[-3.32px]",
+  subClassName = "whitespace-nowrap text-[48px] font-medium leading-[80px] tracking-[-1.92px] text-ink",
 }: {
   /** type-scale overrides so the mobile flow layout can reuse the cycle */
   h1ClassName?: string

@@ -65,7 +65,7 @@ const PRODUCTS: Product[] = [
 ]
 
 /**
- * Mobile Ecosystem: the desktop light panel (#e9e9eb) reflowed — same
+ * Mobile Ecosystem: the desktop light panel (var(--color-gray-50)) reflowed — same
  * icon-plate with the violet glow, same left-aligned ink heading/sub type,
  * and the product rows as WHITE cards (the logo exports carry a baked white
  * background, so rows must stay white like desktop) in a horizontal snap
@@ -74,7 +74,7 @@ const PRODUCTS: Product[] = [
  */
 export function MobileEcosystem() {
   return (
-    <section id="offers" className="bg-[#e9e9eb] py-16">
+    <section id="offers" className="bg-gray-50 py-16">
       <div className="mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8 lg:max-w-[1024px] lg:px-10 xl:max-w-[1200px] 2xl:max-w-[1320px]">
         {/* icon plate — desktop composition */}
         <div
@@ -88,7 +88,7 @@ export function MobileEcosystem() {
             className="pointer-events-none absolute inset-0 rounded-[14px]"
             style={{
               boxShadow:
-                "inset 0px 0px 1px 0px #925cff, inset 0px 0px 3px 0px rgba(146,92,255,0.24), inset 0px 0px 12px 0px rgba(146,92,255,0.12)",
+                "inset 0px 0px 1px 0px var(--color-violet-glow), inset 0px 0px 3px 0px rgba(146,92,255,0.24), inset 0px 0px 12px 0px rgba(146,92,255,0.12)",
             }}
           />
         </div>
@@ -108,7 +108,7 @@ export function MobileEcosystem() {
           <article
             key={p.name}
             data-card
-            className="relative flex w-[82vw] max-w-[380px] shrink-0 flex-col overflow-hidden rounded-[12px] border border-[#e8e8e8] bg-white p-6 md:w-[420px] md:max-w-[420px]"
+            className="relative flex w-[82vw] max-w-[380px] shrink-0 flex-col overflow-hidden rounded-lg border border-border-light bg-white p-6 md:w-[420px] md:max-w-[420px]"
           >
             <Img
               src={p.logo}
@@ -122,7 +122,7 @@ export function MobileEcosystem() {
               {p.description}
             </p>
             {p.comingSoon ? (
-              <div className="mt-1 inline-flex h-[28px] w-fit items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)]">
+              <div className="mt-1 inline-flex h-[28px] w-fit items-center justify-center rounded-[99px] border border-white bg-violet px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)]">
                 <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
                   Coming soon
                 </span>

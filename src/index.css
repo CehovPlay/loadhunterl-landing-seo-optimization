@@ -33,7 +33,13 @@
   --color-gray-300: #8c8d8f;
   --color-gray-200: #a3a4a6;
   --color-gray-100: #dcdcdd;
+  --color-gray-75: #f0f0f0;         /* Feature-card well (light) */
   --color-gray-50: #e8e8e9;
+  --color-gray-650: #33353a;        /* Divider on dark (footer) */
+  --color-gray-550: #4a4c52;        /* Muted separator on dark */
+  --color-gray-250: #b8b8b8;        /* Hero decorative gray */
+  --color-gray-150: #c9c9c9;        /* Hero decorative gray */
+  --color-hero: #efefef;            /* Hero light background */
   --color-dark-text: #f3f3f4;       /* Darck Text Primary */
 
   /* Hairlines on dark --------------------------------------------- */
@@ -49,6 +55,12 @@
   --color-purple-200: #8c6eb7;
   --color-purple-400: #a186c6;      /* Darck purple 2-400 */
   --color-violet-tw: #7c3aed;
+  --color-violet-400: #9b79ce;      /* Tools spine glow */
+  --color-violet-200: #c9b3ec;      /* Tools spine node (lit) */
+  --color-violet-100: #e3d5fa;      /* Tools spine tip */
+  --color-violet-glow: #925cff;     /* Decorative violet beam */
+  --color-violet-glow-2: #a875ff;   /* Decorative violet beam (pair) */
+  --color-violet-cta: #9779bf;      /* CTA gradient stop */
 
   /* Status -------------------------------------------------------- */
   --color-green: #028e75;
@@ -61,6 +73,7 @@
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
 
   /* Type scale (Inter Medium 500) — size / line-height ------------ */
   --text-subtle: 12px;     --text-subtle--line-height: 14px;
@@ -70,6 +83,11 @@
   --text-h3: 24px;         --text-h3--line-height: 32px;
   --text-h2: 30px;         --text-h2--line-height: 40px;
   --text-h1: 48px;         --text-h1--line-height: 58px;
+  /* Display sizes (hero headline is responsive via clamp/lg:/xl:, so it stays
+     an arbitrary value; these cover the fixed desktop-canvas display sizes) */
+  --text-display: 40px;    --text-display--line-height: 48px;
+  --text-display-lg: 60px; --text-display-lg--line-height: 60px;
+  --text-hero: 83px;       --text-hero--line-height: 80px;
 }
 
 @layer base {
@@ -91,7 +109,10 @@
     color: var(--color-dark-text);
     font-family: var(--font-sans);
     font-weight: 500;
-    letter-spacing: -0.01em;
+    /* the whole design uses a uniform -4% tracking; elements set it explicitly
+       (tracking-[-0.04em] or the px equivalents), and this base matches so any
+       un-tracked text inherits the same system value */
+    letter-spacing: -0.04em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;

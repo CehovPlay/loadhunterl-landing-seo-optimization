@@ -66,7 +66,7 @@ const SPEED_S = 60 // seconds per full cycle — slow drift
 function ReviewCard({ r }: { r: Review }) {
   return (
     <div
-      className="group absolute w-[375px] overflow-hidden rounded-[12px] border border-[rgba(229,229,229,0.1)] p-[40px] transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)]"
+      className="group absolute w-[375px] overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-[40px] transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)]"
       style={{ top: r.y }}
       data-card
     >
@@ -78,7 +78,7 @@ function ReviewCard({ r }: { r: Review }) {
           Removed; the radial gradient below is the only visible effect. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[12px]"
+        className="pointer-events-none absolute inset-0 rounded-lg"
         style={{
           backgroundImage:
             "radial-gradient(453px circle at 375px 6px, rgba(53,50,70,1), rgba(53,50,70,0))",
@@ -87,7 +87,7 @@ function ReviewCard({ r }: { r: Review }) {
       {/* hover bg: violet radial from bottom-center (Figma 914:23766), fades in */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[12px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
           backgroundImage:
             "radial-gradient(295px circle at 50% 285px, rgba(111,81,151,1), rgba(111,81,151,0))",
@@ -99,7 +99,7 @@ function ReviewCard({ r }: { r: Review }) {
       </p>
       <div className="relative mt-[40px] flex w-full items-center gap-[12px]">
         <div
-          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white"
+          className="flex size-[42px] items-center justify-center rounded-lg border border-white"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
@@ -117,7 +117,7 @@ function ReviewCard({ r }: { r: Review }) {
       </div>
 
       {/* bottom inner hairline shadow */}
-      <div className="pointer-events-none absolute inset-0 rounded-[12px] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-lg shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25)]" />
     </div>
   )
 }

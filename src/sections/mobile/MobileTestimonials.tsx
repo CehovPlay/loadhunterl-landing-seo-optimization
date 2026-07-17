@@ -46,13 +46,13 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
     <figure
       data-card
       data-no-reveal
-      className="group relative mr-4 w-[300px] shrink-0 overflow-hidden rounded-[12px] border border-[rgba(229,229,229,0.1)] p-6 transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)] md:mr-10 md:w-[375px] md:p-10"
+      className="group relative mr-4 w-[300px] shrink-0 overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-6 transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)] md:mr-10 md:w-[375px] md:p-10"
       style={{ marginTop: r.y }}
     >
       {/* desktop card bg: dark radial from the top-right corner */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[12px]"
+        className="pointer-events-none absolute inset-0 rounded-lg"
         style={{
           backgroundImage:
             "radial-gradient(453px circle at 100% 6px, rgba(53,50,70,1), rgba(53,50,70,0))",
@@ -61,7 +61,7 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
       {/* hover bg: violet radial from bottom-center, fades in (desktop) */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-[12px] opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 rounded-lg opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
           backgroundImage:
             "radial-gradient(295px circle at 50% 285px, rgba(111,81,151,1), rgba(111,81,151,0))",
@@ -72,7 +72,7 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
       </blockquote>
       <figcaption className="relative mt-8 flex items-center gap-3">
         <span
-          className="flex size-[42px] items-center justify-center rounded-[12px] border border-white text-[14px] font-medium tracking-[-0.56px] text-ink-2"
+          className="flex size-[42px] items-center justify-center rounded-lg border border-white text-[14px] font-medium tracking-[-0.56px] text-ink-2"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
@@ -86,7 +86,7 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
           {r.name}
         </span>
       </figcaption>
-      <div className="pointer-events-none absolute inset-0 rounded-[12px] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-lg shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25)]" />
     </figure>
   )
 }

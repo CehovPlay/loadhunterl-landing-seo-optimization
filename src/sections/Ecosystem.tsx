@@ -91,7 +91,7 @@ function ProductRow({ product }: { product: Product }) {
     : 'top-[240px] group-hover:top-[148px]'
 
   return (
-    <div className="group relative h-[320px] w-[954px] shrink-0 overflow-hidden rounded-[12px] bg-white">
+    <div className="group relative h-[320px] w-[954px] shrink-0 overflow-hidden rounded-lg bg-white">
       {/* product mockup (baked export, clipped by the row) */}
       <Img
         src={product.mockup}
@@ -128,7 +128,7 @@ function ProductRow({ product }: { product: Product }) {
           {product.description}
         </p>
         {product.comingSoon && (
-          <div className="mt-[24px] inline-flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-[#6f5197] px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)]">
+          <div className="mt-[24px] inline-flex h-[28px] items-center justify-center rounded-[99px] border border-white bg-violet px-[12px] shadow-[0px_1px_0px_0px_rgba(0,0,0,0.05),0px_4px_4px_0px_rgba(0,0,0,0.05),0px_10px_10px_0px_rgba(0,0,0,0.1)]">
             <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
               Coming soon
             </span>
@@ -137,7 +137,7 @@ function ProductRow({ product }: { product: Product }) {
       </div>
 
       {/* row border above the clipped mockup, as in Figma */}
-      <div className="pointer-events-none absolute inset-0 rounded-[12px] border border-[#e8e8e8]" />
+      <div className="pointer-events-none absolute inset-0 rounded-lg border border-border-light" />
     </div>
   )
 }
@@ -167,7 +167,7 @@ export function Ecosystem() {
       <div
         data-eco-stage
         data-no-reveal
-        className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-[12px] bg-[#e9e9eb] will-change-transform"
+        className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-lg bg-gray-50 will-change-transform"
       >
         {/* Inner content layer: the panel expands symmetrically around it, so
             this is counter-translated by the pin to keep the content fixed —
@@ -177,7 +177,7 @@ export function Ecosystem() {
             everything (grid, ring, glyph) is centered by construction */}
         <div
           data-float
-          className="absolute left-[60px] top-[60px] size-[64px] overflow-hidden rounded-[16px]"
+          className="absolute left-[60px] top-[60px] size-[64px] overflow-hidden rounded-xl"
           style={{ boxShadow: "0px 6px 16px -6px rgba(146,92,255,0.48)" }}
         >
           <Img
@@ -195,10 +195,10 @@ export function Ecosystem() {
             className="absolute inset-0 size-full"
           />
           <div
-            className="pointer-events-none absolute inset-0 rounded-[16px]"
+            className="pointer-events-none absolute inset-0 rounded-xl"
             style={{
               boxShadow:
-                "inset 0px 0px 1px 0px #925cff, inset 0px 0px 3px 0px rgba(146,92,255,0.24), inset 0px 0px 12px 0px rgba(146,92,255,0.12)",
+                "inset 0px 0px 1px 0px var(--color-violet-glow), inset 0px 0px 3px 0px rgba(146,92,255,0.24), inset 0px 0px 12px 0px rgba(146,92,255,0.12)",
             }}
           />
         </div>

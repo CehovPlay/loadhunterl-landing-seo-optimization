@@ -64,7 +64,7 @@ export function MobileNavbar() {
     >
       <div className="mx-auto flex w-full max-w-[440px] justify-end px-4 md:max-w-[768px] md:px-8 lg:max-w-[1024px] lg:px-10 xl:max-w-[1200px]">
         <div
-          className={`flex h-14 items-center justify-between overflow-hidden rounded-full border border-[#ececec] bg-white/85 backdrop-blur-[10px] transition-[width,padding] duration-500 ease-out lg:h-[60px] lg:!w-full lg:!pl-5 lg:!pr-2 ${
+          className={`flex h-14 items-center justify-between overflow-hidden rounded-full border border-border-light bg-white/85 backdrop-blur-[10px] transition-[width,padding] duration-500 ease-out lg:h-[60px] lg:!w-full lg:!pl-5 lg:!pr-2 ${
             collapsed && !open ? "px-[3px]" : "pl-4 pr-1.5"
           }`}
           style={{ boxShadow: PILL_SHADOW, width: collapsed && !open ? 56 : "100%" }}
@@ -88,7 +88,7 @@ export function MobileNavbar() {
               <a
                 key={l.label}
                 href={l.href}
-                className="whitespace-nowrap rounded-full px-3 py-2 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-[#454545] transition-colors hover:bg-black/[0.04]"
+                className="whitespace-nowrap rounded-full px-3 py-2 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-ink transition-colors hover:bg-black/[0.04]"
               >
                 {l.label}
               </a>
@@ -98,7 +98,7 @@ export function MobileNavbar() {
           {/* laptop: compact CTA on the right */}
           <a
             href="#start"
-            className="hidden h-10 shrink-0 items-center gap-2 rounded-full bg-[#6f5197] px-5 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-white transition-transform active:scale-[0.98] lg:flex"
+            className="hidden h-10 shrink-0 items-center gap-2 rounded-full bg-violet px-5 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-white transition-transform active:scale-[0.98] lg:flex"
           >
             Add to Chrome
           </a>
@@ -112,11 +112,11 @@ export function MobileNavbar() {
             className="relative flex size-12 items-center justify-center rounded-full lg:hidden"
           >
             <span
-              className="absolute h-[2px] w-5 rounded-full bg-[#454545] transition-transform duration-300"
+              className="absolute h-[2px] w-5 rounded-full bg-ink transition-transform duration-300"
               style={{ transform: open ? "rotate(45deg)" : "translateY(-3.5px)" }}
             />
             <span
-              className="absolute h-[2px] w-5 rounded-full bg-[#454545] transition-transform duration-300"
+              className="absolute h-[2px] w-5 rounded-full bg-ink transition-transform duration-300"
               style={{ transform: open ? "rotate(-45deg)" : "translateY(3.5px)" }}
             />
           </button>
@@ -146,7 +146,7 @@ export function MobileNavbar() {
                 document.body.style.overflow = ""
                 setOpen(false)
               }}
-              className={`flex h-14 items-center border-b border-[#f0f0f0] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-[#454545] transition-[opacity,transform] duration-300 ${
+              className={`flex h-14 items-center border-b border-gray-75 text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-ink transition-[opacity,transform] duration-300 ${
                 open ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
               }`}
             >

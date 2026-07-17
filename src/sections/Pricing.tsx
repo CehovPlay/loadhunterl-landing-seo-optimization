@@ -223,13 +223,13 @@ function PlanCard({
 
   return (
     <div
-      className="absolute top-[544px] h-[690px] w-[417px] overflow-hidden rounded-[16px] border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-      style={{ left, backgroundImage: "linear-gradient(to bottom, #181a1f, rgba(24,26,31,0))" }}
+      className="absolute top-[544px] h-[690px] w-[417px] overflow-hidden rounded-xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+      style={{ left, backgroundImage: "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))" }}
     >
       {/* head panel */}
-      <div className="absolute left-[3px] top-[3px] h-[218px] w-[409px] rounded-[12px]" style={headStyle}>
+      <div className="absolute left-[3px] top-[3px] h-[218px] w-[409px] rounded-lg" style={headStyle}>
         {plan.head === "border" && (
-          <div className="pointer-events-none absolute inset-0 rounded-[12px] border border-[rgba(229,229,229,0.2)]" />
+          <div className="pointer-events-none absolute inset-0 rounded-lg border border-[rgba(229,229,229,0.2)]" />
         )}
         {/* icon — the AI png carries a baked dark square, crop it to the plate */}
         <div
@@ -260,10 +260,10 @@ function PlanCard({
           <div className="flex items-center gap-[12px]">
             <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">{priceText}</span>
             {plan.unit && (
-              <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-[#a2a2a2]">{plan.unit}</span>
+              <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-ink-3">{plan.unit}</span>
             )}
           </div>
-          <p className="mt-[4px] whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-[#a2a2a2]">{plan.note}</p>
+          <p className="mt-[4px] whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-ink-3">{plan.note}</p>
         </div>
       </div>
 
@@ -283,7 +283,7 @@ function PlanCard({
 
       {/* button — violet glow floods up from the bottom on hover */}
       <button
-        className="group absolute bottom-[3px] left-[3px] flex h-[42px] w-[409px] items-center justify-center overflow-hidden rounded-[12px] border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
+        className="group absolute bottom-[3px] left-[3px] flex h-[42px] w-[409px] items-center justify-center overflow-hidden rounded-lg border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
         type="button"
       >
         <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
@@ -451,7 +451,7 @@ export function Pricing() {
           className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-[200px] bg-[rgba(231,231,231,0.1)]"
         >
           <div
-            className="absolute left-[2px] top-[2px] h-[12px] rounded-[8px] bg-[#6f5197] shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
+            className="absolute left-[2px] top-[2px] h-[12px] rounded-md bg-violet shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25),inset_0px_1px_2px_0px_rgba(255,255,255,0.35)]"
             style={{ width: Math.max(12, knob - 2) }}
           />
           <div

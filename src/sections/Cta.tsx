@@ -26,10 +26,10 @@ export function Cta() {
 
       {/* left — violet gradient card */}
       <div
-        className="absolute left-[120px] top-[240px] h-[627px] w-[531px] rounded-[12px]"
+        className="absolute left-[120px] top-[240px] h-[627px] w-[531px] rounded-lg"
         style={{
           background:
-            "linear-gradient(40.26deg, #6f5197 0%, rgba(111, 81, 151, 0) 100%)",
+            "linear-gradient(40.26deg, var(--color-violet) 0%, rgba(111, 81, 151, 0) 100%)",
         }}
       >
         {/* logo */}
@@ -77,7 +77,7 @@ export function Cta() {
             className="bg-clip-text text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-transparent"
             style={{
               backgroundImage:
-                "linear-gradient(149.61deg, #6f5197 0%, #9779bf 100%)",
+                "linear-gradient(149.61deg, var(--color-violet) 0%, var(--color-violet-cta) 100%)",
             }}
           >
             Add to Chrome

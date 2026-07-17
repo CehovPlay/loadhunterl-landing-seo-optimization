@@ -9,10 +9,10 @@ export function Stars({ score, className = "" }: { score: number; className?: st
       role="img"
       aria-label={`Rated ${score} out of 5`}
     >
-      <span className="text-[#c9c9c9]">★★★★★</span>
+      <span className="text-gray-150">★★★★★</span>
       <span
         aria-hidden
-        className="absolute inset-0 overflow-hidden whitespace-nowrap text-[#6f5197]"
+        className="absolute inset-0 overflow-hidden whitespace-nowrap text-violet"
         style={{ width: `${(score / 5) * 100}%` }}
       >
         ★★★★★

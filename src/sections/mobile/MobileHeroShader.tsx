@@ -64,12 +64,12 @@ export function MobileHeroShader() {
         <ShaderStack drift onReady={() => setShown(true)} />
       </Suspense>
       {/* re-apply the hero's bottom fade so the shader dissolves into the
-          #fafafa partner band exactly like the static background does */}
+          var(--color-bg-light) partner band exactly like the static background does */}
       <div
         className="absolute inset-0"
         style={{
           backgroundImage:
-            "linear-gradient(to bottom, rgba(250,250,250,0) 75%, #fafafa 100%)",
+            "linear-gradient(to bottom, rgba(250,250,250,0) 75%, var(--color-bg-light) 100%)",
         }}
       />
     </div>

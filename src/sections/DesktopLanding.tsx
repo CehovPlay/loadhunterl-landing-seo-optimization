@@ -25,7 +25,7 @@ export function DesktopLanding() {
         {/* hero's full-bleed light bg + shader come from HeroShaderBg's portal */}
         <Hero />
         {/* Light sections: bleed their bg into the >1920 side gutters */}
-        <BleedBg color="#fafafa">
+        <BleedBg color="var(--color-bg-light)">
           <Features />
         </BleedBg>
         {/* zoom-through transition: dive into the hyphen, land in dark Tools */}

@@ -73,7 +73,7 @@ export function Navbar() {
           <div className="relative flex items-center">
             <a
               href="#"
-              className="flex h-[34px] items-center gap-[8px] rounded-[99px] border border-[#ececec] bg-white py-[4px] pl-[4px] pr-[8px]"
+              className="flex h-[34px] items-center gap-[8px] rounded-[99px] border border-border-light bg-white py-[4px] pl-[4px] pr-[8px]"
               style={{ boxShadow: PILL_SHADOW }}
             >
               <Img
@@ -96,7 +96,7 @@ export function Navbar() {
                 key={l.label}
                 href={l.href}
                 className={
-                  "flex h-[28px] items-center justify-center px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545] transition-colors hover:text-black" +
+                  "flex h-[28px] items-center justify-center px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black" +
                   (i === 0 ? " rounded-l-[99px]" : "") +
                   (i === LINKS.length - 1 ? " rounded-r-[99px]" : "")
                 }
@@ -143,7 +143,7 @@ export function Navbar() {
             {/* logo mark pill */}
             <a
               href="#"
-              className="relative flex h-[34px] items-center rounded-[99px] border border-[#ececec] bg-white px-[4px]"
+              className="relative flex h-[34px] items-center rounded-[99px] border border-border-light bg-white px-[4px]"
               style={{ boxShadow: PILL_SHADOW }}
             >
               <Img
@@ -157,7 +157,7 @@ export function Navbar() {
               <a
                 href="#contact"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] border border-[#ececec] bg-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[#454545] transition-colors hover:text-black"
+                className="flex h-[28px] items-center justify-center rounded-[99px] border border-border-light bg-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black"
                 style={{ boxShadow: PILL_SHADOW }}
               >
                 Get Demo
@@ -165,7 +165,7 @@ export function Navbar() {
               <a
                 href="#start"
                 data-magnetic="0.2"
-                className="flex h-[28px] items-center justify-center rounded-[99px] bg-[#6f5197] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
+                className="flex h-[28px] items-center justify-center rounded-[99px] bg-violet px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
                 style={{ boxShadow: PILL_SHADOW }}
               >
                 Add to Chrome

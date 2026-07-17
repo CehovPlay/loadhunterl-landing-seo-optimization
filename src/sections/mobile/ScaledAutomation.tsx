@@ -34,7 +34,7 @@ export function ScaledAutomation() {
   return (
     <div
       ref={hostRef}
-      className="w-full overflow-hidden rounded-[12px]"
+      className="w-full overflow-hidden rounded-lg"
       style={{ height: boxH || undefined }}
     >
       {scale > 0 && (

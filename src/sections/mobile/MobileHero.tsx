@@ -16,13 +16,13 @@ const PARTNERS = [
  * Mobile hero: the desktop copy column reflowed — eyebrow pill, rotating
  * headline (mobile type scale), trust line, two stacked full-width 48px CTAs,
  * and a CSS-keyframe partner marquee (no scaled canvas on mobile, so plain
- * CSS animations are safe). Background: static violet radial tints on #EFEFEF
+ * CSS animations are safe). Background: static violet radial tints on var(--color-hero)
  * paint instantly; on WebGPU-capable devices MobileHeroShader cross-fades the
  * autonomous drift shader over them (see that file for the gating).
  */
 export function MobileHero() {
   return (
-    <section className="relative overflow-hidden bg-[#EFEFEF]">
+    <section className="relative overflow-hidden bg-hero">
       {/* static echo of the desktop ChromaFlow shader */}
       <div
         aria-hidden
@@ -31,7 +31,7 @@ export function MobileHero() {
           backgroundImage:
             "radial-gradient(120% 60% at 85% -5%, rgba(156,102,229,0.16) 0%, rgba(156,102,229,0) 60%)," +
             "radial-gradient(90% 50% at 0% 30%, rgba(111,81,151,0.10) 0%, rgba(111,81,151,0) 65%)," +
-            "linear-gradient(to bottom, rgba(250,250,250,0) 75%, #fafafa 100%)",
+            "linear-gradient(to bottom, rgba(250,250,250,0) 75%, var(--color-bg-light) 100%)",
         }}
       />
       <MobileHeroShader />
@@ -39,7 +39,7 @@ export function MobileHero() {
       <Container className="relative flex flex-col items-center pb-28 pt-[180px] text-center lg:pb-36 lg:pt-[240px]">
         {/* eyebrow pill — desktop skin: soft white gradient, no border */}
         <span
-          className="inline-flex w-fit items-center rounded-[99px] px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545] lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]"
+          className="inline-flex w-fit items-center rounded-[99px] px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-ink lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.5))",
@@ -51,13 +51,13 @@ export function MobileHero() {
         {/* rotating headline + sub (fixed box so the cycle can't shift layout) */}
         <div className="mt-12 flex min-h-[180px] flex-col items-center md:min-h-[240px] lg:mt-14 lg:min-h-[220px]">
           <RotatingHeadline
-            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em] lg:text-[72px] lg:leading-[1.08] xl:text-[83px] xl:leading-[80px] xl:tracking-[-3.32px]"
-            subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-[#454545] lg:text-[40px] lg:leading-[52px] lg:tracking-[-1.6px]"
+            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em] lg:text-[72px] lg:leading-[1.08] xl:text-hero xl:leading-[80px] xl:tracking-[-3.32px]"
+            subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-ink lg:text-[40px] lg:leading-[52px] lg:tracking-[-1.6px]"
           />
         </div>
 
         {/* trust line — desktop copy, stacked in two rows for 390px */}
-        <p className="mt-8 flex flex-col items-center gap-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-[#454545] opacity-60 lg:mt-10 lg:flex-row lg:gap-3 lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]">
+        <p className="mt-8 flex flex-col items-center gap-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-ink opacity-60 lg:mt-10 lg:flex-row lg:gap-3 lg:text-[16px] lg:leading-[22px] lg:tracking-[-0.64px]">
           Trusted by 6,000+ users
           <span className="flex items-center gap-2">
             <span className="hidden lg:inline" aria-hidden>
@@ -85,14 +85,14 @@ export function MobileHero() {
       </Container>
 
       {/* partner marquee — two copies of the row, translated -50% on loop */}
-      <div className="relative bg-[#fafafa] py-10" aria-label="Supported load boards">
+      <div className="relative bg-bg-light py-10" aria-label="Supported load boards">
         <div
           className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10"
-          style={{ background: "linear-gradient(to right, #fafafa, rgba(250,250,250,0))" }}
+          style={{ background: "linear-gradient(to right, var(--color-bg-light), rgba(250,250,250,0))" }}
         />
         <div
           className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10"
-          style={{ background: "linear-gradient(to left, #fafafa, rgba(250,250,250,0))" }}
+          style={{ background: "linear-gradient(to left, var(--color-bg-light), rgba(250,250,250,0))" }}
         />
         <div className="overflow-hidden">
           <div className="animate-lh-marquee flex w-max items-center">

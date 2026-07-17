@@ -21,7 +21,7 @@ import { prefersReducedMotion } from "@/lib/inview"
  * rect on each gsap.ticker frame (position:fixed can't escape the scaled
  * canvas; ScrollTrigger mis-measures inside transform:scale()). Everything
  * is a pure function of scroll — fully reversible. Text colour = Tools bg
- * (#181a1f) and a dark cover fades in at the very end, so the handoff to
+ * (var(--color-gray-800)) and a dark cover fades in at the very end, so the handoff to
  * the next section is invisible.
  */
 
@@ -165,7 +165,7 @@ export function ChaosZoom() {
   }, [])
 
   return (
-    <BleedBg color="#fafafa">
+    <BleedBg color="var(--color-bg-light)">
       <section ref={sectionRef} className="relative" style={{ height: SECTION_H }}>
         {/* pinned svg band — translateY driven per tick; the viewBox zooms.
             data-no-reveal: fully owned by the tick loop. NO overflow clip:
@@ -192,7 +192,7 @@ export function ChaosZoom() {
               x={CX0}
               y={BASELINE_Y}
               textAnchor="middle"
-              fill="#181a1f"
+              fill="var(--color-gray-800)"
               style={{
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 500,
@@ -204,7 +204,7 @@ export function ChaosZoom() {
             </text>
             {/* the hyphen's ink, duplicated as a rect (set from measure()) —
                 invisible over the glyph, it carries the deep zoom phase */}
-            <rect ref={barRef} fill="#181a1f" width="0" height="0" />
+            <rect ref={barRef} fill="var(--color-gray-800)" width="0" height="0" />
           </svg>
         </div>
 
