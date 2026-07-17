@@ -20,7 +20,7 @@ type Phrase = { lines: [string, string]; sub: string }
 
 const PHRASES: Phrase[] = [
   { lines: ["Book better loads", "before anyone else"], sub: "In less than a minute" },
-  { lines: ["Dispatch smarter", "not harder"], sub: "Your AI dispatch buddy" },
+  { lines: ["Dispatch smarter", "not harder"], sub: "AI does the heavy lifting" },
   { lines: ["Only the loads", "that matter"], sub: "AI filters out the noise" },
   { lines: ["Email brokers", "in one click"], sub: "No more copy-paste" },
   { lines: ["Loads find you", "on Telegram"], sub: "Instant alerts, anywhere" },
