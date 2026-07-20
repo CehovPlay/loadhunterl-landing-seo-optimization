@@ -113,7 +113,7 @@ export function MobileWhy() {
               </p>
               <p
                 data-countup
-                className="mt-2 text-[26px] font-medium leading-[32px] tracking-[-1.04px] text-white"
+                className="mt-2 text-[26px] font-medium leading-[32px] tracking-[-1.04px] text-white [text-shadow:0_0_20px_rgba(156,102,229,0.55)]"
               >
                 {SPEED_ROW[1]}
               </p>
@@ -169,7 +169,10 @@ export function MobileWhy() {
               <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
                 {SPEED_ROW[0]}
               </span>
-              <span data-countup className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+              <span
+                data-countup
+                className="text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white [text-shadow:0_0_18px_rgba(156,102,229,0.55)]"
+              >
                 {SPEED_ROW[1]}
               </span>
               <span className="text-center text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-2">

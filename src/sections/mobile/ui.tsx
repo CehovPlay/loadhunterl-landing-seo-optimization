@@ -84,12 +84,13 @@ export function PillButton({
   variant,
   children,
   className = "",
+  ...anchor
 }: {
   href: string
   variant: PillVariant
   children: React.ReactNode
   className?: string
-}) {
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "style">) {
   const base =
     "flex h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-full text-[16px] font-medium leading-[20px] tracking-[-0.64px] transition-transform active:scale-[0.98]"
   const skin: Record<PillVariant, { cls: string; style: React.CSSProperties }> = {
@@ -119,7 +120,7 @@ export function PillButton({
   }
   const s = skin[variant]
   return (
-    <a href={href} className={`${base} ${s.cls} ${className}`} style={s.style}>
+    <a href={href} className={`${base} ${s.cls} ${className}`} style={s.style} {...anchor}>
       {children}
     </a>
   )

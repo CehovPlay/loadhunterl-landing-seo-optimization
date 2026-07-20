@@ -59,7 +59,7 @@ const PLANS: Plan[] = [
     icon: "/figma/pricing/icon-basic.svg",
     blurb: "A streamlined plan to get you moving fast with essential tools.",
     base: 9.99,
-    unit: "/per month",
+    unit: "/ dispatcher / mo",
     note: "Save 20% with team rate.",
     cols: [
       [f("Unlimited Emails"), f("1 Connected Email"), f("1 Email Template"), f("Google Maps Integration"), f("Load Filters")],
@@ -76,7 +76,7 @@ const PLANS: Plan[] = [
     icon: "/figma/pricing/icon-standard.svg",
     blurb: "Perfect for fast-paced teams looking to automate and organize.",
     base: 14.99,
-    unit: "/per month",
+    unit: "/ dispatcher / mo",
     note: "Save 20% with team rate.",
     cols: [
       [
@@ -99,7 +99,7 @@ const PLANS: Plan[] = [
         f("Ignore Brokers/States"),
         f("Hide cancelled loads"),
         f("Hide CA/MX loads"),
-        f("Advanced Profit Calculator", true),
+        f("Telegram Load\nNotifications", true),
       ],
     ],
     cta: "Start 14-day free trial",
@@ -113,7 +113,7 @@ const PLANS: Plan[] = [
     icon: "/figma/pricing/icon-pro.svg",
     blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
     base: 29.99,
-    unit: "/per month",
+    unit: "/ dispatcher / mo",
     note: "Best value for 10+ dispatchers.",
     cols: PRO_COLS,
     cta: "Start 14-day free trial",
@@ -140,6 +140,18 @@ const PLANS: Plan[] = [
 
 const PILL_SHADOW =
   "var(--shadow-pill)"
+
+/* Freemium — the $0 entry tier, rendered as a full-width strip above the
+ * four paid cards (five 417px cards don't fit the 1680px content row). */
+const FREEMIUM = {
+  name: "Freemium",
+  blurb: "Try LoadHunter on real loads — free forever.",
+  features: ["10 broker emails / day", "RPM+ calculator", "Load filters", "1 connected email"],
+  price: "$0",
+  unit: "/forever",
+  note: "No credit card required.",
+  cta: "Start for free",
+}
 
 function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean }) {
   return (
@@ -208,11 +220,11 @@ function FeatureItem({ item }: { item: Feature }) {
 function PlanCard({
   plan,
   left,
-  priceText,
+  price,
 }: {
   plan: Plan
   left: number
-  priceText: string
+  price: { main: string; was?: string; note: string }
 }) {
   const headStyle: CSSProperties =
     plan.head === "pro"
@@ -223,7 +235,7 @@ function PlanCard({
 
   return (
     <div
-      className="absolute top-[544px] h-[690px] w-[417px] overflow-hidden rounded-xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+      className="absolute top-[692px] h-[690px] w-[417px] overflow-hidden rounded-xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
       style={{ left, backgroundImage: "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))" }}
     >
       {/* head panel */}
@@ -255,15 +267,20 @@ function PlanCard({
         </p>
         {/* separator */}
         <div className="absolute left-[24px] top-[112px] h-px w-[361px] bg-[rgba(229,229,229,0.1)]" />
-        {/* price */}
+        {/* price — per-dispatcher figure; struck-through anchor when discounted */}
         <div className="absolute left-[24px] top-[136px] w-[361px]">
-          <div className="flex items-center gap-[12px]">
-            <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">{priceText}</span>
+          <div className="flex items-baseline gap-[10px]">
+            {price.was && (
+              <span className="whitespace-nowrap text-[16px] leading-[20px] tracking-[-0.64px] text-ink-3 line-through">
+                {price.was}
+              </span>
+            )}
+            <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">{price.main}</span>
             {plan.unit && (
               <span className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{plan.unit}</span>
             )}
           </div>
-          <p className="mt-[4px] whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{plan.note}</p>
+          <p className="mt-[4px] whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{price.note}</p>
         </div>
       </div>
 
@@ -358,13 +375,27 @@ export function Pricing() {
     [moveTo],
   )
 
-  const priceFor = (plan: Plan) =>
-    plan.base != null
-      ? `From $${planTotal(plan.base, n, annual).toFixed(2)}`
-      : (plan.price ?? "")
+  /* Price presentation (business logic unchanged): the big number is always
+   * PER DISPATCHER — the anchor price struck through when a discount applies,
+   * and the team total moved into the note line. Totals still come from
+   * planTotal(), so the math matches loadhunter.io exactly. */
+  const priceFor = (plan: Plan): { main: string; was?: string; note: string } => {
+    if (plan.base == null) return { main: plan.price ?? "", note: plan.note }
+    const teamMult = n >= 4 ? 0.8 : n === 3 ? 0.9 : 1
+    const per = Math.floor(plan.base * teamMult * (annual ? 0.9 : 1) * 100) / 100
+    const bill = annual ? "Billed annually" : "Billed monthly"
+    return {
+      main: `$${per.toFixed(2)}`,
+      was: per < plan.base ? `$${plan.base.toFixed(2)}` : undefined,
+      note:
+        n > 1
+          ? `${bill} · $${planTotal(plan.base, n, annual).toFixed(2)}/mo for ${n} dispatchers`
+          : bill,
+    }
+  }
 
   return (
-    <section id="pricing" className="relative h-[1462px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1462px]">
+    <section id="pricing" className="relative h-[1610px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1610px]">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
         <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
@@ -481,13 +512,93 @@ export function Pricing() {
         </div>
       </div>
 
+      {/* freemium strip — $0 entry tier above the paid deck */}
+      <div
+        className="absolute left-[120px] top-[544px] flex h-[112px] w-[1680px] items-center overflow-hidden rounded-xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+        style={{ backgroundImage: "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))" }}
+      >
+        <div className="pointer-events-none absolute inset-[3px] rounded-lg border border-[rgba(229,229,229,0.2)]" />
+
+        {/* identity — same plate style as the plan cards (icon-freemium.svg =
+            basic plate + the hero diamond glyph) */}
+        <div className="ml-[24px] flex w-[352px] shrink-0 items-center gap-[24px]">
+          <div className="relative size-[64px] shrink-0">
+            <Img
+              src="/figma/pricing/icon-freemium.svg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+            />
+          </div>
+          <div className="min-w-0">
+            <span className="whitespace-nowrap text-[20px] leading-[32px] tracking-[-0.8px] text-gray-50">
+              {FREEMIUM.name}
+            </span>
+            <p className="text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{FREEMIUM.blurb}</p>
+          </div>
+        </div>
+
+        {/* separator */}
+        <div className="mx-[32px] h-[64px] w-px shrink-0 bg-[rgba(229,229,229,0.1)]" />
+
+        {/* features */}
+        <div className="flex flex-1 items-center justify-center gap-[40px]">
+          {FREEMIUM.features.map((t) => (
+            <div key={t} className="flex items-center gap-[12px]">
+              <CheckIcon />
+              <span className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">
+                {t}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* separator */}
+        <div className="mx-[32px] h-[64px] w-px shrink-0 bg-[rgba(229,229,229,0.1)]" />
+
+        {/* price + CTA */}
+        <div className="mr-[24px] flex shrink-0 items-center gap-[28px]">
+          <div>
+            <div className="flex items-center gap-[8px]">
+              <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">
+                {FREEMIUM.price}
+              </span>
+              <span className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">
+                {FREEMIUM.unit}
+              </span>
+            </div>
+            <p className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">
+              {FREEMIUM.note}
+            </p>
+          </div>
+          <button
+            className="group relative flex h-[42px] w-[200px] items-center justify-center overflow-hidden rounded-lg border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
+            type="button"
+          >
+            <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
+            <span
+              className="pointer-events-none absolute inset-0 rounded-[11px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              style={{
+                backgroundImage:
+                  "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.95) 0%, rgba(111,81,151,0) 100%)",
+              }}
+            />
+            <span className="relative text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50 transition-transform duration-300 group-hover:-translate-y-[1px]">
+              {FREEMIUM.cta}
+            </span>
+            <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.25)]" />
+          </button>
+        </div>
+      </div>
+
       {/* plan cards */}
       {PLANS.map((plan, i) => (
         <PlanCard
           key={plan.name}
           plan={plan}
           left={[120, 541, 962, 1383][i]}
-          priceText={priceFor(plan)}
+          price={priceFor(plan)}
         />
       ))}
     </section>

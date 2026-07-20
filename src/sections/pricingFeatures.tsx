@@ -49,7 +49,7 @@ export const STANDARD_COLS: FeatureCols = [
     f("Ignore Brokers/States"),
     f("Hide cancelled loads"),
     f("Hide CA/MX loads"),
-    f("Advanced Profit Calculator", true),
+    f("Telegram Load\nNotifications", true),
   ],
 ]
 

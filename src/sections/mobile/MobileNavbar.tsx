@@ -88,6 +88,7 @@ export function MobileNavbar() {
               <a
                 key={l.label}
                 href={l.href}
+                {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
                 className="whitespace-nowrap rounded-full px-3 py-2 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-ink transition-colors hover:bg-black/[0.04]"
               >
                 {l.label}
@@ -139,6 +140,7 @@ export function MobileNavbar() {
             <a
               key={l.label}
               href={l.href}
+              {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
               style={{ transitionDelay: open ? `${80 + i * 40}ms` : "0ms" }}
               onClick={() => {
                 // unlock scroll synchronously — the anchor smooth-scroll fires
@@ -155,7 +157,12 @@ export function MobileNavbar() {
           ))}
         </nav>
         <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-5 pt-4 md:max-w-[768px] md:flex-row md:px-8">
-          <PillButton href="#contact" variant="white">
+          <PillButton
+            href="https://t.me/loadhunterextension"
+            target="_blank"
+            rel="noopener"
+            variant="white"
+          >
             Get Demo
           </PillButton>
           <PillButton href="#start" variant="violet">

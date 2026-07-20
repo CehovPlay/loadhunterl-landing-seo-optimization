@@ -31,7 +31,7 @@ const REVIEWS: Review[] = [
   },
   {
     quote:
-      "Ugh, It Seems To Be A Powerful and helpful Tool for booking loads ,makes everything so easier. Recommend To Taste It, And keep quality of the loads as high is possible with this tool",
+      "A powerful and helpful tool for booking loads — it makes everything so much easier. Recommend trying it: it keeps the quality of the loads as high as possible.",
     initials: "NC",
     name: "Nicolae Cojocari",
     y: 202,
@@ -167,7 +167,7 @@ export function Testimonials() {
     // No overflow-hidden: the marquee cards drift past the 1920 canvas into
     // the >1920 side gutters (the DesignFrame wrapper clips at the window
     // edge), instead of being cut at the canvas boundary.
-    <section ref={sectionRef} id="contact" className="relative h-[1084px] bg-gray-800">
+    <section ref={sectionRef} className="relative h-[1084px] bg-gray-800">
       {/* heading */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
         <Img

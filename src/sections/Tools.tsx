@@ -85,7 +85,7 @@ const BLOCKS: Block[] = [
   {
     key: "b",
     title: "Auto-emailing",
-    desc: "Our custom view eliminates the slowdowns and UI glitches of traditional integration, delivering a smooth and responsive experience across all supported load boards.",
+    desc: "Set your criteria — rate, RPM+, miles, truck type — and LoadHunter emails matching brokers the moment a load appears. One click for a single load, zero clicks once your rules are on.",
     items: [
       {
         icon: "/figma/tools/b-icon1.png",
@@ -150,14 +150,14 @@ const BLOCKS: Block[] = [
       {
         icon: "/figma/tools/e-icon1.png",
         iconW: 62,
-        title: "Advanced filtering",
-        sub: "Filter Telegram notifications to receive only the most relevant loads based on your preferences, improving efficiency.",
+        title: "Deadhead & trip overlays",
+        sub: "See origin, destination and deadhead miles plotted on the route before you commit — the entire road is planned in advance.",
       },
       {
         icon: "/figma/tools/e-icon2.png",
         iconW: 62,
-        title: "Multiple load-boards",
-        sub: "Connect multiple load boards to get loads from all of them in Telegram, streamlining your workflow.",
+        title: "One-click route view",
+        sub: "Open any load's route in the built-in map or jump straight to Google Maps without leaving your load board.",
       },
     ],
     mockup: "/figma/tools/e-mockup.png",

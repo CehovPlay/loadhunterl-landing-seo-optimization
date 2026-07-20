@@ -8,10 +8,15 @@
  * per-dispatcher price truncated to cents, then multiplied by n.
  */
 export function planTotal(base: number, n: number, annual: boolean): number {
+  const per = perDispatcher(base, n, annual)
+  return Math.round(per * n * 100) / 100
+}
+
+/** The discounted per-dispatcher monthly price — the figure the cards display. */
+export function perDispatcher(base: number, n: number, annual: boolean): number {
   const teamMult = n >= 4 ? 0.8 : n === 3 ? 0.9 : 1
   const annualMult = annual ? 0.9 : 1
-  const per = Math.floor(base * teamMult * annualMult * 100) / 100
-  return Math.round(per * n * 100) / 100
+  return Math.floor(base * teamMult * annualMult * 100) / 100
 }
 
 /** Slider zones anchored to each breakpoint's badge positions (design px

@@ -7,9 +7,9 @@ export const LINKS = [
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "https://t.me/loadhunterextension", external: true },
   { label: "Our offers", href: "#offers" },
-  { label: "$LHUNT", href: "#token" },
+  { label: "$LHUNT", href: "https://coin.loadhunt.ai", external: true },
 ]
 
 const PILL_SHADOW =
@@ -95,6 +95,7 @@ export function Navbar() {
               <a
                 key={l.label}
                 href={l.href}
+                {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
                 className={
                   "flex h-[28px] items-center justify-center px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black" +
                   (i === 0 ? " rounded-l-[99px]" : "") +
@@ -155,7 +156,9 @@ export function Navbar() {
             {/* actions */}
             <div className="relative flex h-[28px] items-center gap-[6px]">
               <a
-                href="#contact"
+                href="https://t.me/loadhunterextension"
+                target="_blank"
+                rel="noopener"
                 data-magnetic="0.2"
                 className="flex h-[28px] items-center justify-center rounded-full border border-border-light bg-white px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black"
                 style={{ boxShadow: PILL_SHADOW }}

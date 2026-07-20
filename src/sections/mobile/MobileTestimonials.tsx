@@ -15,7 +15,7 @@ const REVIEWS = [
     name: "Nicolae Cojocari",
     initials: "NC",
     quote:
-      "Ugh, It Seems To Be A Powerful and helpful Tool for booking loads ,makes everything so easier. Recommend To Taste It, And keep quality of the loads as high is possible with this tool",
+      "A powerful and helpful tool for booking loads — it makes everything so much easier. Recommend trying it: it keeps the quality of the loads as high as possible.",
     y: 56,
   },
   {
@@ -152,7 +152,7 @@ export function MobileTestimonials() {
   }, [])
 
   return (
-    <section ref={sectionRef} id="contact" className="overflow-hidden bg-gray-800 py-16">
+    <section ref={sectionRef} className="overflow-hidden bg-gray-800 py-16">
       <Container>
         <SectionHeader
           icon="/figma/tools/intro-icon.png"

@@ -61,8 +61,12 @@ export function ChaosZoom() {
     if (!section || !pin || !svg || !textEl || !bar || !cover) return
 
     if (prefersReducedMotion()) {
-      // no dive — just a static heading band
-      section.style.height = "1080px"
+      // no dive — just a static heading band. The SVG text is centred for the
+      // 2400px band, so without this translate it lands BELOW the shortened
+      // section, gray-800 on the gray-800 Tools bg — i.e. invisible.
+      const RM_H = 640
+      section.style.height = `${RM_H}px`
+      pin.style.transform = `translateY(${RM_H / 2 - SVG_H / 2}px)`
       return
     }
 

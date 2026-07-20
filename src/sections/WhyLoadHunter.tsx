@@ -131,7 +131,11 @@ export function WhyLoadHunter() {
               data-countup={j === 1 ? "" : undefined}
               className={
                 "w-[251px] pt-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px]" +
-                (j === 0 ? " text-white" : " text-center text-gray-100")
+                (j === 0
+                  ? " text-white"
+                  : j === 1
+                    ? " text-center text-white [text-shadow:0_0_18px_rgba(156,102,229,0.55)]"
+                    : " text-center text-gray-100")
               }
             >
               {t}
