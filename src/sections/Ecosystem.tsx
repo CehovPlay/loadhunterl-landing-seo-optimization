@@ -22,6 +22,9 @@ interface Product {
   /** products without a baked wordmark render the site glyph + this text */
   logoText?: string
   mockup: string
+  /** px to sink the mock below the row bottom — hides an awkward half-cut
+   *  last row baked into the export (crop stays bottom-only) */
+  mockDrop?: number
   comingSoon?: boolean
 }
 
@@ -66,6 +69,7 @@ const PRODUCTS: Product[] = [
       'One operating system for your whole trucking business — every load board, your fleet and daily operations in a single workspace.',
     logoText: 'huntOS',
     mockup: '/figma/desk/eco-os.png',
+    mockDrop: 26,
     comingSoon: true,
   },
 ]
@@ -89,7 +93,8 @@ function ProductRow({ product }: { product: Product }) {
         alt={`${product.name} product preview`}
         loading="lazy"
         decoding="async"
-        className="absolute bottom-0 left-[343px] h-[300px] w-auto max-w-none"
+        className="absolute left-[343px] h-[300px] w-auto max-w-none"
+        style={{ bottom: -(product.mockDrop ?? 0) }}
       />
 
       {/* text panel (344 wide, transparent over the white row) */}
