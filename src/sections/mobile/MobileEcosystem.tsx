@@ -101,8 +101,9 @@ export function MobileEcosystem() {
             <article
               key={p.name}
               data-card
-              className="relative flex flex-col overflow-hidden rounded-2xl border border-border-light bg-white p-6 pb-0"
+              className="relative flex flex-col overflow-hidden rounded-2xl border border-border-light bg-white pt-6"
             >
+              <div className="px-6">
               {/* no justify-between: Img's <picture class="contents"> exposes
                   its zero-width <source> children as flex items, which shoves
                   the img to flex-end — ml-auto on the pill instead */}
@@ -133,6 +134,7 @@ export function MobileEcosystem() {
               <p className="mt-6 text-[14px] font-medium leading-[18px] tracking-[-0.56px] text-ink-2">
                 {p.description}
               </p>
+              </div>
               {/* the mockup export carries its own bottom/right bleed */}
               <Img
                 src={p.mockup}

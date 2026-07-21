@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
-import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
+import { gateLoops, prefersReducedMotion, willChangeInView, isCoarsePointer } from "@/lib/inview"
 import { Container, SectionHeader, Stars } from "./ui"
 
 const REVIEWS = [
@@ -101,8 +101,12 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
 export function MobileTestimonials() {
   const sectionRef = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
+  // touch devices get a NATIVE snap carousel instead of the GSAP marquee —
+  // the perpetual per-frame tween visibly janks scrolling on phones
+  const [coarse] = useState(() => isCoarsePointer())
 
   useEffect(() => {
+    if (coarse) return
     const track = trackRef.current
     if (!track) return
     if (prefersReducedMotion()) return
@@ -149,7 +153,7 @@ export function MobileTestimonials() {
       stopGate()
       tween?.kill()
     }
-  }, [])
+  }, [coarse])
 
   return (
     <section ref={sectionRef} className="overflow-hidden bg-gray-800 py-16">
@@ -184,18 +188,27 @@ export function MobileTestimonials() {
         </div>
       </Container>
 
-      {/* marquee band — reduced-motion just shows the static row */}
-      <div className="mt-10">
-        <div ref={trackRef} className="flex w-max items-start">
-          {[0, 1].map((copy) => (
-            <div key={copy} className="flex items-start" aria-hidden={copy === 1}>
-              {REVIEWS.map((r) => (
-                <ReviewCard key={`${copy}-${r.name}`} r={r} />
-              ))}
-            </div>
+      {/* band: native swipe carousel on touch, GSAP marquee for fine pointers
+          (reduced-motion just shows the static row) */}
+      {coarse ? (
+        <div className="lh-snap mt-10 flex items-start overflow-x-auto px-5 pb-2">
+          {REVIEWS.map((r) => (
+            <ReviewCard key={r.name} r={r} />
           ))}
         </div>
-      </div>
+      ) : (
+        <div className="mt-10">
+          <div ref={trackRef} className="flex w-max items-start">
+            {[0, 1].map((copy) => (
+              <div key={copy} className="flex items-start" aria-hidden={copy === 1}>
+                {REVIEWS.map((r) => (
+                  <ReviewCard key={`${copy}-${r.name}`} r={r} />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   )
 }

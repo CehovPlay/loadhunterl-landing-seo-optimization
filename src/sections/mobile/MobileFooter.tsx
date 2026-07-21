@@ -42,9 +42,8 @@ export function MobileFooter() {
         {/* divider under the logo/subscribe block */}
         <div className="mt-8 h-px w-full bg-gray-650" />
 
-        {/* socials left, copyright right; on narrow phones the © line wraps
-            below the icons instead of squeezing into three lines beside them */}
-        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 pt-6">
+        {/* socials + copyright — centred, like everything in this footer */}
+        <div className="flex flex-col items-center gap-3 pt-6 text-center">
           <SocialLinks />
           <span className="whitespace-nowrap text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-[rgba(255,255,255,0.45)]">
             © 2026 LoadHunter. All rights reserved.

@@ -1,19 +1,14 @@
 import { Img } from "@/components/site/Img"
-import { ScaledAutomation } from "./ScaledAutomation"
 import { Container } from "./ui"
 
 /**
- * CTA — the Figma tablet structure (916:71405): the violet card full-width
- * with left-aligned content, and the "One click automation" panel stacked
- * BELOW it, cropped tight to its content (the desktop export cta-right.png
- * is mostly empty page background — the bright content lives in the
- * x 17–80% / y 49–78% region, so the wrapper crops to that window).
+ * CTA — the violet card with the Add-to-Chrome action. The "One click
+ * automation" panel was removed on mobile (user, 2026-07-21).
  */
 export function MobileCta() {
   return (
     <section id="start" className="bg-gray-800 pb-10 pt-16">
       <Container>
-        <div className="">
         <div
           data-card
           className="rounded-lg p-6 md:p-10"
@@ -52,12 +47,6 @@ export function MobileCta() {
               Add to Chrome
             </span>
           </a>
-        </div>
-
-        {/* automation panel — the actual desktop CtaAutomation, scaled to fit */}
-        <div className="mt-5">
-          <ScaledAutomation />
-        </div>
         </div>
       </Container>
     </section>

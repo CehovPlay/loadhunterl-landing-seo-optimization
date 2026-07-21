@@ -249,12 +249,10 @@ export function MobilePricing() {
           sub="Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!"
         />
 
-        {/* billing toggle — mobile Figma 1263:87527: the active option is a
-            SOLID violet pill, the "save up −10%" badge is a separate light
-            chip at the right end of the control */}
+        {/* billing toggle */}
         <div
           data-no-reveal
-          className="mx-auto mt-8 flex h-[52px] w-fit items-center gap-1 rounded-full bg-[rgba(231,231,231,0.1)] p-1.5 shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
+          className="mx-auto mt-8 flex h-[52px] w-fit items-center gap-2 rounded-full bg-[rgba(231,231,231,0.1)] p-1.5 shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
         >
           {(["Monthly", "Annually"] as const).map((label) => {
             const isAnnually = label === "Annually"
@@ -265,17 +263,38 @@ export function MobilePricing() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setAnnual(isAnnually)}
-                className={`flex h-10 items-center justify-center rounded-full px-5 text-[14px] font-medium leading-[16px] tracking-[-0.56px] transition-colors ${
-                  active ? "border border-white/80 bg-violet text-white shadow-pill" : "text-white"
-                }`}
+                className={`flex h-11 items-center justify-center gap-2 rounded-full transition-all ${
+                  isAnnually ? "pl-4 pr-[7px]" : "px-4"
+                } ${active ? "border border-white backdrop-blur-[10px]" : ""}`}
+                style={
+                  active
+                    ? {
+                        backgroundImage:
+                          "radial-gradient(110px 38px at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
+                        boxShadow: PILL_SHADOW,
+                      }
+                    : undefined
+                }
               >
-                {label}
+                <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+                  {label}
+                </span>
+                {isAnnually && (
+                  <span
+                    className="flex h-[28px] items-center whitespace-nowrap rounded-full border border-[rgba(232,232,232,0.75)] px-2.5 text-[12px] leading-[13px] text-white"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
+                    }}
+                  >
+                    {/* full label wraps to two lines inside the pill at 320 */}
+                    <span className="hidden min-[360px]:inline">save up to 10%</span>
+                    <span className="min-[360px]:hidden">−10%</span>
+                  </span>
+                )}
               </button>
             )
           })}
-          <span className="mx-1.5 flex h-[28px] items-center whitespace-nowrap rounded-full bg-white px-2.5 text-[12px] font-medium leading-[13px] tracking-[-0.48px] text-ink">
-            save up −10%
-          </span>
         </div>
 
         {/* dispatcher slider — same control as desktop */}
