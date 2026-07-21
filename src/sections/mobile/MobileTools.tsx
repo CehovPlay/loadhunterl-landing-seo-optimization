@@ -1,24 +1,17 @@
-import { useEffect, useRef } from "react"
 import { Img } from "@/components/site/Img"
-import { prefersReducedMotion } from "@/lib/inview"
 import { Container } from "./ui"
 
 type Item = { icon: string; title: string; sub: string }
-type Block = {
-  title: string
-  desc: string
-  mockup: string
-  /** negative bottom margin (% of width) hiding a baked-in empty bottom band
-   *  of the export — crops must only ever eat the bottom/right edges */
-  mockTrim?: string
-  items: [Item, Item]
-}
+type Block = { title: string; desc: string; mockup: string; items: [Item, Item] }
 
+/* Mobile mockups are dedicated exports (public/figma/mobile/tools-*.png,
+   724px = 2× the 362px slot) — NOT the desktop compositions. They're drawn
+   for the phone frame, so they render 1:1 with no cropping or masks. */
 const BLOCKS: Block[] = [
   {
     title: "Smart-board view",
     desc: "We've completely redesigned how load boards are displayed by replacing the default DAT view with our custom high-performance interface. This allows users to fully customize column layout, hide or show fields, and experience a smoother, faster workflow — without any of the typical lags or freezing.",
-    mockup: "/figma/tools/a-mockup.png",
+    mockup: "/figma/mobile/tools-a.png",
     items: [
       {
         icon: "/figma/tools/a-icon1.png",
@@ -35,7 +28,7 @@ const BLOCKS: Block[] = [
   {
     title: "Auto-emailing",
     desc: "Set your criteria — rate, RPM+, miles, truck type — and LoadHunter emails matching brokers the moment a load appears. One click for a single load, zero clicks once your rules are on.",
-    mockup: "/figma/tools/b-mockup.png",
+    mockup: "/figma/mobile/tools-b.png",
     items: [
       {
         icon: "/figma/tools/b-icon1.png",
@@ -51,9 +44,8 @@ const BLOCKS: Block[] = [
   },
   {
     title: "Telegram notifications",
-    mockTrim: "-26%",
     desc: "Get instant load alerts from multiple load boards like One and Truckstop directly in Telegram. Stay ahead with real-time updates across all your platforms.",
-    mockup: "/figma/tools/c-mockup.png",
+    mockup: "/figma/mobile/tools-c.png",
     items: [
       {
         icon: "/figma/tools/c-icon1.png",
@@ -70,7 +62,7 @@ const BLOCKS: Block[] = [
   {
     title: "Integrated TMS",
     desc: "Take full control of your dispatching process with a built-in TMS. Track driver timelines, manage workflows, and streamline operations — all within LoadHunter. Perfect for organizing your team and boosting efficiency.",
-    mockup: "/figma/tools/d-mockup.png",
+    mockup: "/figma/mobile/tools-d.png",
     items: [
       {
         icon: "/figma/tools/d-icon1.png",
@@ -87,7 +79,7 @@ const BLOCKS: Block[] = [
   {
     title: "Integrated map",
     desc: "Easily track routes and load details on an interactive map, all directly within your load board for enhanced convenience.",
-    mockup: "/figma/tools/e-mockup.png",
+    mockup: "/figma/mobile/tools-e.png",
     items: [
       {
         icon: "/figma/tools/e-icon1.png",
@@ -104,7 +96,7 @@ const BLOCKS: Block[] = [
   {
     title: "Broker reviews",
     desc: "Easily share your experiences working with brokers to help others make informed decisions and avoid potential issues.",
-    mockup: "/figma/tools/f-mockup.png",
+    mockup: "/figma/mobile/tools-f.png",
     items: [
       {
         icon: "/figma/tools/f-icon1.png",
@@ -121,7 +113,7 @@ const BLOCKS: Block[] = [
   {
     title: "Profit calculator",
     desc: "Estimate profitability by factoring in expenses like fuel and miles, giving you clear insights to maximize your earnings.",
-    mockup: "/figma/tools/g-mockup.png",
+    mockup: "/figma/mobile/tools-g.png",
     items: [
       {
         icon: "/figma/tools/g-icon1.png",
@@ -138,93 +130,20 @@ const BLOCKS: Block[] = [
 ]
 
 /**
- * Mobile Tools: intro + the 7 tool blocks stacked along the violet spine.
- * Like desktop, the glowing line is DRAWN by scroll: a dim track runs the
- * full height, and the luminous fill grows until it reaches the viewport
- * centre, igniting each block's node as it passes (scroll + rAF, gated by an
- * IntersectionObserver; reduced-motion gets the fully-drawn state).
+ * Mobile Tools — the user's own mobile structure (Figma 1263:87697):
+ * everything centre-aligned, NO spine line / nodes. Per block: full-width
+ * mockup → title → description → two items (icon, title, sub), all centred.
  */
 export function MobileTools() {
-  const areaRef = useRef<HTMLDivElement>(null)
-  const lineRef = useRef<HTMLDivElement>(null)
-  const fillRef = useRef<HTMLDivElement>(null)
-  const tipRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const area = areaRef.current
-    const line = lineRef.current
-    const fill = fillRef.current
-    const tip = tipRef.current
-    if (!area || !line || !fill || !tip) return
-    const nodes = Array.from(area.querySelectorAll<HTMLElement>("[data-spine-node]"))
-
-    const litNow = (px: number, lineTop: number) => {
-      for (const n of nodes) {
-        const r = n.getBoundingClientRect()
-        const y = r.top - lineTop + r.height / 2
-        const lit = px >= y
-        n.style.background = lit ? "var(--color-violet-200)" : "var(--color-gray-500)"
-        n.style.boxShadow = lit ? "0 0 10px rgba(201,179,236,0.9)" : "none"
-      }
-    }
-
-    if (prefersReducedMotion()) {
-      fill.style.height = "100%"
-      tip.style.opacity = "0"
-      litNow(Infinity, 0)
-      return
-    }
-
-    let raf = 0
-    const update = () => {
-      raf = 0
-      const rect = line.getBoundingClientRect()
-      // the glow tip tracks 60% of the viewport height
-      const px = Math.min(rect.height, Math.max(0, window.innerHeight * 0.6 - rect.top))
-      fill.style.height = `${px}px`
-      tip.style.transform = `translateY(${px}px)`
-      tip.style.opacity = px > 4 && px < rect.height - 4 ? "1" : "0"
-      litNow(px, rect.top)
-    }
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update)
-    }
-
-    // listen only while the section is anywhere near the viewport
-    let listening = false
-    const start = () => {
-      if (listening) return
-      listening = true
-      window.addEventListener("scroll", onScroll, { passive: true })
-      window.addEventListener("resize", onScroll)
-      onScroll()
-    }
-    const stop = () => {
-      if (!listening) return
-      listening = false
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("resize", onScroll)
-    }
-    const io = new IntersectionObserver(
-      (entries) => (entries[entries.length - 1].isIntersecting ? start() : stop()),
-      { rootMargin: "200px 0px 200px 0px" },
-    )
-    io.observe(area)
-    update()
-
-    return () => {
-      io.disconnect()
-      stop()
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-
   return (
     <section id="features" className="bg-gray-800 py-16">
       <Container>
-        {/* intro — desktop order: heading, subtitle, then the gear icon */}
-        <div className="flex flex-col">
-          <h2 className="max-w-[900px] text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-white md:text-[40px] md:leading-[48px]">
+        {/* intro — centred: gear icon plate, heading, dimmed sub */}
+        <div className="flex flex-col items-center text-center">
+          <div data-float className="w-[72px]">
+            <Img src="/figma/tools/intro-icon.png" alt="" loading="lazy" decoding="async" className="w-full" />
+          </div>
+          <h2 className="mt-8 max-w-[900px] text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-white md:text-[40px] md:leading-[48px]">
             Book better loads faster — without missing opportunities with game-changing tools for
             dispatchers
           </h2>
@@ -235,91 +154,39 @@ export function MobileTools() {
           </p>
         </div>
 
-        {/* spine area: the gear icon at the line's origin, the glowing line
-            born straight out of it, blocks shifted right of the line */}
-        <div ref={areaRef} className="relative mt-14">
-          <div data-float className="w-[72px]">
-            <Img src="/figma/tools/intro-icon.png" alt="" loading="lazy" decoding="async" className="w-full" />
-          </div>
-
-          {/* line container — centered under the icon (icon centre x=36) */}
-          <div ref={lineRef} aria-hidden className="absolute bottom-2 left-[35px] top-[64px] w-[2px]">
-            {/* track — dim line for the full height */}
-            <div className="absolute inset-0 rounded-full bg-[rgba(255,255,255,0.08)]" />
-            {/* glow fill — height driven by scroll */}
-            <div
-              ref={fillRef}
-              className="absolute left-0 top-0 w-full rounded-full"
-              style={{
-                height: 0,
-                background: "linear-gradient(to bottom, rgba(155,121,206,0.35) 0%, var(--color-violet-400) 100%)",
-                boxShadow: "0 0 12px rgba(155,121,206,0.55)",
-              }}
-            />
-            {/* luminous tip */}
-            <div
-              ref={tipRef}
-              className="absolute left-1/2 top-[-3px] size-[6px] -translate-x-1/2 rounded-full bg-violet-100"
-              style={{ opacity: 0, boxShadow: "0 0 14px 4px rgba(201,179,236,0.85)" }}
-            />
-          </div>
-
-          <div className="mt-12 flex flex-col gap-48 pl-[56px] md:gap-32 md:pl-[92px]">
-          {BLOCKS.map((b, bi) => (
-            <article
-              key={b.title}
-              data-card
-              className="relative"
-            >
-              {/* ignite node — centered on the line (x=36 of the area) */}
-              <span
-                data-spine-node
-                aria-hidden
-                className="absolute left-[-25px] top-[9px] size-[10px] rounded-full transition-[background,box-shadow] duration-300 md:left-[-61px]"
-                style={{ background: "var(--color-gray-500)" }}
+        <div className="mt-16 flex flex-col gap-20 md:gap-24">
+          {BLOCKS.map((b) => (
+            <article key={b.title} data-card className="flex flex-col items-center">
+              <Img
+                src={b.mockup}
+                alt={`${b.title} interface`}
+                loading="lazy"
+                decoding="async"
+                className="block w-full max-w-[560px]"
               />
-              {/* text column — on laptop it alternates sides with the mockup */}
-              <div className={bi % 2 === 1 ? "" : ""}>
-                <h3 className="text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
-                  {b.title}
-                </h3>
-                <p className="mt-3 max-w-[560px] text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
-                  {b.desc}
-                </p>
-                <div className="mt-8 flex flex-col gap-8">
-                  {b.items.map((it) => (
-                    <div key={it.title} className="flex flex-col gap-4 md:flex-row md:gap-5">
-                      <div className="size-10 shrink-0">
-                        <Img src={it.icon} alt="" loading="lazy" decoding="async" className="w-full" />
-                      </div>
-                      <div>
-                        <h4 className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
-                          {it.title}
-                        </h4>
-                        <p className="mt-2.5 max-w-[560px] text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
-                          {it.sub}
-                        </p>
-                      </div>
+              <h3 className="mt-8 text-center text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
+                {b.title}
+              </h3>
+              <p className="mt-3 max-w-[560px] text-center text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
+                {b.desc}
+              </p>
+              <div className="mt-10 flex flex-col gap-10 md:flex-row md:items-start md:gap-8">
+                {b.items.map((it) => (
+                  <div key={it.title} className="flex flex-col items-center text-center md:max-w-[340px]">
+                    <div className="size-12">
+                      <Img src={it.icon} alt="" loading="lazy" decoding="async" className="w-full" />
                     </div>
-                  ))}
-                </div>
-              </div>
-              {/* mockup bleeds edge-to-edge on the phone (the 56px spine indent
-                  made it unreadably small); the wrapper clips only the
-                  bottom/right, per the mock-crop rule */}
-              <div className="-ml-[76px] mt-8 w-[calc(100%+96px)] overflow-hidden md:ml-0 md:w-full">
-                <Img
-                  src={b.mockup}
-                  alt={`${b.title} interface`}
-                  loading="lazy"
-                  decoding="async"
-                  className="block w-full"
-                  style={b.mockTrim ? { marginBottom: b.mockTrim } : undefined}
-                />
+                    <h4 className="mt-4 text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+                      {it.title}
+                    </h4>
+                    <p className="mt-2.5 max-w-[420px] text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
+                      {it.sub}
+                    </p>
+                  </div>
+                ))}
               </div>
             </article>
           ))}
-          </div>
         </div>
       </Container>
     </section>

@@ -106,6 +106,58 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     3362,
     1102
   ],
+  "/figma/mobile/eco-drive.png": [
+    724,
+    540
+  ],
+  "/figma/mobile/eco-fleet.png": [
+    724,
+    540
+  ],
+  "/figma/mobile/eco-loadhunter.png": [
+    724,
+    480
+  ],
+  "/figma/mobile/eco-os.png": [
+    724,
+    540
+  ],
+  "/figma/mobile/eco-pay.png": [
+    724,
+    794
+  ],
+  "/figma/mobile/eco-tms.png": [
+    724,
+    528
+  ],
+  "/figma/mobile/tools-a.png": [
+    724,
+    570
+  ],
+  "/figma/mobile/tools-b.png": [
+    724,
+    874
+  ],
+  "/figma/mobile/tools-c.png": [
+    726,
+    590
+  ],
+  "/figma/mobile/tools-d.png": [
+    724,
+    493
+  ],
+  "/figma/mobile/tools-e.png": [
+    729,
+    626
+  ],
+  "/figma/mobile/tools-f.png": [
+    724,
+    1054
+  ],
+  "/figma/mobile/tools-g.png": [
+    724,
+    1391
+  ],
   "/figma/orbit-center.png": [
     382,
     382
