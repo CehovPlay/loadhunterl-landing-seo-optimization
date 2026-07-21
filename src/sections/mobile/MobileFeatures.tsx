@@ -37,9 +37,9 @@ export function MobileFeatures() {
             <div
               key={c.title}
               data-card
-              className="overflow-hidden rounded-lg border border-border-light bg-gray-75"
+              className="overflow-hidden rounded-lg border border-border-light bg-gray-75 md:flex md:items-center"
             >
-              <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center">
+              <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center md:w-[45%] md:shrink-0 md:items-start md:px-8 md:py-8 md:text-left">
                 <h3 className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">
                   {c.title}
                 </h3>
@@ -50,7 +50,7 @@ export function MobileFeatures() {
               {/* the Figma vector scene — window keeps the viewBox aspect, so the
                   full illustration is always visible (nothing important cropped) */}
               <div
-                className="relative mt-2 w-full overflow-hidden"
+                className="relative mt-2 w-full overflow-hidden md:mt-0 md:w-[55%]"
                 style={{
                   aspectRatio: (() => {
                     const [, , w, h] = c.viewBox.split(" ").map(Number)

@@ -71,7 +71,7 @@ export function MobileEcosystem() {
     <section id="offers" className="bg-gray-50 py-16">
       <Container>
         {/* centred icon plate — desktop composition */}
-        <div className="flex flex-col items-center text-center">
+        <div className="flex flex-col items-center text-center md:flex-row md:items-center md:gap-6 md:text-left">
           <div
             data-float
             className="relative size-[56px] overflow-hidden rounded-[14px]"
@@ -87,7 +87,7 @@ export function MobileEcosystem() {
               }}
             />
           </div>
-          <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px]">
+          <h2 className="mt-8 md:mt-0 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px]">
             Our ecosystem products
           </h2>
           <p className="mt-4 max-w-[640px] text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-ink">
@@ -97,7 +97,7 @@ export function MobileEcosystem() {
         </div>
 
         {/* product cards — stacked, one under another */}
-        <div className="mx-auto mt-10 flex max-w-[560px] flex-col gap-5">
+        <div className="mx-auto mt-10 flex max-w-[560px] flex-col gap-5 md:max-w-none">
           {PRODUCTS.map((p) => (
             <article
               key={p.name}
@@ -135,7 +135,7 @@ export function MobileEcosystem() {
                   </span>
                 )}
               </div>
-              <p className="mt-6 text-[14px] font-medium leading-[18px] tracking-[-0.56px] text-ink-2">
+              <p className="mt-6 max-w-[520px] text-[14px] font-medium leading-[18px] tracking-[-0.56px] text-ink-2">
                 {p.description}
               </p>
               </div>
