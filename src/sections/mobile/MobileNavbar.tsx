@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Img } from "@/components/site/Img"
-import { LINKS } from "@/sections/Navbar"
+import { CHROME_STORE_URL, LINKS } from "@/sections/Navbar"
 import { PILL_SHADOW, PillButton } from "./ui"
 
 /**
@@ -98,7 +98,9 @@ export function MobileNavbar() {
 
           {/* laptop: compact CTA on the right */}
           <a
-            href="#start"
+            href={CHROME_STORE_URL}
+            target="_blank"
+            rel="noopener"
             className="hidden h-10 shrink-0 items-center gap-2 rounded-full bg-violet px-5 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-white transition-transform active:scale-[0.98]"
           >
             Add to Chrome
@@ -165,7 +167,12 @@ export function MobileNavbar() {
           >
             Get Demo
           </PillButton>
-          <PillButton href="#start" variant="violet">
+          <PillButton
+            href={CHROME_STORE_URL}
+            target="_blank"
+            rel="noopener"
+            variant="violet"
+          >
             Add to Chrome
           </PillButton>
         </div>

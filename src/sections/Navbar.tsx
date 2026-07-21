@@ -2,6 +2,10 @@ import { Img } from "@/components/site/Img"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
+/** Chrome Web Store listing — every "Add to Chrome" CTA leads here. */
+export const CHROME_STORE_URL =
+  "https://chromewebstore.google.com/detail/loadhunter/ogepjnnfghfpkpjjieenkcppifhmmcdg"
+
 export const LINKS = [
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
@@ -165,7 +169,9 @@ export function Navbar() {
                 Get Demo
               </a>
               <a
-                href="#start"
+                href={CHROME_STORE_URL}
+                target="_blank"
+                rel="noopener"
                 data-magnetic="0.2"
                 className="flex h-[28px] items-center justify-center rounded-full bg-violet px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white"
                 style={{ boxShadow: PILL_SHADOW }}

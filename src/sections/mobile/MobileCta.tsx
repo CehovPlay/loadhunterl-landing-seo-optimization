@@ -1,4 +1,5 @@
 import { Img } from "@/components/site/Img"
+import { CHROME_STORE_URL } from "@/sections/Navbar"
 import { Container } from "./ui"
 
 /**
@@ -28,7 +29,9 @@ export function MobileCta() {
             tool.
           </p>
           <a
-            href="#start"
+            href={CHROME_STORE_URL}
+            target="_blank"
+            rel="noopener"
             className="mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white bg-white shadow-pill transition-transform active:scale-[0.98]"
           >
             <img

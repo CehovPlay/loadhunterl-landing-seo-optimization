@@ -6,6 +6,7 @@ import { Img } from "@/components/site/Img"
  * carries the "image 61" blurred glow spanning the full 867px height).
  */
 import { CtaAutomation } from "@/components/site/CtaAutomation"
+import { CHROME_STORE_URL } from "@/sections/Navbar"
 
 export function Cta() {
   return (
@@ -61,7 +62,10 @@ export function Cta() {
           LoadHunter: AI-powered tool.
         </p>
 
-        <button
+        <a
+          href={CHROME_STORE_URL}
+          target="_blank"
+          rel="noopener"
           data-lift
           className="absolute left-[40px] top-[545px] inline-flex h-[42px] items-center gap-[8px] rounded-full border border-white bg-white px-[24px] shadow-pill"
         >
@@ -81,7 +85,7 @@ export function Cta() {
           >
             Add to Chrome
           </span>
-        </button>
+        </a>
       </div>
     </section>
   )
