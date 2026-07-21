@@ -166,6 +166,13 @@
 }
 
 /* horizontal snap carousels (ecosystem / testimonials) */
+/* <source> must never generate a box: inside <Img>'s display:contents
+   <picture>, Chrome otherwise promotes sources to flex/grid items — phantom
+   gap slots and justify-between drift before the actual <img>. */
+picture > source {
+  display: none;
+}
+
 .lh-snap {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;

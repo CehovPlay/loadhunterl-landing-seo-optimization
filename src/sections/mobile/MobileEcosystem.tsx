@@ -104,19 +104,22 @@ export function MobileEcosystem() {
               className="relative flex flex-col overflow-hidden rounded-2xl border border-border-light bg-white pt-6"
             >
               <div className="px-6">
-              {/* no justify-between: Img's <picture class="contents"> exposes
-                  its zero-width <source> children as flex items, which shoves
-                  the img to flex-end — ml-auto on the pill instead */}
+              {/* Img's <picture class="contents"> exposes its zero-width
+                  <source> children as flex items — no justify-between (img
+                  lands at flex-end) and the Img needs a solid wrapper, else
+                  gap-3 inserts two phantom 12px gaps before the logo */}
               <div className="flex items-center gap-3">
                 {p.logo ? (
-                  <Img
-                    src={p.logo}
-                    alt={p.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-6 max-w-none"
-                    style={{ width: p.logoWidth }}
-                  />
+                  <div className="flex h-6 items-center">
+                    <Img
+                      src={p.logo}
+                      alt={p.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-6 max-w-none"
+                      style={{ width: p.logoWidth }}
+                    />
+                  </div>
                 ) : (
                   <div className="flex h-6 items-center gap-[9px]">
                     <img src="/figma/logo-icon.svg" alt="" loading="lazy" decoding="async" className="size-6 max-w-none" />
