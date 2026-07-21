@@ -1,5 +1,5 @@
 import { Img } from "@/components/site/Img"
-import { Container } from "./ui"
+import { Container, useMdUp } from "./ui"
 
 type Item = { icon: string; title: string; sub: string }
 type Block = { title: string; desc: string; mockup: string; items: [Item, Item] }
@@ -135,6 +135,8 @@ const BLOCKS: Block[] = [
  * mockup → title → description → two items (icon, title, sub), all centred.
  */
 export function MobileTools() {
+  // tablet uses the bigger "desk" exports, scaled to the padded content width
+  const mdUp = useMdUp()
   return (
     <section id="features" className="bg-gray-800 py-16">
       <Container>
@@ -158,11 +160,11 @@ export function MobileTools() {
           {BLOCKS.map((b) => (
             <article key={b.title} data-card className="flex flex-col items-center">
               <Img
-                src={b.mockup}
+                src={mdUp ? b.mockup.replace("/mobile/", "/desk/") : b.mockup}
                 alt={`${b.title} interface`}
                 loading="lazy"
                 decoding="async"
-                className="block w-full max-w-[560px]"
+                className="block w-full max-w-[560px] md:max-w-none"
               />
               <h3 className="mt-8 text-center text-[24px] font-medium leading-[32px] tracking-[-0.96px] text-white">
                 {b.title}
@@ -170,9 +172,9 @@ export function MobileTools() {
               <p className="mt-3 max-w-[560px] text-center text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
                 {b.desc}
               </p>
-              <div className="mt-10 flex flex-col gap-10 md:flex-row md:items-start md:gap-8">
+              <div className="mt-10 flex flex-col gap-10">
                 {b.items.map((it) => (
-                  <div key={it.title} className="flex flex-col items-center text-center md:max-w-[340px]">
+                  <div key={it.title} className="flex flex-col items-center text-center">
                     <div className="size-12">
                       <Img src={it.icon} alt="" loading="lazy" decoding="async" className="w-full" />
                     </div>

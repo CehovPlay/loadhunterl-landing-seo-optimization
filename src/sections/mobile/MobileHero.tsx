@@ -49,7 +49,7 @@ export function MobileHero() {
         </span>
 
         {/* rotating headline + sub (fixed box so the cycle can't shift layout) */}
-        <div className="mt-12 flex min-h-[180px] flex-col items-center md:min-h-[240px]">
+        <div className="mt-12 flex min-h-[180px] flex-col items-center">
           <RotatingHeadline
             h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em]"
             subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-ink"
@@ -69,14 +69,14 @@ export function MobileHero() {
         </p>
 
         {/* CTAs — stacked, full width, 48px; desktop order and skins */}
-        <div className="mt-12 flex w-full flex-col gap-3 md:w-auto md:flex-row md:justify-center">
-          <PillButton href="#pricing" variant="glass" className="md:w-[264px]">
+        <div className="mt-12 flex w-full flex-col gap-3">
+          <PillButton href="#pricing" variant="glass" className="">
             Start 14-day free trial
           </PillButton>
           <PillButton
             href="#start"
             variant="violet-radial"
-            className="md:w-[264px]"
+            className=""
           >
             <Img src="/figma/icon-diamond.svg" alt="" className="size-6" />
             Start booking in seconds

@@ -32,12 +32,12 @@ export function MobileFeatures() {
         </div>
 
         {/* cards — desktop card skin: stacked → 2-up (tablet) → 3-up (laptop) */}
-        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="mt-12 grid grid-cols-1 gap-5">
           {CARDS.map((c) => (
             <div
               key={c.title}
               data-card
-              className="overflow-hidden rounded-lg border border-border-light bg-gray-75 md:last:col-span-2"
+              className="overflow-hidden rounded-lg border border-border-light bg-gray-75"
             >
               <div className="flex flex-col items-center gap-3 px-4 pt-5 text-center">
                 <h3 className="text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-ink">

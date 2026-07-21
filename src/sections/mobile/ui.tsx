@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react"
 /**
  * Shared primitives for the mobile flow layout.
  *
@@ -129,3 +130,17 @@ export function PillButton({
 }
 
 export { Stars } from "@/components/site/Stars"
+
+/** ≥768px — the tablet band of the flow layout. Used to swap the mock art:
+ * phone gets /figma/mobile/*, tablet the larger /figma/desk/* exports. */
+const MD_QUERY = "(min-width: 768px)"
+export function useMdUp(): boolean {
+  return useSyncExternalStore(
+    (cb: () => void) => {
+      const m = window.matchMedia(MD_QUERY)
+      m.addEventListener("change", cb)
+      return () => m.removeEventListener("change", cb)
+    },
+    () => window.matchMedia(MD_QUERY).matches,
+  )
+}

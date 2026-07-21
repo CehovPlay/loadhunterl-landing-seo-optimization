@@ -1,5 +1,5 @@
 import { Img } from "@/components/site/Img"
-import { Container } from "./ui"
+import { Container, useMdUp } from "./ui"
 
 type Product = {
   name: string
@@ -66,6 +66,7 @@ const PRODUCTS: Product[] = [
  * right), description, and the mockup filling the card's bottom edge.
  */
 export function MobileEcosystem() {
+  const mdUp = useMdUp()
   return (
     <section id="offers" className="bg-gray-50 py-16">
       <Container>
@@ -140,7 +141,7 @@ export function MobileEcosystem() {
               </div>
               {/* the mockup export carries its own bottom/right bleed */}
               <Img
-                src={p.mockup}
+                src={mdUp ? p.mockup.replace("/mobile/", "/desk/") : p.mockup}
                 alt={`${p.name} product preview`}
                 loading="lazy"
                 decoding="async"

@@ -80,7 +80,7 @@ const BLOCKS: Block[] = [
         sub: "You can drag, resize, reorder, hide, or pin any load — customizing the load board interface to fit their unique dispatching flow.",
       },
     ],
-    mockup: "/figma/tools/a-mockup.png",
+    mockup: "/figma/desk/tools-a.png",
   },
   {
     key: "b",
@@ -100,7 +100,7 @@ const BLOCKS: Block[] = [
         sub: "Avoid duplicates and re-posted loads by sending emails only to new brokers, keeping requests relevant.",
       },
     ],
-    mockup: "/figma/tools/b-mockup.png",
+    mockup: "/figma/desk/tools-b.png",
   },
   {
     key: "c",
@@ -120,7 +120,7 @@ const BLOCKS: Block[] = [
         sub: "Connect multiple load boards to get loads from all of them in Telegram, streamlining your workflow.",
       },
     ],
-    mockup: "/figma/tools/c-mockup.png",
+    mockup: "/figma/desk/tools-c.png",
   },
   {
     key: "d",
@@ -140,7 +140,7 @@ const BLOCKS: Block[] = [
         sub: "Easily track driver schedules and task timelines for better coordination.",
       },
     ],
-    mockup: "/figma/tools/d-mockup.png",
+    mockup: "/figma/desk/tools-d.png",
   },
   {
     key: "e",
@@ -160,7 +160,7 @@ const BLOCKS: Block[] = [
         sub: "Open any load's route in the built-in map or jump straight to Google Maps without leaving your load board.",
       },
     ],
-    mockup: "/figma/tools/e-mockup.png",
+    mockup: "/figma/desk/tools-e.png",
   },
   {
     key: "f",
@@ -180,7 +180,7 @@ const BLOCKS: Block[] = [
         sub: "Get instant alerts on brokers who frequently cancel loads at the last minute or have low credit scores.",
       },
     ],
-    mockup: "/figma/tools/f-mockup.png",
+    mockup: "/figma/desk/tools-f.png",
   },
   {
     key: "g",
@@ -200,7 +200,7 @@ const BLOCKS: Block[] = [
         sub: "Evaluate load profitability including deadhead miles (DHO/DHD). Don't settle for high gross if the Rate Per Mile doesn't meet your margin goals.",
       },
     ],
-    mockup: "/figma/tools/g-mockup.png",
+    mockup: "/figma/desk/tools-g.png",
   },
 ]
 
@@ -236,7 +236,7 @@ function ToolBlock({ b, index }: { b: Block; index: number }) {
           decoding="async"
           data-parallax="0.04"
           className="max-w-none"
-          style={{ width: BLOCK_W }}
+          style={{ width: 688 }}
         />
       </div>
       <div className="mt-[80px] flex flex-col gap-[24px]">

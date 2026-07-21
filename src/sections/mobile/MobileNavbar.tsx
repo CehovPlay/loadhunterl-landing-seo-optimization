@@ -156,7 +156,7 @@ export function MobileNavbar() {
             </a>
           ))}
         </nav>
-        <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-5 pt-4 md:max-w-[768px] md:flex-row md:px-8">
+        <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-5 pt-4 md:max-w-[768px] md:px-8">
           <PillButton
             href="https://t.me/loadhunterextension"
             target="_blank"

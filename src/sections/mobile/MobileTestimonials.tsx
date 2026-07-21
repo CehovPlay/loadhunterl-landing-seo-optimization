@@ -46,7 +46,7 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
     <figure
       data-card
       data-no-reveal
-      className="group relative mr-4 w-[300px] shrink-0 overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-6 transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)] md:mr-10 md:w-[375px] md:p-10"
+      className="group relative mr-4 w-[300px] shrink-0 overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-6 transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)] md:p-10"
       style={{ marginTop: r.y }}
     >
       {/* desktop card bg: dark radial from the top-right corner */}

@@ -22,8 +22,6 @@ interface Product {
   /** products without a baked wordmark render the site glyph + this text */
   logoText?: string
   mockup: string
-  /** lh/tms mockups pan on hover — separate baked export */
-  mockupHover?: string
   comingSoon?: boolean
 }
 
@@ -34,8 +32,7 @@ const PRODUCTS: Product[] = [
       'LoadHunter Extension is an AI browser tool that enhances the load booking process on major load boards (DAT, Truckstop, etc.).',
     logoWidth: 150.5,
     logo: '/figma/eco/logo1.png',
-    mockup: '/figma/eco/row1.png',
-    mockupHover: '/figma/eco/row1-hover.png',
+    mockup: '/figma/desk/eco-loadhunter.png',
   },
   {
     name: 'huntTMS',
@@ -43,8 +40,7 @@ const PRODUCTS: Product[] = [
       'A complete transport management system — dispatch, driver timelines and operations on one platform.',
     logoWidth: 113,
     logo: '/figma/eco/logo2.png',
-    mockup: '/figma/eco/row2.png',
-    mockupHover: '/figma/eco/row2-hover.png',
+    mockup: '/figma/desk/eco-tms.png',
   },
   {
     name: 'huntPAY',
@@ -52,7 +48,7 @@ const PRODUCTS: Product[] = [
       'Faster settlements and factoring — automated invoicing and payment tracking so you get paid sooner.',
     logoWidth: 109,
     logo: '/figma/eco/logo3.png',
-    mockup: '/figma/eco/row3.png',
+    mockup: '/figma/desk/eco-pay.png',
     comingSoon: true,
   },
   {
@@ -61,7 +57,7 @@ const PRODUCTS: Product[] = [
       'The driver companion app — trips, documents and dispatch chat, right from the cab.',
     logoWidth: 130,
     logo: '/figma/eco/logo4.png',
-    mockup: '/figma/eco/row4.png',
+    mockup: '/figma/desk/eco-drive.png',
     comingSoon: true,
   },
   {
@@ -69,7 +65,7 @@ const PRODUCTS: Product[] = [
     description:
       'One operating system for your whole trucking business — every load board, your fleet and daily operations in a single workspace.',
     logoText: 'huntOS',
-    mockup: '/figma/eco/row6.png',
+    mockup: '/figma/desk/eco-os.png',
     comingSoon: true,
   },
 ]
@@ -85,25 +81,16 @@ function ProductRow({ product }: { product: Product }) {
 
   return (
     <div className="group relative h-[320px] w-[954px] shrink-0 overflow-hidden rounded-lg bg-white">
-      {/* product mockup (baked export, clipped by the row) */}
+      {/* product mockup — scaled to the row height, pinned to the window's
+          BOTTOM-LEFT corner; the row's overflow-hidden crops only the right
+          (the white exports are composed for a bottom-left anchor) */}
       <Img
         src={product.mockup}
         alt={`${product.name} product preview`}
         loading="lazy"
         decoding="async"
-        className="absolute left-[343px] top-0 h-[320px] w-[611px] max-w-none"
+        className="absolute bottom-0 left-[343px] h-[320px] w-auto max-w-none"
       />
-      {product.mockupHover && (
-        <Img
-          src={product.mockupHover}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          aria-hidden="true"
-          data-no-reveal
-          className="absolute left-[343px] top-0 h-[320px] w-[611px] max-w-none opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        />
-      )}
 
       {/* text panel (344 wide, transparent over the white row) */}
       {product.logo ? (

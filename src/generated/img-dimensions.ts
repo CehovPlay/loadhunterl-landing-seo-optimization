@@ -6,6 +6,54 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     608,
     477
   ],
+  "/figma/desk/eco-drive.png": [
+    1376,
+    578
+  ],
+  "/figma/desk/eco-loadhunter.png": [
+    1376,
+    540
+  ],
+  "/figma/desk/eco-os.png": [
+    1376,
+    476
+  ],
+  "/figma/desk/eco-pay.png": [
+    1376,
+    640
+  ],
+  "/figma/desk/eco-tms.png": [
+    1376,
+    580
+  ],
+  "/figma/desk/tools-a.png": [
+    1376,
+    851
+  ],
+  "/figma/desk/tools-b.png": [
+    1376,
+    875
+  ],
+  "/figma/desk/tools-c.png": [
+    1376,
+    1118
+  ],
+  "/figma/desk/tools-d.png": [
+    1376,
+    1208
+  ],
+  "/figma/desk/tools-e.png": [
+    1390,
+    948
+  ],
+  "/figma/desk/tools-f.png": [
+    1433,
+    890
+  ],
+  "/figma/desk/tools-g.png": [
+    1336,
+    724
+  ],
   "/figma/eco-icon.png": [
     168,
     168
@@ -41,38 +89,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/eco/logo6.png": [
     228,
     48
-  ],
-  "/figma/eco/row1-hover.png": [
-    1222,
-    640
-  ],
-  "/figma/eco/row1.png": [
-    1222,
-    640
-  ],
-  "/figma/eco/row2-hover.png": [
-    1222,
-    640
-  ],
-  "/figma/eco/row2.png": [
-    1222,
-    640
-  ],
-  "/figma/eco/row3.png": [
-    1222,
-    640
-  ],
-  "/figma/eco/row4.png": [
-    1222,
-    640
-  ],
-  "/figma/eco/row5.png": [
-    1222,
-    640
-  ],
-  "/figma/eco/row6.png": [
-    1222,
-    640
   ],
   "/figma/feat-card1-img.png": [
     1092,
@@ -110,10 +126,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     724,
     540
   ],
-  "/figma/mobile/eco-fleet.png": [
-    724,
-    540
-  ],
   "/figma/mobile/eco-loadhunter.png": [
     724,
     480
@@ -136,7 +148,7 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   ],
   "/figma/mobile/tools-b.png": [
     724,
-    874
+    788
   ],
   "/figma/mobile/tools-c.png": [
     726,
@@ -152,11 +164,11 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   ],
   "/figma/mobile/tools-f.png": [
     724,
-    1054
+    854
   ],
   "/figma/mobile/tools-g.png": [
     724,
-    1391
+    1280
   ],
   "/figma/orbit-center.png": [
     382,
@@ -210,10 +222,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     124,
     124
   ],
-  "/figma/tools/a-mockup.png": [
-    1848,
-    1174
-  ],
   "/figma/tools/b-icon1.png": [
     104,
     124
@@ -221,10 +229,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/tools/b-icon2.png": [
     104,
     124
-  ],
-  "/figma/tools/b-mockup.png": [
-    1848,
-    1174
   ],
   "/figma/tools/c-icon1.png": [
     124,
@@ -234,10 +238,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     124,
     124
   ],
-  "/figma/tools/c-mockup.png": [
-    1907,
-    1848
-  ],
   "/figma/tools/d-icon1.png": [
     104,
     124
@@ -245,10 +245,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/tools/d-icon2.png": [
     104,
     124
-  ],
-  "/figma/tools/d-mockup.png": [
-    1848,
-    1256
   ],
   "/figma/tools/e-icon1.png": [
     124,
@@ -258,10 +254,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     124,
     124
   ],
-  "/figma/tools/e-mockup.png": [
-    1886,
-    1274
-  ],
   "/figma/tools/f-icon1.png": [
     104,
     124
@@ -270,10 +262,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     104,
     124
   ],
-  "/figma/tools/f-mockup.png": [
-    1848,
-    1372
-  ],
   "/figma/tools/g-icon1.png": [
     124,
     124
@@ -281,10 +269,6 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/tools/g-icon2.png": [
     124,
     124
-  ],
-  "/figma/tools/g-mockup.png": [
-    1848,
-    1135
   ],
   "/figma/tools/intro-icon.png": [
     168,

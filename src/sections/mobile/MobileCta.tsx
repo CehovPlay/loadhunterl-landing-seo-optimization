@@ -29,7 +29,7 @@ export function MobileCta() {
           </p>
           <a
             href="#start"
-            className="mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white bg-white shadow-pill transition-transform active:scale-[0.98] md:w-[220px]"
+            className="mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white bg-white shadow-pill transition-transform active:scale-[0.98]"
           >
             <img
               src="/figma/tail/cta-chrome.svg"

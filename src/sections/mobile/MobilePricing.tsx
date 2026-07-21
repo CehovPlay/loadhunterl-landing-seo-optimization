@@ -343,7 +343,7 @@ export function MobilePricing() {
 
         {/* plan selector tabs — swipeable row, active tab mirrors the billing
             toggle's active pill */}
-        <div data-no-reveal className="lh-snap -mx-5 mt-10 flex gap-2 overflow-x-auto px-5 md:mx-0 md:justify-center md:px-0">
+        <div data-no-reveal className="lh-snap -mx-5 mt-10 flex gap-2 overflow-x-auto px-5">
           {PLAN_DEFS.map((p, i) => {
             const active = selected === i
             return (
@@ -407,7 +407,7 @@ export function MobilePricing() {
                   {group.title}
                 </p>
                 {/* tablet: rows flow into two columns */}
-                <div className="md:grid md:grid-cols-2 md:gap-x-10">
+                <div className="">
                   {group.rows.map((r) => (
                     <div
                       key={r.label}
