@@ -34,7 +34,7 @@ export type PlanDef = {
 export const PLAN_DEFS: PlanDef[] = [
   {
     name: "Freemium",
-    icon: "/figma/pricing/icon-freemium.svg",
+    icon: "/figma/pricing/icon-freemium.png",
     price: "$0",
     unit: "/forever",
     note: "No credit card required.",
@@ -42,21 +42,21 @@ export const PLAN_DEFS: PlanDef[] = [
   },
   {
     name: "Basic",
-    icon: "/figma/pricing/icon-basic.svg",
+    icon: "/figma/pricing/icon-basic.png",
     base: 9.99,
     note: "Save 20% with team rate.",
     cta: "Start 14-day free trial",
   },
   {
     name: "Standard",
-    icon: "/figma/pricing/icon-standard.svg",
+    icon: "/figma/pricing/icon-standard.png",
     base: 14.99,
     note: "Save 20% with team rate.",
     cta: "Start 14-day free trial",
   },
   {
     name: "Pro",
-    icon: "/figma/pricing/icon-pro.svg",
+    icon: "/figma/pricing/icon-pro.png",
     base: 29.99,
     note: "Best value for 10+ dispatchers.",
     cta: "Start 14-day free trial",

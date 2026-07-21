@@ -44,7 +44,7 @@ function Cell({ value }: { value: CellValue }) {
  * Prices stay live from the toggle + slider above; per prod loadhunter.io the
  * figure is the TEAM TOTAL per month. CTAs live in the table's footer row. */
 function HeaderCell({ plan, price }: { plan: PlanDef; price: Price }) {
-  const cropped = plan.icon.endsWith(".png")
+  const cropped = plan.icon.includes("icon-ai")
   return (
     <div className="flex h-full w-[260px] flex-col items-center gap-[12px] px-[20px] pb-[20px] pt-[20px]">
       {/* icon — the 64px plate art scaled to the table's 40px plate; the AI png
@@ -176,7 +176,7 @@ export function Pricing() {
     <section id="pricing" className="relative h-[2652px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_2652px]">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
-        <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] h-[84px] w-[84px] max-w-none" />
+        <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.png" alt="" className="absolute left-[-10px] top-[-4px] h-[84px] w-[84px] max-w-none" />
       </div>
 
       {/* heading */}

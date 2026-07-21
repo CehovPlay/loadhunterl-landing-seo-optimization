@@ -159,7 +159,7 @@ export function MobileTestimonials() {
     <section ref={sectionRef} className="overflow-hidden bg-gray-800 py-16">
       <Container>
         <SectionHeader
-          icon="/figma/testimonials/header-icon.svg"
+          icon="/figma/testimonials/header-icon.png"
           title="What clients say"
           sub="Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials"
         />

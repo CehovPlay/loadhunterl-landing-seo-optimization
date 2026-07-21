@@ -178,6 +178,10 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     3840,
     4028
   ],
+  "/figma/pricing/header-icon.png": [
+    252,
+    252
+  ],
   "/figma/pricing/icon-ai.png": [
     168,
     168
@@ -185,6 +189,10 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/pricing/icon-basic.png": [
     168,
     168
+  ],
+  "/figma/pricing/icon-freemium.png": [
+    252,
+    252
   ],
   "/figma/pricing/icon-pro.png": [
     168,
@@ -213,6 +221,10 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/tail/social-3.png": [
     72,
     72
+  ],
+  "/figma/testimonials/header-icon.png": [
+    252,
+    252
   ],
   "/figma/tools/a-icon1.png": [
     124,

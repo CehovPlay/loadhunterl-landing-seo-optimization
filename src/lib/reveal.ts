@@ -23,6 +23,12 @@ import gsap from "gsap"
 const RISE = 28
 
 export function initReveal() {
+  // 2026-07-21, user's animation policy: the shader, the hero entrance and
+  // the partner marquee are the only "alive" zones — everything below renders
+  // STATIC, no appear/reveal animations. The whole cascade is disabled; the
+  // machinery below is kept for easy re-enabling.
+  const REVEAL_DISABLED = true
+  if (REVEAL_DISABLED) return () => {}
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return () => {}
   }

@@ -27,10 +27,6 @@ export function MobileHeroShader() {
   const [shown, setShown] = useState(false)
 
   useEffect(() => {
-    // phones/tablets skip the shader entirely (2026-07-21: the drift engine
-    // visibly janks scrolling on an iPhone 13 — the static hero gradient is
-    // the mobile experience, WebGPU stays a fine-pointer luxury)
-    if (window.matchMedia("(pointer: coarse)").matches) return
     if (noShader || prefersReducedMotion() || !("gpu" in navigator)) return
     let alive = true
     // don't compete with the LCP hero paint / critical JS: probe the adapter

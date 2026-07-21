@@ -30,7 +30,7 @@ function cardStyle(plan: PlanDef): React.CSSProperties {
 function PlanIdentity({ plan }: { plan: PlanDef }) {
   // icon-ai is a PNG with a baked dark square around the rounded plate — the
   // SVG icons are transparent. Crop the PNG to the plate so no bg shows.
-  const cropped = plan.icon.endsWith(".png")
+  const cropped = plan.icon.includes("icon-ai")
   return (
     <div className="flex items-center gap-3">
       <div
@@ -244,7 +244,7 @@ export function MobilePricing() {
     <section id="pricing" className="bg-gray-800 py-16">
       <Container>
         <SectionHeader
-          icon="/figma/pricing/header-icon.svg"
+          icon="/figma/pricing/header-icon.png"
           title={<>Choose the plan that&rsquo;s perfect for your business</>}
           sub="Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!"
         />
