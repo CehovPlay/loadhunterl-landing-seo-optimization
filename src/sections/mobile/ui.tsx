@@ -49,7 +49,9 @@ export function SectionHeader({
     <div className="relative z-10 flex flex-col items-center text-center">
       {icon && (
         <div data-float className="mb-5 w-[72px]">
-          <img src={icon} alt="" loading="lazy" decoding="async" className="w-full" />
+          {/* header icons are square SVG art without intrinsic size — Safari
+              falls back to a 300x150 ratio unless the height is pinned */}
+          <img src={icon} alt="" loading="lazy" decoding="async" className="aspect-square w-full" />
         </div>
       )}
       <h2

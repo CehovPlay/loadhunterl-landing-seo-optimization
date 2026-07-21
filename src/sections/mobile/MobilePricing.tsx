@@ -43,8 +43,8 @@ function PlanIdentity({ plan }: { plan: PlanDef }) {
           decoding="async"
           className={
             cropped
-              ? "absolute left-[-7.5px] top-[-3px] w-[63px] max-w-none"
-              : "w-[62px] max-w-none -translate-x-2 -translate-y-1"
+              ? "absolute left-[-7.5px] top-[-3px] h-[63px] w-[63px] max-w-none"
+              : "h-[62px] w-[62px] max-w-none -translate-x-2 -translate-y-1"
           }
         />
       </div>

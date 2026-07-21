@@ -175,7 +175,7 @@ export function Testimonials() {
           alt=""
           loading="lazy"
           decoding="async"
-          className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
+          className="absolute left-[-10px] top-[-4px] h-[84px] w-[84px] max-w-none"
         />
       </div>
       <h2 className="absolute left-[418px] top-[124px] w-[1084px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">

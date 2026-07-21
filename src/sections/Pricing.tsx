@@ -56,7 +56,7 @@ function HeaderCell({ plan, price }: { plan: PlanDef; price: Price }) {
           loading="lazy"
           decoding="async"
           className="absolute max-w-none"
-          style={{ left: -6.25, top: -2.5, width: 52.5 }}
+          style={{ left: -6.25, top: -2.5, width: 52.5, height: 52.5 }}
         />
       </div>
       {/* name + badge */}
@@ -176,7 +176,7 @@ export function Pricing() {
     <section id="pricing" className="relative h-[2660px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_2660px]">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
-        <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
+        <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] h-[84px] w-[84px] max-w-none" />
       </div>
 
       {/* heading */}
