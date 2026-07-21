@@ -61,7 +61,7 @@ export function MobileHeroShader() {
       style={{ opacity: shown ? 1 : 0 }}
     >
       <Suspense fallback={null}>
-        <ShaderStack drift onReady={() => setShown(true)} />
+        <ShaderStack onReady={() => setShown(true)} />
       </Suspense>
       {/* re-apply the hero's bottom fade so the shader dissolves into the
           var(--color-bg-light) partner band exactly like the static background does */}

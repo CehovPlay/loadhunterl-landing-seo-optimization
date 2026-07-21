@@ -280,6 +280,35 @@ function Spine() {
       >
         {/* static track */}
         <path d={SPINE_PATH} stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+        {/* soft glow around the drawn fill. This used to be an SVG
+            drop-shadow filter on the animated path — but a filter is
+            re-rasterised over the path's ~1920×9800 region on EVERY
+            strokeDashoffset change, i.e. every scroll frame (the main jank
+            source in this section, pathological in Safari). Two wide
+            low-alpha strokes drawn under the crisp line read the same and
+            cost nothing. */}
+        <path
+          data-spine-glow
+          d={SPINE_PATH}
+          stroke="#9b79ce"
+          strokeWidth="10"
+          strokeOpacity="0.06"
+          strokeLinecap="round"
+          strokeDasharray={1000}
+          strokeDashoffset={1000}
+          pathLength={1000}
+        />
+        <path
+          data-spine-glow
+          d={SPINE_PATH}
+          stroke="#9b79ce"
+          strokeWidth="4"
+          strokeOpacity="0.16"
+          strokeLinecap="round"
+          strokeDasharray={1000}
+          strokeDashoffset={1000}
+          pathLength={1000}
+        />
         {/* scroll-drawn fill — one continuous stroke from the icon; the muted
             glow (user: line dimmer, only the tip sphere stays bright) */}
         <path
@@ -290,7 +319,6 @@ function Spine() {
           strokeDasharray={1000}
           strokeDashoffset={1000}
           pathLength={1000}
-          style={{ filter: "drop-shadow(0 0 6px rgba(155,121,206,0.55))" }}
         />
         <defs>
           <linearGradient
@@ -342,8 +370,13 @@ export function Tools() {
     const section = ref.current
     if (!section) return
     const fill = section.querySelector<SVGPathElement>("[data-spine-fill]")
+    const glows = [...section.querySelectorAll<SVGPathElement>("[data-spine-glow]")]
     const tip = section.querySelector<HTMLElement>("[data-spine-tip]")
     if (!fill || !tip) return
+    const setDash = (v: string) => {
+      fill.style.strokeDashoffset = v
+      for (const g of glows) g.style.strokeDashoffset = v
+    }
 
     const lit = (key: string, on: boolean) => {
       const node = section.querySelector<HTMLElement>(`[data-tool-node="${key}"]`)
@@ -360,7 +393,7 @@ export function Tools() {
     }
 
     if (prefersReducedMotion()) {
-      fill.style.strokeDashoffset = "0"
+      setDash("0")
       BLOCKS.forEach((b) => lit(b.key, true))
       return
     }
@@ -448,16 +481,20 @@ export function Tools() {
     const totalLen = fill.getTotalLength()
     const verticalLen = SPINE_BOTTOM - CURVE_END_Y
     const curveLen = totalLen - verticalLen
+    let lastKey = NaN // skip all writes on frames where nothing scrolled
     const onTick = () => {
       const rect = section.getBoundingClientRect()
       const vh = window.innerHeight
+      const frameKey = rect.top + vh * 1e-7
+      if (frameKey === lastKey) return
+      lastKey = frameKey
       const scale = rect.width / 1920
       const y60 = (vh * 0.6 - rect.top) / scale // 60%-line in canvas px
       const s =
         y60 <= CURVE_END_Y
           ? curveLen * gsap.utils.clamp(0, 1, (y60 - ICON_Y) / (CURVE_END_Y - ICON_Y))
           : curveLen + Math.min(verticalLen, y60 - CURVE_END_Y)
-      fill.style.strokeDashoffset = String(1000 * (1 - s / totalLen))
+      setDash(String(1000 * (1 - s / totalLen)))
       const vp = gsap.utils.clamp(0, 1, (y60 - CURVE_END_Y) / verticalLen)
       tip.style.transform = `translateY(${vp * verticalLen}px)`
       // the tip appears only once the front has passed the FIRST node —

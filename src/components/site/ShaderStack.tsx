@@ -1,7 +1,6 @@
 import {
   Shader,
   Swirl,
-  ChromaFlow,
   FlutedGlass,
   FilmGrain,
   Group,
@@ -19,22 +18,19 @@ import {
  */
 export default function ShaderStack({
   polarCenter,
-  drift = false,
   onReady,
 }: {
   polarCenter?: { x: number; y: number }
-  /** Autonomous linear mode (flow-layout hero, touch devices): the violet
-   *  accent drifts on its own — the polar recipe without the polar bend —
-   *  instead of the cursor-driven ChromaFlow. */
-  drift?: boolean
   /** Fires when the WebGPU renderer is up — used to cross-fade the canvas
    *  over the static fallback gradients. */
   onReady?: () => void
 }) {
-  // Polar (orbit) mode animates on its own: a violet Swirl — a couple of
-  // tones brighter/lighter than the brand #6f5197 — drifts continuously, no
-  // cursor involvement. The linear (hero) mode keeps the cursor-driven violet
-  // ChromaFlow on desktop, or the same autonomous drift on touch (`drift`).
+  // Every mode animates on its own — no cursor involvement anywhere (the
+  // cursor-driven ChromaFlow hero was retired 2026-07-21: the hero drifts
+  // autonomously like the radial orbit band). Polar (orbit) mode: a violet
+  // Swirl — a couple of tones brighter/lighter than the brand #6f5197 —
+  // drifts around the ring centre. Linear (hero) mode: the same autonomous
+  // drift, violet fenced to the upper band.
   const input = polarCenter ? (
     // Violet is radially fenced so it can NEVER flood the section: in
     // pre-polar space y = radius, and the white LinearGradient overlay
@@ -68,14 +64,14 @@ export default function ShaderStack({
         edges="stretch"
       />
     </Group>
-  ) : drift ? (
+  ) : (
     // Violet fenced to the upper band (echoes the static fallback tints):
     // the luminance mask fades the drifting violet Swirl out by ~80% height,
     // so the area above the CTAs stays calm and light.
     <Group>
-      {/* lower contrast than the desktop input: without ChromaFlow's white
-          wash on top, a #eaeaea swirl through the fluted glass reads as loud
-          holographic rainbows — #f0f0f0 keeps it a soft pearl drift */}
+      {/* without a white wash on top, a #eaeaea swirl through the fluted
+          glass reads as loud holographic rainbows — #f0f0f0 keeps it a soft
+          pearl drift */}
       <Swirl colorA="#ffffff" colorB="#f0f0f0" detail={1.7} speed={0.3} />
       <Swirl
         colorA="#9b79ce"
@@ -96,26 +92,10 @@ export default function ShaderStack({
         edges="stretch"
       />
     </Group>
-  ) : (
-    <ChromaFlow
-      baseColor="#ffffff"
-      downColor="#6f5197"
-      leftColor="#6f5197"
-      rightColor="#6f5197"
-      upColor="#6f5197"
-      momentum={13}
-      radius={3.5}
-      opacity={0.55}
-    >
-      {/* colorB stays slightly darker than white even on white bands — a
-          flat input gives FlutedGlass nothing to refract and the whole
-          effect vanishes */}
-      <Swirl colorA="#ffffff" colorB="#eaeaea" detail={1.7} />
-    </ChromaFlow>
   )
   const fluted = (
     <FlutedGlass
-      aberration={drift ? 0.28 : 0.61}
+      aberration={polarCenter ? 0.61 : 0.28}
       angle={polarCenter ? 90 : 31}
       frequency={8}
       highlight={0.12}

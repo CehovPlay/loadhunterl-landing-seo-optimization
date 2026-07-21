@@ -31,6 +31,16 @@ function useLenis(mobile: boolean) {
   useLayoutEffect(() => {
     const nativeOnly = isCoarsePointer() || prefersReducedMotion()
 
+    // Deep links (/#pricing etc.): the browser's initial jump to the anchor
+    // happens while the preloader holds `html.lh-pl-lock { overflow:hidden }`,
+    // so it lands nowhere and the visitor is left at the top. Re-apply the
+    // hash the moment the preloader unlocks (or now, if it's already gone).
+    const jumpToHash = () => {
+      const hash = window.location.hash
+      const el = hash.length > 1 ? document.querySelector(hash) : null
+      if (el) (el as HTMLElement).scrollIntoView({ behavior: "instant", block: "start" })
+    }
+
     let lenis: Lenis | null = null
     let update: ((time: number) => void) | null = null
     let onPreloaderDone: (() => void) | null = null
@@ -45,9 +55,15 @@ function useLenis(mobile: boolean) {
       // preloader dispatches lh:preloader-done at the moment it unlocks.
       if (document.documentElement.classList.contains("lh-pl-lock")) {
         lenis.stop()
-        onPreloaderDone = () => lenis?.start()
+        onPreloaderDone = () => {
+          lenis?.start()
+          jumpToHash()
+        }
         window.addEventListener("lh:preloader-done", onPreloaderDone, { once: true })
       }
+    } else if (document.documentElement.classList.contains("lh-pl-lock")) {
+      onPreloaderDone = jumpToHash
+      window.addEventListener("lh:preloader-done", onPreloaderDone, { once: true })
     }
 
     const onClick = (e: MouseEvent) => {
@@ -68,6 +84,53 @@ function useLenis(mobile: boolean) {
       if (onPreloaderDone) window.removeEventListener("lh:preloader-done", onPreloaderDone)
       if (update) gsap.ticker.remove(update)
       if (lenis) lenis.destroy()
+    }
+  }, [mobile])
+}
+
+/**
+ * Warm the heaviest below-the-fold rasters while the preloader still owns the
+ * screen (and on first idle after it). Their lazy <Img>s otherwise start
+ * fetching + AVIF-decoding right as they approach the viewport — which landed
+ * exactly under the ChaosZoom dive and read as a scroll freeze. Fetch + decode
+ * off the critical path instead; the browser keeps them in its caches.
+ * AVIF is what <Img> picks in every current browser; a non-AVIF browser just
+ * re-fetches its fallback lazily as before.
+ */
+function useImageWarmup(mobile: boolean) {
+  useLayoutEffect(() => {
+    const base = mobile ? "/figma/mobile" : "/figma/desk"
+    const urls = [
+      `${base}/tools-a.avif`,
+      `${base}/tools-b.avif`,
+      `${base}/tools-c.avif`,
+      `${base}/tools-d.avif`,
+      `${base}/tools-e.avif`,
+      `${base}/tools-f.avif`,
+      `${base}/tools-g.avif`,
+      `${base}/eco-loadhunter.avif`,
+      `${base}/eco-tms.avif`,
+    ]
+    let cancelled = false
+    const warm = () => {
+      if (cancelled) return
+      for (const src of urls) {
+        const img = new Image()
+        img.decoding = "async"
+        img.src = src
+        img.decode?.().catch(() => {})
+      }
+    }
+    // wait for the window load (critical assets done), then first idle
+    const idle = () => {
+      if ("requestIdleCallback" in window) requestIdleCallback(warm, { timeout: 4000 })
+      else setTimeout(warm, 1200)
+    }
+    if (document.readyState === "complete") idle()
+    else window.addEventListener("load", idle, { once: true })
+    return () => {
+      cancelled = true
+      window.removeEventListener("load", idle)
     }
   }, [mobile])
 }
@@ -121,6 +184,7 @@ declare global {
 function App() {
   const mobile = useFlowLayout()
   useLenis(mobile)
+  useImageWarmup(mobile)
 
   if (mobile) {
     return (

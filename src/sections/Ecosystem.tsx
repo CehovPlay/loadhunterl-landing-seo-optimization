@@ -164,10 +164,15 @@ export function Ecosystem() {
       {/* data-no-reveal: the card runs its own pin/expand/list-scroll
           choreography, so it opts out of the global fade-rise cascade (which
           would otherwise fight the pin and could leave rows stuck hidden). */}
+      {/* NO will-change on the stage: the pin animates left/width/height
+          (layout, not transform), so a pinned compositor layer buys nothing —
+          and its rasterisation, snapped at fractional page-zoom device
+          pixels, drew a stale hairline seam at the viewport edge until any
+          forced repaint (e.g. opening DevTools) refreshed it. */}
       <div
         data-eco-stage
         data-no-reveal
-        className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-lg bg-gray-50 will-change-transform"
+        className="absolute left-[120px] top-[-623px] h-[1000px] w-[1680px] overflow-hidden rounded-lg bg-gray-50"
       >
         {/* Inner content layer: the panel expands symmetrically around it, so
             this is counter-translated by the pin to keep the content fixed —

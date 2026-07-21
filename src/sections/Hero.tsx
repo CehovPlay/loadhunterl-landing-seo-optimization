@@ -11,8 +11,23 @@ export function Hero() {
   return (
     <section className="relative h-[1080px] w-full">
       {/* animated shader background (experiment) — portalled full-bleed behind
-          the page; also paints the hero's var(--color-hero) base into the side gutters */}
-      <ShaderBand baseColor="#efefef" />
+          the page; also paints the hero's var(--color-hero) base into the side gutters.
+          The static fallback echoes the flow-layout hero tints so Safari
+          (no working WebGPU) gets a composed band, not bare gray. */}
+      <ShaderBand
+        baseColor="#efefef"
+        fallback={
+          <div
+            aria-hidden
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(120% 60% at 85% -5%, rgba(156,102,229,0.16) 0%, rgba(156,102,229,0) 60%)," +
+                "radial-gradient(90% 50% at 0% 30%, rgba(111,81,151,0.10) 0%, rgba(111,81,151,0) 65%)",
+            }}
+          />
+        }
+      />
 
       {/* copy — centered */}
       <div className="absolute inset-x-0 top-[203px] z-20 flex flex-col items-center gap-[70px] px-[120px] text-center">

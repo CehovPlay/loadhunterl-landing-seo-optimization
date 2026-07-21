@@ -101,6 +101,13 @@ export function initEcosystemPin() {
   const setWinY = win ? gsap.quickSetter(win, "y", "px") : noop
   const setWinH = win ? gsap.quickSetter(win, "height", "px") : noop
 
+  // frame-skip: the tick used to run (and WRITE width/height/left/radius —
+  // i.e. force style/layout work) on every gsap frame for the life of the
+  // page. Re-writing identical values is pure waste, so remember the last
+  // applied progress and bail when nothing changed. `lastKey` folds in the
+  // viewport size so a resize mid-rest still re-applies.
+  let lastKey = NaN
+
   const tick = () => {
     const r = section.getBoundingClientRect()
     if (!r.width) return
@@ -109,14 +116,27 @@ export function initEcosystemPin() {
     // viewport size in design px — the card's fullscreen target. Above the
     // canvas width it exceeds the canvas (the card spills into the gutters);
     // short viewports never shrink the card below its resting size.
-    const vwD = Math.max(cfg.cardW, document.documentElement.clientWidth / s)
-    const vhD = Math.max(cfg.cardH, vh / s)
+    // +16 design px of overscan (~8 css px per side): the fullscreen
+    // left/width land on fractions after the canvas scale AND the browser's
+    // page zoom, and their combined device-pixel rounding left a several-px
+    // strip of page bg at the screen edge on some zoom levels (seen at ~68%
+    // browser zoom). Nothing sits near the card edges at fullscreen, so a
+    // generous overhang past the viewport is invisible — and no rounding
+    // regime can ever expose the background again.
+    const OVERSCAN = 16
+    const vwD = Math.max(cfg.cardW, document.documentElement.clientWidth / s + OVERSCAN)
+    const vhD = Math.max(cfg.cardH, vh / s + OVERSCAN)
     // viewport Y at which the card top must sit to be vertically centred
     const centeredTop = (vh - cfg.cardH * s) / 2
     // section.top at the instant the card (resting at cardTop) reaches centre
     const pinStartTop = centeredTop - cfg.cardTop * s
     // progress into the pin, in design px (clamped to the runway)
     const t = clamp(0, TOTAL, (pinStartTop - r.top) / s)
+
+    // parked before/after the runway with an unchanged viewport → no writes
+    const key = t + vwD * 1e-7 + vhD * 1e-9
+    if (key === lastKey) return
+    lastKey = key
 
     // phase 1: fullscreen expansion (0 → 1 over the first `expand` px)
     const p = clamp(0, 1, t / cfg.expand)
@@ -161,11 +181,31 @@ export function initEcosystemPin() {
     setList(-listT)
   }
 
-  gsap.ticker.add(tick)
+  // run the ticker only while the section is anywhere near the viewport —
+  // same gating as the Tools spine. Off-screen the pin geometry cannot
+  // change, so the per-frame rect read + quick-setter writes are dropped
+  // entirely. Generous rootMargin: the card hangs ABOVE the section top
+  // (cardTop is negative) and must be pinned before it reaches centre.
   tick()
+  let ticking = false
+  const io = new IntersectionObserver(
+    (entries) => {
+      const e = entries[entries.length - 1]
+      if (e.isIntersecting && !ticking) {
+        ticking = true
+        gsap.ticker.add(tick)
+      } else if (!e.isIntersecting && ticking) {
+        ticking = false
+        gsap.ticker.remove(tick)
+      }
+    },
+    { rootMargin: "1200px 0px 400px 0px" },
+  )
+  io.observe(section)
 
   return () => {
-    gsap.ticker.remove(tick)
+    io.disconnect()
+    if (ticking) gsap.ticker.remove(tick)
     gsap.set([stage, list], {
       clearProps: "transform,width,height,left,borderRadius",
     })

@@ -1,11 +1,12 @@
-import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 
 /**
- * Full-bleed animated shader band (experiment): Swirl base → ChromaFlow
- * (violet cursor flow) → FlutedGlass refraction → FilmGrain, rendered by the
- * `shaders` WebGPU engine. Children act as the input of the wrapping effect,
- * so the stack nests inside-out: Swirl is the bottom layer, FilmGrain the top.
+ * Full-bleed animated shader band (experiment): autonomous violet Swirl drift
+ * → FlutedGlass refraction → FilmGrain, rendered by the `shaders` WebGPU
+ * engine — no cursor involvement anywhere (2026-07-21). Children act as the
+ * input of the wrapping effect, so the stack nests inside-out: Swirl is the
+ * bottom layer, FilmGrain the top.
  *
  * The canvas must span the whole viewport width, not the centered 1920
  * artboard — so (BleedBg-style) this component measures the section band it
@@ -33,6 +34,7 @@ export function ShaderBand({
   baseColor,
   polarCenter,
   extendBottom = 0,
+  fallback,
 }: {
   baseColor: string
   /** When set, the fluted pattern is bent into concentric circles around this
@@ -43,6 +45,11 @@ export function ShaderBand({
    *  card's hang-over zone). Remember polarCenter y is a fraction of the
    *  EXTENDED band height. */
   extendBottom?: number
+  /** Static stand-in painted UNDER the shader canvas. When the WebGPU engine
+   *  runs (Chrome) its opaque canvas simply covers it; when it can't come up
+   *  (Safari today, no-WebGPU hardware) this is what the visitor sees instead
+   *  of a bare flat band. Keep it cheap and purely decorative. */
+  fallback?: ReactNode
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [box, setBox] = useState<{ top: number; height: number } | null>(null)
@@ -96,10 +103,16 @@ export function ShaderBand({
               pointerEvents: "none",
             }}
           >
+            {fallback}
             {noShader || !engineReady ? null : (
-              <Suspense fallback={null}>
-                <ShaderStack polarCenter={polarCenter} />
-              </Suspense>
+              // absolute wrapper: the fallback layer is positioned, and a
+              // positioned sibling later in DOM order is what paints above it
+              // (an in-flow canvas would paint UNDER the positioned fallback)
+              <div className="absolute inset-0">
+                <Suspense fallback={null}>
+                  <ShaderStack polarCenter={polarCenter} />
+                </Suspense>
+              </div>
             )}
           </div>,
           document.body,
