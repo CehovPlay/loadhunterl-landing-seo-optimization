@@ -15,6 +15,7 @@ npm run typecheck  # tsc -b --noEmit only
 npm run lint       # oxlint (config in .oxlintrc.json)
 npm run preview    # serve the production build
 npm run transcode  # regenerate AVIF/WebP siblings for public/figma/** (add -- --force to rebuild all)
+node scripts/gen-chaos-headline.mjs  # rebuild the ChaosZoom headline outline from assets/chaos-headline.svg
 ```
 
 There is no test suite. "Verifying a change" means visual verification. Chrome is at
@@ -100,6 +101,12 @@ across first paint and resize).
 
 ## Animation system (data-attribute driven)
 
+**Animation policy (user, 2026-07-21, final):** the shader bands + hero headline entrance + partner
+marquee are the only "alive" zones; everything below the hero is STATIC — `initReveal` is hard-disabled
+via `REVEAL_DISABLED = true` in `reveal.ts` (machinery kept, flip the flag to restore). Desktop-only
+scroll choreography stays: Tools spine draw, ChaosZoom dive, ecosystem pin, testimonials marquee.
+All shader modes drift autonomously — the cursor-driven ChromaFlow hero was retired the same day.
+
 Two init functions run once per canvas mount, from `CanvasEffects` rendered after the landing tree in
 `App.tsx` (so the DOM exists before they hide elements for reveal):
 
@@ -114,6 +121,25 @@ Two init functions run once per canvas mount, from `CanvasEffects` rendered afte
 `src/lib/inview.ts` exposes `isCoarsePointer()` / `prefersReducedMotion()`. Lenis is created only for
 fine-pointer + motion-enabled visitors (`useLenis` in `App.tsx`); touch and reduced-motion fall back
 to native scroll + `scrollIntoView` for anchor links.
+
+## Engine gotchas (ChaosZoom & WebGPU shaders)
+
+- **ChaosZoom's headline is vector OUTLINES, not text.** The dive zooms the SVG viewBox ~×430; GPU
+  Chrome's font-glyph rasterisation falls apart beyond ~×50 (fragments jump around the screen —
+  headless Chrome does NOT reproduce this, it software-rasterises fine), and canvas TextMetrics
+  differ between Blink and WebKit. Pipeline: designer's Figma export `assets/chaos-headline.svg` →
+  `scripts/gen-chaos-headline.mjs` → `src/generated/chaosHeadline.ts` (joined path + width/baseline/
+  hyphen ink box). To change the headline, replace the SVG and re-run the script. Letters must never
+  fade to translucent (user requirement) — the dive is pure opaque geometry.
+- **The `shaders` WebGPU engine does not run under Safari/WebKit** (engine init error; canvas stays
+  empty). `ShaderBand` takes a `fallback` ReactNode painted UNDER the canvas — hero: static violet
+  tints; Orbit: dotted rings + violet core (the shader IS the orbit graphic; without the fallback the
+  section is a white void). The canvas needs its own absolute wrapper so it paints ABOVE the
+  positioned fallback. Playwright WebKit (no `navigator.gpu` at all) is the local stand-in for
+  Safari-class rendering.
+- **Every scroll ticker frame-skips**: ecosystemPin / Tools spine / ChaosZoom memoise their last
+  written values and bail when nothing changed — re-setting an identical `viewBox` still repaints the
+  whole SVG and was the freeze between Features and the dive. Keep this pattern for any new ticker.
 
 ## Design tokens & images
 
@@ -131,9 +157,14 @@ to native scroll + `scrollIntoView` for anchor links.
 
 ## Production wiring (backend-owned)
 
-- All conversion CTAs (hero, pricing incl. Freemium's "Start for free", "Add to Chrome") are
-  intentionally unwired `<button>`s — the backend connects them before launch. Same for the footer
-  Subscribe forms (preventDefault stubs) and the LinkedIn footer icon (`href="#"` until the page exists).
+- **Wired (2026-07-21):** every "Add to Chrome" CTA (desktop navbar pill, CTA card, mobile navbar +
+  menu + CTA card) links to the Chrome Web Store listing — single source: `CHROME_STORE_URL` in
+  `src/sections/Navbar.tsx`. "Get Demo"/"Contact" → t.me/loadhunterextension; footer socials mirror
+  PROD; "$LHUNT" → coin.loadhunt.ai.
+- **Still stubs:** the trial CTAs (hero "Start 14-day free trial" / "Start booking in seconds", all
+  pricing-table CTAs incl. Freemium's "Start for free") are unwired `<button>`s — on PROD
+  loadhunter.io they lead to app.loadhunter.io. Same for the footer Subscribe forms
+  (preventDefault stubs).
 - Analytics: GA4 loads only when the build gets `VITE_GA_ID=G-XXXXXXXXXX` (see `src/lib/analytics.ts`).
 - SEO: OG/Twitter/canonical in `index.html`, `public/robots.txt` + `sitemap.xml`, `og-image.png`
   (1200×630 hero render — regenerate after hero changes). All URLs assume `https://loadhunter.io`.

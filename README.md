@@ -2,7 +2,7 @@
 
 Marketing site for **LoadHunter**, an AI copilot for freight dispatchers (browser extension for DAT, Truckstop and other load boards).
 
-On the desktop it's a pixel-perfect reproduction of the Figma 1920px artboard (whole-page mean pixel deviation from the design render: **~1.1/255**, i.e. font-antialiasing level); below 1024px it switches to a hand-built responsive flow layout. Both are enriched with GSAP scroll choreography and an interactive pricing calculator.
+On the desktop it's a pixel-perfect reproduction of the Figma 1920px artboard (whole-page mean pixel deviation from the design render: **~1.1/255**, i.e. font-antialiasing level); below 1024px it switches to a hand-built responsive flow layout. Both are enriched with GSAP scroll choreography, a WebGPU shader hero and an interactive pricing table.
 
 ![Preview](docs/preview.png)
 
@@ -10,8 +10,9 @@ On the desktop it's a pixel-perfect reproduction of the Figma 1920px artboard (w
 
 - [React 19](https://react.dev) + TypeScript, built with [Vite](https://vite.dev)
 - [Tailwind CSS 4](https://tailwindcss.com) — design tokens from Figma live in `src/index.css` (`@theme`)
-- [GSAP](https://gsap.com) — scroll-reveal cascades, the ecosystem scroll-pin, marquees, micro-animations
-- [Lenis](https://lenis.darkroom.engineering) — smooth scrolling, synced with GSAP's ticker
+- [GSAP](https://gsap.com) — scroll choreography (spine draw, dive, ecosystem pin), marquees, micro-animations
+- [Lenis](https://lenis.darkroom.engineering) — smooth scrolling, synced with GSAP's ticker (mouse visitors only; touch scrolls natively)
+- [shaders](https://www.npmjs.com/package/shaders) — WebGPU hero/orbit bands, autonomous drift (no cursor tracking), with static CSS/SVG fallbacks where WebGPU is unavailable (Safari today)
 - Static [Inter](https://rsms.me/inter/) via Fontsource (weight 500 — the only weight the design uses)
 
 ## Getting started
@@ -27,7 +28,31 @@ npm run transcode  # regenerate AVIF/WebP siblings for public/figma/** (append -
 ```
 
 Requires Node 20+. There is no test suite — a change is verified visually (see `CLAUDE.md` for the
-headless-Chrome screenshot workflow).
+headless-browser screenshot workflow). **Judge scroll performance on `npm run preview`, not the dev
+server** — dev-mode React is several times slower.
+
+## Handover / integration points (backend)
+
+The site is fully static — `npm run build` → deploy `dist/` to any static host. It is currently
+served from Vercel (project `loadhunter-extension-landing`, deployed via `npx vercel --prod`); moving
+to the `loadhunter.io` domain is just pointing the host at the same build.
+
+Already wired:
+
+- **"Add to Chrome"** (navbar, CTA card, mobile menu — all 5 instances) → the Chrome Web Store
+  listing. The URL lives in one place: `CHROME_STORE_URL` in `src/sections/Navbar.tsx`.
+- **"Get Demo" / "Contact"** → `https://t.me/loadhunterextension`
+- Footer socials → Telegram / Instagram / YouTube / X (mirrors production loadhunter.io)
+- **$LHUNT** → `https://coin.loadhunt.ai`
+
+Still stubs, to be wired before launch:
+
+- **Trial CTAs** — hero "Start 14-day free trial" / "Start booking in seconds" and every pricing-table
+  CTA are unwired `<button>`s. On production loadhunter.io the trial buttons lead to
+  `https://app.loadhunter.io`.
+- **Subscribe forms** (both footers) — `preventDefault` stubs, no endpoint.
+- **Analytics** — GA4 loads only when the build gets `VITE_GA_ID=G-XXXXXXXXXX` (`src/lib/analytics.ts`).
+- SEO meta, `robots.txt`, `sitemap.xml` and the OG image already assume `https://loadhunter.io`.
 
 ## How it's built
 
@@ -53,71 +78,90 @@ centers with side gutters (body background + `BleedBg` cover them); below 1920px
 the *same* components; there is deliberately no third section tree. Conventions: content column
 `px-5 max-w-[440px]` → `md:px-8 md:max-w-[768px]`, `py-16` sections, touch targets ≥44px, type via
 `clamp()` with `md:` bumps, horizontal snap carousels (`.lh-snap`) for ecosystem/testimonials, an
-accordion FAQ, and a stepper (not the desktop drag slider) in Pricing.
+accordion FAQ, and plan-selector tabs (not the desktop compare table) in Pricing.
 
 ### Sections (desktop)
 
 | Component | Content |
 |---|---|
-| `Navbar` | pill navigation with anchor links (smooth-scrolled through Lenis) |
-| `Hero` | gradient headline, product mockup, extension settings popup |
-| `Features` | partners logo strip + three feature cards |
-| `Tools` | seven alternating feature blocks (Smart-board, Auto-emailing, Telegram, TMS, Map, Broker reviews, Profit calculator) |
-| `Orbit` | live badge pills orbiting the centre mark on canvas-drawn dotted rings |
-| `Ecosystem` | scroll-pinned products panel — see below |
-| `WhyLoadHunter` | comparison table (HTML) over a glow backdrop, vector check/cross icons |
-| `ChaosZoom` | "From chaos to AI-powered dispatch" deep-zoom transition |
-| `Pricing` | interactive plan cards + calculator — see below |
-| `Testimonials` | live full-bleed marquee of review cards |
-| `Faq`, `Cta`, `Footer` | FAQ list, "Add to Chrome" card, footer with vector orbit rings |
+| `Navbar` | pill navigation; compact portalled pill after scrolling |
+| `Hero` | rotating typed headline over the WebGPU shader band (autonomous violet drift; static tints on Safari) |
+| `Features` | partners logo marquee + three feature cards with inline-SVG scenes |
+| `ChaosZoom` | "From chaos to AI-Powered dispatch" — scroll-scrubbed dive into the hyphen; the headline is a **pre-generated SVG outline** (see `scripts/gen-chaos-headline.mjs`), not live text |
+| `Tools` | seven alternating feature blocks along a glowing spine (Smart-board, Auto-emailing, Telegram, TMS, Map, Broker reviews, Profit calculator) |
+| `Orbit` | concentric-ring shader band around the centre mark (dotted-ring SVG fallback on Safari) |
+| `Ecosystem` | scroll-pinned products panel — expands to fullscreen, then the list scrolls; see below |
+| `Pricing` | live-priced compare table (5 plans × 40 feature rows) + dispatcher slider and billing toggle |
+| `Testimonials` | full-bleed review marquee (native snap carousel on touch) |
+| `Faq`, `Cta`, `Footer` | FAQ list, "Add to Chrome" card, compact footer with socials |
 
 The `src/sections/mobile/*` tree mirrors these as flow-layout components (`MobileHero`, `MobileTools`,
-`MobilePricing`, `MobileTestimonials`, …), sharing the content/logic modules below.
+`MobilePricing`, `MobileTestimonials`, …), sharing the content/logic modules (`planMatrix.tsx`,
+`pricingLogic.ts`, `RotatingHeadline`, `Stars`, `LINKS`/`CHROME_STORE_URL`).
 
 Text, tables, buttons and lists are real HTML with exact Figma geometry; purely decorative visuals
-(product mockups, glows) are 2× PNG/SVG exports under `public/figma/`, served as AVIF→WebP→PNG through
+(product mockups, glows) are 2× PNG exports under `public/figma/`, served as AVIF→WebP→PNG through
 the `<Img>` component (`npm run transcode` generates the AVIF/WebP siblings and a size manifest in
-`src/generated/img-dimensions.ts` to avoid layout shift).
+`src/generated/img-dimensions.ts` to avoid layout shift). The heaviest below-fold mockups are
+prefetched and decoded on first idle (`useImageWarmup` in `App.tsx`) so they never decode mid-scroll.
+
+### Preloader
+
+An inline (pre-bundle) preloader in `index.html` owns the screen during hydration: the LH mark
+self-assembles, the wordmark wipes out of it, then two dark panels split apart to reveal the site.
+It locks scrolling while visible; `App.tsx` re-applies `location.hash` deep links on unlock.
 
 ### Ecosystem scroll-pin
 
 `src/lib/ecosystemPin.ts` pins the "Our ecosystem products" panel at the viewport centre and drives
 two reversible, scroll-linked phases: the card expands in all directions until it covers the whole
-viewport (corners flattening to zero), then the product list scrolls through it before the pin
-releases flush with the next section. It reads live `getBoundingClientRect()` every ticker frame
-instead of using ScrollTrigger, so it is immune to the scaled canvas and Lenis smoothing.
+viewport (with overscan past the edges — page-zoom rounding must never expose the background), then
+the product list scrolls through it before the pin releases flush with the next section. It reads
+live `getBoundingClientRect()` per ticker frame instead of ScrollTrigger (immune to the scaled canvas
+and Lenis smoothing), is IntersectionObserver-gated and skips frames where nothing changed.
+
+### ChaosZoom dive
+
+The section zooms the SVG viewBox ~×430 into the headline's hyphen. At that depth GPU Chrome's font
+rasterisation falls apart, so the headline ships as **vector outlines** generated from the designer's
+Figma export: `assets/chaos-headline.svg` → `node scripts/gen-chaos-headline.mjs` →
+`src/generated/chaosHeadline.ts`. To change the headline, replace the SVG export and re-run the
+script — no code changes needed.
 
 ### Interactive pricing
 
-The production loadhunter.io calculator (`src/sections/pricingLogic.ts` is shared between desktop and
-mobile):
-
-- 1–50 dispatchers on a draggable slider (desktop) / stepper (mobile), non-linear zones anchored to the discount badges
-- team discount: 3 dispatchers → −10%, 4+ → −20%; annual billing → extra ×0.9
-- per-dispatcher price is truncated to cents, then multiplied by headcount — card prices update live
+`src/sections/pricingLogic.ts` mirrors the production loadhunter.io calculator and is shared between
+desktop and mobile: team rate (3 dispatchers → −10%, 4+ → −20%), annual billing → extra ×0.9 applied
+without re-rounding, displayed figure = monthly **team total**. `src/sections/planMatrix.tsx` holds
+the plan definitions and the 40-row feature matrix both layouts render.
 
 ### Animations
 
-- `src/lib/reveal.ts` — GSAP `ScrollTrigger.batch` cascading fade/rise as elements enter the viewport, once per element; respects `prefers-reduced-motion`. Opt out with `[data-no-reveal]`.
-- `src/lib/micro.ts` — data-attribute micro-animation layer: `data-float`, `data-pulse`, `data-parallax`, `data-lift`, `data-magnetic`, `data-tilt`, `data-countup`, button press feedback
-- Testimonials marquee drifts right-to-left; hovering a card eases the drift to a stop and lights the card with the design's violet hover state
-- Orbit badges revolve clockwise, counter-rotating to stay upright; the rotation runs on compositor layers and pauses whenever the section is offscreen
+Current animation policy (2026-07-21): the shader bands, the hero headline entrance and the partner
+marquee are the only "alive" zones — everything below is static (the scroll-reveal cascade in
+`src/lib/reveal.ts` is disabled via `REVEAL_DISABLED`; the machinery is kept). Desktop keeps its
+scroll choreography: the Tools spine draw, the ChaosZoom dive, the ecosystem pin and the testimonials
+marquee. `src/lib/micro.ts` provides the data-attribute micro-layer (`data-float`, `data-parallax`,
+`data-magnetic`, `data-countup`, press feedback…). Every loop is IntersectionObserver-gated to cost
+nothing off-screen, and every scroll ticker skips frames where nothing changed.
 
 ## Project layout
 
 ```
+assets/              designer source exports (chaos-headline.svg)
 public/figma/        2x asset exports from the Figma file (per-section subfolders)
+scripts/             transcode-images.mjs, gen-chaos-headline.mjs
 src/
-  components/site/   DesignFrame (canvas scaler), BleedBg, Img, useFlowLayout
-  lib/               reveal.ts, micro.ts, ecosystemPin.ts (scroll systems)
+  components/site/   DesignFrame (canvas scaler), ShaderBand/ShaderStack, BleedBg, Img, …
+  lib/               reveal.ts, micro.ts, ecosystemPin.ts, inview.ts (scroll systems)
   sections/          desktop sections (1920 canvas), pixel-positioned
   sections/mobile/   flow-layout sections (< 1024px), mobile-first + md: tablet
-  sections/pricingFeatures.tsx, pricingLogic.ts   shared pricing data/logic
-  generated/         img-dimensions.ts (generated by npm run transcode)
+  sections/planMatrix.tsx, pricingLogic.ts   shared pricing data/logic
+  generated/         img-dimensions.ts, chaosHeadline.ts (generated — do not edit)
   index.css          Tailwind 4 theme: Figma color/typography/radius/shadow tokens
 ```
 
 ## More docs
 
 - [`PERFORMANCE.md`](PERFORMANCE.md) — scroll-jank fixes and the measured main-thread / bundle wins
-- [`CLAUDE.md`](CLAUDE.md) — deep architecture notes, mobile gotchas, and the visual-verification (headless Chrome) workflow
+- [`CLAUDE.md`](CLAUDE.md) — deep architecture notes, mobile gotchas, and the visual-verification (headless browser) workflow

@@ -108,3 +108,30 @@ Not blocking; ordered by value.
 **High-DPR / large monitors:** removing the no-op blurs matters most here (`backdrop-filter` cost grows ~radius², and `transform:scale` enlarges the kernel). **Guardrail:** never add `will-change`/`translateZ` to the DesignFrame inner — at high DPR it promotes the whole ~1920×19,624 canvas into one GPU texture (hundreds of MB). Isolation is achieved via `content-visibility` instead.
 
 **Reduced-motion / touch:** every infinite loop now bails to its static frame; smooth-scroll and parallax are skipped; only tap/press feedback remains.
+
+## Pass 2 (2026-07-21) — scroll tickers, Safari, decode warm-up
+
+Symptom: freezes around the Features→ChaosZoom boundary and inside the long scroll sections;
+rendering artifacts in Safari. Fixes (measured on `npm run preview`, headless Chromium, auto-scroll
+probe over the affected zone: avg frame 43–70 ms → 24–36 ms, worst 835–1690 ms → 240–760 ms):
+
+1. **Redundant `viewBox` writes repainted the ChaosZoom SVG every scroll frame.** During the whole
+   approach the computed camera values are constant, but re-setting an identical `viewBox`
+   invalidates the 6000×2400 SVG. All scroll tickers (ChaosZoom, ecosystemPin, Tools spine) now
+   memoise last-written values and bail on no-change frames.
+2. **ecosystemPin ran on every GSAP frame for the life of the page**, writing `left/width/height/
+   borderRadius` (layout + paint) even at rest. Now IntersectionObserver-gated like the spine.
+3. **SVG `drop-shadow` filter on the animated spine path** re-rasterised a ~1920×9800 filter region
+   per scroll frame (pathological in Safari). Replaced with two wide low-alpha strokes under the
+   crisp line — visually identical, no filter.
+4. **`will-change` removed from ChaosZoom's pin and the ecosystem stage.** Both animate via
+   viewBox/layout, so the forced compositor layer bought nothing and cost a (viewport × DPR)²
+   texture; the stage's pinned raster also drew a stale hairline seam at fractional page zoom.
+5. **Below-fold mockup decode moved off the scroll path**: the 7 Tools + 2 ecosystem AVIFs are
+   fetched and decoded on first idle after `load` (`useImageWarmup`), instead of decoding right as
+   their lazy `<Img>`s approach the viewport (which landed exactly under the dive).
+6. **ChaosZoom headline converted to vector outlines** (see CLAUDE.md) — also removes the per-frame
+   font re-shaping cost of deep-zoom text rendering, and with it the GPU-Chrome glyph breakage and
+   both Safari TextMetrics artifacts.
+7. **Safari/no-WebGPU**: static fallbacks under the shader canvases (hero tints, orbit rings) — the
+   sections no longer render as empty voids where the engine can't start.
