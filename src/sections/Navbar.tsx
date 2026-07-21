@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
 export const LINKS = [
-  { label: "Why us", href: "#why" },
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },

@@ -5,7 +5,6 @@ import { Features } from "@/sections/Features"
 import { Tools } from "@/sections/Tools"
 import { Orbit } from "@/sections/Orbit"
 import { Ecosystem } from "@/sections/Ecosystem"
-import { WhyLoadHunter } from "@/sections/WhyLoadHunter"
 import { ChaosZoom } from "@/sections/ChaosZoom"
 import { Pricing } from "@/sections/Pricing"
 import { Testimonials } from "@/sections/Testimonials"
@@ -34,7 +33,6 @@ export function DesktopLanding() {
         {/* Orbit's full-bleed white bg + shader come from its own ShaderBand */}
         <Orbit />
         <Ecosystem />
-        <WhyLoadHunter />
         <Pricing />
         <Testimonials />
         <Faq />

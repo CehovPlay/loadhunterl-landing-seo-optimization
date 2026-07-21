@@ -3,7 +3,6 @@ import { MobileHero } from "./MobileHero"
 import { MobileFeatures } from "./MobileFeatures"
 import { MobileTools } from "./MobileTools"
 import { MobileEcosystem } from "./MobileEcosystem"
-import { MobileWhy } from "./MobileWhy"
 import { MobilePricing } from "./MobilePricing"
 import { MobileTestimonials } from "./MobileTestimonials"
 import { MobileFaq } from "./MobileFaq"
@@ -25,7 +24,6 @@ export function MobileLanding() {
         <MobileFeatures />
         <MobileTools />
         <MobileEcosystem />
-        <MobileWhy />
         <MobilePricing />
         <MobileTestimonials />
         <MobileFaq />

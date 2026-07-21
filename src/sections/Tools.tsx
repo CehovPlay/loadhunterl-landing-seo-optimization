@@ -280,7 +280,8 @@ function Spine() {
       >
         {/* static track */}
         <path d={SPINE_PATH} stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-        {/* scroll-drawn fill — one continuous stroke from the icon */}
+        {/* scroll-drawn fill — one continuous stroke from the icon; the muted
+            glow (user: line dimmer, only the tip sphere stays bright) */}
         <path
           data-spine-fill
           d={SPINE_PATH}
@@ -312,8 +313,8 @@ function Spine() {
         style={{
           left: CENTER_X - 5,
           top: CURVE_END_Y - 5,
-          background: "var(--color-violet-200)",
-          boxShadow: "0 0 22px 6px rgba(155,121,206,0.65)",
+          background: "var(--color-violet-100)",
+          boxShadow: "0 0 10px 3px rgba(199,159,253,0.9), 0 0 34px 10px rgba(146,92,255,0.6)",
           opacity: 0,
         }}
       />

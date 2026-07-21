@@ -241,7 +241,7 @@ export function CtaAutomation({
 
       {/* centre: icon + copy */}
       <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-[24px] pl-px pt-px">
-        <div className="flex size-[52px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] shadow-[0px_7.98px_7.98px_0px_rgba(0,0,0,0.05),0px_19.949px_19.949px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px] pointer-coarse:backdrop-blur-none">
+        <div className="flex size-[52px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] shadow-[0px_7.98px_7.98px_0px_rgba(0,0,0,0.05),0px_19.949px_19.949px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px]">
           <Img src="/figma/cta/icon-center.svg" alt="" data-no-reveal className="h-[33.92px] w-[35.86px]" />
         </div>
         <div className="flex flex-col items-center gap-[12px]">
@@ -258,7 +258,7 @@ export function CtaAutomation({
       {BALLS.map((b) => (
         <div
           key={b.icon}
-          className="absolute flex size-[62px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] backdrop-blur-[10px] pointer-coarse:backdrop-blur-none"
+          className="absolute flex size-[62px] items-center justify-center rounded-full border border-[rgba(255,255,255,0.27)] bg-gradient-to-b from-[rgba(195,195,195,0.1)] to-[rgba(255,255,255,0.1)] backdrop-blur-[10px]"
           style={{ left: b.x, top: b.cy - 31 }}
         >
           <Img src={b.icon} alt="" data-no-reveal style={{ width: b.w, height: b.h }} />

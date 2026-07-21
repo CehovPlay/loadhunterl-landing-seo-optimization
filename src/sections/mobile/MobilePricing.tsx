@@ -1,109 +1,38 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { useCallback, useLayoutEffect, useRef, useState } from "react"
 import { Img } from "@/components/site/Img"
-import { BASIC_COLS, PRO_COLS, STANDARD_COLS, type FeatureCols } from "@/sections/pricingFeatures"
-import { countToKnob, knobToCount, perDispatcher, planTotal } from "@/sections/pricingLogic"
+import {
+  CellCheck,
+  CellClock,
+  CellDash,
+  MATRIX,
+  PLAN_DEFS,
+  type CellValue,
+  type PlanDef,
+} from "@/sections/planMatrix"
+import { countToKnob, knobToCount, planTotal } from "@/sections/pricingLogic"
 import { Container, PILL_SHADOW, SectionHeader } from "./ui"
 
-type Plan = {
-  name: string
-  icon: string
-  blurb: string
-  price?: string
-  base?: number
-  unit?: string
-  note: string
-  cols: FeatureCols
-  cta: string
-  head: "border" | "pro" | "ai"
-  recommended?: boolean
-}
-
-const PLANS: Plan[] = [
-  {
-    name: "Basic",
-    icon: "/figma/pricing/icon-basic.svg",
-    blurb: "A streamlined plan to get you moving fast with essential tools.",
-    base: 9.99,
-    unit: "/ dispatcher / mo",
-    note: "Save 20% with team rate.",
-    cols: BASIC_COLS,
-    cta: "Start 14-day free trial",
-    head: "border",
-  },
-  {
-    name: "Standard",
-    icon: "/figma/pricing/icon-standard.svg",
-    blurb: "Perfect for fast-paced teams looking to automate and organize.",
-    base: 14.99,
-    unit: "/ dispatcher / mo",
-    note: "Save 20% with team rate.",
-    cols: STANDARD_COLS,
-    cta: "Start 14-day free trial",
-    head: "border",
-  },
-  {
-    name: "Pro",
-    icon: "/figma/pricing/icon-pro.svg",
-    blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
-    base: 29.99,
-    unit: "/ dispatcher / mo",
-    note: "Best value for 10+ dispatchers.",
-    cols: PRO_COLS,
-    cta: "Start 14-day free trial",
-    head: "pro",
-    recommended: true,
-  },
-  {
-    name: "AI subscription",
-    icon: "/figma/pricing/icon-ai.png",
-    blurb:
-      "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
-    price: "Let's talk",
-    note: "Best value for 20+ dispatchers.",
-    cols: PRO_COLS,
-    cta: "Add to wishlist",
-    head: "ai",
-  },
-]
-
-function FeatureRow({ text, clock }: { text: string; clock?: boolean }) {
-  return (
-    <div className={`flex items-start gap-2.5 ${clock ? "opacity-50" : ""}`}>
-      <img
-        src={clock ? "/figma/pricing/clock.svg" : "/figma/pricing/check.svg"}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        data-spin={clock ? "" : undefined}
-        data-no-reveal={clock ? "" : undefined}
-        className={clock ? "mt-[2px] h-3 w-3" : "mt-[5px] h-2 w-3"}
-      />
-      <span className="whitespace-pre-line text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-gray-50">
-        {text}
-      </span>
-    </div>
-  )
-}
+type Price = { main: string; unit?: string; note: string }
 
 /* full-card background: the plan accent gradient layered over the shared
    dark card gradient, so pro/ai washes reach under the CTA too */
-function cardStyle(plan: Plan): React.CSSProperties {
+function cardStyle(plan: PlanDef): React.CSSProperties {
   const base = "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))"
   const accent =
-    plan.head === "pro"
+    plan.accent === "pro"
       ? "radial-gradient(ellipse 420px 500px at 6px 7px, rgba(53,50,70,1) 0%, rgba(53,50,70,0) 100%), "
-      : plan.head === "ai"
+      : plan.accent === "ai"
         ? "radial-gradient(130% 100% at 85% 80%, rgba(111,81,151,0.95) 0%, rgba(111,81,151,0) 100%), "
         : ""
   return { backgroundImage: accent + base }
 }
 
-function PlanIdentity({ plan, stacked = false }: { plan: Plan; stacked?: boolean }) {
+function PlanIdentity({ plan }: { plan: PlanDef }) {
   // icon-ai is a PNG with a baked dark square around the rounded plate — the
   // SVG icons are transparent. Crop the PNG to the plate so no bg shows.
   const cropped = plan.icon.endsWith(".png")
   return (
-    <div className={stacked ? "flex flex-col items-start gap-3" : "flex items-start gap-3"}>
+    <div className="flex items-center gap-3">
       <div
         className={`relative size-12 shrink-0 ${cropped ? "overflow-hidden rounded-[11px]" : ""}`}
       >
@@ -119,57 +48,41 @@ function PlanIdentity({ plan, stacked = false }: { plan: Plan; stacked?: boolean
           }
         />
       </div>
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-2">
-          <h3 className="whitespace-nowrap text-[18px] font-medium leading-[24px] tracking-[-0.72px] text-gray-50">
-            {plan.name}
-          </h3>
-          {plan.recommended && (
-            <span className="flex h-6 items-center gap-1.5 rounded-full bg-[rgba(232,232,232,0.1)] px-2.5">
-              <img
-                src="/figma/pricing/crown.svg"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="h-[13px] w-[11px]"
-              />
-              <span className="whitespace-nowrap text-[11px] leading-[13px] text-gray-50">
-                Recommended
-              </span>
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 className="whitespace-nowrap text-[18px] font-medium leading-[24px] tracking-[-0.72px] text-gray-50">
+          {plan.name}
+        </h3>
+        {plan.recommended && (
+          <span className="flex h-6 items-center gap-1.5 rounded-full bg-[rgba(232,232,232,0.1)] px-2.5">
+            <img
+              src="/figma/pricing/crown.svg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-[13px] w-[11px]"
+            />
+            <span className="whitespace-nowrap text-[11px] leading-[13px] text-gray-50">
+              Recommended
             </span>
-          )}
-        </div>
-        <p className="mt-1 text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-gray-50/90">
-          {plan.blurb}
-        </p>
+          </span>
+        )}
       </div>
     </div>
   )
 }
 
-function PlanPrice({
-  plan,
-  price,
-}: {
-  plan: Plan
-  price: { main: string; was?: string; note: string }
-}) {
+function PlanPrice({ price }: { price: Price }) {
   return (
     <div>
       <div className="flex items-baseline gap-2">
-        {price.was && (
-          <span className="whitespace-nowrap text-[14px] font-medium tracking-[-0.56px] text-ink-3 line-through">
-            {price.was}
-          </span>
-        )}
         <span
           key={price.main}
           className="lh-pop whitespace-nowrap text-[26px] font-medium leading-[32px] tracking-[-1.04px] text-gray-50"
         >
           {price.main}
         </span>
-        {plan.unit && (
-          <span className="whitespace-nowrap text-[12px] text-ink-3">{plan.unit}</span>
+        {price.unit && (
+          <span className="whitespace-nowrap text-[12px] text-ink-3">{price.unit}</span>
         )}
       </div>
       <p className="mt-1 text-[12px] text-ink-3">{price.note}</p>
@@ -177,21 +90,7 @@ function PlanPrice({
   )
 }
 
-function PlanFeatures({ plan }: { plan: Plan }) {
-  return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-      {plan.cols.map((col, ci) => (
-        <div key={ci} className="flex min-w-0 flex-col gap-3">
-          {col.map((item, i) => (
-            <FeatureRow key={i} text={item.text} clock={item.clock} />
-          ))}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function PlanCta({ plan }: { plan: Plan }) {
+function PlanCta({ plan }: { plan: PlanDef }) {
   return (
     <button
       type="button"
@@ -213,8 +112,17 @@ function PlanCta({ plan }: { plan: Plan }) {
   )
 }
 
-const cardShell =
-  "overflow-hidden rounded-2xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+function ValueCell({ value }: { value: CellValue }) {
+  if (value === true) return <CellCheck />
+  if (value === null) return <CellDash />
+  // css spin: these cells re-mount on plan switch, after initMicro's scan
+  if (value === "soon") return <CellClock css />
+  return (
+    <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
+      {value}
+    </span>
+  )
+}
 
 function DiscountBadge({ text, active }: { text: string; active: boolean }) {
   return (
@@ -234,49 +142,18 @@ function DiscountBadge({ text, active }: { text: string; active: boolean }) {
 }
 
 /**
- * Mobile/tablet Pricing — the Figma accordion structure (921:88128 tablet /
- * 942:110506 phone): the first plan is open by default; opening another plan
- * closes the previous one.
- *  - phone: vertical accordion — every card keeps its head (identity, price)
- *    and CTA visible; the feature grid expands in between
- *  - tablet: horizontal accordion — the open plan takes the row, the others
- *    collapse into narrow clipped strips
- * Prices stay live from the billing toggle + dispatcher stepper above.
+ * Flow-layout Pricing — the desktop compare table (Figma 1247:10) reflowed as
+ * a plan selector: swipeable plan tabs on top, then the selected plan's
+ * header (identity → price → CTA) and its full grouped feature column from
+ * the shared MATRIX. Prices stay live from the billing toggle + dispatcher
+ * slider above; Pro is preselected as the recommended plan.
  */
 export function MobilePricing() {
   const [annual, setAnnual] = useState(true)
-  const [open, setOpen] = useState(0)
-
-  /* phone: the accordion is scroll-driven, no tap needed — the card entering
-     the viewport opens its features, and since the accordion is exclusive the
-     card scrolling out above closes. Active = the LAST card whose top has
-     crossed the gate line; height changes from open/close only ever push the
-     other cards further past their side of the gate, so it can't oscillate. */
-  const phoneListRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const list = phoneListRef.current
-    if (!list) return
-    const phone = window.matchMedia("(max-width: 767px)")
-    let raf = 0
-    const pick = () => {
-      raf = 0
-      if (!phone.matches) return
-      const gate = window.innerHeight * 0.8
-      let active = 0
-      Array.from(list.children).forEach((card, i) => {
-        if (card.getBoundingClientRect().top < gate) active = i
-      })
-      setOpen(active)
-    }
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(pick)
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => {
-      window.removeEventListener("scroll", onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
+  const [selected, setSelected] = useState(
+    PLAN_DEFS.findIndex((p) => p.recommended),
+  )
+  const plan = PLAN_DEFS[selected]
 
   /* dispatcher slider — desktop logic (pricingLogic.knobToCount) with the
      desktop zones expressed as fractions of the responsive track */
@@ -351,19 +228,15 @@ export function MobilePricing() {
     [n, stepTo],
   )
 
-  /* Same presentation as the desktop deck: per-dispatcher figure with the
-   * anchor struck through when discounted; team total in the note line. */
-  const priceFor = (plan: Plan): { main: string; was?: string; note: string } => {
-    if (plan.base == null) return { main: plan.price ?? "", note: plan.note }
-    const per = perDispatcher(plan.base, n, annual)
-    const bill = annual ? "Billed annually" : "Billed monthly"
+  /* Same presentation as the desktop table, mirroring PROD loadhunter.io:
+   * the big figure is the monthly TEAM TOTAL, "/ month, billed yearly" on
+   * annual, with the static plan note underneath. */
+  const priceFor = (p: PlanDef): Price => {
+    if (p.base == null) return { main: p.price ?? "", unit: p.unit, note: p.note }
     return {
-      main: `$${per.toFixed(2)}`,
-      was: per < plan.base ? `$${plan.base.toFixed(2)}` : undefined,
-      note:
-        n > 1
-          ? `${bill} · $${planTotal(plan.base, n, annual).toFixed(2)}/mo for ${n} dispatchers`
-          : bill,
+      main: `$${planTotal(p.base, n, annual).toFixed(2)}`,
+      unit: `/ month${annual ? ", billed yearly" : ""}`,
+      note: p.note,
     }
   }
 
@@ -475,189 +348,89 @@ export function MobilePricing() {
           </div>
         </div>
 
-        {/* freemium strip — $0 entry tier above the paid plans */}
+        {/* plan selector tabs — swipeable row, active tab mirrors the billing
+            toggle's active pill */}
+        <div data-no-reveal className="lh-snap -mx-5 mt-10 flex gap-2 overflow-x-auto px-5 md:mx-0 md:justify-center md:px-0">
+          {PLAN_DEFS.map((p, i) => {
+            const active = selected === i
+            return (
+              <button
+                key={p.name}
+                type="button"
+                aria-pressed={active}
+                onClick={() => setSelected(i)}
+                className={`flex h-11 shrink-0 items-center gap-1.5 rounded-full border px-4 transition-all ${
+                  active
+                    ? "border-white backdrop-blur-[10px]"
+                    : "border-[rgba(232,232,232,0.2)]"
+                }`}
+                style={
+                  active
+                    ? {
+                        backgroundImage:
+                          "radial-gradient(110px 38px at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
+                        boxShadow: PILL_SHADOW,
+                      }
+                    : undefined
+                }
+              >
+                {p.recommended && (
+                  <img
+                    src="/figma/pricing/crown.svg"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="h-[13px] w-[11px]"
+                  />
+                )}
+                <span className="whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
+                  {p.name}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* selected plan panel — head (identity → price → CTA) + the plan's
+            column of the shared feature matrix, grouped like the desktop table */}
         <article
           data-no-reveal
-          className={`${cardShell} mt-10 lg:mt-12`}
-          style={{ backgroundImage: "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))" }}
+          className="mt-4 overflow-hidden rounded-2xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+          style={cardStyle(plan)}
         >
-          <div className="flex flex-col gap-5 p-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-center gap-3">
-              <div className="relative size-12 shrink-0">
-                <Img
-                  src="/figma/pricing/icon-freemium.svg"
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="w-[62px] max-w-none -translate-x-2 -translate-y-1"
-                />
-              </div>
-              <div className="min-w-0">
-                <h3 className="whitespace-nowrap text-[18px] font-medium leading-[24px] tracking-[-0.72px] text-gray-50">
-                  Freemium
-                </h3>
-                <p className="mt-1 text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-gray-50/90">
-                  Try LoadHunter on real loads — free forever.
+          <div className="p-5">
+            <PlanIdentity plan={plan} />
+            <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
+            <PlanPrice price={priceFor(plan)} />
+          </div>
+          <div className="px-3">
+            <PlanCta plan={plan} />
+          </div>
+
+          <div className="px-5 pb-5">
+            {MATRIX.map((group) => (
+              <div key={group.title}>
+                <p className="pb-2 pt-6 text-[11px] font-medium uppercase leading-[14px] tracking-[-0.44px] text-ink-3">
+                  {group.title}
                 </p>
-              </div>
-            </div>
-
-            <div className="grid shrink-0 grid-cols-2 gap-x-6 gap-y-3">
-              {["10 broker emails / day", "RPM+ calculator", "Load filters", "1 connected email"].map(
-                (t) => (
-                  <FeatureRow key={t} text={t} />
-                ),
-              )}
-            </div>
-
-            <div className="flex items-center justify-between gap-4 lg:shrink-0">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span className="whitespace-nowrap text-[26px] font-medium leading-[32px] tracking-[-1.04px] text-gray-50">
-                    $0
-                  </span>
-                  <span className="whitespace-nowrap text-[12px] text-ink-3">/forever</span>
+                {/* tablet: rows flow into two columns */}
+                <div className="md:grid md:grid-cols-2 md:gap-x-10">
+                  {group.rows.map((r) => (
+                    <div
+                      key={r.label}
+                      className="flex min-h-10 items-center justify-between gap-4 border-b border-[rgba(229,229,229,0.07)]"
+                    >
+                      <span className="text-[13px] font-medium leading-[16px] tracking-[-0.52px] text-gray-50">
+                        {r.label}
+                      </span>
+                      <ValueCell value={r.values[selected]} />
+                    </div>
+                  ))}
                 </div>
-                <p className="mt-1 whitespace-nowrap text-[12px] text-ink-3">No credit card required.</p>
               </div>
-              <button
-                type="button"
-                className="relative flex h-12 items-center justify-center overflow-hidden rounded-xl border border-[rgba(232,232,232,0.2)] px-6 transition-transform active:scale-[0.99]"
-              >
-                <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
-                <span
-                  className="pointer-events-none absolute inset-0 rounded-[11px]"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.55) 0%, rgba(111,81,151,0) 100%)",
-                  }}
-                />
-                <span className="relative whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-50">
-                  Start for free
-                </span>
-                <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.18)]" />
-              </button>
-            </div>
+            ))}
           </div>
         </article>
-
-        {/* phone: vertical exclusive accordion, scroll-driven (see effect above) */}
-        <div ref={phoneListRef} className="mt-4 flex flex-col gap-4 md:hidden">
-          {PLANS.map((plan, i) => {
-            const expanded = open === i
-            return (
-              <article
-                key={plan.name}
-                data-no-reveal
-                onClick={() => setOpen(i)}
-                className={`${cardShell} cursor-pointer`}
-                style={cardStyle(plan)}
-              >
-                {/* head — identity + price (Figma 942:110506: the whole card
-                    toggles, no chevron; head content is always visible) */}
-                <button
-                  type="button"
-                  aria-expanded={expanded}
-                  className="relative w-full p-5 pb-0 text-left"
-                >
-                  <PlanIdentity plan={plan} stacked />
-                  <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
-                  <PlanPrice plan={plan} price={priceFor(plan)} />
-                </button>
-                {/* features expand between the price and the CTA */}
-                <div
-                  className="grid transition-[grid-template-rows] duration-300 ease-out"
-                  style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
-                >
-                  <div className="overflow-hidden">
-                    <div className="px-5 pt-5">
-                      <PlanFeatures plan={plan} />
-                    </div>
-                  </div>
-                </div>
-                <div className="p-3">
-                  <PlanCta plan={plan} />
-                </div>
-              </article>
-            )
-          })}
-        </div>
-
-        {/* tablet: horizontal exclusive accordion — open plan takes the row,
-            the rest collapse to clipped strips */}
-        <div className="mt-4 hidden gap-3 md:flex lg:hidden">
-          {PLANS.map((plan, i) => {
-            const expanded = open === i
-            return (
-              <article
-                key={plan.name}
-                data-no-reveal
-                onClick={() => setOpen(i)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault()
-                    setOpen(i)
-                  }
-                }}
-                role="button"
-                tabIndex={0}
-                aria-expanded={expanded}
-                aria-label={`${plan.name} plan`}
-                className={`${cardShell} relative min-w-0 cursor-pointer transition-[flex-grow] duration-500 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-violet-400)]`}
-                style={{
-                  ...cardStyle(plan),
-                  flexBasis: expanded ? 0 : 76,
-                  flexGrow: expanded ? 1 : 0,
-                  flexShrink: 0,
-                }}
-              >
-                {/* inner spans the card when open; keeps min width so the
-                    collapsed strip clips instead of squishing */}
-                <div className="flex h-full w-full min-w-[416px] flex-col">
-                  <div className="relative m-[3px] rounded-xl p-5">
-                    <PlanIdentity plan={plan} />
-                    <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
-                    <PlanPrice plan={plan} price={priceFor(plan)} />
-                  </div>
-                  <div
-                    className={`flex-1 px-6 py-4 transition-opacity duration-300 ${
-                      expanded ? "opacity-100" : "opacity-0"
-                    }`}
-                  >
-                    <PlanFeatures plan={plan} />
-                  </div>
-                  <div className="p-[3px]">
-                    <PlanCta plan={plan} />
-                  </div>
-                </div>
-              </article>
-            )
-          })}
-        </div>
-
-        {/* laptop: all four plans expanded side by side, like desktop */}
-        <div className="mt-4 hidden gap-5 lg:grid lg:grid-cols-4">
-          {PLANS.map((plan) => (
-            <article
-              key={plan.name}
-              data-card
-              className={`${cardShell} flex flex-col`}
-              style={cardStyle(plan)}
-            >
-              <div className="p-5">
-                <PlanIdentity plan={plan} stacked />
-                <div className="my-4 h-px bg-[rgba(229,229,229,0.1)]" />
-                <PlanPrice plan={plan} price={priceFor(plan)} />
-              </div>
-              <div className="flex-1 px-5 pb-2">
-                <PlanFeatures plan={plan} />
-              </div>
-              <div className="p-3">
-                <PlanCta plan={plan} />
-              </div>
-            </article>
-          ))}
-        </div>
       </Container>
     </section>
   )

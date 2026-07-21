@@ -177,6 +177,12 @@ export function initMicro() {
     cleanups.push(() => {
       el.removeEventListener("mousemove", move)
       el.removeEventListener("mouseleave", leave)
+      // quickTo tweens outlive the listeners — kill them and zero the offsets,
+      // else the teardown clearProps pass spams "x/y not eligible for reset"
+      // warnings on every HMR re-init
+      xTo.tween?.kill()
+      yTo.tween?.kill()
+      gsap.set(el, { x: 0, y: 0 })
     })
   })
 

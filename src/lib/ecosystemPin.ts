@@ -50,7 +50,9 @@ const DESKTOP = {
   radius: 12,
   windowTop: 0,
   expand: 600,
-  listContent: 2100,
+  // 5 rows × 320 + 4 gaps × 20 + 2 × 40 padding (fleetHUNT + huntONE merged
+  // into the single huntOS row, 2026-07-21)
+  listContent: 1760,
   listScroll: 1100,
 }
 

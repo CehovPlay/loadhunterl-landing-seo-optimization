@@ -33,22 +33,28 @@ screenshots with `sharp` (a devDependency) since full-page captures are ~19 000p
 ## Architecture — the fixed-canvas scaling model (read this first)
 
 There are TWO experiences, switched by `useFlowLayout` (`src/components/site/useFlowLayout.ts`,
-matchMedia `max-width: 1279px`) and code-split in `App.tsx`:
+matchMedia `max-width: 1023px`) and code-split in `App.tsx`:
 
-- **≥ 1280px — the fixed 1920 desktop canvas** (`src/sections/*`): NOT responsive in the usual flow
+- **≥ 1024px — the fixed 1920 desktop canvas** (`src/sections/*`): NOT responsive in the usual flow
   sense. Each section is **absolutely pixel-positioned** against the 1920px canvas, and `DesignFrame`
-  (`src/components/site/DesignFrame.tsx`) uniformly `transform: scale()`s it to the viewport (≈0.67
-  at 1280 → 1.0 at 1920). This is why every element there uses exact `px` values.
-- **< 1280px — the flow layout** (`src/sections/mobile/*`): a real responsive layout built from
+  (`src/components/site/DesignFrame.tsx`) uniformly `transform: scale()`s it to the viewport (≈0.53
+  at 1024 → 1.0 at 1920). This is why every element there uses exact `px` values.
+- **< 1024px — the flow layout** (`src/sections/mobile/*`): a real responsive layout built from
   scratch on the desktop content (2026-07-16) — no canvas, no scaling. It is mobile-first with the
-  TABLET refinements expressed as `md:` (≥768px) Tailwind modifiers in the SAME components (plus
-  `lg:` laptop refinements that bite 1024–1279) — there is deliberately no third section tree. Conventions: content column `px-5 max-w-[440px]`, tablet
+  TABLET refinements expressed as `md:` (≥768px) Tailwind modifiers in the SAME components (the leftover `lg:`/`xl:` modifiers are dead code now that the
+  canvas takes over at 1024) — there is deliberately no third section tree. Conventions: content column `px-5 max-w-[440px]`, tablet
   `md:px-8 md:max-w-[768px]`; sections `py-16`; touch targets ≥44px (buttons/pill rows are 48-56px);
   type via `clamp()` + `md:` bumps (section h2 → 40/48 on tablet); horizontal snap carousels
-  (`.lh-snap` in index.css) for ecosystem/testimonials; accordion FAQ; stepper instead of the drag
-  slider in Pricing. Tablet-specific layout: features 2-col grid (3rd card spans), tools items 2-col,
-  pricing cards 2×2, hero CTAs side by side, CTA card + automation panel side by side, footer in one
-  row. Shared content modules: `pricingFeatures.tsx`, `pricingLogic.ts`, `LINKS` from `Navbar.tsx`,
+  (`.lh-snap` in index.css) for ecosystem/testimonials; accordion FAQ. Pricing (2026-07-21, Figma
+  1247:10): the desktop canvas renders a 1680px compare table (label column + five plan columns,
+  grouped feature rows, Pro column highlight, 42px CTA footer row); the flow layout reflows it as
+  swipeable plan tabs (Pro preselected) + the selected plan's grouped feature column. Both read
+  `planMatrix.tsx` (plan defs + feature matrix + cell glyphs) and `pricingLogic.ts`, which mirrors
+  PROD loadhunter.io math: per-seat = round2(base × teamMult), × 0.9 for annual WITHOUT re-rounding,
+  displayed figure = monthly TEAM TOTAL (`$X / month, billed yearly`), no strikethrough anchor.
+  Tablet-specific layout: features 2-col grid (3rd card spans), tools items 2-col, hero CTAs side by
+  side, CTA card + automation panel side by side, footer in one
+  row. Shared content modules: `planMatrix.tsx`, `pricingLogic.ts`, `LINKS` from `Navbar.tsx`,
   `RotatingHeadline` (type scale via `h1ClassName`/`subClassName` props), `Stars`
   (`src/components/site/Stars.tsx`). The old Figma adaptive frames are NOT the source of truth — the
   desktop version is.

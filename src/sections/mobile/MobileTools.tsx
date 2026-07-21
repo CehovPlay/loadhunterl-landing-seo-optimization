@@ -255,7 +255,7 @@ export function MobileTools() {
             />
           </div>
 
-          <div className="mt-12 flex flex-col gap-48 pl-[76px] md:pl-[92px] lg:gap-32">
+          <div className="mt-12 flex flex-col gap-48 pl-[76px] md:gap-32 md:pl-[92px]">
           {BLOCKS.map((b, bi) => (
             <article
               key={b.title}

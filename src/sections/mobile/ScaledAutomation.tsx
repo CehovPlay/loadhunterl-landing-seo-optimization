@@ -4,8 +4,10 @@ import { CtaAutomation } from "@/components/site/CtaAutomation"
 const PANEL_W = 1129
 const PANEL_H = 627
 /* the desktop composition carries generous empty margins — on the PHONE break
-   zoom it inside the box and crop the edges so the content reads larger;
-   tablet keeps the untouched desktop framing */
+   zoom it inside the box so the content reads larger. The crop must eat ONLY
+   the bottom/right edges (all mock/panel compositions are built to be safe to
+   clip there — top/left must stay visible), so the zoomed panel stays
+   anchored to its top-left corner. */
 const PHONE_ZOOM = 1.45
 
 /**

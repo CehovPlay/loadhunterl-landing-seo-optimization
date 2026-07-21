@@ -33,11 +33,21 @@ function useLenis(mobile: boolean) {
 
     let lenis: Lenis | null = null
     let update: ((time: number) => void) | null = null
+    let onPreloaderDone: (() => void) | null = null
     if (!nativeOnly) {
       lenis = new Lenis()
       update = (time: number) => lenis!.raf(time * 1000)
       gsap.ticker.add(update)
       gsap.ticker.lagSmoothing(500, 33)
+      // While the index.html preloader locks scrolling (html.lh-pl-lock),
+      // Lenis would still accumulate wheel deltas against the frozen page and
+      // fire them as one big jump on unlock — keep it stopped until the
+      // preloader dispatches lh:preloader-done at the moment it unlocks.
+      if (document.documentElement.classList.contains("lh-pl-lock")) {
+        lenis.stop()
+        onPreloaderDone = () => lenis?.start()
+        window.addEventListener("lh:preloader-done", onPreloaderDone, { once: true })
+      }
     }
 
     const onClick = (e: MouseEvent) => {
@@ -55,6 +65,7 @@ function useLenis(mobile: boolean) {
 
     return () => {
       document.removeEventListener("click", onClick)
+      if (onPreloaderDone) window.removeEventListener("lh:preloader-done", onPreloaderDone)
       if (update) gsap.ticker.remove(update)
       if (lenis) lenis.destroy()
     }
@@ -75,13 +86,27 @@ function CanvasEffects({ mobile }: { mobile: boolean }) {
     const teardownReveal = initReveal()
     const teardownMicro = initMicro()
     const teardownEcoPin = initEcosystemPin()
+    // release the index.html preloader after the first REAL paint of the
+    // landing tree (double rAF = the frame after this commit is on screen);
+    // the preloader itself enforces its minimum display time
+    const raf = requestAnimationFrame(() =>
+      requestAnimationFrame(() => window.__lhPreloaderDone?.()),
+    )
     return () => {
+      cancelAnimationFrame(raf)
       teardownEcoPin()
       teardownMicro()
       teardownReveal()
     }
   }, [mobile])
   return null
+}
+
+declare global {
+  interface Window {
+    /** defined inline in index.html; completes and removes the preloader */
+    __lhPreloaderDone?: () => void
+  }
 }
 
 /**

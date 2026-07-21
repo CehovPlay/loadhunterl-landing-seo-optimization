@@ -171,7 +171,7 @@ export function Testimonials() {
       {/* heading */}
       <div data-float className="absolute left-[928px] top-0 size-[64px]">
         <Img
-          src="/figma/tools/intro-icon.png"
+          src="/figma/testimonials/header-icon.svg"
           alt=""
           loading="lazy"
           decoding="async"

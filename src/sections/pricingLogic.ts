@@ -1,22 +1,23 @@
 /**
  * loadhunter.io pricing logic + dispatcher-slider mapping, shared by the
- * tablet and phone pricing sections (the desktop deck keeps its own copy in
- * Pricing.tsx with design-anchored desktop constants).
+ * desktop compare table and the flow-layout plan selector.
  *
- * team discount: n === 3 → -10%, n >= 4 → -20%;
- * annual billing → extra -10%;
- * per-dispatcher price truncated to cents, then multiplied by n.
+ * Mirrors the PROD bundle math exactly (loadhunter.io, checked 2026-07-21):
+ *   teamMult: n <= 2 → 1, n === 3 → 0.9, n >= 4 → 0.8
+ *   per-seat = round2(base × teamMult), then × 0.9 for annual billing
+ *   (NO re-rounding after the annual multiplier — prod does
+ *   `(base*mult).toFixed(2) * yearlyMult`), total = round2(n × per-seat).
+ * The displayed figure is the TEAM TOTAL per month, not per dispatcher.
  */
-export function planTotal(base: number, n: number, annual: boolean): number {
-  const per = perDispatcher(base, n, annual)
-  return Math.round(per * n * 100) / 100
-}
-
-/** The discounted per-dispatcher monthly price — the figure the cards display. */
 export function perDispatcher(base: number, n: number, annual: boolean): number {
   const teamMult = n >= 4 ? 0.8 : n === 3 ? 0.9 : 1
-  const annualMult = annual ? 0.9 : 1
-  return Math.floor(base * teamMult * annualMult * 100) / 100
+  const per = Math.round(base * teamMult * 100) / 100
+  return annual ? per * 0.9 : per
+}
+
+/** The monthly team total — the figure both layouts display. */
+export function planTotal(base: number, n: number, annual: boolean): number {
+  return Math.round(perDispatcher(base, n, annual) * n * 100) / 100
 }
 
 /** Slider zones anchored to each breakpoint's badge positions (design px

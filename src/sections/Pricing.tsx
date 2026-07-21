@@ -1,157 +1,19 @@
 import { Img } from "@/components/site/Img"
 import { useCallback, useRef, useState } from "react"
-import type { CSSProperties } from "react"
+import {
+  CellCheck,
+  CellClock,
+  CellDash,
+  MATRIX,
+  PLAN_DEFS,
+  type CellValue,
+  type PlanDef,
+} from "@/sections/planMatrix"
+import { planTotal } from "@/sections/pricingLogic"
 
-type Feature = {
-  text: string
-  clock?: boolean
-  twoLine?: boolean
-}
+const PILL_SHADOW = "var(--shadow-pill)"
 
-type Plan = {
-  name: string
-  icon: string
-  blurb: string
-  /** static price label (AI card); priced plans use `base` instead */
-  price?: string
-  /** base monthly price per dispatcher (loadhunter.io logic) */
-  base?: number
-  unit?: string
-  note: string
-  cols: [Feature[], Feature[]]
-  cta: string
-  head: "border" | "pro" | "ai"
-  recommended?: boolean
-  listX: number
-  listY: number
-  colGap: number
-}
-
-const f = (text: string, twoLine = false): Feature => ({ text, twoLine })
-const clock = (text: string): Feature => ({ text, clock: true, twoLine: true })
-
-const PRO_COLS: [Feature[], Feature[]] = [
-  [
-    f("Smart-board view"),
-    f("Full load board customization", true),
-    f("Auto-Refresh Button"),
-    f("Pin to Top"),
-    f("Performance Boost"),
-    f("Redesigned load board"),
-    f("Search Tabs Reorder"),
-    f("Up to 2 Factoring Connections", true),
-    f("FMCSA Broker Lookup"),
-  ],
-  [
-    f("Team Management"),
-    f("Advanced Filtering Modes", true),
-    f("Driver Profile Setup"),
-    clock("CC Support for Emails (Coming soon)"),
-    clock("Dispatcher Analytics (Coming soon)"),
-    clock("Idle Driver Email Alerts (Coming soon)"),
-    clock("Email Read Notifications (Coming soon)"),
-  ],
-]
-
-const PLANS: Plan[] = [
-  {
-    name: "Basic",
-    icon: "/figma/pricing/icon-basic.svg",
-    blurb: "A streamlined plan to get you moving fast with essential tools.",
-    base: 9.99,
-    unit: "/ dispatcher / mo",
-    note: "Save 20% with team rate.",
-    cols: [
-      [f("Unlimited Emails"), f("1 Connected Email"), f("1 Email Template"), f("Google Maps Integration"), f("Load Filters")],
-      [f("RPM+"), f("Click to Call"), f("Copy Load Info"), f("Weather Integration"), f("Profit Calculator")],
-    ],
-    cta: "Start 14-day free trial",
-    head: "border",
-    listX: 28,
-    listY: 260,
-    colGap: 22,
-  },
-  {
-    name: "Standard",
-    icon: "/figma/pricing/icon-standard.svg",
-    blurb: "Perfect for fast-paced teams looking to automate and organize.",
-    base: 14.99,
-    unit: "/ dispatcher / mo",
-    note: "Save 20% with team rate.",
-    cols: [
-      [
-        f("Unlimited Email Accounts", true),
-        f("Unlimited Templates"),
-        f("Email Signature"),
-        f("VoIP Integration"),
-        f("Tolls Integration"),
-        f("Integrated TMS"),
-        f("Saved Loads"),
-        f("Dark Mode"),
-        f("Integrated\nTrucking Map", true),
-      ],
-      [
-        f("Advanced Profit Calculator", true),
-        f("1 Factoring Connection"),
-        f("Community Reviews"),
-        f("Market Conditions"),
-        f("Load Notes"),
-        f("Ignore Brokers/States"),
-        f("Hide cancelled loads"),
-        f("Hide CA/MX loads"),
-        f("Telegram Load\nNotifications", true),
-      ],
-    ],
-    cta: "Start 14-day free trial",
-    head: "border",
-    listX: 32,
-    listY: 250,
-    colGap: 51,
-  },
-  {
-    name: "Pro",
-    icon: "/figma/pricing/icon-pro.svg",
-    blurb: "Unlock the full LoadHunter experience with automation, insights, and control.",
-    base: 29.99,
-    unit: "/ dispatcher / mo",
-    note: "Best value for 10+ dispatchers.",
-    cols: PRO_COLS,
-    cta: "Start 14-day free trial",
-    head: "pro",
-    recommended: true,
-    listX: 32,
-    listY: 250,
-    colGap: 51,
-  },
-  {
-    name: "AI subscription",
-    icon: "/figma/pricing/icon-ai.png",
-    blurb: "Our comprehensive enterprise solution comes fully equipped with all the professional features.",
-    price: "Let's talk",
-    note: "Best value for 20+ dispatchers.",
-    cols: PRO_COLS,
-    cta: "Add to wishlist",
-    head: "ai",
-    listX: 32,
-    listY: 250,
-    colGap: 51,
-  },
-]
-
-const PILL_SHADOW =
-  "var(--shadow-pill)"
-
-/* Freemium — the $0 entry tier, rendered as a full-width strip above the
- * four paid cards (five 417px cards don't fit the 1680px content row). */
-const FREEMIUM = {
-  name: "Freemium",
-  blurb: "Try LoadHunter on real loads — free forever.",
-  features: ["10 broker emails / day", "RPM+ calculator", "Load filters", "1 connected email"],
-  price: "$0",
-  unit: "/forever",
-  note: "No credit card required.",
-  cta: "Start for free",
-}
+type Price = { main: string; unit?: string; note: string }
 
 function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean }) {
   return (
@@ -167,169 +29,92 @@ function DiscountBadge({ text, shadow = true }: { text: string; shadow?: boolean
   )
 }
 
-function CheckIcon() {
+function Cell({ value }: { value: CellValue }) {
+  if (value === true) return <CellCheck />
+  if (value === null) return <CellDash />
+  if (value === "soon") return <CellClock />
   return (
-    <div className="relative h-[6px] w-[9px] shrink-0">
-      <img loading="lazy" decoding="async"
-        src="/figma/pricing/check.svg"
-        alt=""
-        className="absolute max-w-none"
-        style={{ left: -1, top: -1, width: 11, height: 7.21 }}
-      />
-    </div>
+    <span className="relative -top-px whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
+      {value}
+    </span>
   )
 }
 
-function ClockIcon() {
+/* Compare-table header cell (Figma 1248:2): icon → name → price → note.
+ * Prices stay live from the toggle + slider above; per prod loadhunter.io the
+ * figure is the TEAM TOTAL per month. CTAs live in the table's footer row. */
+function HeaderCell({ plan, price }: { plan: PlanDef; price: Price }) {
+  const cropped = plan.icon.endsWith(".png")
   return (
-    <div className="relative size-[10px] shrink-0">
-      {/* coming-soon marker spins like a loader — GSAP data-spin (micro.ts):
-          CSS keyframe animations on the transform don't render inside the
-          scaled canvas in Chrome, so it's driven from the shared ticker.
-          data-no-reveal: the reveal cascade tweens with overwrite:true and
-          would kill the spin the moment the row fades in. */}
-      <img loading="lazy" decoding="async"
-        src="/figma/pricing/clock.svg"
-        alt=""
-        data-spin
-        data-no-reveal
-        className="absolute max-w-none"
-        style={{ left: -1, top: -1, width: 12, height: 12 }}
-      />
-    </div>
-  )
-}
-
-function FeatureItem({ item }: { item: Feature }) {
-  if (item.clock) {
-    return (
-      <div className="flex w-full items-start gap-[12px] opacity-50">
-        <ClockIcon />
-        <p className="min-w-px flex-1 whitespace-pre-line text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">{item.text}</p>
-      </div>
-    )
-  }
-  return (
-    <div className={`flex w-full items-center gap-[12px] ${item.twoLine ? "h-[32px]" : "h-[16px]"}`}>
-      <CheckIcon />
-      <p className="min-w-px flex-1 whitespace-pre-line text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">{item.text}</p>
-    </div>
-  )
-}
-
-function PlanCard({
-  plan,
-  left,
-  price,
-}: {
-  plan: Plan
-  left: number
-  price: { main: string; was?: string; note: string }
-}) {
-  const headStyle: CSSProperties =
-    plan.head === "pro"
-      ? { backgroundImage: "radial-gradient(ellipse 433px 487px at 6px 7px, rgba(53,50,70,1) 0%, rgba(53,50,70,0) 100%)" }
-      : plan.head === "ai"
-        ? { backgroundImage: "radial-gradient(250px 290px at 205px 237px, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)" }
-        : {}
-
-  return (
-    <div
-      className="absolute top-[692px] h-[690px] w-[417px] overflow-hidden rounded-xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
-      style={{ left, backgroundImage: "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))" }}
-    >
-      {/* head panel */}
-      <div className="absolute left-[3px] top-[3px] h-[218px] w-[409px] rounded-lg" style={headStyle}>
-        {plan.head === "border" && (
-          <div className="pointer-events-none absolute inset-0 rounded-lg border border-[rgba(229,229,229,0.2)]" />
-        )}
-        {/* icon — the AI png carries a baked dark square, crop it to the plate */}
-        <div
-          className={`absolute left-[24px] top-[24px] size-[64px] ${
-            plan.icon.endsWith(".png") ? "overflow-hidden rounded-[14px]" : ""
-          }`}
-        >
-          <Img src={plan.icon} alt="" loading="lazy" decoding="async" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
-        </div>
-        {/* name + badge */}
-        <div className="absolute left-[112px] top-[24px] h-[32px] w-[273px]">
-          <span className="whitespace-nowrap text-[20px] leading-[32px] tracking-[-0.8px] text-gray-50">{plan.name}</span>
-          {plan.recommended && (
-            <div className="absolute left-[41px] top-[4px] flex h-[24px] items-center gap-[10px] rounded-full bg-[rgba(232,232,232,0.1)] px-[10px]">
-              <img loading="lazy" decoding="async" src="/figma/pricing/crown.svg" alt="" className="h-[14px] w-[12.24px] max-w-none" />
-              <span className="whitespace-nowrap text-[12px] leading-[14px] tracking-[-0.48px] text-gray-50">Recommended</span>
-            </div>
-          )}
-        </div>
-        {/* description */}
-        <p className="absolute left-[112px] top-[60px] w-[273px] text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">
-          {plan.blurb}
-        </p>
-        {/* separator */}
-        <div className="absolute left-[24px] top-[112px] h-px w-[361px] bg-[rgba(229,229,229,0.1)]" />
-        {/* price — per-dispatcher figure; struck-through anchor when discounted */}
-        <div className="absolute left-[24px] top-[136px] w-[361px]">
-          <div className="flex items-baseline gap-[10px]">
-            {price.was && (
-              <span className="whitespace-nowrap text-[16px] leading-[20px] tracking-[-0.64px] text-ink-3 line-through">
-                {price.was}
-              </span>
-            )}
-            <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">{price.main}</span>
-            {plan.unit && (
-              <span className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{plan.unit}</span>
-            )}
-          </div>
-          <p className="mt-[4px] whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{price.note}</p>
-        </div>
-      </div>
-
-      {/* feature list */}
-      <div
-        className="absolute flex w-[353px] items-start"
-        style={{ left: plan.listX - 1, top: plan.listY - 1, columnGap: plan.colGap }}
-      >
-        {plan.cols.map((col, ci) => (
-          <div key={ci} className="flex min-w-px flex-1 flex-col gap-[22px]">
-            {col.map((item, i) => (
-              <FeatureItem key={i} item={item} />
-            ))}
-          </div>
-        ))}
-      </div>
-
-      {/* button — violet glow floods up from the bottom on hover */}
-      <button
-        className="group absolute bottom-[3px] left-[3px] flex h-[42px] w-[409px] items-center justify-center overflow-hidden rounded-lg border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
-        type="button"
-      >
-        <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
-        <span
-          className="pointer-events-none absolute inset-0 rounded-[11px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            backgroundImage:
-              "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.95) 0%, rgba(111,81,151,0) 100%)",
-          }}
+    <div className="flex h-full w-[260px] flex-col items-center gap-[12px] px-[20px] pb-[20px] pt-[20px]">
+      {/* icon — the 64px plate art scaled to the table's 40px plate; the AI png
+          carries a baked dark square, crop it to the rounded plate */}
+      <div className={`relative size-[40px] shrink-0 ${cropped ? "overflow-hidden rounded-[10px]" : ""}`}>
+        <Img
+          src={plan.icon}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute max-w-none"
+          style={{ left: -6.25, top: -2.5, width: 52.5 }}
         />
-        <span className="relative text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50 transition-transform duration-300 group-hover:-translate-y-[1px]">
-          {plan.cta}
+      </div>
+      {/* name + badge */}
+      <div className="flex items-center gap-[8px]">
+        <span className="whitespace-nowrap text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-gray-50">
+          {plan.name}
         </span>
-        <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.25)]" />
-      </button>
+        {plan.recommended && (
+          <span className="flex items-center rounded-full bg-[rgba(232,232,232,0.1)] px-[10px] py-[2px]">
+            <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
+              Recommended
+            </span>
+          </span>
+        )}
+      </div>
+      {/* price — team total per month, prod-style */}
+      <div className="flex items-baseline gap-[6px]">
+        <span
+          key={price.main}
+          className="lh-pop whitespace-nowrap text-[20px] font-medium leading-[28px] tracking-[-0.8px] text-gray-50"
+        >
+          {price.main}
+        </span>
+        {price.unit && (
+          <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-3">
+            {price.unit}
+          </span>
+        )}
+      </div>
+      <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-3">
+        {price.note}
+      </span>
     </div>
   )
 }
 
-/* --- loadhunter.io pricing logic ---------------------------------------
- * team discount: n === 3 → -10%, n >= 4 → -20%;
- * annual billing → extra -10%;
- * per-dispatcher price truncated to cents, then multiplied by n.
- */
-function planTotal(base: number, n: number, annual: boolean): number {
-  const teamMult = n >= 4 ? 0.8 : n === 3 ? 0.9 : 1
-  const annualMult = annual ? 0.9 : 1
-  const per = Math.floor(base * teamMult * annualMult * 100) / 100
-  return Math.round(per * n * 100) / 100
+/* Footer CTA — the plan deck's original 42px button, one per column at the
+ * very bottom of the table; violet glow floods up from the bottom on hover */
+function FooterCta({ plan }: { plan: PlanDef }) {
+  return (
+    <button
+      className="group relative flex h-[42px] w-full items-center justify-center overflow-hidden rounded-lg border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
+      type="button"
+    >
+      <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
+      <span
+        className="pointer-events-none absolute inset-0 rounded-[11px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          backgroundImage:
+            "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.95) 0%, rgba(111,81,151,0) 100%)",
+        }}
+      />
+      <span className="relative whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-gray-50 transition-transform duration-300 group-hover:-translate-y-[1px]">
+        {plan.cta}
+      </span>
+      <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.25)]" />
+    </button>
+  )
 }
 
 /* Slider zones anchored to the design's badge positions (track 848px wide,
@@ -375,37 +160,30 @@ export function Pricing() {
     [moveTo],
   )
 
-  /* Price presentation (business logic unchanged): the big number is always
-   * PER DISPATCHER — the anchor price struck through when a discount applies,
-   * and the team total moved into the note line. Totals still come from
-   * planTotal(), so the math matches loadhunter.io exactly. */
-  const priceFor = (plan: Plan): { main: string; was?: string; note: string } => {
-    if (plan.base == null) return { main: plan.price ?? "", note: plan.note }
-    const teamMult = n >= 4 ? 0.8 : n === 3 ? 0.9 : 1
-    const per = Math.floor(plan.base * teamMult * (annual ? 0.9 : 1) * 100) / 100
-    const bill = annual ? "Billed annually" : "Billed monthly"
+  /* Price presentation mirrors PROD loadhunter.io: the big figure is the
+   * monthly TEAM TOTAL from planTotal(), "/ month, billed yearly" on annual;
+   * the static plan note stays underneath (Figma 1247:10). */
+  const priceFor = (plan: PlanDef): Price => {
+    if (plan.base == null) return { main: plan.price ?? "", unit: plan.unit, note: plan.note }
     return {
-      main: `$${per.toFixed(2)}`,
-      was: per < plan.base ? `$${plan.base.toFixed(2)}` : undefined,
-      note:
-        n > 1
-          ? `${bill} · $${planTotal(plan.base, n, annual).toFixed(2)}/mo for ${n} dispatchers`
-          : bill,
+      main: `$${planTotal(plan.base, n, annual).toFixed(2)}`,
+      unit: `/ month${annual ? ", billed yearly" : ""}`,
+      note: plan.note,
     }
   }
 
   return (
-    <section id="pricing" className="relative h-[1610px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_1610px]">
+    <section id="pricing" className="relative h-[2660px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_2660px]">
       {/* header icon */}
-      <div data-float className="absolute left-[928px] top-0 size-[64px]">
+      <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
         <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none" />
       </div>
 
       {/* heading */}
-      <h2 className="absolute left-[442px] top-[124px] w-[1036px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
+      <h2 className="absolute left-[442px] top-[244px] w-[1036px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
         Choose the plan that&rsquo;s perfect for your business
       </h2>
-      <p className="absolute left-[632px] top-[202px] w-[656px] whitespace-nowrap text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+      <p className="absolute left-[632px] top-[322px] w-[656px] whitespace-nowrap text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
         Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!
       </p>
 
@@ -416,7 +194,7 @@ export function Pricing() {
           excluded from the scroll-reveal cascade */}
       <div
         data-no-reveal
-        className="absolute left-[832.5px] top-[278px] flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] p-[6px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
+        className="absolute left-[832.5px] top-[398px] flex h-[40px] items-center gap-[12px] rounded-full bg-[rgba(231,231,231,0.1)] p-[6px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
       >
         {(["Monthly", "Annually"] as const).map((label) => {
           const active = (label === "Annually") === annual
@@ -464,7 +242,7 @@ export function Pricing() {
       </div>
 
       {/* dispatchers slider */}
-      <div className="absolute left-[536px] top-[342px] w-[848px] select-none">
+      <div className="absolute left-[536px] top-[462px] w-[848px] select-none">
         <p
           className="w-[120px] whitespace-nowrap text-center text-[16px] leading-[20px] tracking-[-0.64px] text-white"
           style={{ marginLeft: knob - 68 }}
@@ -477,7 +255,7 @@ export function Pricing() {
           role="slider"
           aria-label="Number of dispatchers"
           aria-valuemin={1}
-          aria-valuemax={10}
+          aria-valuemax={50}
           aria-valuenow={n}
           className="relative mt-[14px] h-[16px] w-full cursor-pointer rounded-full bg-[rgba(231,231,231,0.1)]"
         >
@@ -512,95 +290,72 @@ export function Pricing() {
         </div>
       </div>
 
-      {/* freemium strip — $0 entry tier above the paid deck */}
+      {/* compare table (Figma 1247:10) — one 1680px table replaces the old
+          freemium strip + plan deck: label column 372px + five 260px plan
+          columns; header row 240px, group headers 54px, feature rows 24px.
+          data-card → the reveal cascade fades the table in as ONE block
+          instead of tweening ~250 cells individually. */}
       <div
-        className="absolute left-[120px] top-[544px] flex h-[112px] w-[1680px] items-center overflow-hidden rounded-xl border border-[rgba(229,229,229,0.1)] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+        data-card
+        className="absolute left-[120px] top-[664px] w-[1680px] rounded-2xl border border-[rgba(229,229,229,0.1)] p-[4px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
         style={{ backgroundImage: "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))" }}
       >
-        <div className="pointer-events-none absolute inset-[3px] rounded-lg border border-[rgba(229,229,229,0.2)]" />
+        {/* Pro column highlight — full-height violet wash under the column */}
+        <div className="pointer-events-none absolute bottom-[3px] left-[1156px] top-[3px] w-[260px] rounded-xl border border-[rgba(111,81,151,0.35)] bg-[rgba(111,81,151,0.06)]" />
 
-        {/* identity — same plate style as the plan cards (icon-freemium.svg =
-            basic plate + the hero diamond glyph) */}
-        <div className="ml-[24px] flex w-[352px] shrink-0 items-center gap-[24px]">
-          <div className="relative size-[64px] shrink-0">
-            <Img
-              src="/figma/pricing/icon-freemium.svg"
-              alt=""
-              loading="lazy"
-              decoding="async"
-              className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
-            />
-          </div>
-          <div className="min-w-0">
-            <span className="whitespace-nowrap text-[20px] leading-[32px] tracking-[-0.8px] text-gray-50">
-              {FREEMIUM.name}
+        {/* header row */}
+        <div className="relative flex h-[192px] items-end border-b border-[rgba(229,229,229,0.1)]">
+          <div className="w-[372px] pb-[20px] pl-[20px]">
+            <span className="text-[11px] font-medium uppercase leading-[14px] tracking-[-0.44px] text-ink-3">
+              Features
             </span>
-            <p className="text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">{FREEMIUM.blurb}</p>
           </div>
-        </div>
-
-        {/* separator */}
-        <div className="mx-[32px] h-[64px] w-px shrink-0 bg-[rgba(229,229,229,0.1)]" />
-
-        {/* features */}
-        <div className="flex flex-1 items-center justify-center gap-[40px]">
-          {FREEMIUM.features.map((t) => (
-            <div key={t} className="flex items-center gap-[12px]">
-              <CheckIcon />
-              <span className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50">
-                {t}
-              </span>
-            </div>
+          {PLAN_DEFS.map((plan) => (
+            <HeaderCell key={plan.name} plan={plan} price={priceFor(plan)} />
           ))}
         </div>
 
-        {/* separator */}
-        <div className="mx-[32px] h-[64px] w-px shrink-0 bg-[rgba(229,229,229,0.1)]" />
-
-        {/* price + CTA */}
-        <div className="mr-[24px] flex shrink-0 items-center gap-[28px]">
-          <div>
-            <div className="flex items-center gap-[8px]">
-              <span className="whitespace-nowrap text-[30px] leading-[40px] tracking-[-1.2px] text-gray-50">
-                {FREEMIUM.price}
-              </span>
-              <span className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">
-                {FREEMIUM.unit}
+        {/* feature groups */}
+        {MATRIX.map((group) => (
+          <div key={group.title} className="relative">
+            <div className="border-b border-[rgba(229,229,229,0.1)] py-[20px] pl-[20px]">
+              <span className="text-[11px] font-medium uppercase leading-[14px] tracking-[-0.44px] text-ink-3">
+                {group.title}
               </span>
             </div>
-            <p className="whitespace-nowrap text-[14px] leading-[16px] tracking-[-0.56px] text-ink-3">
-              {FREEMIUM.note}
-            </p>
+            {group.rows.map((r) => (
+              <div
+                key={r.label}
+                className="flex h-[32px] items-center border-b border-[rgba(229,229,229,0.07)] transition-colors duration-150 hover:bg-[rgba(255,255,255,0.02)]"
+              >
+                {/* -top-px: Inter's glyphs sit low in their line box — without
+                    the nudge every row label reads slightly below the row's
+                    optical centre next to the centred check marks */}
+                <div className="w-[372px] pl-[20px]">
+                  <span className="relative -top-px whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-gray-50">
+                    {r.label}
+                  </span>
+                </div>
+                {r.values.map((v, i) => (
+                  <div key={i} className="flex w-[260px] items-center justify-center">
+                    <Cell value={v} />
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
-          <button
-            className="group relative flex h-[42px] w-[200px] items-center justify-center overflow-hidden rounded-lg border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
-            type="button"
-          >
-            <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
-            <span
-              className="pointer-events-none absolute inset-0 rounded-[11px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              style={{
-                backgroundImage:
-                  "radial-gradient(70% 160% at 50% 115%, rgba(111,81,151,0.95) 0%, rgba(111,81,151,0) 100%)",
-              }}
-            />
-            <span className="relative text-[14px] leading-[16px] tracking-[-0.56px] text-gray-50 transition-transform duration-300 group-hover:-translate-y-[1px]">
-              {FREEMIUM.cta}
-            </span>
-            <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.25)]" />
-          </button>
+        ))}
+
+        {/* footer CTA row — one 42px button per plan column */}
+        <div className="relative flex items-center py-[12px]">
+          <div className="w-[372px]" />
+          {PLAN_DEFS.map((plan) => (
+            <div key={plan.name} className="w-[260px] px-[20px]">
+              <FooterCta plan={plan} />
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* plan cards */}
-      {PLANS.map((plan, i) => (
-        <PlanCard
-          key={plan.name}
-          plan={plan}
-          left={[120, 541, 962, 1383][i]}
-          price={priceFor(plan)}
-        />
-      ))}
     </section>
   )
 }

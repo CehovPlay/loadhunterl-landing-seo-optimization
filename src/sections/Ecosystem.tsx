@@ -16,8 +16,11 @@ interface Product {
   name: string
   description: string
   /** logo box width in px (height is always 24, at (32,32)) */
-  logoWidth: number
-  logo: string
+  logoWidth?: number
+  /** baked wordmark export; when absent, `logoText` composes glyph + text */
+  logo?: string
+  /** products without a baked wordmark render the site glyph + this text */
+  logoText?: string
   mockup: string
   /** lh/tms mockups pan on hover — separate baked export */
   mockupHover?: string
@@ -62,20 +65,10 @@ const PRODUCTS: Product[] = [
     comingSoon: true,
   },
   {
-    name: 'fleetHUNT',
+    name: 'huntOS',
     description:
-      'Fleet management at scale — track trucks, maintenance and utilization across your whole fleet.',
-    logoWidth: 126,
-    logo: '/figma/eco/logo5.png',
-    mockup: '/figma/eco/row5.png',
-    comingSoon: true,
-  },
-  {
-    name: 'huntONE',
-    description:
-      'Every load board in one place — unified search across DAT, Truckstop and more.',
-    logoWidth: 114,
-    logo: '/figma/eco/logo6.png',
+      'One operating system for your whole trucking business — every load board, your fleet and daily operations in a single workspace.',
+    logoText: 'huntOS',
     mockup: '/figma/eco/row6.png',
     comingSoon: true,
   },
@@ -113,14 +106,29 @@ function ProductRow({ product }: { product: Product }) {
       )}
 
       {/* text panel (344 wide, transparent over the white row) */}
-      <Img
-        src={product.logo}
-        alt={product.name}
-        loading="lazy"
-        decoding="async"
-        className="absolute left-[32px] top-[32px] h-[24px] max-w-none"
-        style={{ width: `${product.logoWidth}px` }}
-      />
+      {product.logo ? (
+        <Img
+          src={product.logo}
+          alt={product.name}
+          loading="lazy"
+          decoding="async"
+          className="absolute left-[32px] top-[32px] h-[24px] max-w-none"
+          style={{ width: `${product.logoWidth}px` }}
+        />
+      ) : (
+        <div className="absolute left-[32px] top-[32px] flex h-[24px] items-center gap-[9px]">
+          <img
+            src="/figma/logo-icon.svg"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="size-[24px] max-w-none"
+          />
+          <span className="text-[23px] font-semibold leading-[24px] tracking-[-0.92px] text-ink">
+            {product.logoText}
+          </span>
+        </div>
+      )}
       <div
         className={`absolute left-[32px] w-[280px] transition-[top] duration-300 ease-out ${descTop}`}
       >

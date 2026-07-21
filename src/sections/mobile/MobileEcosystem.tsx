@@ -3,9 +3,15 @@ import { Img } from "@/components/site/Img"
 type Product = {
   name: string
   description: string
-  logo: string
-  logoWidth: number
+  /** baked wordmark export; when absent, `logoText` composes glyph + text */
+  logo?: string
+  logoWidth?: number
+  logoText?: string
   mockup: string
+  /** % of card width to pull the mockup up — hides a baked-in sliced top edge
+   *  (some desktop exports were pre-cropped for the desktop row window; the
+   *  mock must only ever read as cropped at its bottom/right) */
+  mockupShift?: number
   comingSoon?: boolean
 }
 
@@ -17,6 +23,7 @@ const PRODUCTS: Product[] = [
     logo: "/figma/eco/logo1.png",
     logoWidth: 150.5,
     mockup: "/figma/eco/row1.png",
+    mockupShift: 2.5,
   },
   {
     name: "huntTMS",
@@ -25,6 +32,7 @@ const PRODUCTS: Product[] = [
     logo: "/figma/eco/logo2.png",
     logoWidth: 113,
     mockup: "/figma/eco/row2.png",
+    mockupShift: 0.8,
   },
   {
     name: "huntPAY",
@@ -45,20 +53,10 @@ const PRODUCTS: Product[] = [
     comingSoon: true,
   },
   {
-    name: "fleetHUNT",
+    name: "huntOS",
     description:
-      "Fleet management at scale — track trucks, maintenance and utilization across your whole fleet.",
-    logo: "/figma/eco/logo5.png",
-    logoWidth: 126,
-    mockup: "/figma/eco/row5.png",
-    comingSoon: true,
-  },
-  {
-    name: "huntONE",
-    description:
-      "Every load board in one place — unified search across DAT, Truckstop and more.",
-    logo: "/figma/eco/logo6.png",
-    logoWidth: 114,
+      "One operating system for your whole trucking business — every load board, your fleet and daily operations in a single workspace.",
+    logoText: "huntOS",
     mockup: "/figma/eco/row6.png",
     comingSoon: true,
   },
@@ -110,14 +108,23 @@ export function MobileEcosystem() {
             data-card
             className="relative flex w-[82vw] max-w-[380px] shrink-0 flex-col overflow-hidden rounded-lg border border-border-light bg-white p-6 md:w-[420px] md:max-w-[420px]"
           >
-            <Img
-              src={p.logo}
-              alt={p.name}
-              loading="lazy"
-              decoding="async"
-              className="h-6 max-w-none"
-              style={{ width: p.logoWidth }}
-            />
+            {p.logo ? (
+              <Img
+                src={p.logo}
+                alt={p.name}
+                loading="lazy"
+                decoding="async"
+                className="h-6 max-w-none"
+                style={{ width: p.logoWidth }}
+              />
+            ) : (
+              <div className="flex h-6 items-center gap-[9px]">
+                <img src="/figma/logo-icon.svg" alt="" loading="lazy" decoding="async" className="size-6 max-w-none" />
+                <span className="text-[23px] font-semibold leading-6 tracking-[-0.92px] text-ink">
+                  {p.logoText}
+                </span>
+              </div>
+            )}
             <p className="mt-4 min-h-[64px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
               {p.description}
             </p>
@@ -139,7 +146,8 @@ export function MobileEcosystem() {
                 alt={`${p.name} product preview`}
                 loading="lazy"
                 decoding="async"
-                className="-mt-px block w-[102%] max-w-none"
+                className="block w-[102%] max-w-none"
+                style={{ marginTop: p.mockupShift ? `-${p.mockupShift}%` : -1 }}
               />
             </div>
           </article>
