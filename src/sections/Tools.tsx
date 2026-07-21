@@ -54,7 +54,7 @@ const SPINE_D = `M 206 ${ICON_Y} H ${CENTER_X - ARC_R} Q ${CENTER_X} ${ICON_Y} $
 const BLOCK0_Y = 1028 // first block title top
 const PITCH = 1461 // title-to-title vertical rhythm
 const NODE_OFFSET = 20 // node sits level with the block title
-const BLOCK_W = 777
+const BLOCK_W = 688 // matches the mock exports’ native width — text aligns to the mock edge
 const RIGHT_X = 1020 // blocks right of the spine
 const LEFT_X = 120 // blocks left of the spine
 const SPINE_BOTTOM = BLOCK0_Y + 6 * PITCH + NODE_OFFSET // last node
@@ -236,7 +236,7 @@ function ToolBlock({ b, index }: { b: Block; index: number }) {
           decoding="async"
           data-parallax="0.04"
           className="max-w-none"
-          style={{ width: 688 }}
+          style={{ width: BLOCK_W }}
         />
       </div>
       <div className="mt-[80px] flex flex-col gap-[24px]">
