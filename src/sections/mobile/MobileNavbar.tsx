@@ -62,16 +62,16 @@ export function MobileNavbar() {
       className="fixed inset-x-0 top-0 z-[100]"
       style={{ paddingTop: "max(10px, env(safe-area-inset-top))" }}
     >
-      <div className="mx-auto flex w-full max-w-[440px] justify-end px-4 md:max-w-[768px] md:px-8 lg:max-w-[1024px] lg:px-10 xl:max-w-[1200px]">
+      <div className="mx-auto flex w-full max-w-[440px] justify-end px-4 md:max-w-[768px] md:px-8">
         <div
-          className={`flex h-14 items-center justify-between overflow-hidden rounded-full border border-border-light bg-white/85 backdrop-blur-[10px] transition-[width,padding] duration-500 ease-out lg:h-[60px] lg:!w-full lg:!pl-5 lg:!pr-2 ${
+          className={`flex h-14 items-center justify-between overflow-hidden rounded-full border border-border-light bg-white/85 backdrop-blur-[10px] transition-[width,padding] duration-500 ease-out ${
             collapsed && !open ? "px-[3px]" : "pl-4 pr-1.5"
           }`}
           style={{ boxShadow: PILL_SHADOW, width: collapsed && !open ? 56 : "100%" }}
         >
           <a
             href="#"
-            className={`flex items-center gap-2 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-500 lg:!max-w-[160px] lg:!opacity-100 ${
+            className={`flex items-center gap-2 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-500 ${
               collapsed && !open
                 ? "pointer-events-none max-w-0 opacity-0"
                 : "max-w-[160px] opacity-100"
@@ -83,7 +83,7 @@ export function MobileNavbar() {
           </a>
 
           {/* laptop: inline nav links (desktop treatment) */}
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 px-4 lg:flex">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 px-4">
             {LINKS.map((l) => (
               <a
                 key={l.label}
@@ -99,7 +99,7 @@ export function MobileNavbar() {
           {/* laptop: compact CTA on the right */}
           <a
             href="#start"
-            className="hidden h-10 shrink-0 items-center gap-2 rounded-full bg-violet px-5 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-white transition-transform active:scale-[0.98] lg:flex"
+            className="hidden h-10 shrink-0 items-center gap-2 rounded-full bg-violet px-5 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-white transition-transform active:scale-[0.98]"
           >
             Add to Chrome
           </a>
@@ -110,7 +110,7 @@ export function MobileNavbar() {
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="relative flex size-12 items-center justify-center rounded-full lg:hidden"
+            className="relative flex size-12 items-center justify-center rounded-full"
           >
             <span
               className="absolute h-[2px] w-5 rounded-full bg-ink transition-transform duration-300"

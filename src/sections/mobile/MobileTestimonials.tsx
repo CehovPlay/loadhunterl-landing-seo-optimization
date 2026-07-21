@@ -160,12 +160,12 @@ export function MobileTestimonials() {
           sub="Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials"
         />
         {/* trust stats — real text (the desktop strip is a baked image) */}
-        <div className="mt-8 flex items-stretch justify-center gap-6">
+        <div className="mt-8 flex items-stretch justify-center gap-4 min-[360px]:gap-6">
           <div className="flex flex-col items-center justify-center gap-1.5">
             <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
               6,000&thinsp;+
             </span>
-            <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+            <span className="whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
               Trusted by users
             </span>
           </div>
@@ -177,7 +177,7 @@ export function MobileTestimonials() {
                 4.4
               </span>
             </span>
-            <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+            <span className="whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
               from 100+ reviews
             </span>
           </div>

@@ -281,13 +281,15 @@ export function MobilePricing() {
                 </span>
                 {isAnnually && (
                   <span
-                    className="flex h-[28px] items-center rounded-full border border-[rgba(232,232,232,0.75)] px-2.5 text-[12px] leading-[13px] text-white"
+                    className="flex h-[28px] items-center whitespace-nowrap rounded-full border border-[rgba(232,232,232,0.75)] px-2.5 text-[12px] leading-[13px] text-white"
                     style={{
                       backgroundImage:
                         "linear-gradient(to bottom, rgba(255,255,255,0.12), rgba(255,255,255,0.1))",
                     }}
                   >
-                    save up to 10%
+                    {/* full label wraps to two lines inside the pill at 320 */}
+                    <span className="hidden min-[360px]:inline">save up to 10%</span>
+                    <span className="min-[360px]:hidden">−10%</span>
                   </span>
                 )}
               </button>

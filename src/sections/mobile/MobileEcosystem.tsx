@@ -73,7 +73,7 @@ const PRODUCTS: Product[] = [
 export function MobileEcosystem() {
   return (
     <section id="offers" className="bg-gray-50 py-16">
-      <div className="mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8 lg:max-w-[1024px] lg:px-10 xl:max-w-[1200px] 2xl:max-w-[1320px]">
+      <div className="mx-auto w-full max-w-[440px] px-5 md:max-w-[768px] md:px-8">
         {/* icon plate — desktop composition */}
         <div
           data-float
@@ -91,17 +91,17 @@ export function MobileEcosystem() {
           />
         </div>
 
-        <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px] lg:text-[48px] lg:leading-[56px] xl:text-[56px] xl:leading-[64px]">
+        <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px]">
           Our ecosystem products
         </h2>
-        <p className="mt-4 max-w-[640px] text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-ink lg:mt-5 lg:text-[18px] lg:leading-[24px]">
+        <p className="mt-4 max-w-[640px] text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-ink">
           Everything you need to find, evaluate, and book loads — faster, smarter, and in one
           place.
         </p>
       </div>
 
       {/* product rows — white cards like the desktop list, snap carousel */}
-      <div className="lh-snap mt-10 flex gap-4 overflow-x-auto pb-2 px-[max(20px,calc((100vw-440px)/2+20px))] md:px-[max(32px,calc((100vw-768px)/2+32px))] lg:mt-12 lg:gap-6 lg:px-[max(40px,calc((100vw-1024px)/2+40px))] xl:px-[max(40px,calc((100vw-1200px)/2+40px))] 2xl:px-[max(40px,calc((100vw-1320px)/2+40px))]">
+      <div className="lh-snap mt-10 flex gap-4 overflow-x-auto pb-2 px-[max(20px,calc((100vw-440px)/2+20px))] md:px-[max(32px,calc((100vw-768px)/2+32px))]">
         {PRODUCTS.map((p) => (
           <article
             key={p.name}
