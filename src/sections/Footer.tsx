@@ -50,12 +50,12 @@ export function Footer() {
           gutters (the DesignFrame wrapper clips it at the window edge) */}
       <div className="absolute left-1/2 top-[191px] h-px w-[6000px] -translate-x-1/2 bg-gray-650" />
 
-      {/* bottom row — socials left, copyright right */}
+      {/* bottom row — copyright left, socials right */}
       <div className="absolute left-[120px] top-[219px] flex h-[24px] w-[1680px] items-center justify-between">
-        <SocialLinks />
         <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[rgba(255,255,255,0.45)]">
           © 2026 LoadHunter. All rights reserved.
         </span>
+        <SocialLinks />
       </div>
     </footer>
   )

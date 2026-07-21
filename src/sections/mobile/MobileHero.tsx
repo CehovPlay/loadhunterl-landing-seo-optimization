@@ -69,7 +69,7 @@ export function MobileHero() {
         </p>
 
         {/* CTAs — stacked, full width, 48px; desktop order and skins */}
-        <div className="mt-12 flex w-full flex-col gap-3">
+        <div className="mx-auto mt-12 flex w-full max-w-[400px] flex-col gap-3">
           <PillButton href="#pricing" variant="glass" className="">
             Start 14-day free trial
           </PillButton>

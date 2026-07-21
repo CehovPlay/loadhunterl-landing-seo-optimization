@@ -173,7 +173,7 @@ export function Pricing() {
   }
 
   return (
-    <section id="pricing" className="relative h-[2660px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_2660px]">
+    <section id="pricing" className="relative h-[2652px] bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_2652px]">
       {/* header icon */}
       <div data-float className="absolute left-[928px] top-[120px] size-[64px]">
         <img loading="lazy" decoding="async" src="/figma/pricing/header-icon.svg" alt="" className="absolute left-[-10px] top-[-4px] h-[84px] w-[84px] max-w-none" />
@@ -347,7 +347,7 @@ export function Pricing() {
         ))}
 
         {/* footer CTA row — one 42px button per plan column */}
-        <div className="relative flex items-center py-[12px]">
+        <div className="relative flex items-center py-[8px]">
           <div className="w-[372px]" />
           {PLAN_DEFS.map((plan) => (
             <div key={plan.name} className="w-[260px] px-[20px]">

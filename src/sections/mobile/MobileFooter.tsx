@@ -44,10 +44,10 @@ export function MobileFooter() {
 
         {/* socials + copyright — centred, like everything in this footer */}
         <div className="flex flex-col items-center gap-3 pt-6 text-center">
-          <SocialLinks />
           <span className="whitespace-nowrap text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-[rgba(255,255,255,0.45)]">
             © 2026 LoadHunter. All rights reserved.
           </span>
+          <SocialLinks />
         </div>
       </Container>
     </footer>

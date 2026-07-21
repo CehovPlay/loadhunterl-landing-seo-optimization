@@ -81,7 +81,7 @@ function ProductRow({ product }: { product: Product }) {
 
   return (
     <div className="group relative h-[320px] w-[954px] shrink-0 overflow-hidden rounded-lg bg-white">
-      {/* product mockup — scaled to the row height, pinned to the window's
+      {/* product mockup — scaled to the row height minus a 20px top inset, pinned to the window's
           BOTTOM-LEFT corner; the row's overflow-hidden crops only the right
           (the white exports are composed for a bottom-left anchor) */}
       <Img
@@ -89,7 +89,7 @@ function ProductRow({ product }: { product: Product }) {
         alt={`${product.name} product preview`}
         loading="lazy"
         decoding="async"
-        className="absolute bottom-0 left-[343px] h-[320px] w-auto max-w-none"
+        className="absolute bottom-0 left-[343px] h-[300px] w-auto max-w-none"
       />
 
       {/* text panel (344 wide, transparent over the white row) */}
