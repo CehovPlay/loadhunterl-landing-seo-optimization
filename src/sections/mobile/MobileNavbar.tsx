@@ -126,7 +126,7 @@ export function MobileNavbar() {
 
       {/* full-screen menu */}
       <div
-        className={`fixed inset-0 -z-10 flex flex-col bg-white transition-[opacity,visibility] duration-300 ${
+        className={`fixed inset-0 -z-10 flex flex-col bg-white transition-[opacity,visibility] duration-300 md:bottom-auto md:rounded-b-3xl md:pb-8 md:shadow-[0px_24px_48px_-12px_rgba(0,0,0,0.18)] ${
           open ? "visible opacity-100" : "invisible opacity-0"
         }`}
         style={{
@@ -135,7 +135,7 @@ export function MobileNavbar() {
         }}
         aria-hidden={!open}
       >
-        <nav className="mx-auto flex w-full max-w-[440px] flex-1 flex-col overflow-y-auto px-5 md:max-w-[768px] md:px-8">
+        <nav className="mx-auto flex w-full max-w-[440px] flex-1 flex-col overflow-y-auto px-5 md:max-w-[768px] md:flex-none md:px-8">
           {LINKS.map((l, i) => (
             <a
               key={l.label}

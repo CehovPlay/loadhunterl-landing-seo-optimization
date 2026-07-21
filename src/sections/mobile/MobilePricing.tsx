@@ -343,7 +343,7 @@ export function MobilePricing() {
 
         {/* plan selector tabs — swipeable row, active tab mirrors the billing
             toggle's active pill */}
-        <div data-no-reveal className="lh-snap -mx-5 mt-10 flex gap-2 overflow-x-auto px-5">
+        <div data-no-reveal className="lh-snap -mx-5 mt-10 flex gap-2 overflow-x-auto px-5 md:mx-0 md:overflow-visible md:px-0">
           {PLAN_DEFS.map((p, i) => {
             const active = selected === i
             return (
@@ -352,7 +352,7 @@ export function MobilePricing() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setSelected(i)}
-                className={`flex h-11 shrink-0 items-center gap-1.5 rounded-full border px-4 transition-all ${
+                className={`flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full border px-4 transition-all md:flex-1 ${
                   active
                     ? "border-white backdrop-blur-[10px]"
                     : "border-[rgba(232,232,232,0.2)]"
