@@ -71,7 +71,7 @@ export function MobileEcosystem() {
     <section id="offers" className="bg-gray-50 py-16">
       <Container>
         {/* centred icon plate — desktop composition */}
-        <div className="flex flex-col items-center text-center md:flex-row md:items-center md:gap-6 md:text-left">
+        <div className="flex flex-col items-center text-center">
           <div
             data-float
             className="relative size-[56px] overflow-hidden rounded-[14px]"
@@ -87,7 +87,7 @@ export function MobileEcosystem() {
               }}
             />
           </div>
-          <h2 className="mt-8 md:mt-0 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px]">
+          <h2 className="mt-8 text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px]">
             Our ecosystem products
           </h2>
           <p className="mt-4 max-w-[640px] text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-ink">
