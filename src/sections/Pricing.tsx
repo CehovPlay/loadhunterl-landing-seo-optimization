@@ -350,7 +350,7 @@ export function Pricing() {
         <div className="relative flex items-center py-[8px]">
           <div className="w-[372px]" />
           {PLAN_DEFS.map((plan) => (
-            <div key={plan.name} className="w-[260px] px-[20px]">
+            <div key={plan.name} className="w-[260px] px-[8px]">
               <FooterCta plan={plan} />
             </div>
           ))}
