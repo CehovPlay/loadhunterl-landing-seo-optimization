@@ -2,10 +2,6 @@
 // Intrinsic pixel dimensions of every /figma raster, so <Img> can set
 // width/height and reserve layout space (prevents CLS).
 export const IMG_DIMENSIONS: Record<string, [number, number]> = {
-  "/figma/cta/glow.png": [
-    608,
-    477
-  ],
   "/figma/desk/eco-drive.png": [
     1376,
     578
@@ -183,28 +179,24 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     252
   ],
   "/figma/pricing/icon-ai.png": [
-    168,
-    168
+    252,
+    252
   ],
   "/figma/pricing/icon-basic.png": [
-    168,
-    168
+    252,
+    252
   ],
   "/figma/pricing/icon-freemium.png": [
     252,
     252
   ],
   "/figma/pricing/icon-pro.png": [
-    168,
-    168
+    252,
+    252
   ],
   "/figma/pricing/icon-standard.png": [
-    168,
-    168
-  ],
-  "/figma/tail/cta-right.png": [
-    2258,
-    1734
+    252,
+    252
   ],
   "/figma/tail/faq-icon.png": [
     168,

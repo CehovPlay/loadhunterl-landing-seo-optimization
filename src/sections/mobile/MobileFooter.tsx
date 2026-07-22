@@ -42,12 +42,23 @@ export function MobileFooter() {
         {/* divider under the logo/subscribe block */}
         <div className="mt-8 h-px w-full bg-gray-650" />
 
-        {/* socials + copyright — centred, like everything in this footer */}
-        <div className="flex flex-col items-center gap-3 pt-6 text-center md:flex-row md:justify-between md:text-left">
-          <span className="whitespace-nowrap text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-[rgba(255,255,255,0.45)]">
+        {/* bottom row — © / socials centred between / legal links; stacked on
+            phone, one row on tablet (socials in the middle both ways) */}
+        <div className="flex flex-col items-center gap-4 pt-6 text-center md:relative md:flex-row md:justify-between md:gap-3 md:text-left">
+          <span className="whitespace-nowrap text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-[rgba(255,255,255,0.45)] max-md:order-1">
             © 2026 LoadHunter. All rights reserved.
           </span>
-          <SocialLinks />
+          <div className="max-md:order-2 md:absolute md:left-1/2 md:-translate-x-1/2">
+            <SocialLinks />
+          </div>
+          <div className="flex items-center gap-5 text-[12px] font-medium leading-[15px] tracking-[-0.48px] text-[rgba(255,255,255,0.45)] max-md:order-3">
+            <a href="/privacy.html" className="transition-colors hover:text-white">
+              Privacy Policy
+            </a>
+            <a href="/terms.html" className="transition-colors hover:text-white">
+              Terms of Service
+            </a>
+          </div>
         </div>
       </Container>
     </footer>

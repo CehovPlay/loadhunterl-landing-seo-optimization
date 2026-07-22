@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Img } from "@/components/site/Img"
-import { CHROME_STORE_URL, LINKS } from "@/sections/Navbar"
+import { CALENDLY_URL, CHROME_STORE_URL, LINKS } from "@/sections/Navbar"
 import { PILL_SHADOW, PillButton } from "./ui"
 
 /**
@@ -160,7 +160,7 @@ export function MobileNavbar() {
         </nav>
         <div className="mx-auto flex w-full max-w-[440px] flex-col gap-3 px-5 pt-4 md:max-w-[768px] md:px-8">
           <PillButton
-            href="https://t.me/loadhunterextension"
+            href={CALENDLY_URL}
             target="_blank"
             rel="noopener"
             variant="white"

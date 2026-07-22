@@ -6,6 +6,10 @@ import { createPortal } from "react-dom"
 export const CHROME_STORE_URL =
   "https://chromewebstore.google.com/detail/loadhunter/ogepjnnfghfpkpjjieenkcppifhmmcdg"
 
+/** Calendly event — every "Get Demo" CTA leads here (PROD loadhunter.io/demo
+ *  embeds this same event inline; no backend involved). */
+export const CALENDLY_URL = "https://calendly.com/loadhunterdev/30min"
+
 export const LINKS = [
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
@@ -159,7 +163,7 @@ export function Navbar() {
             {/* actions */}
             <div className="relative flex h-[28px] items-center gap-[6px]">
               <a
-                href="https://t.me/loadhunterextension"
+                href={CALENDLY_URL}
                 target="_blank"
                 rel="noopener"
                 data-magnetic="0.2"

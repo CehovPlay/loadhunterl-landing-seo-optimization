@@ -1,9 +1,10 @@
 import { Img } from "@/components/site/Img"
 /**
  * Figma: Group 2085665218 (926:101886) — 1920x867 @ page y=17689.
- * Card row @ y=240: violet gradient card 531x627 @ x=120 (HTML) + decorative
- * automation panel 1129x627 @ x=671 (exported cta-right.png @2x, which also
- * carries the "image 61" blurred glow spanning the full 867px height).
+ * Card row @ y=240: violet gradient card 531x627 @ x=120 (HTML) + the fully
+ * vector automation panel 1129x627 @ x=671. The old baked cta-right.png
+ * (panel + diagonal light streak) was removed at the user's request — the
+ * streak read as a stray PNG edge on the flat section bg.
  */
 import { CtaAutomation } from "@/components/site/CtaAutomation"
 import { CHROME_STORE_URL } from "@/sections/Navbar"
@@ -11,18 +12,7 @@ import { CHROME_STORE_URL } from "@/sections/Navbar"
 export function Cta() {
   return (
     <section id="start" className="relative h-[867px] overflow-hidden bg-gray-800 [content-visibility:auto] [contain-intrinsic-size:1920px_867px]">
-      {/* right panel + glow — exported as one bitmap, full section height */}
-      <Img
-        src="/figma/tail/cta-right.png"
-        alt=""
-        aria-hidden
-        loading="lazy"
-        decoding="async"
-        className="absolute left-[671px] top-0 h-[867px] w-[1129px] max-w-none"
-      />
-
-      {/* fully vector "One click automation" panel with looping beams —
-          covers the baked panel region of the bitmap above */}
+      {/* fully vector "One click automation" panel with looping beams */}
       <CtaAutomation />
 
       {/* left — violet gradient card */}
