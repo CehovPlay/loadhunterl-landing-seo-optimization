@@ -37,21 +37,27 @@ The site is fully static — `npm run build` → deploy `dist/` to any static ho
 served from Vercel (project `loadhunter-extension-landing`, deployed via `npx vercel --prod`); moving
 to the `loadhunter.io` domain is just pointing the host at the same build.
 
-Already wired:
+**Full handoff doc for the backend team: [`docs/BACKEND.md`](docs/BACKEND.md)** (in Russian —
+what's wired, the exact Klaviyo call for the subscribe form, GA4, domain move checklist).
 
-- **"Add to Chrome"** (navbar, CTA card, mobile menu — all 5 instances) → the Chrome Web Store
-  listing. The URL lives in one place: `CHROME_STORE_URL` in `src/sections/Navbar.tsx`.
-- **"Get Demo" / "Contact"** → `https://t.me/loadhunterextension`
-- Footer socials → Telegram / Instagram / YouTube / X (mirrors production loadhunter.io)
-- **$LHUNT** → `https://coin.loadhunt.ai`
+Already wired (external URLs are centralized as constants in `src/sections/Navbar.tsx`):
+
+- **"Add to Chrome"** (navbar, hero "Start booking in seconds", CTA card, mobile menu) → the Chrome
+  Web Store listing (`CHROME_STORE_URL`).
+- **"Get Demo"** → Calendly `loadhunterdev/30min` (`CALENDLY_URL` — the same event PROD embeds
+  on `/demo`); **"Contact"** → `https://t.me/loadhunterextension`
+- **Trial CTAs** — hero "Start 14-day free trial" + pricing-table CTAs → `https://app.loadhunter.io`
+  (`APP_URL`, per-plan `ctaHref` in `planMatrix.tsx`); AI plan "Add to wishlist" → Telegram.
+- Footer socials → Telegram / Instagram / YouTube / X; **$LHUNT** → `https://coin.loadhunt.ai`
+- **Privacy / Terms** → static `public/privacy.html` + `public/terms.html` (dark, responsive,
+  PROD copy), linked from both footers and listed in `sitemap.xml`.
 
 Still stubs, to be wired before launch:
 
-- **Trial CTAs** — hero "Start 14-day free trial" / "Start booking in seconds" and every pricing-table
-  CTA are unwired `<button>`s. On production loadhunter.io the trial buttons lead to
-  `https://app.loadhunter.io`.
-- **Subscribe forms** (both footers) — `preventDefault` stubs, no endpoint.
-- **Analytics** — GA4 loads only when the build gets `VITE_GA_ID=G-XXXXXXXXXX` (`src/lib/analytics.ts`).
+- **Subscribe forms** (both footers) — `preventDefault` stubs; needs only a Klaviyo `list_id`
+  (frontend-only wiring, see `docs/BACKEND.md`).
+- **Analytics** — GA4 loads only when the build gets `VITE_GA_ID` (`src/lib/analytics.ts`);
+  PROD uses `G-VXPXV4HPCV`.
 - SEO meta, `robots.txt`, `sitemap.xml` and the OG image already assume `https://loadhunter.io`.
 
 ## How it's built
