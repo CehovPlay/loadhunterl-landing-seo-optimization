@@ -92,8 +92,10 @@ function PlanPrice({ price }: { price: Price }) {
 
 function PlanCta({ plan }: { plan: PlanDef }) {
   return (
-    <button
-      type="button"
+    <a
+      href={plan.ctaHref}
+      target="_blank"
+      rel="noopener"
       className="relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl border border-[rgba(232,232,232,0.2)] transition-transform active:scale-[0.99]"
     >
       <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
@@ -108,7 +110,7 @@ function PlanCta({ plan }: { plan: PlanDef }) {
         {plan.cta}
       </span>
       <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.18)]" />
-    </button>
+    </a>
   )
 }
 

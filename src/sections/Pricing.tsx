@@ -97,9 +97,11 @@ function HeaderCell({ plan, price }: { plan: PlanDef; price: Price }) {
  * very bottom of the table; violet glow floods up from the bottom on hover */
 function FooterCta({ plan }: { plan: PlanDef }) {
   return (
-    <button
+    <a
+      href={plan.ctaHref}
+      target="_blank"
+      rel="noopener"
       className="group relative flex h-[42px] w-full items-center justify-center overflow-hidden rounded-lg border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
-      type="button"
     >
       <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
       <span
@@ -113,7 +115,7 @@ function FooterCta({ plan }: { plan: PlanDef }) {
         {plan.cta}
       </span>
       <span className="pointer-events-none absolute inset-0 rounded-[11px] shadow-[inset_0px_0px_24px_0px_rgba(255,255,255,0.25)]" />
-    </button>
+    </a>
   )
 }
 

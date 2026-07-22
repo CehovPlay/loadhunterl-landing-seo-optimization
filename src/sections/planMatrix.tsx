@@ -5,6 +5,7 @@
  * `true` = check, `null` = not included, `"soon"` = coming-soon spinner,
  * any other string renders literally ("10 / day", "Unlimited", "2+", …).
  */
+import { APP_URL } from "@/sections/Navbar"
 
 export type CellValue = true | null | "soon" | string
 
@@ -26,6 +27,8 @@ export type PlanDef = {
   /** static note under the price (replaced by the live billing line on priced plans) */
   note: string
   cta: string
+  /** where the plan CTA leads (APP_URL for trials, Telegram for "Let's talk") */
+  ctaHref: string
   recommended?: boolean
   /** card accent wash used by the flow-layout plan panel */
   accent?: "pro" | "ai"
@@ -39,6 +42,7 @@ export const PLAN_DEFS: PlanDef[] = [
     unit: "/forever",
     note: "No credit card required.",
     cta: "Start for free",
+    ctaHref: APP_URL,
   },
   {
     name: "Basic",
@@ -46,6 +50,7 @@ export const PLAN_DEFS: PlanDef[] = [
     base: 9.99,
     note: "Save 20% with team rate.",
     cta: "Start 14-day free trial",
+    ctaHref: APP_URL,
   },
   {
     name: "Standard",
@@ -53,6 +58,7 @@ export const PLAN_DEFS: PlanDef[] = [
     base: 14.99,
     note: "Save 20% with team rate.",
     cta: "Start 14-day free trial",
+    ctaHref: APP_URL,
   },
   {
     name: "Pro",
@@ -60,6 +66,7 @@ export const PLAN_DEFS: PlanDef[] = [
     base: 29.99,
     note: "Best value for 10+ dispatchers.",
     cta: "Start 14-day free trial",
+    ctaHref: APP_URL,
     recommended: true,
     accent: "pro",
   },
@@ -69,6 +76,7 @@ export const PLAN_DEFS: PlanDef[] = [
     price: "Let's talk",
     note: "Best value for 20+ dispatchers.",
     cta: "Add to wishlist",
+    ctaHref: "https://t.me/loadhunterextension",
     accent: "ai",
   },
 ]

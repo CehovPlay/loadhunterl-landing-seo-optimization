@@ -10,6 +10,9 @@ export const CHROME_STORE_URL =
  *  embeds this same event inline; no backend involved). */
 export const CALENDLY_URL = "https://calendly.com/loadhunterdev/30min"
 
+/** The web app — trial/"start" CTAs lead here, mirroring PROD loadhunter.io. */
+export const APP_URL = "https://app.loadhunter.io"
+
 export const LINKS = [
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },

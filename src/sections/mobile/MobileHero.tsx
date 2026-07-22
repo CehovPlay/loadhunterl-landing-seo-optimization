@@ -1,5 +1,6 @@
 import { Img } from "@/components/site/Img"
 import { RotatingHeadline } from "@/components/site/RotatingHeadline"
+import { APP_URL, CHROME_STORE_URL } from "@/sections/Navbar"
 import { MobileHeroShader } from "./MobileHeroShader"
 import { Container, PillButton, Stars } from "./ui"
 
@@ -70,11 +71,13 @@ export function MobileHero() {
 
         {/* CTAs — stacked, full width, 48px; desktop order and skins */}
         <div className="mx-auto mt-12 flex w-full max-w-[400px] flex-col gap-3">
-          <PillButton href="#pricing" variant="glass" className="">
+          <PillButton href={APP_URL} target="_blank" rel="noopener" variant="glass" className="">
             Start 14-day free trial
           </PillButton>
           <PillButton
-            href="#start"
+            href={CHROME_STORE_URL}
+            target="_blank"
+            rel="noopener"
             variant="violet-radial"
             className=""
           >

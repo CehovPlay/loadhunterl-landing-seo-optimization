@@ -1,6 +1,7 @@
 import { Img } from "@/components/site/Img"
 import { RotatingHeadline } from "@/components/site/RotatingHeadline"
 import { ShaderBand } from "@/components/site/ShaderBand"
+import { APP_URL, CHROME_STORE_URL } from "@/sections/Navbar"
 import diamondIcon from "/figma/icon-diamond.svg"
 
 /**
@@ -70,7 +71,10 @@ export function Hero() {
 
         {/* CTAs */}
         <div className="flex items-center gap-[12px]">
-          <button
+          <a
+            href={APP_URL}
+            target="_blank"
+            rel="noopener"
             data-lift
             className="flex h-[42px] w-[288px] items-center justify-center whitespace-nowrap rounded-full border border-white text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-ink backdrop-blur-[10px]"
             style={{
@@ -81,8 +85,11 @@ export function Hero() {
             }}
           >
             Start 14-day free trial
-          </button>
-          <button
+          </a>
+          <a
+            href={CHROME_STORE_URL}
+            target="_blank"
+            rel="noopener"
             data-lift
             className="flex h-[42px] w-[288px] items-center justify-center gap-[8px] overflow-hidden whitespace-nowrap rounded-full border border-white py-[4px] pl-[9px] pr-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
             style={{
@@ -94,7 +101,7 @@ export function Hero() {
           >
             <Img src={diamondIcon} alt="" decoding="async" className="size-[25px]" />
             Start booking in seconds
-          </button>
+          </a>
         </div>
       </div>
     </section>
