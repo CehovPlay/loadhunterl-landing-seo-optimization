@@ -296,14 +296,24 @@ export function Pricing() {
           freemium strip + plan deck: label column 372px + five 260px plan
           columns; header row 240px, group headers 54px, feature rows 24px.
           data-card → the reveal cascade fades the table in as ONE block
-          instead of tweening ~250 cells individually. */}
+          instead of tweening ~250 cells individually.
+
+          The padding is 3px, NOT 4: the 1680px box is border-box and carries a
+          1px border, so the row grid (372 + 5×260 = 1672) only fits with 3px of
+          padding. With 4px it overflowed by 2px, and since flex items shrink by
+          default every column silently became 259.69px wide — the columns then
+          drifted up to 2px off the Pro highlight, which is absolutely positioned
+          and does NOT shrink (its CTA sat 6.6/9.4px off-centre). Keep these five
+          numbers adding up if any of them ever changes. */}
       <div
         data-card
-        className="absolute left-[120px] top-[664px] w-[1680px] rounded-2xl border border-[rgba(229,229,229,0.1)] p-[4px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+        className="absolute left-[120px] top-[664px] w-[1680px] rounded-2xl border border-[rgba(229,229,229,0.1)] p-[3px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
         style={{ backgroundImage: "linear-gradient(to bottom, var(--color-gray-800), rgba(24,26,31,0))" }}
       >
-        {/* Pro column highlight — full-height violet wash under the column */}
-        <div className="pointer-events-none absolute bottom-[3px] left-[1156px] top-[3px] w-[260px] rounded-xl border border-[rgba(111,81,151,0.35)] bg-[rgba(111,81,151,0.06)]" />
+        {/* Pro column highlight — full-height violet wash under the column.
+            left = padding (3) + label column (372) + three 260px columns; the
+            1px overhang top/bottom into the padding is intentional. */}
+        <div className="pointer-events-none absolute bottom-[2px] left-[1155px] top-[2px] w-[260px] rounded-xl border border-[rgba(111,81,151,0.35)] bg-[rgba(111,81,151,0.06)]" />
 
         {/* header row */}
         <div className="relative flex h-[192px] items-end border-b border-[rgba(229,229,229,0.1)]">
