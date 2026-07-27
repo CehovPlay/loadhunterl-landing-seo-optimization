@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from "react"
 import { prefersReducedMotion } from "@/lib/inview"
+import { HERO_BOTTOM_FADE } from "./ui"
 
 const ShaderStack = lazy(() => import("@/components/site/ShaderStack"))
 
@@ -65,13 +66,7 @@ export function MobileHeroShader() {
       </Suspense>
       {/* re-apply the hero's bottom fade so the shader dissolves into the
           var(--color-bg-light) partner band exactly like the static background does */}
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(to bottom, rgba(250,250,250,0) 75%, var(--color-bg-light) 100%)",
-        }}
-      />
+      <div className="absolute inset-0" style={{ backgroundImage: HERO_BOTTOM_FADE }} />
     </div>
   )
 }

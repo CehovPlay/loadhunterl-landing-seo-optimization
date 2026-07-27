@@ -102,6 +102,10 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
     168,
     168
   ],
+  "/figma/hero-dashboard-2x.png": [
+    3360,
+    1436
+  ],
   "/figma/hero-dashboard.png": [
     2046,
     1984
@@ -137,6 +141,10 @@ export const IMG_DIMENSIONS: Record<string, [number, number]> = {
   "/figma/mobile/eco-tms.png": [
     724,
     528
+  ],
+  "/figma/mobile/hero-dashboard.png": [
+    2100,
+    898
   ],
   "/figma/mobile/tools-a.png": [
     724,

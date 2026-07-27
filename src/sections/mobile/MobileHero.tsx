@@ -2,7 +2,7 @@ import { Img } from "@/components/site/Img"
 import { RotatingHeadline } from "@/components/site/RotatingHeadline"
 import { APP_URL, CHROME_STORE_URL } from "@/sections/Navbar"
 import { MobileHeroShader } from "./MobileHeroShader"
-import { Container, PillButton, Stars } from "./ui"
+import { Container, HERO_BOTTOM_FADE, PillButton, Stars } from "./ui"
 
 // explicit w+h: these SVGs carry no intrinsic size, so `w-auto` would fall
 // back to the 300×150 replaced-element default (ratios from the desktop strip)
@@ -32,12 +32,12 @@ export function MobileHero() {
           backgroundImage:
             "radial-gradient(120% 60% at 85% -5%, rgba(156,102,229,0.16) 0%, rgba(156,102,229,0) 60%)," +
             "radial-gradient(90% 50% at 0% 30%, rgba(111,81,151,0.10) 0%, rgba(111,81,151,0) 65%)," +
-            "linear-gradient(to bottom, rgba(250,250,250,0) 75%, var(--color-bg-light) 100%)",
+            HERO_BOTTOM_FADE,
         }}
       />
       <MobileHeroShader />
 
-      <Container className="relative flex flex-col items-center pb-28 pt-[180px] text-center">
+      <Container className="relative flex flex-col items-center pb-14 pt-[180px] text-center">
         {/* eyebrow pill — desktop skin: soft white gradient, no border */}
         <span
           className="inline-flex w-fit items-center rounded-full px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-ink"
@@ -86,6 +86,30 @@ export function MobileHero() {
           </PillButton>
         </div>
       </Container>
+
+      {/* product screenshot — the desktop hero mockup is 2.34:1, so fitting its
+          full width into the 350px column would leave 150px of unreadable UI.
+          Instead it renders at a FIXED width (1110 = 0.66 of the desktop 1680,
+          the smallest scale where the sidebar and card labels stay legible) and
+          is cropped: LEFT edge flush with the content column, the crop happening
+          at the screen edge itself, so the cut is invisible and the app reads as
+          continuing off-screen. Never cropped at the top/left.
+          The width MUST NOT be a percentage: the wrapper's content box grows
+          with the viewport between 440 and 768 (left padding only half-tracks
+          it), so `w-[300%]` scaled the mockup up to 1650px at 700px wide and
+          then snapped back to 1104 at the md: breakpoint — a visible jump, and
+          the hero grew to 1667px with it. Fixed px = constant scale, and a wider
+          screen simply reveals more of the dashboard.
+          Height is uncropped, so the export's baked bottom fade into #fafafa
+          still lands on the (already #fafafa) hero bottom — see HERO_BOTTOM_FADE. */}
+      <div className="relative overflow-hidden pl-[max(20px,calc((100vw-440px)/2+20px))] md:pl-[max(32px,calc((100vw-768px)/2+32px))]">
+        <Img
+          src="/figma/mobile/hero-dashboard.png"
+          alt="LoadHunter dashboard: e-mail templates, factoring, drivers and release notes"
+          decoding="async"
+          className="block w-[1110px] max-w-none"
+        />
+      </div>
 
       {/* partner marquee — two copies of the row, translated -50% on loop */}
       <div className="relative bg-bg-light py-10" aria-label="Supported load boards">

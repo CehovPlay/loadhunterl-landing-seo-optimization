@@ -35,6 +35,7 @@ export function ShaderBand({
   polarCenter,
   extendBottom = 0,
   fallback,
+  bottomFade,
 }: {
   baseColor: string
   /** When set, the fluted pattern is bent into concentric circles around this
@@ -50,6 +51,13 @@ export function ShaderBand({
    *  (Safari today, no-WebGPU hardware) this is what the visitor sees instead
    *  of a bare flat band. Keep it cheap and purely decorative. */
   fallback?: ReactNode
+  /** CSS background-image painted as the band's TOP layer — above the shader
+   *  canvas and the fallback, still behind the design canvas. Used by the hero
+   *  to dissolve the shader into the next section's flat colour across the FULL
+   *  viewport width (gutters included), so the product screenshot's baked
+   *  #fafafa bottom has no edge to show against. Percentage stops resolve
+   *  against the band height, which keeps it independent of the canvas scale. */
+  bottomFade?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [box, setBox] = useState<{ top: number; height: number } | null>(null)
@@ -113,6 +121,9 @@ export function ShaderBand({
                   <ShaderStack polarCenter={polarCenter} />
                 </Suspense>
               </div>
+            )}
+            {bottomFade && (
+              <div className="absolute inset-0" style={{ backgroundImage: bottomFade }} />
             )}
           </div>,
           document.body,

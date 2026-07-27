@@ -5,18 +5,33 @@ import { APP_URL, CHROME_STORE_URL } from "@/sections/Navbar"
 import diamondIcon from "/figma/icon-diamond.svg"
 
 /**
- * Experiment: mockup removed; the copy block is horizontally centered on the
- * canvas (was the left column of the original Figma hero, x0 y203).
+ * Product-SaaS hero (2026-07-27): centered copy column over the shader band,
+ * then the app dashboard screenshot sitting on the fold — 1680px wide, i.e. the
+ * page's content grid and the native half of the 3360px 2× export, so it renders
+ * pixel-for-pixel at canvas scale 1.
+ *
+ * The export is fully OPAQUE and its content already fades out into #fafafa at
+ * the bottom (baked in Figma) = var(--color-bg-light) = the Features section
+ * below. So the hero band itself fades to the same #fafafa over the screenshot's
+ * lower half (`bottomFade`, full-bleed inside the shader portal): the mockup's
+ * bottom and side edges dissolve instead of ending on a visible rectangle, and
+ * the hero → Features seam disappears.
  */
+const MOCK_TOP = 970
+const MOCK_H = 718 // 1680 × (1436/3360)
+
 export function Hero() {
   return (
-    <section className="relative h-[1080px] w-full">
+    <section className="relative h-[1740px] w-full">
       {/* animated shader background (experiment) — portalled full-bleed behind
           the page; also paints the hero's var(--color-hero) base into the side gutters.
           The static fallback echoes the flow-layout hero tints so Safari
           (no working WebGPU) gets a composed band, not bare gray. */}
       <ShaderBand
         baseColor="#efefef"
+        bottomFade={
+          "linear-gradient(to bottom, rgba(250,250,250,0) 55%, var(--color-bg-light) 88%)"
+        }
         fallback={
           <div
             aria-hidden
@@ -103,6 +118,22 @@ export function Hero() {
             Start booking in seconds
           </a>
         </div>
+      </div>
+
+      {/* product screenshot — content grid (x120, w1680), native 2× export */}
+      <div
+        className="absolute left-[120px] z-10 w-[1680px]"
+        style={{ top: MOCK_TOP, height: MOCK_H }}
+      >
+        <Img
+          src="/figma/hero-dashboard-2x.png"
+          alt="LoadHunter dashboard: e-mail templates, factoring, drivers, release notes and tutorials"
+          fetchPriority="high"
+          decoding="async"
+          width={1680}
+          height={MOCK_H}
+          className="block h-full w-full"
+        />
       </div>
     </section>
   )

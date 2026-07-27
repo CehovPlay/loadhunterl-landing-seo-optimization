@@ -15,6 +15,15 @@ import { useSyncExternalStore } from "react"
 export const PILL_SHADOW =
   "var(--shadow-pill)"
 
+/** Hero → partner-band dissolve. The hero now ends with the product screenshot,
+ *  whose baked bottom fade runs into #fafafa (= var(--color-bg-light)), so the
+ *  hero background must already BE that colour where the screenshot sits — hence
+ *  the stops finish well before the section's bottom edge. Shared because
+ *  MobileHeroShader re-applies the identical gradient over its canvas; if the two
+ *  drift apart, a visible band appears the moment the shader comes up. */
+export const HERO_BOTTOM_FADE =
+  "linear-gradient(to bottom, rgba(250,250,250,0) 46%, var(--color-bg-light) 72%)"
+
 export function Container({
   className = "",
   children,
