@@ -13,8 +13,9 @@ import { prefersReducedMotion } from "@/lib/inview"
  *   run right → soft arc → vertical drop at the CANVAS CENTRE (x=960).
  *   Feature blocks alternate sides of the centre line (1st right, 2nd left,
  *   …), each with a node on the spine at title level (+20). Block column
- *   w=777; title → desc → 80px → mockup (w=777) → 80px → items; block pitch
- *   1461.
+ *   w=688; title → desc → 80px → mockup (w=688) → 80px → items. The vertical
+ *   rhythm is content-driven — each block starts GAP px under the previous
+ *   one's real height (Block.h), not on the old fixed 1461px pitch.
  *
  * The path is revealed with stroke-dashoffset; the vertical front is kept
  * px-aligned with the 60%-viewport line (the curve prefix is compressed into
@@ -43,6 +44,15 @@ type Block = {
   desc: string
   items: Item[]
   mockup: string
+  /**
+   * Rendered height in canvas px. The blocks are absolutely positioned (fixed
+   * canvas), so the vertical rhythm cannot come from flow — it is
+   * `previous top + previous height + GAP`. Measured in the browser at
+   * scale 1 (`getBoundingClientRect` on `[data-tool-block]`); heights are
+   * stable before the mockups load because <Img> reserves their box from
+   * img-dimensions.ts. RE-MEASURE after editing a block's copy or mockup.
+   */
+  h: number
 }
 
 /* ------------------------------------------------- geometry constants --- */
@@ -51,15 +61,19 @@ const ICON_Y = 628 // icon centre — the horizontal run's y
 const ARC_R = 150 // corner radius of the horizontal→vertical turn
 const CURVE_END_Y = ICON_Y + ARC_R // where the arc lands on the vertical
 const SPINE_D = `M 206 ${ICON_Y} H ${CENTER_X - ARC_R} Q ${CENTER_X} ${ICON_Y} ${CENTER_X} ${CURVE_END_Y}`
-const BLOCK0_Y = 1028 // first block title top
-const PITCH = 1461 // title-to-title vertical rhythm
+const BLOCK0_Y = 820 // first block title top
+/** Vertical step between blocks = previous block's height + GAP. NEGATIVE on
+ *  purpose: consecutive blocks sit on OPPOSITE sides of the spine, so letting
+ *  them overlap by 300px weaves the two columns together (same-side blocks —
+ *  i.e. i and i+2 — still keep 195–390px of clear air). With the old
+ *  1461px pitch every block was followed by 470–670px in which its own side —
+ *  and the other one — were both empty, which read as a bare spine. */
+const GAP = -300
+const TAIL = 300 // air under the last block before the section ends
 const NODE_OFFSET = 20 // node sits level with the block title
 const BLOCK_W = 688 // matches the mock exports’ native width — text aligns to the mock edge
 const RIGHT_X = 1020 // blocks right of the spine
 const LEFT_X = 120 // blocks left of the spine
-const SPINE_BOTTOM = BLOCK0_Y + 6 * PITCH + NODE_OFFSET // last node
-const SECTION_H = 10960
-const SPINE_PATH = `${SPINE_D} V ${SPINE_BOTTOM}`
 
 const BLOCKS: Block[] = [
   {
@@ -81,6 +95,7 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: "/figma/desk/tools-a.png",
+    h: 865,
   },
   {
     key: "b",
@@ -101,6 +116,7 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: "/figma/desk/tools-b.png",
+    h: 821,
   },
   {
     key: "c",
@@ -121,6 +137,7 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: "/figma/desk/tools-c.png",
+    h: 943,
   },
   {
     key: "d",
@@ -141,6 +158,7 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: "/figma/desk/tools-d.png",
+    h: 992,
   },
   {
     key: "e",
@@ -161,6 +179,7 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: "/figma/desk/tools-e.png",
+    h: 869,
   },
   {
     key: "f",
@@ -181,6 +200,7 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: "/figma/desk/tools-f.png",
+    h: 795,
   },
   {
     key: "g",
@@ -201,8 +221,21 @@ const BLOCKS: Block[] = [
       },
     ],
     mockup: "/figma/desk/tools-g.png",
+    h: 773,
   },
 ]
+
+/* Block tops: content-driven rhythm (see Block.h). The old fixed 1461px pitch
+   was ~500–670px of dead air between the shorter blocks — the section read as
+   an empty spine with text far apart. */
+const TOPS = BLOCKS.reduce<number[]>((acc, _b, i) => {
+  acc.push(i === 0 ? BLOCK0_Y : acc[i - 1] + BLOCKS[i - 1].h + GAP)
+  return acc
+}, [])
+const LAST_TOP = TOPS[TOPS.length - 1]
+const SPINE_BOTTOM = LAST_TOP + NODE_OFFSET // last node
+const SECTION_H = LAST_TOP + BLOCKS[BLOCKS.length - 1].h + TAIL
+const SPINE_PATH = `${SPINE_D} V ${SPINE_BOTTOM}`
 
 /* -------------------------------------------------------------- blocks --- */
 
@@ -216,7 +249,7 @@ function ToolBlock({ b, index }: { b: Block; index: number }) {
       data-tool-block={b.key}
       data-no-reveal
       className="absolute"
-      style={{ top: BLOCK0_Y + index * PITCH, left, width: BLOCK_W }}
+      style={{ top: TOPS[index], left, width: BLOCK_W }}
     >
       <h3 data-tb className="text-[30px] font-medium leading-[40px] tracking-[-1.2px] text-white">
         {b.title}
@@ -354,7 +387,7 @@ function Spine() {
           className="absolute size-[14px] rounded-full border border-white/15"
           style={{
             left: CENTER_X - 7,
-            top: BLOCK0_Y + i * PITCH + NODE_OFFSET - 7,
+            top: TOPS[i] + NODE_OFFSET - 7,
             background: "var(--color-gray-900)",
           }}
         />

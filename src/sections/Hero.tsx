@@ -5,10 +5,16 @@ import { APP_URL, CHROME_STORE_URL } from "@/sections/Navbar"
 import diamondIcon from "/figma/icon-diamond.svg"
 
 /**
- * Product-SaaS hero (2026-07-27): centered copy column over the shader band,
- * then the app dashboard screenshot sitting on the fold — 1680px wide, i.e. the
- * page's content grid and the native half of the 3360px 2× export, so it renders
- * pixel-for-pixel at canvas scale 1.
+ * Product-SaaS hero — SPLIT layout (2026-07-31): copy column left on the
+ * content grid (x120), the app screenshot right, deliberately oversized so its
+ * right half runs off the canvas/viewport edge (the classic "app peeking in"
+ * SaaS hero). Replaces the earlier centered-copy + full-width-mockup-below
+ * composition, which pushed the product 970px down the page.
+ *
+ * DesignFrame's inner canvas does not clip (only the outer viewport wrapper
+ * does), so the overflow simply falls off the right edge — and above 1920 it
+ * bleeds into the side gutter instead of ending on a hard cut, same as the
+ * other full-bleed decor.
  *
  * The export is fully OPAQUE and its content already fades out into #fafafa at
  * the bottom (baked in Figma) = var(--color-bg-light) = the Features section
@@ -17,12 +23,17 @@ import diamondIcon from "/figma/icon-diamond.svg"
  * bottom and side edges dissolve instead of ending on a visible rectangle, and
  * the hero → Features seam disappears.
  */
-const MOCK_TOP = 970
-const MOCK_H = 718 // 1680 × (1436/3360)
+const HERO_H = 960
+const COPY_TOP = 236
+const COPY_W = 820 // x120 → x940; the widest rotating line ("before anyone else") fits
+const MOCK_LEFT = 1000
+const MOCK_W = 1500 // ~580px of it lives past the canvas edge
+const MOCK_TOP = 176
+const MOCK_H = Math.round(MOCK_W * (1436 / 3360)) // 641
 
 export function Hero() {
   return (
-    <section className="relative h-[1740px] w-full">
+    <section className="relative w-full" style={{ height: HERO_H }}>
       {/* animated shader background (experiment) — portalled full-bleed behind
           the page; also paints the hero's var(--color-hero) base into the side gutters.
           The static fallback echoes the flow-layout hero tints so Safari
@@ -45,8 +56,11 @@ export function Hero() {
         }
       />
 
-      {/* copy — centered */}
-      <div className="absolute inset-x-0 top-[203px] z-20 flex flex-col items-center gap-[70px] px-[120px] text-center">
+      {/* copy — left column on the content grid */}
+      <div
+        className="absolute left-[120px] z-20 flex flex-col items-start gap-[44px] text-left"
+        style={{ top: COPY_TOP, width: COPY_W }}
+      >
         {/* eyebrow pill */}
         <span
           className="inline-flex w-fit items-center rounded-full px-[20px] py-[4px] text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-ink"
@@ -58,7 +72,7 @@ export function Hero() {
           The AI copilot for smarter dispatching.
         </span>
 
-        <div className="flex flex-col items-center gap-[60px]">
+        <div className="flex flex-col items-start gap-[20px]">
           {/* rotating typed H1 + matching sub-headline badge */}
           <RotatingHeadline />
 
@@ -120,19 +134,30 @@ export function Hero() {
         </div>
       </div>
 
-      {/* product screenshot — content grid (x120, w1680), native 2× export */}
+      {/* product screenshot — right of the copy, running off the canvas edge.
+          The export is opaque and its baked bottom fade lands on #fafafa, which
+          used to read as a light rectangle now that it no longer spans the full
+          width — so the box is masked out over its lower third and dissolves
+          into the band instead of ending on a straight cut. */}
       <div
-        className="absolute left-[120px] z-10 w-[1680px]"
-        style={{ top: MOCK_TOP, height: MOCK_H }}
+        className="absolute z-10"
+        style={{
+          top: MOCK_TOP,
+          left: MOCK_LEFT,
+          width: MOCK_W,
+          height: MOCK_H,
+          maskImage: "linear-gradient(to bottom, #000 58%, transparent 97%)",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 58%, transparent 97%)",
+        }}
       >
         <Img
           src="/figma/hero-dashboard-2x.png"
           alt="LoadHunter dashboard: e-mail templates, factoring, drivers, release notes and tutorials"
           fetchPriority="high"
           decoding="async"
-          width={1680}
+          width={MOCK_W}
           height={MOCK_H}
-          className="block h-full w-full"
+          className="block h-full w-full max-w-none"
         />
       </div>
     </section>
