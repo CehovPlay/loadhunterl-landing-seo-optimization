@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect } from "react"
+import { lazy, Suspense, useEffect, useLayoutEffect } from "react"
 import Lenis from "lenis"
 import gsap from "gsap"
 import { initReveal } from "@/lib/reveal"
@@ -7,6 +7,7 @@ import { initEcosystemPin } from "@/lib/ecosystemPin"
 import { DesignFrame } from "@/components/site/DesignFrame"
 import { useFlowLayout } from "@/components/site/useFlowLayout"
 import { isCoarsePointer, prefersReducedMotion } from "@/lib/inview"
+import { canonical, matchRoute, setHomeRenderer } from "@/routes"
 
 // Code-split the two experiences: a phone visitor never downloads the desktop
 // tree (with its WebGPU shader engine), and vice versa.
@@ -173,6 +174,39 @@ declare global {
 }
 
 /**
+ * Dev-only metadata sync. In production every route is prerendered as its own
+ * HTML document (scripts/prerender.mjs), so the head is already correct before
+ * any JS runs; this only keeps the dev server's single index.html honest when
+ * you open /faq/ or an SEO page.
+ */
+function useRouteMeta(path: string) {
+  useEffect(() => {
+    const route = matchRoute(path)
+    if (!route) return
+    document.title = route.title
+    const set = (sel: string, attr: string, value: string) => {
+      const el = document.querySelector(sel)
+      if (el) el.setAttribute(attr, value)
+    }
+    set('meta[name="description"]', "content", route.description)
+    set('link[rel="canonical"]', "href", canonical(route.path))
+    set('meta[name="robots"]', "content", route.index ? "index,follow" : "noindex,follow")
+  }, [path])
+}
+
+/** Content routes have no canvas effects to wait for, so they release the
+ *  index.html preloader themselves once mounted. */
+function useReleasePreloader(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return
+    const raf = requestAnimationFrame(() =>
+      requestAnimationFrame(() => window.__lhPreloaderDone?.()),
+    )
+    return () => cancelAnimationFrame(raf)
+  }, [enabled])
+}
+
+/**
  * Two experiences:
  *  - < 1280px — the flow landing (src/sections/mobile/*): a real responsive
  *    layout (fluid widths, stacked sections, 44px+ touch targets). Mobile-first;
@@ -181,9 +215,8 @@ declare global {
  *    at/above 1920 maxScale={1} holds it at pixel size and centers it. So
  *    1280–1920 is the desktop design adapted by uniform scale.
  */
-function App() {
+function Home() {
   const mobile = useFlowLayout()
-  useLenis(mobile)
   useImageWarmup(mobile)
 
   if (mobile) {
@@ -203,6 +236,27 @@ function App() {
       </Suspense>
     </DesignFrame>
   )
+}
+
+// registered here (not inside routes.tsx) so the code-split landing chunks are
+// not pulled into every standalone page's bundle
+setHomeRenderer(() => <Home />)
+
+function App({ path }: { path?: string }) {
+  // The prerenderer passes the route explicitly; in the browser it is the URL.
+  const pathname = path ?? (typeof window === "undefined" ? "/" : window.location.pathname)
+  const route = matchRoute(pathname)
+  const isHome = !route || route.path === "/"
+
+  const mobile = useFlowLayout()
+  useLenis(mobile)
+  useRouteMeta(route ? route.path : "/")
+  useReleasePreloader(!isHome)
+
+  // Unknown path: render the homepage rather than a blank screen. The static
+  // host serves real 404s; this is only the client-side fallback.
+  if (isHome) return <Home />
+  return route!.render()
 }
 
 export default App

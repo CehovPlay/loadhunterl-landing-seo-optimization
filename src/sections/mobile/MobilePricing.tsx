@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { Img } from "@/components/site/Img"
 import {
   CellCheck,
@@ -10,6 +10,8 @@ import {
   type PlanDef,
 } from "@/sections/planMatrix"
 import { countToKnob, knobToCount, planTotal } from "@/sections/pricingLogic"
+import { PRICING_COPY } from "@/content/copy"
+import { track } from "@/lib/analytics"
 import { Container, PILL_SHADOW, SectionHeader } from "./ui"
 
 type Price = { main: string; unit?: string; note: string }
@@ -52,6 +54,10 @@ function PlanIdentity({ plan }: { plan: PlanDef }) {
         <h3 className="whitespace-nowrap text-[18px] font-medium leading-[24px] tracking-[-0.72px] text-gray-50">
           {plan.name}
         </h3>
+        {/* LH-038 */}
+        <span className="basis-full text-[12px] font-medium leading-[16px] tracking-[-0.02em] text-violet-300">
+          {plan.bestFit}
+        </span>
         {plan.recommended && (
           <span className="flex h-6 items-center gap-1.5 rounded-full bg-[rgba(232,232,232,0.1)] px-2.5">
             <img
@@ -96,6 +102,7 @@ function PlanCta({ plan }: { plan: PlanDef }) {
       href={plan.ctaHref}
       target="_blank"
       rel="noopener"
+      onClick={() => track("plan_trial_click", { plan: plan.name })}
       className="relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl border border-[rgba(232,232,232,0.2)] transition-transform active:scale-[0.99]"
     >
       <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
@@ -181,6 +188,18 @@ export function MobilePricing() {
   }
   const n = trackW ? knobToCount(frac * trackW, zones) : 1
 
+  // LH-066 — one debounced event per settled dispatcher count, not per frame
+  const lastN = useRef(n)
+  useEffect(() => {
+    if (lastN.current === n) return
+    const t = setTimeout(() => {
+      lastN.current = n
+      track("dispatcher_count_change", { count: n })
+    }, 500)
+    return () => clearTimeout(t)
+  }, [n])
+
+
   const moveTo = useCallback((clientX: number) => {
     const track = trackRef.current
     if (!track) return
@@ -247,9 +266,13 @@ export function MobilePricing() {
       <Container>
         <SectionHeader
           icon="/figma/pricing/header-icon.png"
-          title={<>Choose the plan that&rsquo;s perfect for your business</>}
-          sub="Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!"
+          title={PRICING_COPY.h2}
+          sub={PRICING_COPY.lead}
         />
+        {/* LH-037 / COPYQA-020 */}
+        <p className="mt-3 text-center text-[13px] font-medium leading-[19px] tracking-[-0.02em] text-[rgba(255,255,255,0.5)]">
+          {PRICING_COPY.discountNote}
+        </p>
 
         {/* billing toggle */}
         <div
@@ -426,6 +449,10 @@ export function MobilePricing() {
             ))}
           </div>
         </article>
+        {/* LH-041 — one legal-safe trial/cancellation note per section */}
+        <p className="mt-8 text-center text-[13px] font-medium leading-[19px] tracking-[-0.01em] text-[rgba(255,255,255,0.5)]">
+          {PRICING_COPY.riskReversal}
+        </p>
       </Container>
     </section>
   )

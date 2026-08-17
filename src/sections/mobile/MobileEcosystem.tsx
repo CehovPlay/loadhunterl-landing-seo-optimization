@@ -1,4 +1,5 @@
 import { Img } from "@/components/site/Img"
+import { ECOSYSTEM_COPY } from "@/content/copy"
 import { Container, useMdUp } from "./ui"
 
 type Product = {
@@ -34,7 +35,7 @@ const PRODUCTS: Product[] = [
   {
     name: "huntPAY",
     description:
-      "Faster settlements and factoring — automated invoicing and payment tracking so you get paid sooner.",
+      ECOSYSTEM_COPY.huntPAY,
     logo: "/figma/eco/logo3.png",
     logoWidth: 109,
     mockup: "/figma/mobile/eco-pay.png",
@@ -52,7 +53,7 @@ const PRODUCTS: Product[] = [
   {
     name: "huntOS",
     description:
-      "One operating system for your whole trucking business — every load board, your fleet and daily operations in a single workspace.",
+      ECOSYSTEM_COPY.huntOS,
     logoText: "huntOS",
     mockup: "/figma/mobile/eco-os.png",
     comingSoon: true,
@@ -91,8 +92,7 @@ export function MobileEcosystem() {
             Our ecosystem products
           </h2>
           <p className="mt-4 max-w-[640px] text-[16px] font-medium leading-[21px] tracking-[-0.64px] text-ink">
-            Everything you need to find, evaluate, and book loads — faster, smarter, and in one
-            place.
+            {ECOSYSTEM_COPY.lead}
           </p>
         </div>
 

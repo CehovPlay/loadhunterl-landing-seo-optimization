@@ -1,25 +1,26 @@
 import { Img } from "@/components/site/Img"
+import { track } from "@/lib/analytics"
 import { useEffect, useState } from "react"
 import { createPortal } from "react-dom"
 
-/** Chrome Web Store listing — every "Add to Chrome" CTA leads here. */
-export const CHROME_STORE_URL =
-  "https://chromewebstore.google.com/detail/loadhunter/ogepjnnfghfpkpjjieenkcppifhmmcdg"
+// URL constants moved to src/content/links.ts (component-free, so pure content
+// modules can import them); re-exported here for existing call sites.
+import { APP_URL, CALENDLY_URL, CHROME_STORE_URL } from "@/content/links"
 
-/** Calendly event — every "Get Demo" CTA leads here (PROD loadhunter.io/demo
- *  embeds this same event inline; no backend involved). */
-export const CALENDLY_URL = "https://calendly.com/loadhunterdev/30min"
+export { APP_URL, CALENDLY_URL, CHROME_STORE_URL }
 
-/** The web app — trial/"start" CTAs lead here, mirroring PROD loadhunter.io. */
-export const APP_URL = "https://app.loadhunter.io"
-
-export const LINKS = [
-  { label: "Features", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "https://t.me/loadhunterextension", external: true },
-  { label: "Our offers", href: "#offers" },
-  { label: "$LHUNT", href: "https://coin.loadhunt.ai", external: true },
+export const LINKS: {
+  label: string
+  href: string
+  external?: boolean
+  event?: "nav_pricing_click" | "blog_click"
+}[] = [
+  { label: "Why LoadHunter", href: "/#why-loadhunter" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "Features", href: "/#features" },
+  { label: "Pricing", href: "/#pricing", event: "nav_pricing_click" },
+  { label: "Reviews", href: "/#reviews" },
+  { label: "Blog", href: "/blog/", event: "blog_click" },
 ]
 
 const PILL_SHADOW =
@@ -106,8 +107,9 @@ export function Navbar() {
                 key={l.label}
                 href={l.href}
                 {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
+                onClick={l.event ? () => track(l.event!) : undefined}
                 className={
-                  "flex h-[28px] items-center justify-center px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black" +
+                  "flex h-[28px] items-center justify-center px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink transition-colors hover:text-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet" +
                   (i === 0 ? " rounded-l-[99px]" : "") +
                   (i === LINKS.length - 1 ? " rounded-r-[99px]" : "")
                 }

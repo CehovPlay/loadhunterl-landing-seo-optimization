@@ -26,6 +26,8 @@ export type PlanDef = {
   unit?: string
   /** static note under the price (replaced by the live billing line on priced plans) */
   note: string
+  /** LH-038 — who the plan is for, shown under the plan name */
+  bestFit: string
   cta: string
   /** where the plan CTA leads (APP_URL for trials, Telegram for "Let's talk") */
   ctaHref: string
@@ -41,6 +43,7 @@ export const PLAN_DEFS: PlanDef[] = [
     price: "$0",
     unit: "/forever",
     note: "No credit card required.",
+    bestFit: "Explore the basics",
     cta: "Start for free",
     ctaHref: APP_URL,
   },
@@ -49,6 +52,7 @@ export const PLAN_DEFS: PlanDef[] = [
     icon: "/figma/pricing/icon-basic.png",
     base: 9.99,
     note: "Save 20% with team rate.",
+    bestFit: "Essential outreach for one user",
     cta: "Start 14-day free trial",
     ctaHref: APP_URL,
   },
@@ -57,6 +61,7 @@ export const PLAN_DEFS: PlanDef[] = [
     icon: "/figma/pricing/icon-standard.png",
     base: 14.99,
     note: "Save 20% with team rate.",
+    bestFit: "Workflow tools for active dispatch",
     cta: "Start 14-day free trial",
     ctaHref: APP_URL,
   },
@@ -65,17 +70,22 @@ export const PLAN_DEFS: PlanDef[] = [
     icon: "/figma/pricing/icon-pro.png",
     base: 29.99,
     note: "Best value for 10+ dispatchers.",
+    bestFit: "Advanced automation and team control",
     cta: "Start 14-day free trial",
     ctaHref: APP_URL,
     recommended: true,
     accent: "pro",
   },
   {
-    name: "AI subscription",
+    // LH-040 — renamed from "AI subscription"/"Let's talk", which explained
+    // neither the product nor its audience. Presented as a Custom/Enterprise
+    // track, not a fifth ordinary plan.
+    name: "Custom AI automation",
     icon: "/figma/pricing/icon-ai.png",
-    price: "Let's talk",
-    note: "Best value for 20+ dispatchers.",
-    cta: "Add to wishlist",
+    price: "Contact sales",
+    note: "For larger dispatch operations that need tailored workflow rules, integrations and onboarding.",
+    bestFit: "Tailored rules, integrations and onboarding",
+    cta: "Contact sales",
     ctaHref: "https://t.me/loadhunterextension",
     accent: "ai",
   },
@@ -87,7 +97,7 @@ const no = null
 
 export const MATRIX: MatrixGroup[] = [
   {
-    title: "Core dispatch tools",
+    title: "Core tools",
     rows: [
       row("Unlimited Emails", "10 / day", check, check, check, check),
       row("Connected Email Accounts", "1", "1", "Unlimited", "Unlimited", "Unlimited"),
@@ -98,33 +108,33 @@ export const MATRIX: MatrixGroup[] = [
       row("Click to Call", no, check, check, check, check),
       row("Copy Load Info", no, check, check, check, check),
       row("Weather Integration", no, check, check, check, check),
-      row("Profit Calculator", no, "Basic", "Advanced", "Advanced", "Advanced"),
+      row("True-profit calculator", no, "Basic", "Advanced", "Advanced", "Advanced"),
     ],
   },
   {
-    title: "Automation & workflow",
+    title: "Automation",
     rows: [
       row("Email Signature", no, no, check, check, check),
       row("VoIP Integration", no, no, check, check, check),
       row("Tolls Integration", no, no, check, check, check),
-      row("Integrated TMS", no, no, check, check, check),
-      row("Integrated Trucking Map", no, no, check, check, check),
+      row("Built-in dispatch workspace", no, no, check, check, check),
+      row("Route and deadhead view", no, no, check, check, check),
       row("Saved Loads", no, no, check, check, check),
       row("Load Notes", no, no, check, check, check),
-      row("Community Reviews", no, no, check, check, check),
+      row("Broker signals (carrier feedback)", no, no, check, check, check),
       row("Market Conditions", no, no, check, check, check),
       row("Ignore Brokers/States", no, no, check, check, check),
       row("Hide Cancelled Loads", no, no, check, check, check),
       row("Hide CA/MX Loads", no, no, check, check, check),
-      row("Telegram Load Notifications", no, no, check, check, check),
+      row("Telegram load alerts", no, no, check, check, check),
       row("Dark Mode", no, no, check, check, check),
       row("Factoring Connections", no, no, "1", "2+", "2+"),
     ],
   },
   {
-    title: "Pro power features",
+    title: "SmartBoard",
     rows: [
-      row("SmartBoard View", no, no, no, check, check),
+      row("SmartBoard view", no, no, no, check, check),
       row("Full LoadBoard Customization", no, no, no, check, check),
       row("Redesigned LoadBoard", no, no, no, check, check),
       row("Auto-Refresh Button", no, no, no, check, check),
@@ -133,6 +143,13 @@ export const MATRIX: MatrixGroup[] = [
       row("Search Tabs Reorder", no, no, no, check, check),
       row("Advanced Filtering Modes", no, no, no, check, check),
       row("FMCSA Broker Lookup", no, no, no, check, check),
+    ],
+  },
+  {
+    // LH-039 — "Team" is one of the five approved accordion labels, so the
+    // team-scoped rows move out of the SmartBoard group.
+    title: "Team",
+    rows: [
       row("Team Management", no, no, no, check, check),
       row("Driver Profile Setup", no, no, no, check, check),
     ],
@@ -186,10 +203,16 @@ export function CellClock({ css = false }: { css?: boolean }) {
 }
 
 export function CellDash() {
-  // -top-px: optical centring — Inter sits low in its line box next to the icons
+  // -top-px: optical centring — Inter sits low in its line box next to the icons.
+  // En dash, not an em dash: QA-001 requires U+2014 to be absent from rendered
+  // copy, and a screen reader gets the real meaning from the label.
   return (
-    <span className="relative -top-px text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-3 opacity-50">
-      —
+    <span
+      role="img"
+      aria-label="Not included"
+      className="relative -top-px text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-3 opacity-50"
+    >
+      &ndash;
     </span>
   )
 }

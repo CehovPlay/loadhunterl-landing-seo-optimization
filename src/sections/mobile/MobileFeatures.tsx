@@ -1,15 +1,16 @@
 import { Img } from "@/components/site/Img"
+import { WHY } from "@/content/copy"
 import { CARDS, svgHtml } from "@/sections/Features"
 import { Container } from "./ui"
 
 /**
- * Mobile Features: the desktop cards reflowed full-width — same var(--color-gray-75)
- * card, same border/radius, same inlined Figma SVG scene covering the lower
- * window (identical viewBox crop + preserveAspectRatio), text block on top.
+ * "Why LoadHunter" on the flow layout (LH-017..021) — the desktop cards
+ * reflowed full-width: same var(--color-gray-75) card, same border/radius,
+ * same inlined Figma SVG scene, text block on top.
  */
 export function MobileFeatures() {
   return (
-    <section id="why" className="bg-bg-light py-16">
+    <section id="why-loadhunter" className="bg-bg-light py-16">
       <Container>
         {/* header — desktop composition: floating icon → h2 → sub */}
         <div className="flex flex-col items-center text-center">
@@ -22,12 +23,11 @@ export function MobileFeatures() {
               className="absolute left-[-9px] top-[-3px] w-[74px] max-w-none"
             />
           </div>
-          <h2 className="text-[clamp(28px,7.7vw,34px)] font-medium leading-[1.2] tracking-[-0.04em] text-ink md:text-[40px] md:leading-[48px]">
-            Everything you need to book faster — nothing extra
+          <h2 className="text-[clamp(26px,6.6vw,32px)] font-medium leading-[1.2] tracking-[-0.03em] text-ink md:text-[40px] md:leading-[48px]">
+            {WHY.h2}
           </h2>
-          <p className="mt-4 text-[14px] font-medium leading-[19px] tracking-[-0.56px] text-ink-2">
-            New loads appear instantly — no refresh, no delay. Email or text brokers in seconds,
-            not minutes.
+          <p className="mt-4 text-[16px] font-medium leading-[24px] tracking-[-0.02em] text-ink/80">
+            {WHY.lead}
           </p>
         </div>
 

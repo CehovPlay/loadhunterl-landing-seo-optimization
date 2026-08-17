@@ -1,5 +1,5 @@
 import { Img } from "@/components/site/Img"
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   CellCheck,
   CellClock,
@@ -10,6 +10,8 @@ import {
   type PlanDef,
 } from "@/sections/planMatrix"
 import { planTotal } from "@/sections/pricingLogic"
+import { PRICING_COPY } from "@/content/copy"
+import { track } from "@/lib/analytics"
 
 const PILL_SHADOW = "var(--shadow-pill)"
 
@@ -89,6 +91,11 @@ function HeaderCell({ plan, price }: { plan: PlanDef; price: Price }) {
       <span className="whitespace-nowrap text-[12px] font-medium leading-[14px] tracking-[-0.48px] text-ink-3">
         {price.note}
       </span>
+      {/* LH-038 — who each plan is for, so the difference is readable without
+          scanning the whole matrix */}
+      <span className="text-center text-[12px] font-medium leading-[16px] tracking-[-0.02em] text-violet-300">
+        {plan.bestFit}
+      </span>
     </div>
   )
 }
@@ -101,6 +108,7 @@ function FooterCta({ plan }: { plan: PlanDef }) {
       href={plan.ctaHref}
       target="_blank"
       rel="noopener"
+      onClick={() => track("plan_trial_click", { plan: plan.name })}
       className="group relative flex h-[42px] w-full items-center justify-center overflow-hidden rounded-lg border border-[rgba(232,232,232,0.2)] shadow-[0px_6px_10px_0px_rgba(80,50,15,0.1)] transition-[border-color,box-shadow] duration-300 hover:border-[rgba(232,232,232,0.45)] hover:shadow-[0px_10px_28px_-6px_rgba(111,81,151,0.5)]"
     >
       <span className="pointer-events-none absolute inset-0 rounded-[11px] bg-[rgba(0,0,0,0.1)]" />
@@ -138,6 +146,18 @@ export function Pricing() {
   const [knob, setKnob] = useState(KNOB_MIN)
   const trackRef = useRef<HTMLDivElement>(null)
   const n = knobToCount(knob)
+
+  // LH-066 — one debounced event per settled dispatcher count, not per frame
+  const lastN = useRef(n)
+  useEffect(() => {
+    if (lastN.current === n) return
+    const t = setTimeout(() => {
+      lastN.current = n
+      track("dispatcher_count_change", { count: n })
+    }, 500)
+    return () => clearTimeout(t)
+  }, [n])
+
 
   const moveTo = useCallback((clientX: number) => {
     const track = trackRef.current
@@ -182,11 +202,16 @@ export function Pricing() {
       </div>
 
       {/* heading */}
-      <h2 className="absolute left-[442px] top-[244px] w-[1036px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
-        Choose the plan that&rsquo;s perfect for your business
+      {/* LH-036 / SEO-019 */}
+      <h2 className="absolute left-[442px] top-[244px] w-[1036px] text-center text-[44px] font-medium leading-[52px] tracking-[-0.03em] text-white">
+        {PRICING_COPY.h2}
       </h2>
-      <p className="absolute left-[632px] top-[322px] w-[656px] whitespace-nowrap text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-        Enjoy a 10% annual discount, plus save an extra 10% with 3 users — and unlock 20% off starting at 4 users!
+      <p className="absolute left-[510px] top-[314px] w-[900px] text-center text-[18px] font-medium leading-[26px] tracking-[-0.02em] text-[rgba(255,255,255,0.65)]">
+        {PRICING_COPY.lead}
+      </p>
+      {/* LH-037 / COPYQA-020 — the discount rules in plain language */}
+      <p className="absolute left-[510px] top-[360px] w-[900px] text-center text-[14px] font-medium leading-[20px] tracking-[-0.02em] text-[rgba(255,255,255,0.5)]">
+        {PRICING_COPY.discountNote}
       </p>
 
       {/* billing toggle — Figma 1206:100899: container p-6/gap-12 on a
@@ -206,7 +231,10 @@ export function Pricing() {
               key={label}
               type="button"
               aria-pressed={active}
-              onClick={() => setAnnual(isAnnually)}
+              onClick={() => {
+                setAnnual(isAnnually)
+                track("pricing_toggle", { billing: isAnnually ? "annual" : "monthly" })
+              }}
               className={
                 "flex h-[28px] items-center justify-center gap-[8px] rounded-full py-[4px] transition-all " +
                 (isAnnually ? "pl-[12px] pr-[4px] " : "px-[12px] ") +
@@ -368,6 +396,12 @@ export function Pricing() {
           ))}
         </div>
       </div>
+
+      {/* LH-041 — one legal-safe trial/cancellation note for the whole section,
+          not repeated inside every card */}
+      <p className="absolute left-[510px] top-[2560px] w-[900px] text-center text-[13px] font-medium leading-[19px] tracking-[-0.01em] text-[rgba(255,255,255,0.5)]">
+        {PRICING_COPY.riskReversal}
+      </p>
     </section>
   )
 }

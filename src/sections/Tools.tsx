@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react"
 import gsap from "gsap"
 import { Img } from "@/components/site/Img"
+import { FEATURES_INTRO, TOOL_BLOCKS } from "@/content/copy"
 import { prefersReducedMotion } from "@/lib/inview"
 
 /**
@@ -36,6 +37,8 @@ type Item = {
   iconW: 62 | 52
   title: string
   sub: string
+  /** LH-032 — where a signal comes from, shown as a chip next to the item. */
+  source?: string
 }
 
 type Block = {
@@ -75,155 +78,26 @@ const BLOCK_W = 688 // matches the mock exports’ native width — text aligns 
 const RIGHT_X = 1020 // blocks right of the spine
 const LEFT_X = 120 // blocks left of the spine
 
-const BLOCKS: Block[] = [
-  {
-    key: "a",
-    title: "Smart-board view",
-    desc: "We’ve completely redesigned how load boards are displayed by replacing the default DAT view with our custom high-performance interface. This allows users to fully customize column layout, hide or show fields, and experience a smoother, faster workflow — without any of the typical lags or freezing.",
-    items: [
-      {
-        icon: "/figma/tools/a-icon1.png",
-        iconW: 62,
-        title: "Performance optimization",
-        sub: "Our custom view eliminates the slowdowns and UI glitches of traditional integration, delivering a smooth and responsive experience across all supported load boards.",
-      },
-      {
-        icon: "/figma/tools/a-icon2.png",
-        iconW: 62,
-        title: "Workflow customization",
-        sub: "You can drag, resize, reorder, hide, or pin any load — customizing the load board interface to fit their unique dispatching flow.",
-      },
-    ],
-    mockup: "/figma/desk/tools-a.png",
-    h: 865,
-  },
-  {
-    key: "b",
-    title: "Auto-emailing",
-    desc: "Set your criteria — rate, RPM+, miles, truck type — and LoadHunter emails matching brokers the moment a load appears. One click for a single load, zero clicks once your rules are on.",
-    items: [
-      {
-        icon: "/figma/tools/b-icon1.png",
-        iconW: 52,
-        title: "Multiple email accounts",
-        sub: "Send emails from multiple accounts automatically, ideal for teams working with different carriers.",
-      },
-      {
-        icon: "/figma/tools/b-icon2.png",
-        iconW: 52,
-        title: "AI filtering",
-        sub: "Avoid duplicates and re-posted loads by sending emails only to new brokers, keeping requests relevant.",
-      },
-    ],
-    mockup: "/figma/desk/tools-b.png",
-    h: 821,
-  },
-  {
-    key: "c",
-    title: "Telegram notifications",
-    desc: "Get instant load alerts from multiple load boards like One and Truckstop directly in Telegram. Stay ahead with real-time updates across all your platforms.",
-    items: [
-      {
-        icon: "/figma/tools/c-icon1.png",
-        iconW: 62,
-        title: "Advanced filtering",
-        sub: "Filter Telegram notifications to receive only the most relevant loads based on your preferences, improving efficiency.",
-      },
-      {
-        icon: "/figma/tools/c-icon2.png",
-        iconW: 62,
-        title: "Multiple load-boards",
-        sub: "Connect multiple load boards to get loads from all of them in Telegram, streamlining your workflow.",
-      },
-    ],
-    mockup: "/figma/desk/tools-c.png",
-    h: 943,
-  },
-  {
-    key: "d",
-    title: "Integrated TMS",
-    desc: "Take full control of your dispatching process with a built-in TMS. Track driver timelines, manage workflows, and streamline operations — all within LoadHunter. Perfect for organizing your team and boosting efficiency.",
-    items: [
-      {
-        icon: "/figma/tools/d-icon1.png",
-        iconW: 52,
-        title: "Efficient workflow management",
-        sub: "Manage dispatch tasks directly in TMS, streamlining communication and boosting productivity.",
-      },
-      {
-        icon: "/figma/tools/d-icon2.png",
-        iconW: 52,
-        title: "Improved task planning",
-        sub: "Easily track driver schedules and task timelines for better coordination.",
-      },
-    ],
-    mockup: "/figma/desk/tools-d.png",
-    h: 992,
-  },
-  {
-    key: "e",
-    title: "Integrated map",
-    desc: "Easily track routes and load details on an interactive map, all directly within your load board for enhanced convenience.",
-    items: [
-      {
-        icon: "/figma/tools/e-icon1.png",
-        iconW: 62,
-        title: "Deadhead & trip overlays",
-        sub: "See origin, destination and deadhead miles plotted on the route before you commit — the entire road is planned in advance.",
-      },
-      {
-        icon: "/figma/tools/e-icon2.png",
-        iconW: 62,
-        title: "One-click route view",
-        sub: "Open any load's route in the built-in map or jump straight to Google Maps without leaving your load board.",
-      },
-    ],
-    mockup: "/figma/desk/tools-e.png",
-    h: 869,
-  },
-  {
-    key: "f",
-    title: "Broker reviews",
-    desc: "Easily share your experiences working with brokers to help others make informed decisions and avoid potential issues.",
-    items: [
-      {
-        icon: "/figma/tools/f-icon1.png",
-        iconW: 52,
-        title: "Verified payment history",
-        sub: "See how long brokers actually take to pay and if they respect detention or layover agreements.",
-      },
-      {
-        icon: "/figma/tools/f-icon2.png",
-        iconW: 52,
-        title: "Real-time red flags",
-        sub: "Get instant alerts on brokers who frequently cancel loads at the last minute or have low credit scores.",
-      },
-    ],
-    mockup: "/figma/desk/tools-f.png",
-    h: 795,
-  },
-  {
-    key: "g",
-    title: "Profit calculator",
-    desc: "Estimate profitability by factoring in expenses like fuel and miles, giving you clear insights to maximize your earnings.",
-    items: [
-      {
-        icon: "/figma/tools/g-icon1.png",
-        iconW: 62,
-        title: "Full expense breakdown",
-        sub: "Account for fuel consumption, current diesel prices, and tolls automatically. Know your true net profit before you even call the broker.",
-      },
-      {
-        icon: "/figma/tools/g-icon2.png",
-        iconW: 62,
-        title: "Smart RPM+ evaluation",
-        sub: "Evaluate load profitability including deadhead miles (DHO/DHD). Don't settle for high gross if the Rate Per Mile doesn't meet your margin goals.",
-      },
-    ],
-    mockup: "/figma/desk/tools-g.png",
-    h: 773,
-  },
-]
+/** Rendered heights, measured in the browser at canvas scale 1 (see Block.h).
+ *  RE-MEASURE with public/__measure.html after editing any block's copy. */
+const BLOCK_H: Record<string, number> = {
+  a: 816,
+  b: 810,
+  c: 931,
+  d: 976,
+  e: 841,
+  f: 799,
+  g: 763,
+}
+
+const BLOCKS: Block[] = TOOL_BLOCKS.map((b) => ({
+  key: b.key,
+  title: b.h3,
+  desc: b.body,
+  items: b.items.map((i) => ({ ...i })),
+  mockup: `/figma/desk/tools-${b.key}.png`,
+  h: BLOCK_H[b.key],
+}))
 
 /* Block tops: content-driven rhythm (see Block.h). The old fixed 1461px pitch
    was ~500–670px of dead air between the shorter blocks — the section read as
@@ -286,10 +160,16 @@ function ToolBlock({ b, index }: { b: Block; index: number }) {
                 style={{ left: it.iconW === 62 ? -10 : 0, width: it.iconW }}
               />
             </div>
-            <h4 className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+            <h4 className="flex flex-wrap items-center gap-[8px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
               {it.title}
+              {/* LH-032 — every signal names its source */}
+              {it.source && (
+                <span className="rounded-full border border-gray-650 px-[8px] py-px text-[11px] font-medium leading-[16px] tracking-normal text-[rgba(255,255,255,0.55)]">
+                  Source: {it.source}
+                </span>
+              )}
             </h4>
-            <p className="mt-[8px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
+            <p className="mt-[8px] text-[14px] font-medium leading-[18px] tracking-[-0.02em] text-ink-2">
               {it.sub}
             </p>
           </div>
@@ -578,16 +458,13 @@ export function Tools() {
       style={{ height: SECTION_H, containIntrinsicSize: `1920px ${SECTION_H}px` }}
     >
       {/* intro — left-aligned heading + subtitle, 220px from the top */}
-      <h2 className="absolute left-[120px] top-[220px] w-[1680px] text-left text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
-        Book better loads faster — without missing opportunities with
-        <br />
-        game-changing tools for dispatchers
+      {/* LH-026 / SEO-010 / COPYQA-008 */}
+      <h2 className="absolute left-[120px] top-[220px] w-[1400px] text-left text-[44px] font-medium leading-[52px] tracking-[-0.03em] text-white">
+        {FEATURES_INTRO.h2}
       </h2>
-      <p className="absolute left-[120px] top-[360px] w-[1200px] text-left text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-        LoadHunter finds high-RPM loads in real-time, filters the noise, and
-        lets you contact brokers instantly — all in one place. Real-time load
-        scanning, smart filters, and instant outreach — built for dispatchers
-        who want results, not dashboards.
+      {/* COPYQA-009 */}
+      <p className="absolute left-[120px] top-[330px] w-[900px] text-left text-[18px] font-medium leading-[26px] tracking-[-0.02em] text-[rgba(255,255,255,0.65)]">
+        {FEATURES_INTRO.lead}
       </p>
 
       {/* gear icon — 64x64 box, PNG render 84x84 incl. shadow (offset -10/-4);

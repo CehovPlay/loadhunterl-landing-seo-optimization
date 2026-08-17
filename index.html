@@ -10,32 +10,49 @@
     <!-- No LCP image preload: on every breakpoint the hero is copy over a
          background (shader band on desktop, gradient on mobile) — it renders
          no hero image at all. -->
+    <!-- LH-052..054 / SEO-001..002 / COPYQA-001..003 — approved metadata.
+         No em dash (U+2014) anywhere in marketing copy. -->
     <meta
       name="description"
-      content="LoadHunter OS — book better loads before anyone else. AI-powered dispatch tools that book loads in under 30 seconds."
+      content="Book better loads faster with LoadHunter, the AI-powered browser extension for DAT One and Truckstop. Filter loads, contact brokers and check profit in one workflow. Start your free 14-day trial today."
     />
-    <title>LoadHunter OS — Book better loads before anyone else</title>
+    <title>LoadHunter: AI Browser Extension for DAT One &amp; Truckstop</title>
 
     <link rel="canonical" href="https://loadhunter.io/" />
+    <meta name="robots" content="index,follow" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="LoadHunter" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://loadhunter.io/" />
-    <meta property="og:title" content="LoadHunter OS — Book better loads before anyone else" />
+    <meta
+      property="og:title"
+      content="LoadHunter AI Browser Extension for DAT One &amp; Truckstop"
+    />
     <meta
       property="og:description"
-      content="AI copilot for freight dispatchers: smart-board view, auto-emailing, Telegram alerts and a profit calculator — book loads in under a minute."
+      content="Filter loads, contact brokers and check profit in one workflow with LoadHunter. Start your free 14-day trial today."
     />
     <meta property="og:image" content="https://loadhunter.io/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="LoadHunter — Book better loads before anyone else" />
+    <meta
+      property="og:image:alt"
+      content="LoadHunter browser extension running inside a load board"
+    />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LoadHunter OS — Book better loads before anyone else" />
+    <meta
+      name="twitter:title"
+      content="LoadHunter AI Browser Extension for DAT One &amp; Truckstop"
+    />
     <meta
       name="twitter:description"
-      content="AI copilot for freight dispatchers: smart-board view, auto-emailing, Telegram alerts and a profit calculator — book loads in under a minute."
+      content="Filter loads, contact brokers and check profit in one workflow with LoadHunter. Start your free 14-day trial today."
     />
     <meta name="twitter:image" content="https://loadhunter.io/og-image.png" />
+    <meta
+      name="twitter:image:alt"
+      content="LoadHunter browser extension running inside a load board"
+    />
     <!-- NO untyped PNG preload here: an AVIF-capable browser would fetch BOTH
          the AVIF above and the PNG (up to ~950 KB wasted). The rare non-AVIF
          browser simply loads its fallback via <picture> without a preload. -->
@@ -49,6 +66,7 @@
          (window.__lhPreloaderDone(), fallbacks: window load / 8s watchdog)
          the logo fades and the two hero-colored panels split apart vertically
          to reveal the site. -->
+    <!--lh-preloader-start-->
     <div id="lh-preloader" aria-hidden="true">
       <div class="lh-pl-half lh-pl-top"></div>
       <div class="lh-pl-half lh-pl-bot"></div>
@@ -61,6 +79,7 @@
         <span class="lh-pl-wordmark"><img src="/figma/tail/logo-text-white.svg" alt="" width="135" height="22" /></span>
       </div>
     </div>
+    <!--lh-preloader-end-->
     <style>
       html.lh-pl-lock { overflow: hidden; }
       #lh-preloader { position: fixed; inset: 0; z-index: 9999; }

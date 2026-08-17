@@ -8,6 +8,8 @@ import { Img } from "@/components/site/Img"
  */
 import { CtaAutomation } from "@/components/site/CtaAutomation"
 import { CHROME_STORE_URL } from "@/sections/Navbar"
+import { FINAL_CTA } from "@/content/copy"
+import { track } from "@/lib/analytics"
 
 export function Cta() {
   return (
@@ -41,41 +43,54 @@ export function Cta() {
           />
         </div>
 
-        <h2 className="absolute left-[41px] top-[401px] w-[451px] text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-white">
-          Start your experience
-          <br />
-          with LoadHunter
+        {/* LH-046 / SEO-022 */}
+        <h2 className="absolute left-[40px] top-[352px] w-[451px] text-[28px] font-medium leading-[34px] tracking-[-0.03em] text-white">
+          {FINAL_CTA.h2}
         </h2>
 
-        <p className="absolute left-[40px] top-[473px] w-[451px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white">
-          Search loads with efficiency and speed you never had before.
-          LoadHunter: AI-powered tool.
+        <p className="absolute left-[40px] top-[470px] w-[451px] text-[16px] font-medium leading-[24px] tracking-[-0.02em] text-white/90">
+          {FINAL_CTA.body}
         </p>
 
-        <a
-          href={CHROME_STORE_URL}
-          target="_blank"
-          rel="noopener"
-          data-lift
-          className="absolute left-[40px] top-[545px] inline-flex h-[42px] items-center gap-[8px] rounded-full border border-white bg-white px-[24px] shadow-pill"
-        >
-          <Img
-            src="/figma/tail/cta-chrome.svg"
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="size-[16px] max-w-none"
-          />
-          <span
-            className="bg-clip-text text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-transparent"
-            style={{
-              backgroundImage:
-                "linear-gradient(149.61deg, var(--color-violet) 0%, var(--color-violet-cta) 100%)",
-            }}
+        {/* LH-046 — the hero's CTA hierarchy repeated: one dominant primary
+            plus the same secondary */}
+        <div className="absolute left-[40px] top-[540px] flex flex-wrap items-center gap-[12px]">
+          <a
+            href={FINAL_CTA.primaryHref}
+            target="_blank"
+            rel="noopener"
+            data-lift
+            onClick={() => track("final_trial_click")}
+            className="inline-flex h-[48px] items-center rounded-full bg-white px-[24px] shadow-pill"
           >
+            <span
+              className="bg-clip-text text-[15px] font-medium leading-[20px] tracking-[-0.02em] text-transparent"
+              style={{
+                backgroundImage:
+                  "linear-gradient(149.61deg, var(--color-violet) 0%, var(--color-violet-cta) 100%)",
+              }}
+            >
+              {FINAL_CTA.primary}
+            </span>
+          </a>
+          <a
+            href={CHROME_STORE_URL}
+            target="_blank"
+            rel="noopener"
+            data-lift
+            onClick={() => track("final_chrome_click")}
+            className="inline-flex h-[48px] items-center gap-[8px] rounded-full border border-white/70 px-[20px] text-[15px] font-medium leading-[20px] tracking-[-0.02em] text-white"
+          >
+            <Img
+              src="/figma/tail/cta-chrome.svg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="size-[16px] max-w-none"
+            />
             Add to Chrome
-          </span>
-        </a>
+          </a>
+        </div>
       </div>
     </section>
   )

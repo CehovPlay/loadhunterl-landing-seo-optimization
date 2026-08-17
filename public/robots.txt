@@ -1,4 +1,24 @@
+# Search and retrieval crawlers
 User-agent: *
 Allow: /
+
+# AI search / retrieval (AEO-001). These fetch pages to answer and cite;
+# allowing them is what makes the FAQ eligible to be quoted.
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+# NOTE: GPTBot and ClaudeBot are model-training crawlers, not search crawlers.
+# They are intentionally left undeclared: that decision belongs to the site
+# owner, and blocking them would NOT affect ChatGPT Search or Claude web search.
+
+# Dev-only probes must never be crawled.
+Disallow: /__probe.html
+Disallow: /__measure.html
 
 Sitemap: https://loadhunter.io/sitemap.xml

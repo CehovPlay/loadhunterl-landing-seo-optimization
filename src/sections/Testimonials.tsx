@@ -1,16 +1,21 @@
 import { Img } from "@/components/site/Img"
-import { Stars } from "@/components/site/Stars"
-import { useEffect, useRef } from "react"
-import gsap from "gsap"
-import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
+import { CHROME_REVIEWS_URL, REVIEWS as REVIEWS_COPY } from "@/content/copy"
+import { track } from "@/lib/analytics"
+import { useRef } from "react"
 
 /**
- * Figma: header Frame 1618873946 (914:23696) 1920x320 @ y=15559,
- * reviews strip (914:23713) 643x42 @ (638.5, +278),
- * cards Group 2085665201 (914:23741) @ y=15999 (section-rel 440):
- * cards 375 wide, step 415, staggered y offsets. Rebuilt as a live GSAP
- * marquee (right→left); hovering a card eases the marquee to a stop and
- * lights the card up with the design's violet hover state.
+ * Reviews, rebuilt for LH-042 / LH-043 / SEO-020.
+ *
+ * The GSAP marquee is gone: LH-042 bans auto-loop and LH-016 bans infinite
+ * marquees, so the five unique reviews render as a static grid. Each card links
+ * to the source listing (per-review deep links are not available on the Chrome
+ * Web Store, so they point at the reviews tab) and fires `review_source_click`.
+ *
+ * The old blended "4.4 from 100+ reviews" stat is replaced by two separate
+ * source cards with an "As of" stamp — never one averaged number (LH-043).
+ *
+ * Review text is quoted VERBATIM (COPYQA-021): customer wording, including its
+ * em dash, must not be silently edited.
  */
 
 type Review = {
@@ -59,23 +64,14 @@ const REVIEWS: Review[] = [
   },
 ]
 
-const CARD_STEP = 415 // 375 card + 40 gap
-const CYCLE = REVIEWS.length * CARD_STEP // 2075
-const SPEED_S = 60 // seconds per full cycle — slow drift
 
 function ReviewCard({ r }: { r: Review }) {
   return (
     <div
-      className="group absolute w-[375px] overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-[40px] transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)]"
-      style={{ top: r.y }}
+      className="group relative flex w-[375px] flex-col overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-[32px] transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)]"
       data-card
     >
-      {/* default bg: dark radial from top-right (Figma 914:23772).
-          NOTE: this used backdrop-blur-[100px], but the backdrop is the flat
-          solid gray-800 section (cards never overlap: step 415 > width 375), so
-          the 100px blur returned the identical color — a pure no-op that
-          re-sampled a ~100px kernel every frame the marquee advanced, ×15 cards.
-          Removed; the radial gradient below is the only visible effect. */}
+      {/* default bg: dark radial from top-right (Figma 914:23772) */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 rounded-lg"
@@ -94,27 +90,36 @@ function ReviewCard({ r }: { r: Review }) {
         }}
       />
 
-      <p className="relative w-full text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-gray-50">
-        {r.quote}
-      </p>
-      <div className="relative mt-[40px] flex w-full items-center gap-[12px]">
+      <blockquote className="relative w-full flex-1 text-[16px] font-medium leading-[22px] tracking-[-0.02em] text-gray-50">
+        &ldquo;{r.quote}&rdquo;
+      </blockquote>
+      <div className="relative mt-[28px] flex w-full items-center gap-[12px]">
         <div
-          className="flex size-[42px] items-center justify-center rounded-lg border border-white"
+          className="flex size-[42px] shrink-0 items-center justify-center rounded-lg border border-white"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.6), rgba(255,255,255,0.5))",
-            boxShadow:
-              "var(--shadow-pill)",
+            boxShadow: "var(--shadow-pill)",
           }}
         >
           <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
             {r.initials}
           </span>
         </div>
-        <span className="text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
+        <cite className="not-italic text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white">
           {r.name}
-        </span>
+        </cite>
       </div>
+      {/* LH-042 — the reader can open the source */}
+      <a
+        href={CHROME_REVIEWS_URL}
+        target="_blank"
+        rel="noopener"
+        onClick={() => track("review_source_click", { source: "chrome" })}
+        className="relative mt-[16px] inline-flex w-fit items-center gap-[6px] text-[13px] font-medium leading-[18px] text-[rgba(255,255,255,0.55)] underline underline-offset-2 transition-colors hover:text-white"
+      >
+        Chrome Web Store review
+      </a>
 
       {/* bottom inner hairline shadow */}
       <div className="pointer-events-none absolute inset-0 rounded-lg shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25)]" />
@@ -124,113 +129,59 @@ function ReviewCard({ r }: { r: Review }) {
 
 export function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-    // reduced motion: leave the strip on its static first frame
-    if (prefersReducedMotion()) return
-
-    const tween = gsap.to(track, {
-      x: -CYCLE,
-      duration: SPEED_S,
-      ease: "none",
-      repeat: -1,
-    })
-
-    // pause the marquee (and free its composited layer) while off-screen
-    const stopGate = gateLoops(sectionRef.current, tween)
-    const stopWC = willChangeInView(track, sectionRef.current)
-
-    const cards = track.querySelectorAll<HTMLElement>("[data-card]")
-    const slow = () =>
-      gsap.to(tween, { timeScale: 0, duration: 0.6, overwrite: true })
-    const resume = () =>
-      gsap.to(tween, { timeScale: 1, duration: 0.6, overwrite: true })
-    cards.forEach((c) => {
-      c.addEventListener("mouseenter", slow)
-      c.addEventListener("mouseleave", resume)
-    })
-    return () => {
-      cards.forEach((c) => {
-        c.removeEventListener("mouseenter", slow)
-        c.removeEventListener("mouseleave", resume)
-      })
-      stopWC()
-      stopGate()
-      tween.kill()
-    }
-  }, [])
 
   return (
-    // No overflow-hidden: the marquee cards drift past the 1920 canvas into
-    // the >1920 side gutters (the DesignFrame wrapper clips at the window
-    // edge), instead of being cut at the canvas boundary.
-    <section ref={sectionRef} className="relative h-[1084px] bg-gray-800">
-      {/* heading */}
-      <div data-float className="absolute left-[928px] top-0 size-[64px]">
-        <Img
-          src="/figma/testimonials/header-icon.png"
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="absolute left-[-10px] top-[-4px] h-[84px] w-[84px] max-w-none"
-        />
-      </div>
-      <h2 className="absolute left-[418px] top-[124px] w-[1084px] text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-white">
-        What clients say
-      </h2>
-      <p className="absolute left-[418px] top-[202px] w-[1084px] text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-        Our clients appreciate our attention to their needs and professionalism.
-        Here are some of their testimonials
-      </p>
-
-      {/* trust stats — real text (was a baked reviews-strip.png export);
-          logos dropped per design feedback, stats enlarged */}
-      <div className="absolute left-[418px] top-[266px] flex w-[1084px] items-stretch justify-center gap-8">
-        <div className="flex flex-col items-center justify-center gap-[6px]">
-          <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-            6,000&thinsp;+
-          </span>
-          <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-            Trusted by users
-          </span>
+    <section ref={sectionRef} id="reviews" className="relative w-full bg-gray-800">
+      <div className="flex flex-col items-center px-[120px] pb-[120px] pt-[120px]">
+        <div data-float className="relative size-[64px]">
+          <Img
+            src="/figma/testimonials/header-icon.png"
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className="absolute left-[-10px] top-[-4px] h-[84px] w-[84px] max-w-none"
+          />
         </div>
-        <div aria-hidden className="w-px self-stretch bg-line-strong" />
-        <div className="flex flex-col items-center justify-center gap-[6px]">
-          <span className="flex items-center gap-[10px]">
-            <Stars score={4.4} className="text-[16px]" />
-            <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-              4.4
-            </span>
-          </span>
-          <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-            from 100+ reviews
-          </span>
-        </div>
-      </div>
 
-      {/* marquee: initial offset matches the design frame (first card @ x=-82) */}
-      <div className="absolute left-[-82px] top-[440px] h-[524px] w-[6225px]">
-        <div
-          ref={trackRef}
-          data-marquee-track
-          className="relative h-full w-full"
-        >
-          {/* the -1 copy keeps the left gutter populated right after each
-              loop reset (t≈0), when copy 0 has not yet drifted past it */}
-          {[-1, 0, 1, 2].map((copy) =>
-            REVIEWS.map((r, i) => (
-              <div
-                key={`${copy}-${r.name}`}
-                className="absolute top-0 h-full"
-                style={{ left: copy * CYCLE + i * CARD_STEP }}
+        {/* LH-042 / SEO-020 */}
+        <h2 className="mt-[48px] text-center text-[44px] font-medium leading-[52px] tracking-[-0.03em] text-white">
+          {REVIEWS_COPY.h2}
+        </h2>
+        <p className="mt-[20px] max-w-[900px] text-center text-[18px] font-medium leading-[26px] tracking-[-0.02em] text-[rgba(255,255,255,0.65)]">
+          {REVIEWS_COPY.lead}
+        </p>
+
+        {/* LH-043 — two source cards, never a blended average */}
+        <ul className="mt-[40px] flex items-stretch justify-center gap-[16px]">
+          {REVIEWS_COPY.metrics.map((m) => (
+            <li key={m.source}>
+              <a
+                href={m.href}
+                target="_blank"
+                rel="noopener"
+                onClick={() => track("review_source_click", { source: m.source })}
+                data-lift
+                className="flex h-full w-[320px] flex-col items-start gap-[6px] rounded-lg border border-gray-650 px-[24px] py-[18px] transition-colors hover:border-violet/60"
               >
-                <ReviewCard r={r} />
-              </div>
-            )),
-          )}
+                <span className="text-[13px] font-medium leading-[18px] text-[rgba(255,255,255,0.55)]">
+                  {m.source}
+                </span>
+                <span className="text-[20px] font-medium leading-[28px] tracking-[-0.02em] text-white">
+                  {m.value}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-[12px] text-[13px] font-medium leading-[18px] text-[rgba(255,255,255,0.45)]">
+          {REVIEWS_COPY.asOf}
+        </p>
+
+        {/* five unique reviews, static (no auto-loop) */}
+        <div className="mt-[56px] flex flex-wrap justify-center gap-[24px]">
+          {REVIEWS.map((r) => (
+            <ReviewCard key={r.name} r={r} />
+          ))}
         </div>
       </div>
     </section>

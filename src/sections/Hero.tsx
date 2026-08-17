@@ -1,8 +1,9 @@
 import { Img } from "@/components/site/Img"
-import { RotatingHeadline } from "@/components/site/RotatingHeadline"
+import { ProofBadges } from "@/components/site/ProofBadges"
 import { ShaderBand } from "@/components/site/ShaderBand"
-import { APP_URL, CHROME_STORE_URL } from "@/sections/Navbar"
-import diamondIcon from "/figma/icon-diamond.svg"
+import { HERO } from "@/content/copy"
+import { track } from "@/lib/analytics"
+import { APP_URL } from "@/sections/Navbar"
 
 /**
  * Product-SaaS hero — SPLIT layout (2026-07-31): copy column left on the
@@ -23,9 +24,9 @@ import diamondIcon from "/figma/icon-diamond.svg"
  * bottom and side edges dissolve instead of ending on a visible rectangle, and
  * the hero → Features seam disappears.
  */
-const HERO_H = 960
-const COPY_TOP = 236
-const COPY_W = 820 // x120 → x940; the widest rotating line ("before anyone else") fits
+const HERO_H = 920
+const COPY_TOP = 200
+const COPY_W = 820 // x120 → x940; the 64px H1 wraps to exactly two lines here
 const MOCK_LEFT = 1000
 const MOCK_W = 1500 // ~580px of it lives past the canvas edge
 const MOCK_TOP = 176
@@ -56,82 +57,76 @@ export function Hero() {
         }
       />
 
-      {/* copy — left column on the content grid */}
+      {/* copy — left column on the content grid.
+          Static, SSR-visible text: LH-002 requires the H1 to be readable
+          without any animation, so the old RotatingHeadline (6 typed phrases)
+          is gone and a single approved H1 stays in the DOM. */}
       <div
-        className="absolute left-[120px] z-20 flex flex-col items-start gap-[44px] text-left"
+        className="absolute left-[120px] z-20 flex flex-col items-start text-left"
         style={{ top: COPY_TOP, width: COPY_W }}
       >
-        {/* eyebrow pill */}
+        {/* LH-001 eyebrow — compact pill, no glow */}
         <span
-          className="inline-flex w-fit items-center rounded-full px-[20px] py-[4px] text-[20px] font-medium leading-[32px] tracking-[-0.8px] text-ink"
+          className="inline-flex w-fit items-center rounded-full px-[16px] py-[5px] text-[16px] font-medium leading-[24px] tracking-[-0.48px] text-ink"
           style={{
             backgroundImage:
               "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.5))",
           }}
         >
-          The AI copilot for smarter dispatching.
+          {HERO.eyebrow}
         </span>
 
-        <div className="flex flex-col items-start gap-[20px]">
-          {/* rotating typed H1 + matching sub-headline badge */}
-          <RotatingHeadline />
+        {/* LH-002 / SEO-004 — the page's single H1 (type scale LH-014: 64/68) */}
+        <h1 className="mt-[28px] text-[64px] font-medium leading-[68px] tracking-[-0.03em] text-ink">
+          {HERO.h1}
+        </h1>
 
-          {/* trust line: 6K+ users + weighted rating across Google (4.6/28) and
-              Trustpilot (3.8/9) = 4.4 */}
-          <p className="flex items-center gap-[10px] text-[17px] font-medium leading-[24px] tracking-[-0.68px] text-ink opacity-60">
-            Trusted by 6,000+ users
-            <span aria-hidden className="text-gray-250">·</span>
-            <span
-              className="relative inline-flex text-[15px] leading-none tracking-[2px]"
-              role="img"
-              aria-label="Rated 4.4 out of 5 on Google and Trustpilot"
-            >
-              <span className="text-gray-150">★★★★★</span>
-              <span
-                className="absolute inset-0 overflow-hidden whitespace-nowrap text-violet"
-                style={{ width: `${(4.4 / 5) * 100}%` }}
-              >
-                ★★★★★
-              </span>
-            </span>
-            4.4 on Google &amp; Trustpilot
-          </p>
-        </div>
+        {/* LH-003 / SEO-005 — lead, capped at 720px per the brief */}
+        <p className="mt-[24px] max-w-[720px] text-[20px] font-medium leading-[30px] tracking-[-0.03em] text-ink/80">
+          {HERO.lead}
+        </p>
 
-        {/* CTAs */}
-        <div className="flex items-center gap-[12px]">
+        {/* LH-004 — source-attributed proof badges */}
+        <ProofBadges className="mt-[28px]" />
+
+        {/* CTAs — LH-005 one dominant primary, LH-006 a differently-shaped
+            secondary that leads to the demo section rather than a second
+            "start here" */}
+        <div className="mt-[28px] flex items-center gap-[12px]">
           <a
             href={APP_URL}
             target="_blank"
             rel="noopener"
             data-lift
-            className="flex h-[42px] w-[288px] items-center justify-center whitespace-nowrap rounded-full border border-white text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-ink backdrop-blur-[10px]"
+            onClick={() => track("hero_trial_click")}
+            className="flex h-[52px] items-center justify-center whitespace-nowrap rounded-full bg-violet px-[28px] text-[17px] font-medium leading-[24px] tracking-[-0.03em] text-white"
             style={{
-              backgroundImage:
-                "linear-gradient(to bottom, var(--color-white), rgba(255,255,255,0.5))",
-              boxShadow:
-                "var(--shadow-pill)",
+              boxShadow: "var(--shadow-pill), 0px 34px 74px -20px rgba(111,81,151,0.5)",
             }}
           >
-            Start 14-day free trial
+            {HERO.primaryCta}
           </a>
           <a
-            href={CHROME_STORE_URL}
-            target="_blank"
-            rel="noopener"
+            href="#demo"
             data-lift
-            className="flex h-[42px] w-[288px] items-center justify-center gap-[8px] overflow-hidden whitespace-nowrap rounded-full border border-white py-[4px] pl-[9px] pr-[12px] text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-white"
-            style={{
-              backgroundImage:
-                "radial-gradient(60% 140% at 50% 110%, rgba(111,81,151,1) 0%, rgba(111,81,151,0) 100%)",
-              boxShadow:
-                "var(--shadow-pill), 0px 34px 74px -20px rgba(111,81,151,0.5)",
-            }}
+            onClick={() => track("hero_chrome_click")}
+            className="flex h-[52px] items-center justify-center gap-[10px] whitespace-nowrap rounded-full border border-border-light bg-white px-[24px] text-[17px] font-medium leading-[24px] tracking-[-0.03em] text-ink transition-colors hover:text-black"
+            style={{ boxShadow: "var(--shadow-pill)" }}
           >
-            <Img src={diamondIcon} alt="" decoding="async" className="size-[25px]" />
-            Start booking in seconds
+            <svg viewBox="0 0 24 24" aria-hidden className="size-[20px]" fill="currentColor">
+              <path d="M8.5 5.6a1 1 0 0 1 1.52-.85l8.1 5.15a1 1 0 0 1 0 1.69l-8.1 5.15a1 1 0 0 1-1.52-.85V5.6z" />
+            </svg>
+            {HERO.secondaryCta}
           </a>
         </div>
+
+        {/* LH-007 — risk reversal microcopy, out of the FAQ and under the CTA */}
+        <p className="mt-[14px] flex items-center gap-[8px] text-[14px] font-medium leading-[20px] tracking-[-0.02em] text-ink/70">
+          <svg viewBox="0 0 24 24" aria-hidden className="size-[16px] text-violet" fill="currentColor">
+            <path d="M12 2.2 4.5 5.3v6.1c0 4.6 3.2 8.9 7.5 10.4 4.3-1.5 7.5-5.8 7.5-10.4V5.3L12 2.2zm-1.1 13.2-3.2-3.2 1.3-1.3 1.9 1.9 4.6-4.6 1.3 1.3-5.9 5.9z" />
+          </svg>
+          {HERO.microcopy}
+        </p>
       </div>
 
       {/* product screenshot — right of the copy, running off the canvas edge.
@@ -152,7 +147,7 @@ export function Hero() {
       >
         <Img
           src="/figma/hero-dashboard-2x.png"
-          alt="LoadHunter dashboard: e-mail templates, factoring, drivers, release notes and tutorials"
+          alt="LoadHunter workspace inside the load board: broker email templates, factoring signals, driver list and load details in one view"
           fetchPriority="high"
           decoding="async"
           width={MOCK_W}
@@ -160,6 +155,14 @@ export function Hero() {
           className="block h-full w-full max-w-none"
         />
       </div>
+
+      {/* LH-008 — caption naming what the visual actually shows */}
+      <p
+        className="absolute z-20 text-[15px] font-medium leading-[22px] tracking-[-0.02em] text-ink/70"
+        style={{ top: MOCK_TOP + MOCK_H + 20, left: MOCK_LEFT, width: 640 }}
+      >
+        {HERO.caption}
+      </p>
     </section>
   )
 }

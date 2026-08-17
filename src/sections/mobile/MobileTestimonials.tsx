@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react"
-import gsap from "gsap"
-import { gateLoops, prefersReducedMotion, willChangeInView, isCoarsePointer } from "@/lib/inview"
-import { Container, SectionHeader, Stars } from "./ui"
+import { useRef } from "react"
+import { CHROME_REVIEWS_URL, REVIEWS as REVIEWS_COPY } from "@/content/copy"
+import { track } from "@/lib/analytics"
+import { Container, SectionHeader } from "./ui"
 
 const REVIEWS = [
   {
@@ -46,8 +46,7 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
     <figure
       data-card
       data-no-reveal
-      className="group relative mr-4 w-[300px] shrink-0 overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-6 transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)] md:p-10"
-      style={{ marginTop: r.y }}
+      className="group relative flex w-full flex-col overflow-hidden rounded-lg border border-[rgba(229,229,229,0.1)] p-6 transition-[border-color,box-shadow] duration-500 hover:border-[rgba(111,81,151,0.8)] hover:shadow-[0px_34px_74px_-20px_rgba(111,81,151,0.5)] md:p-10"
     >
       {/* desktop card bg: dark radial from the top-right corner */}
       <div
@@ -67,8 +66,8 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
             "radial-gradient(295px circle at 50% 285px, rgba(111,81,151,1), rgba(111,81,151,0))",
         }}
       />
-      <blockquote className="relative text-[16px] font-medium leading-[20px] tracking-[-0.64px] text-gray-50">
-        {r.quote}
+      <blockquote className="relative flex-1 text-[16px] font-medium leading-[22px] tracking-[-0.02em] text-gray-50">
+        &ldquo;{r.quote}&rdquo;
       </blockquote>
       <figcaption className="relative mt-8 flex items-center gap-3">
         <span
@@ -86,129 +85,73 @@ function ReviewCard({ r }: { r: (typeof REVIEWS)[number] }) {
           {r.name}
         </span>
       </figcaption>
+      {/* LH-042 — the reader can open the source */}
+      <a
+        href={CHROME_REVIEWS_URL}
+        target="_blank"
+        rel="noopener"
+        onClick={() => track("review_source_click", { source: "chrome" })}
+        className="relative mt-4 inline-flex w-fit items-center text-[13px] font-medium leading-[18px] text-[rgba(255,255,255,0.55)] underline underline-offset-2"
+      >
+        Chrome Web Store review
+      </a>
       <div className="pointer-events-none absolute inset-0 rounded-lg shadow-[inset_0px_-1px_1px_0px_rgba(0,0,0,0.25)]" />
     </figure>
   )
 }
 
 /**
- * Testimonials — same behavior as desktop: a GSAP marquee drifting right→left
- * (two copies of the list, seamless wrap on half the track width), hovering a
- * card eases the drift to a stop and lights the violet hover state. Cards
- * carry staggered y offsets like the desktop band. Reduced-motion shows the
- * static row.
+ * Reviews on the flow layout, rebuilt for LH-042 / LH-043 / SEO-020.
+ *
+ * The GSAP marquee and the touch snap carousel are both gone: LH-042 bans
+ * auto-loop and LH-016 bans infinite marquees, so the five unique reviews stack
+ * (two columns from md). The blended "4.4 from 100+ reviews" stat is replaced
+ * by the two separate source cards with an "As of" stamp.
  */
 export function MobileTestimonials() {
   const sectionRef = useRef<HTMLElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-  // touch devices get a NATIVE snap carousel instead of the GSAP marquee —
-  // the perpetual per-frame tween visibly janks scrolling on phones
-  const [coarse] = useState(() => isCoarsePointer())
-
-  useEffect(() => {
-    if (coarse) return
-    const track = trackRef.current
-    if (!track) return
-    if (prefersReducedMotion()) return
-
-    let tween: gsap.core.Tween | null = null
-    const playable = {
-      play: () => tween?.play(),
-      pause: () => tween?.pause(),
-    }
-    const build = () => {
-      const half = track.scrollWidth / 2
-      if (!half) return
-      const paused = tween ? tween.paused() : true
-      tween?.kill()
-      gsap.set(track, { x: 0 })
-      tween = gsap.fromTo(
-        track,
-        { x: 0 },
-        { x: -half, duration: half / 55, ease: "none", repeat: -1, paused },
-      )
-    }
-    build()
-    window.addEventListener("resize", build)
-
-    const stopGate = gateLoops(sectionRef.current, playable)
-
-    // hover: ease the marquee to a stop, resume on leave (desktop behavior)
-    const slow = () => tween && gsap.to(tween, { timeScale: 0, duration: 0.6, overwrite: true })
-    const resume = () => tween && gsap.to(tween, { timeScale: 1, duration: 0.6, overwrite: true })
-    const cards = Array.from(track.querySelectorAll<HTMLElement>("[data-card]"))
-    cards.forEach((c) => {
-      c.addEventListener("mouseenter", slow)
-      c.addEventListener("mouseleave", resume)
-    })
-    const stopWC = willChangeInView(track, sectionRef.current)
-
-    return () => {
-      cards.forEach((c) => {
-        c.removeEventListener("mouseenter", slow)
-        c.removeEventListener("mouseleave", resume)
-      })
-      window.removeEventListener("resize", build)
-      stopWC()
-      stopGate()
-      tween?.kill()
-    }
-  }, [coarse])
 
   return (
-    <section ref={sectionRef} className="overflow-hidden bg-gray-800 py-16">
+    <section ref={sectionRef} id="reviews" className="overflow-hidden bg-gray-800 py-16">
       <Container>
         <SectionHeader
           icon="/figma/testimonials/header-icon.png"
-          title="What clients say"
-          sub="Our clients appreciate our attention to their needs and professionalism. Here are some of their testimonials"
+          title={REVIEWS_COPY.h2}
+          sub={REVIEWS_COPY.lead}
         />
-        {/* trust stats — real text (the desktop strip is a baked image) */}
-        <div className="mt-8 flex items-stretch justify-center gap-4 min-[360px]:gap-6">
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-              6,000&thinsp;+
-            </span>
-            <span className="whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-              Trusted by users
-            </span>
-          </div>
-          <div aria-hidden className="w-px self-stretch bg-line-strong" />
-          <div className="flex flex-col items-center justify-center gap-1.5">
-            <span className="flex items-center gap-2">
-              <Stars score={4.4} className="text-[16px]" />
-              <span className="text-[24px] font-medium leading-[28px] tracking-[-0.96px] text-white">
-                4.4
-              </span>
-            </span>
-            <span className="whitespace-nowrap text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-              from 100+ reviews
-            </span>
-          </div>
-        </div>
-      </Container>
 
-      {/* band: native swipe carousel on touch, GSAP marquee for fine pointers
-          (reduced-motion just shows the static row) */}
-      {coarse ? (
-        <div className="lh-snap mt-10 flex items-start overflow-x-auto px-5 pb-2">
+        {/* LH-043 — two source cards, never a blended average */}
+        <ul className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-2">
+          {REVIEWS_COPY.metrics.map((m) => (
+            <li key={m.source}>
+              <a
+                href={m.href}
+                target="_blank"
+                rel="noopener"
+                onClick={() => track("review_source_click", { source: m.source })}
+                className="flex h-full flex-col items-start gap-1.5 rounded-lg border border-gray-650 px-5 py-4"
+              >
+                <span className="text-[13px] font-medium leading-[18px] text-[rgba(255,255,255,0.55)]">
+                  {m.source}
+                </span>
+                <span className="text-[18px] font-medium leading-[26px] tracking-[-0.02em] text-white">
+                  {m.value}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-[13px] font-medium leading-[18px] text-[rgba(255,255,255,0.45)]">
+          {REVIEWS_COPY.asOf}
+        </p>
+
+        {/* five unique reviews, static (no auto-loop, no carousel) */}
+        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2">
           {REVIEWS.map((r) => (
             <ReviewCard key={r.name} r={r} />
           ))}
         </div>
-      ) : (
-        <div className="mt-10">
-          <div ref={trackRef} className="flex w-max items-start">
-            {[0, 1].map((copy) => (
-              <div key={copy} className="flex items-start" aria-hidden={copy === 1}>
-                {REVIEWS.map((r) => (
-                  <ReviewCard key={`${copy}-${r.name}`} r={r} />
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      </Container>
     </section>
   )
 }

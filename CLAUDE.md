@@ -10,7 +10,9 @@ Marketing landing page for **LoadHunter** — an AI copilot (browser extension) 
 
 ```bash
 npm run dev        # Vite dev server + HMR (http://localhost:5173)
-npm run build      # tsc -b (typecheck) then vite build → dist/  (runs prebuild transcode)
+npm run build      # tsc -b → vite build → prerender  (prebuild: transcode + robots/sitemap)
+npm run seo        # regenerate public/robots.txt + public/sitemap.xml from the route table
+npm run prerender  # re-run the static prerender over an existing dist/
 npm run typecheck  # tsc -b --noEmit only
 npm run lint       # oxlint (config in .oxlintrc.json)
 npm run preview    # serve the production build
@@ -30,6 +32,44 @@ target width, e.g.:
 
 `--virtual-time-budget` is required — the SPA needs time to render before Chrome exits. Crop tall
 screenshots with `sharp` (a devDependency) since full-page captures are ~19 000px tall.
+
+## Content, routes and prerendering (added 2026-08-17 for the SEO brief)
+
+**All approved marketing copy lives in `src/content/copy.ts`**, with the brief's task ID
+(`LH-xxx` / `SEO-xxx` / `COPYQA-xxx` / `FAQ-xxx`) in a comment above each string. Both section trees
+render from it, which is what makes desktop/mobile content parity checkable and lets "was the
+approved text implemented verbatim" be answered by diffing one file. Never hardcode marketing copy in
+a component. Rules: no U+2014 in marketing copy (customer reviews are quoted verbatim and are the one
+exception), and no unverifiable claim (no "no lags" without measurements, no "verified" broker data,
+no guaranteed profit).
+
+**Routes are data.** `src/routes.meta.ts` holds path/title/description/index/JSON-LD and is
+deliberately component-free; `src/routes.tsx` joins it with render functions. Three consumers read the
+same table, so they cannot drift: the app (`App.tsx` matches `window.location.pathname`),
+`scripts/gen-seo-files.mjs` (robots.txt + sitemap.xml, indexable routes only) and
+`scripts/prerender.mjs`. Content routes (`/faq/`, `/blog/`, the five SEO pages, `/security/`) are
+flow-responsive at every width and do NOT use the canvas — they render through `src/pages/PageShell`.
+
+**Prerendering is browser-based, not react-dom/server.** The landing tree uses a scaled canvas,
+`createPortal(document.body)`, WebGPU and layout-effect measurement; making that SSR-safe would mean
+rewriting working code. `scripts/prerender.mjs` instead serves `dist/`, loads each route in headless
+Chrome, captures the settled DOM and writes `dist/<route>/index.html` with that route's head tags and
+JSON-LD. Two things it must keep doing: capture ALL routes before writing any (the static server
+falls back to `dist/index.html`, so writing mid-loop changes later captures), and re-insert the
+preloader markup, which the app deletes from the DOM once it has painted — it is lifted from the
+`<!--lh-preloader-start/end-->` markers in `index.html`. Skip with `PRERENDER=0` or `CHROME_PATH=`.
+
+**Analytics**: `track()` in `src/lib/analytics.ts` takes only names from the approved `TrackEvent`
+union and pushes to `dataLayer`; GA4 loads only with `VITE_GA_ID` and declares Consent Mode v2
+defaults (everything denied) before `config`.
+
+**Blog**: `src/content/blog.ts` `BLOG_POSTS` is intentionally empty. While it is, `/blog/` renders its
+"first guides are being written" state, is served `noindex`, stays out of the sitemap, and the
+homepage `BlogTeaser` does not render. Publishing posts reverses all four automatically.
+
+**Verification probes**: `public/__probe.html` (iframe the site at an arbitrary width/scroll offset)
+and `public/__measure.html` (measure Tools block heights at canvas scale 1) are recreated ad hoc for
+QA and MUST be deleted before building — see the git history of this file for their contents.
 
 ## Architecture — the fixed-canvas scaling model (read this first)
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Img } from "@/components/site/Img"
+import { track } from "@/lib/analytics"
 import { CALENDLY_URL, CHROME_STORE_URL, LINKS } from "@/sections/Navbar"
 import { PILL_SHADOW, PillButton } from "./ui"
 
@@ -76,7 +77,7 @@ export function MobileNavbar() {
                 ? "pointer-events-none max-w-0 opacity-0"
                 : "max-w-[160px] opacity-100"
             }`}
-            aria-label="LoadHunter — home"
+            aria-label="LoadHunter home"
           >
             <Img src="/figma/logo-icon.svg" alt="" className="h-[26px] w-[27px] max-w-none" />
             <Img src="/figma/logo-text.svg" alt="LoadHunter" className="h-[15px] w-[94px] max-w-none" />
@@ -89,6 +90,7 @@ export function MobileNavbar() {
                 key={l.label}
                 href={l.href}
                 {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
+                onClick={l.event ? () => track(l.event!) : undefined}
                 className="whitespace-nowrap rounded-full px-3 py-2 text-[15px] font-medium leading-[20px] tracking-[-0.6px] text-ink transition-colors hover:bg-black/[0.04]"
               >
                 {l.label}
@@ -145,6 +147,7 @@ export function MobileNavbar() {
               {...(l.external ? { target: "_blank", rel: "noopener" } : {})}
               style={{ transitionDelay: open ? `${80 + i * 40}ms` : "0ms" }}
               onClick={() => {
+                if (l.event) track(l.event)
                 // unlock scroll synchronously — the anchor smooth-scroll fires
                 // in this same tick, before the effect cleanup would run
                 document.body.style.overflow = ""

@@ -1,57 +1,143 @@
 /**
- * Compact footer: logo/subscribe row @ (120,120), a full-bleed divider
- * @ y=191 under it, and a bottom row (social icons left, © right) below the
- * divider. The section must NOT clip (the divider bleeds into the >1920
- * gutters) and has no own bg — the root gray-800 shows through.
+ * Footer, rebuilt for LH-047..051.
+ *
+ * Structure: brand + contacts + newsletter on the left, the four approved link
+ * columns (Product / Solutions / Resources / Company) on the right, a quiet
+ * Ecosystem row underneath (LH-010 moved huntTMS/huntPAY/huntDRIVE/huntOS and
+ * $LHUNT out of the header), the trademark independence disclaimer (LH-050),
+ * then a full-bleed divider and the bottom row.
+ *
+ * The section must NOT clip: the divider bleeds into the >1920 gutters.
  * NOTE: no [content-visibility:auto] here — the 6000px-wide divider
- * intentionally paints outside the section box, and the containment that
- * comes with content-visibility would clip it.
- * data-no-reveal: the rows sit in the bottom of the viewport at max scroll,
- * below the reveal IntersectionObserver's rootMargin — they would stay at
- * autoAlpha 0 forever if reveal-managed.
+ * intentionally paints outside the section box, and the containment that comes
+ * with content-visibility would clip it.
+ * data-no-reveal: these rows sit at max scroll, below the reveal observer's
+ * rootMargin, and would stay at autoAlpha 0 forever if reveal-managed.
  */
 import { SocialLinks } from "@/components/site/SocialLinks"
+import {
+  FOOTER_ECOSYSTEM,
+  FOOTER_NAV,
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  SUPPORT_PHONE_HREF,
+  TRADEMARK_DISCLAIMER,
+} from "@/content/copy"
+import { NewsletterForm } from "@/components/site/NewsletterForm"
+
+const linkCls =
+  "text-[14px] font-medium leading-[20px] tracking-[-0.02em] text-[rgba(255,255,255,0.55)] transition-colors hover:text-white"
 
 export function Footer() {
   return (
-    <footer id="token" data-no-reveal className="relative h-[280px]">
-      {/* logo + subscribe row */}
-      <div className="absolute left-[120px] top-[120px] h-[40px] w-[1680px]">
-        <div className="absolute left-0 top-[8px] h-[24px] w-[151px]">
-          <img loading="lazy" decoding="async"
-            src="/figma/tail/logo-icon-white.svg"
-            alt=""
-            className="absolute left-0 top-0 size-[24px] max-w-none"
-          />
-          <img loading="lazy" decoding="async"
-            src="/figma/tail/logo-text-white.svg"
-            alt="LoadHunter"
-            className="absolute left-[34px] top-[2.56px] h-[18.88px] w-[116.44px] max-w-none"
-          />
+    <footer id="site-footer" data-no-reveal className="relative">
+      <div className="flex gap-[80px] px-[120px] pb-[60px] pt-[96px]">
+        {/* brand + contacts + newsletter */}
+        <div className="w-[440px] shrink-0">
+          <a href="/" className="flex h-[24px] w-[151px] items-center">
+            <img
+              loading="lazy"
+              decoding="async"
+              src="/figma/tail/logo-icon-white.svg"
+              alt=""
+              className="size-[24px] max-w-none"
+            />
+            <img
+              loading="lazy"
+              decoding="async"
+              src="/figma/tail/logo-text-white.svg"
+              alt="LoadHunter"
+              className="ml-[10px] h-[18.88px] w-[116.44px] max-w-none"
+            />
+          </a>
+
+          {/* LH-049 — public contacts, both clickable */}
+          <address className="mt-[24px] flex flex-col gap-[6px] not-italic">
+            <a href={`mailto:${SUPPORT_EMAIL}`} className={linkCls}>
+              {SUPPORT_EMAIL}
+            </a>
+            <a href={`tel:${SUPPORT_PHONE_HREF}`} className={linkCls}>
+              {SUPPORT_PHONE}
+            </a>
+            <span className="text-[14px] font-medium leading-[20px] tracking-[-0.02em] text-[rgba(255,255,255,0.45)]">
+              United States
+            </span>
+          </address>
+
+          {/* LH-051 / LH-069 */}
+          <NewsletterForm className="mt-[32px]" />
         </div>
 
-        <form
-          className="absolute right-0 top-0 flex h-[40px] items-center gap-[6px] rounded-full bg-[rgba(54,56,61,0.5)] py-[6px] pl-[8px] pr-[6px] shadow-[inset_0px_0px_4px_0px_rgba(0,0,0,0.1)]"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <input
-            type="email"
-            aria-label="Email address"
-            placeholder="Enter your email address"
-            className="h-[24px] w-[241px] rounded-full bg-gradient-to-b from-[rgba(255,255,255,0.06)] to-[rgba(255,255,255,0.05)] px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white shadow-pill placeholder:text-ink-2 focus:outline-none"
-          />
-          <button className="flex h-[28px] items-center justify-center rounded-full border border-white bg-violet px-[12px] text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-white shadow-pill transition-opacity hover:opacity-90">
-            Subscribe
-          </button>
-        </form>
+        {/* LH-047 / LH-048 — four link columns, max 6 links each */}
+        <nav aria-label="Footer" className="flex flex-1 justify-between gap-[40px]">
+          {FOOTER_NAV.map((group) => (
+            <div key={group.title} className="min-w-[160px]">
+              <h2 className="text-[14px] font-medium leading-[20px] tracking-[-0.02em] text-white">
+                {group.title}
+              </h2>
+              <ul className="mt-[16px] flex flex-col gap-[10px]">
+                {group.links.map((l) => (
+                  <li key={l.label + l.href}>
+                    <a
+                      href={l.href}
+                      {...("external" in l && l.external
+                        ? { target: "_blank", rel: "noopener" }
+                        : {})}
+                      className={linkCls}
+                    >
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
       </div>
 
-      {/* full-bleed divider — spans the whole viewport, past the >1920
-          gutters (the DesignFrame wrapper clips it at the window edge) */}
-      <div className="absolute left-1/2 top-[191px] h-px w-[6000px] -translate-x-1/2 bg-gray-650" />
+      {/* LH-010 — quiet ecosystem group, upcoming products marked */}
+      <div className="flex items-center gap-[16px] px-[120px] pb-[28px]">
+        <h2 className="text-[13px] font-medium leading-[18px] tracking-[-0.02em] text-[rgba(255,255,255,0.45)]">
+          {FOOTER_ECOSYSTEM.title}
+        </h2>
+        <ul className="flex flex-wrap items-center gap-x-[20px] gap-y-[8px]">
+          {FOOTER_ECOSYSTEM.links.map((l) => (
+            <li key={l.label}>
+              {"upcoming" in l && l.upcoming ? (
+                <span className="flex items-center gap-[6px] text-[13px] font-medium leading-[18px] tracking-[-0.02em] text-[rgba(255,255,255,0.4)]">
+                  {l.label}
+                  <span className="rounded-full border border-[rgba(255,255,255,0.18)] px-[6px] py-px text-[11px] leading-[14px]">
+                    Coming soon
+                  </span>
+                </span>
+              ) : (
+                <a
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-[13px] font-medium leading-[18px] tracking-[-0.02em] text-[rgba(255,255,255,0.55)] transition-colors hover:text-white"
+                >
+                  {l.label}
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* LH-050 — trademark independence, readable (not hidden) */}
+      <p className="max-w-[1200px] px-[120px] pb-[32px] text-[13px] font-medium leading-[19px] tracking-[-0.01em] text-[rgba(255,255,255,0.5)]">
+        {TRADEMARK_DISCLAIMER}
+      </p>
+
+      {/* full-bleed divider — spans the whole viewport, past the >1920 gutters
+          (the DesignFrame wrapper clips it at the window edge) */}
+      <div className="relative h-px">
+        <div className="absolute left-1/2 top-0 h-px w-[6000px] -translate-x-1/2 bg-gray-650" />
+      </div>
 
       {/* bottom row — copyright left, socials centred, legal links right */}
-      <div className="absolute left-[120px] top-[219px] flex h-[24px] w-[1680px] items-center justify-between">
+      <div className="relative flex h-[24px] items-center justify-between px-[120px] pb-[60px] pt-[28px]">
         <span className="text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-[rgba(255,255,255,0.45)]">
           © 2026 LoadHunter. All rights reserved.
         </span>

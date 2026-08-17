@@ -1,7 +1,6 @@
 import { Img } from "@/components/site/Img"
-import { useEffect, useRef } from "react"
-import gsap from "gsap"
-import { gateLoops, prefersReducedMotion, willChangeInView } from "@/lib/inview"
+import { useRef } from "react"
+import { WHY } from "@/content/copy"
 import orbitSvg from "@/assets/features/orbit.svg?raw"
 import gaugeSvg from "@/assets/features/gauge.svg?raw"
 import aiSvg from "@/assets/features/ai.svg?raw"
@@ -15,26 +14,32 @@ import aiSvg from "@/assets/features/ai.svg?raw"
  * the window, aligned to match how the PNG was placed (top-anchored for the
  * gauge, centred for the others).
  */
+/**
+ * "Why LoadHunter" (LH-017..021). The section keeps its original file name for
+ * churn reasons, but in the approved information architecture it is the WHY
+ * block: H2 + lead + three benefit cards, anchored at #why-loadhunter. The
+ * product feature list lives in Tools.tsx (#features).
+ */
 export const CARDS = [
   {
-    title: "All needs in one place",
-    body: "Access every essential dispatching tool directly from your load board — emails, notifications, maps, and more, all seamlessly integrated.",
+    title: WHY.cards[0].h3,
+    body: WHY.cards[0].body,
     svg: orbitSvg,
     imgBox: { top: 89, height: 350 },
     viewBox: "112 586 587 376",
     par: "xMidYMid slice",
   },
   {
-    title: "Time saver",
-    body: "Save hours every day by automating repetitive tasks, streamlining workflows, and focusing on what matters most — booking the best loads.",
+    title: WHY.cards[1].h3,
+    body: WHY.cards[1].body,
     svg: gaugeSvg,
     imgBox: { top: 97, height: 342 },
     viewBox: "140 116 523 342",
     par: "xMidYMin slice",
   },
   {
-    title: "AI-powered automation",
-    body: "Automate your workflow with AI features like Telegram notifications and auto-emailing, reducing manual tasks and saving valuable time.",
+    title: WHY.cards[2].h3,
+    body: WHY.cards[2].body,
     svg: aiSvg,
     imgBox: { top: 83, height: 356 },
     viewBox: "183 152 524 342",
@@ -51,67 +56,15 @@ export function svgHtml(raw: string, viewBox: string, par: string) {
   )
 }
 
-/* Partners marquee row — Figma PartnersBlock: logos 112x56 @ y40, step 302px */
-const PARTNER_SEQ = [
-  { src: "/figma/partner-123loadboard.svg", cls: "mt-[18px] h-[19.029px] w-[112px]" },
-  { src: "/figma/partner-trucksmarter.svg", cls: "mt-[14px] h-[27.07px] w-[112px]" },
-  { src: "/figma/partner-truckstop.svg", cls: "mt-[18px] h-[19.911px] w-[112px]" },
-  { src: "/figma/partner-dat.svg", cls: "mt-[16px] h-[24.17px] w-[112px]" },
-]
-
-function PartnerLogo({ x, idx }: { x: number; idx: number }) {
-  const p = PARTNER_SEQ[idx % 4]
-  return (
-    <div className="absolute top-[40px] h-[56px] w-[112px]" style={{ left: x }}>
-      <img loading="lazy" decoding="async" src={p.src} alt="" className={p.cls} />
-    </div>
-  )
-}
-
 export function Features() {
-  // Figma x positions: step 302, pattern of 4 logos (period 1208). The track
-  // drifts left→right by one period and wraps, so we pre-extend one period
-  // to the left of the design's -20..2094 range.
-  const xs: number[] = []
-  for (let x = -20 - 1208; x <= 2094; x += 302) xs.push(x)
-
   const sectionRef = useRef<HTMLElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-    if (prefersReducedMotion()) return // static partner strip
-    const tween = gsap.to(track, {
-      x: 1208, // one full pattern period → seamless wrap
-      duration: 50,
-      ease: "none",
-      repeat: -1,
-    })
-    const stopGate = gateLoops(sectionRef.current, tween)
-    const stopWC = willChangeInView(track, sectionRef.current)
-    return () => {
-      stopWC()
-      stopGate()
-      tween.kill()
-    }
-  }, [])
 
   return (
-    <section ref={sectionRef} id="why" className="relative w-full bg-bg-light">
-      {/* Partners block, 136px — slow left→right marquee */}
-      <div className="relative h-[136px] w-full overflow-hidden">
-        <div ref={trackRef} data-marquee-track className="absolute inset-0">
-          {xs.map((x) => {
-            const idx = (((x + 20) / 302) % 4 + 4) % 4
-            return <PartnerLogo key={x} x={x} idx={idx} />
-          })}
-        </div>
-        {/* edge fades */}
-        <div className="pointer-events-none absolute left-0 top-0 h-[136px] w-[189px] bg-gradient-to-r from-bg-light to-[rgba(250,250,250,0)]" />
-        <div className="pointer-events-none absolute right-0 top-0 h-[136px] w-[189px] bg-gradient-to-l from-bg-light to-[rgba(250,250,250,0)]" />
-      </div>
-
-      <div className="flex w-full flex-col items-center gap-[120px] pb-[120px] pt-[80px]">
+    <section ref={sectionRef} id="why-loadhunter" className="relative w-full bg-bg-light">
+      {/* The partner marquee that used to open this section is gone: LH-016
+          bans infinite marquees and LH-071 replaces it with the static
+          Compatibility section placed right after the hero. */}
+      <div className="flex w-full flex-col items-center gap-[120px] pb-[120px] pt-[40px]">
         {/* header */}
         <div className="flex w-full flex-col items-center gap-[20px] px-[120px]">
           <div className="flex w-full flex-col items-center gap-[60px]">
@@ -125,13 +78,14 @@ export function Features() {
                 className="absolute left-[-10px] top-[-4px] w-[84px] max-w-none"
               />
             </div>
-            <h2 className="w-full text-center text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-ink">
-              Everything you need to book faster — nothing extra
+            {/* LH-017 / SEO-006 / COPYQA-004 */}
+            <h2 className="w-full max-w-[1200px] text-center text-[44px] font-medium leading-[52px] tracking-[-0.03em] text-ink">
+              {WHY.h2}
             </h2>
           </div>
-          <p className="w-full text-center text-[14px] font-medium leading-[16px] tracking-[-0.56px] text-ink-2">
-            New loads appear instantly — no refresh, no delay. Email or text
-            brokers in seconds, not minutes.
+          {/* LH-018 / SEO-007 / COPYQA-005 */}
+          <p className="w-full max-w-[900px] text-center text-[18px] font-medium leading-[26px] tracking-[-0.02em] text-ink/80">
+            {WHY.lead}
           </p>
         </div>
 

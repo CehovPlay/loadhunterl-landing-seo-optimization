@@ -1,25 +1,18 @@
 import { Img } from "@/components/site/Img"
-import { RotatingHeadline } from "@/components/site/RotatingHeadline"
-import { APP_URL, CHROME_STORE_URL } from "@/sections/Navbar"
+import { ProofBadges } from "@/components/site/ProofBadges"
+import { HERO } from "@/content/copy"
+import { track } from "@/lib/analytics"
+import { APP_URL } from "@/sections/Navbar"
 import { MobileHeroShader } from "./MobileHeroShader"
-import { Container, HERO_BOTTOM_FADE, PillButton, Stars } from "./ui"
-
-// explicit w+h: these SVGs carry no intrinsic size, so `w-auto` would fall
-// back to the 300×150 replaced-element default (ratios from the desktop strip)
-const PARTNERS = [
-  { src: "/figma/partner-123loadboard.svg", w: 100, h: 17 },
-  { src: "/figma/partner-trucksmarter.svg", w: 99, h: 24 },
-  { src: "/figma/partner-truckstop.svg", w: 101, h: 18 },
-  { src: "/figma/partner-dat.svg", w: 102, h: 22 },
-]
+import { Container, HERO_BOTTOM_FADE, PillButton } from "./ui"
 
 /**
- * Mobile hero: the desktop copy column reflowed — eyebrow pill, rotating
- * headline (mobile type scale), trust line, two stacked full-width 48px CTAs,
- * and a CSS-keyframe partner marquee (no scaled canvas on mobile, so plain
- * CSS animations are safe). Background: static violet radial tints on var(--color-hero)
- * paint instantly; on WebGPU-capable devices MobileHeroShader cross-fades the
- * autonomous drift shader over them (see that file for the gating).
+ * Mobile hero: the desktop copy column reflowed — eyebrow pill, the single
+ * static approved H1 (LH-002: readable with animation off), lead, proof
+ * badges, one dominant primary CTA plus a demo secondary, and the risk
+ * reversal microcopy. Background: static violet radial tints on
+ * var(--color-hero) paint instantly; on WebGPU-capable devices
+ * MobileHeroShader cross-fades the autonomous drift shader over them.
  */
 export function MobileHero() {
   return (
@@ -37,8 +30,8 @@ export function MobileHero() {
       />
       <MobileHeroShader />
 
-      <Container className="relative flex flex-col items-center pb-14 pt-[180px] text-center">
-        {/* eyebrow pill — desktop skin: soft white gradient, no border */}
+      <Container className="relative flex flex-col items-center pb-14 pt-[160px] text-center">
+        {/* LH-001 eyebrow — compact pill, no glow */}
         <span
           className="inline-flex w-fit items-center rounded-full px-4 py-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-ink"
           style={{
@@ -46,45 +39,54 @@ export function MobileHero() {
               "linear-gradient(to bottom, rgba(255,255,255,0.7), rgba(255,255,255,0.5))",
           }}
         >
-          The AI copilot for smarter dispatching.
+          {HERO.eyebrow}
         </span>
 
-        {/* rotating headline + sub (fixed box so the cycle can't shift layout) */}
-        <div className="mt-12 flex min-h-[180px] flex-col items-center">
-          <RotatingHeadline
-            h1ClassName="-mx-2 -my-[10px] px-2 py-[10px] text-[clamp(34px,9.7vw,60px)] font-medium leading-[1.12] tracking-[-0.04em]"
-            subClassName="text-[clamp(19px,5.4vw,24px)] font-medium leading-[1.6] tracking-[-0.04em] text-ink"
-          />
-        </div>
+        {/* LH-002 / SEO-004 — the page's single H1, static and always in the DOM */}
+        <h1 className="mt-8 text-[clamp(32px,8.6vw,44px)] font-medium leading-[1.14] tracking-[-0.04em] text-ink">
+          {HERO.h1}
+        </h1>
 
-        {/* trust line — desktop copy, stacked in two rows for 390px */}
-        <p className="mt-8 flex flex-col items-center gap-1.5 text-[14px] font-medium leading-[20px] tracking-[-0.56px] text-ink opacity-60">
-          Trusted by 6,000+ users
-          <span className="flex items-center gap-2">
-            <span className="hidden" aria-hidden>
-              ·
-            </span>
-            <Stars score={4.4} className="text-[13px]" />
-            4.4 on Google &amp; Trustpilot
-          </span>
+        {/* LH-003 / SEO-005 */}
+        <p className="mt-5 text-[clamp(16px,4.2vw,18px)] font-medium leading-[1.55] tracking-[-0.03em] text-ink/80">
+          {HERO.lead}
         </p>
 
-        {/* CTAs — stacked, full width, 48px; desktop order and skins */}
-        <div className="mx-auto mt-12 flex w-full max-w-[400px] flex-col gap-3">
-          <PillButton href={APP_URL} target="_blank" rel="noopener" variant="glass" className="">
-            Start 14-day free trial
-          </PillButton>
+        {/* LH-004 — source-attributed proof badges */}
+        <ProofBadges compact className="mt-8 items-center [&_ul]:justify-center" />
+
+        {/* CTAs — LH-005 primary dominant, LH-006 secondary to the demo */}
+        <div className="mx-auto mt-10 flex w-full max-w-[400px] flex-col gap-3">
           <PillButton
-            href={CHROME_STORE_URL}
+            href={APP_URL}
             target="_blank"
             rel="noopener"
-            variant="violet-radial"
+            variant="violet"
+            onClick={() => track("hero_trial_click")}
             className=""
           >
-            <Img src="/figma/icon-diamond.svg" alt="" className="size-6" />
-            Start booking in seconds
+            {HERO.primaryCta}
+          </PillButton>
+          <PillButton
+            href="#demo"
+            variant="white"
+            onClick={() => track("hero_chrome_click")}
+            className=""
+          >
+            <svg viewBox="0 0 24 24" aria-hidden className="size-5" fill="currentColor">
+              <path d="M8.5 5.6a1 1 0 0 1 1.52-.85l8.1 5.15a1 1 0 0 1 0 1.69l-8.1 5.15a1 1 0 0 1-1.52-.85V5.6z" />
+            </svg>
+            {HERO.secondaryCta}
           </PillButton>
         </div>
+
+        {/* LH-007 */}
+        <p className="mt-4 flex items-center justify-center gap-2 text-[13px] font-medium leading-[18px] tracking-[-0.02em] text-ink/70">
+          <svg viewBox="0 0 24 24" aria-hidden className="size-4 text-violet" fill="currentColor">
+            <path d="M12 2.2 4.5 5.3v6.1c0 4.6 3.2 8.9 7.5 10.4 4.3-1.5 7.5-5.8 7.5-10.4V5.3L12 2.2zm-1.1 13.2-3.2-3.2 1.3-1.3 1.9 1.9 4.6-4.6 1.3 1.3-5.9 5.9z" />
+          </svg>
+          {HERO.microcopy}
+        </p>
       </Container>
 
       {/* product screenshot — the desktop hero mockup is 2.34:1, so fitting its
@@ -105,42 +107,22 @@ export function MobileHero() {
       <div className="relative overflow-hidden pl-[max(20px,calc((100vw-440px)/2+20px))] md:pl-[max(32px,calc((100vw-768px)/2+32px))]">
         <Img
           src="/figma/mobile/hero-dashboard.png"
-          alt="LoadHunter dashboard: e-mail templates, factoring, drivers and release notes"
+          alt="LoadHunter workspace inside the load board: broker email templates, factoring signals, driver list and load details in one view"
           decoding="async"
           className="block w-[1110px] max-w-none"
         />
       </div>
 
-      {/* partner marquee — two copies of the row, translated -50% on loop */}
-      <div className="relative bg-bg-light py-10" aria-label="Supported load boards">
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10"
-          style={{ background: "linear-gradient(to right, var(--color-bg-light), rgba(250,250,250,0))" }}
-        />
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10"
-          style={{ background: "linear-gradient(to left, var(--color-bg-light), rgba(250,250,250,0))" }}
-        />
-        <div className="overflow-hidden">
-          <div className="animate-lh-marquee flex w-max items-center">
-            {[0, 1].map((copy) => (
-              <div key={copy} className="flex items-center" aria-hidden={copy === 1}>
-                {PARTNERS.map((p) => (
-                  <img
-                    key={`${copy}-${p.src}`}
-                    src={p.src}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className="mx-6 opacity-60"
-                    style={{ width: p.w, height: p.h }}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* LH-008 — caption naming what the visual actually shows */}
+      <Container className="relative">
+        <p className="pb-10 text-center text-[14px] font-medium leading-[20px] tracking-[-0.02em] text-ink/70">
+          {HERO.caption}
+        </p>
+      </Container>
+
+      {/* The partner marquee that used to sit here is gone: LH-016 bans
+          infinite marquees and LH-071 replaces it with the static
+          MobileCompatibility section rendered right after this one. */}
     </section>
   )
 }

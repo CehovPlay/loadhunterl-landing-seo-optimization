@@ -1,4 +1,5 @@
 import { Img } from "@/components/site/Img"
+import { ECOSYSTEM_COPY } from "@/content/copy"
 /**
  * Figma: Frame 2147238581 (914:26048) — light card 1680x1000 @ (120, 11018).
  * The card floats over the orbit section (which ends at y=11641) and hangs
@@ -40,7 +41,7 @@ const PRODUCTS: Product[] = [
   {
     name: 'huntTMS',
     description:
-      'A complete transport management system — dispatch, driver timelines and operations on one platform.',
+      ECOSYSTEM_COPY.huntTMS,
     logoWidth: 113,
     logo: '/figma/eco/logo2.png',
     mockup: '/figma/desk/eco-tms.png',
@@ -48,7 +49,7 @@ const PRODUCTS: Product[] = [
   {
     name: 'huntPAY',
     description:
-      'Faster settlements and factoring — automated invoicing and payment tracking so you get paid sooner.',
+      ECOSYSTEM_COPY.huntPAY,
     logoWidth: 109,
     logo: '/figma/eco/logo3.png',
     mockup: '/figma/desk/eco-pay.png',
@@ -57,7 +58,7 @@ const PRODUCTS: Product[] = [
   {
     name: 'huntDRIVE',
     description:
-      'The driver companion app — trips, documents and dispatch chat, right from the cab.',
+      ECOSYSTEM_COPY.huntDRIVE,
     logoWidth: 130,
     logo: '/figma/eco/logo4.png',
     mockup: '/figma/desk/eco-drive.png',
@@ -66,7 +67,7 @@ const PRODUCTS: Product[] = [
   {
     name: 'huntOS',
     description:
-      'One operating system for your whole trucking business — every load board, your fleet and daily operations in a single workspace.',
+      ECOSYSTEM_COPY.huntOS,
     logoText: 'huntOS',
     mockup: '/figma/desk/eco-os.png',
     mockDrop: 26,
@@ -210,10 +211,9 @@ export function Ecosystem() {
         <h2 className="absolute left-[60px] top-[184px] w-[526px] text-[48px] font-medium leading-[58px] tracking-[-1.92px] text-ink">
           Our ecosystem products
         </h2>
-        <p className="absolute left-[60px] top-[266px] w-[566px] text-[20px] font-medium leading-[24px] tracking-[-0.8px] text-ink">
-          Everything you need to find, evaluate, and book loads —
-          <br />
-          faster, smarter, and in one place.
+        {/* COPYQA-015 */}
+        <p className="absolute left-[60px] top-[266px] w-[566px] text-[18px] font-medium leading-[26px] tracking-[-0.02em] text-ink/80">
+          {ECOSYSTEM_COPY.lead}
         </p>
 
         {/* right column — product list, scrolled by the pin (not native

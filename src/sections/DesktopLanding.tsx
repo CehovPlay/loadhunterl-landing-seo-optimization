@@ -1,6 +1,7 @@
 import { BleedBg } from "@/components/site/BleedBg"
 import { Navbar } from "@/sections/Navbar"
 import { Hero } from "@/sections/Hero"
+import { Compatibility } from "@/sections/Compatibility"
 import { Features } from "@/sections/Features"
 import { Tools } from "@/sections/Tools"
 import { Orbit } from "@/sections/Orbit"
@@ -11,6 +12,14 @@ import { Testimonials } from "@/sections/Testimonials"
 import { Faq } from "@/sections/Faq"
 import { Cta } from "@/sections/Cta"
 import { Footer } from "@/sections/Footer"
+import {
+  BlogTeaser,
+  Differentiation,
+  HowItWorks,
+  ProductDemo,
+  RegionalProof,
+  UseCases,
+} from "@/components/site/sections"
 
 /** Desktop 1920 canvas. Extracted into its own module so App can code-split it
  *  (React.lazy) — a phone/tablet visitor never downloads this tree. */
@@ -25,7 +34,17 @@ export function DesktopLanding() {
         <Hero />
         {/* Light sections: bleed their bg into the >1920 side gutters */}
         <BleedBg color="var(--color-bg-light)">
+          {/* Approved information architecture (LH-057 heading map):
+              Compatibility → Why → How It Works → Differentiation → Use cases
+              → Demo → Regional, all inside the light zone that ends at the
+              ChaosZoom transition. */}
+          <Compatibility />
           <Features />
+          <HowItWorks />
+          <Differentiation />
+          <UseCases />
+          <ProductDemo />
+          <RegionalProof />
         </BleedBg>
         {/* zoom-through transition: dive into the hyphen, land in dark Tools */}
         <ChaosZoom />
@@ -36,6 +55,7 @@ export function DesktopLanding() {
         <Pricing />
         <Testimonials />
         <Faq />
+        <BlogTeaser />
         <Cta />
       </main>
       <Footer />
