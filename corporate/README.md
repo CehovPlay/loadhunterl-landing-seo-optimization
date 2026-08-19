@@ -15,10 +15,26 @@ widths since headless Chrome clamps `--window-size` to about 500px.
 
 ## What is built
 
-First pass covers TZ §27.4 (first screen), §27.5 (the operating cycle) and §27.7 (stop 01,
-LoadHunter), plus the global header (§5.3) and footer (§5.4 / §26.4). Stops 02 to 05, the
-assembled-ecosystem block, role selection, proof and the final conversion block (§27.8 to §27.16) are
-not built.
+The whole homepage, in the order tab 01 specifies: hero, then blocks 1 to 8, then the FAQ, plus the
+global header (§5.3) and footer (§5.4 / §26.4).
+
+| Block | Section | Proof |
+|---|---|---|
+| Hero | Run freight as one connected operation. | Sample load passport, with the load followed through the five products |
+| 01 | The road starts with the next load | Board result and the same result with the LoadHunter layer |
+| 02 | Turn the booked load into an operating plan | The load arriving on the dispatch board, with owner, next step, timing and exception |
+| 03 | Keep the driver and office on the same mile | Driver action on the phone, consequence on the office panel - the visitor drives it |
+| 04 | Close the load without opening a new process | Proof of delivery becoming an invoice timeline |
+| 05 | See the exceptions before they become calls | Four lanes converging, then what the command layer puts first |
+| 06 | Choose your entry point | Route selector (role, urgent job, team size) and the five cards |
+| 07 | Proof before promise | Pinned proof rail: what is published, what is not, and the status matrix |
+| 08 | The operating system is the destination | The data trail, ending on the CTA the visitor's answers earned |
+| FAQ | Five questions, verbatim | Availability answer rendered from the ledger |
+
+Every block obeys the rule the tab repeats under all eight: the CTA opens after the visitor has seen
+half the block or touched its proof, never as a pop-up. Analytics events are emitted for all seven
+names the tab lists (`lib/analytics.ts`), to `dataLayer` and a DOM event; no vendor is wired and no
+PII enters a payload.
 
 ## Decisions this branch is standing on
 
@@ -27,10 +43,19 @@ of P0. The colour, radius and type values are the Figma brand tokens the extensi
 ships; what changed is polarity, not palette. The landing's dark greys became ink, its light greys
 became ground.
 
-**Master spec wins on copy.** Where the master and the per-page tab disagree, the master is canon.
-That decision covers the hero (§6.1/§27.4 rather than tab 01), the header CTA (§27.3 rather than the
-generic §5.3 "Start Free") and stop 01's button. The block body copy in stop 01 comes from tab 01
-because it is the only approved English for it. Full conflict list: `~/loadhunter-tz/README.md`.
+**The page tab wins on copy.** Where tab 01 and master §27 disagree, tab 01 is canon for this page,
+and every string it prints as "точный контент" or "Точный текст" is reproduced verbatim. That
+reverses an earlier call and changes the hero (H1, supporting copy, both CTAs, microcopy), the block
+sequence, the CTA labels, the FAQ and the metadata. Nothing is merged between the two: the master's
+variants are still the owner's to choose, and they are logged as conflict 1 in
+`~/loadhunter-tz/README.md`.
+
+Where a block's exact text is an instruction to the builder rather than visitor copy - blocks 6, 7
+and 8, and FAQ answer 2 - the instruction is carried out with governed material instead of being
+paraphrased into marketing prose. The job line on each product card is that product page's own H1,
+the user line is its audience, the selector's questions offer the page passport's audiences, the JTBD
+sentences from master §2.3 and the priority segments from §2.2, and the availability answer is the
+status ledger itself.
 
 **Next.js, per §14.1.** App Router, every route static-prerendered, no client-side routing shell. The
 homepage HTML contains all indexable copy with nothing hidden behind hydration.
@@ -61,9 +86,16 @@ on it, the nodes fill as you reach them, and hovering a product lights that segm
 one road rather than a stack of blocks, and the only way that reads is if the geometry is literally
 continuous, so every section shares the container and the same left edge.
 
-The load is one object. The card in the hero and the card in stop 01 are the same component with the
-same figures; stop 01 adds the decision layer to it. §7.2 is explicit that showing two different
-loads lets the visitor credit the product for the load instead of for the analysis.
+The load is one object. Load LH-4471 - Dallas to Atlanta, dry van, $2,180, 762 miles - is the same
+load in the hero, on the board, on the dispatch row, in the driver's hand, on the invoice timeline
+and in the exception list. §7.2 is explicit that showing two different loads lets the visitor credit
+the product for the load instead of for the analysis, and §27.6 wants the handover of context to be
+something you can watch.
+
+Nothing on the page fakes a screenshot. Every panel is the real field set of the shipped workflow
+filled with clearly labeled sample data, which is the honest process demonstration §27.14 allows
+while approved customer proof does not exist. Two of the four cards in block 7 say out loud that they
+are not published yet.
 
 ## The hero band
 
@@ -105,17 +137,31 @@ Five animations, each with a job:
 |---|---|
 | Hero stagger | Hierarchy. Walks the eye down promise, explanation, action once on arrival. |
 | Rail progress | State. Shows how far along the route the visitor is. Scrubbed, never eased. |
-| Layer rows in stop 01 | Storytelling. The decision layer arrives on the card in reading order. |
-| Rail segment on row hover | Feedback. Says which stop is under the pointer. |
-| Hero shader drift | Atmosphere. The only autonomous motion on the site, on the only screen with no data on it. |
+| The load arriving on the board (02) | Storytelling. The handover is the claim, so it is the thing that moves. |
+| Invoice steps and exception rows (04, 05) | Reading order. The trail runs one way and is finished before the CTA. |
+| Lanes converging (05) | Relationship. Four signal sources, one layer. Opacity, not a dash draw - the viewBox is stretched horizontally and a dash pattern comes out of that unevenly. |
+| Staged CTA reveal | The tab's own rule, made visible: the action arrives once the block has been read. |
+| Hero shader drift | Atmosphere. The only autonomous motion on the site, on the only screen with no figures on it. |
+
+The driver lane in block 3 runs no timers at all: it moves only when the visitor moves it, which is
+what a demonstration of "one action at a time" should do anyway, and it means reduced motion needs no
+separate path through it.
 
 Entry animations set their from-state in an effect, never in the markup, so §43.1 and §46.3 hold: a
-visitor without JavaScript gets the finished page rather than an empty stage.
+visitor without JavaScript gets the finished page rather than an empty stage. The same applies to the
+two states that are closed by default - the staged CTAs and the disclosures inside the proofs. Both
+are expressed in CSS behind `html[data-js="on"]`, stamped by an inline script before first paint, so
+the server HTML ships them open: the acceptance criteria require the full meaning and an available
+CTA without scripting, and an inline `opacity: 0` would take exactly that away from the people who
+cannot open it again.
 
 ## Open, and blocking the rest of the page
 
-- **Analytics contract.** The TZ specifies five incompatible event-parameter schemas. Nothing is
-  wired until one is chosen.
+- **Analytics contract.** The TZ specifies five incompatible event-parameter schemas. The page emits
+  tab 01's set (template group A) to `dataLayer`; the vendor, the consent gate in front of it and the
+  final schema are still open.
+- **Hero copy conflict.** Tab 01 and master §27.4 carry two different first screens. This branch
+  ships tab 01's. One of them has to be retired.
 - **Product screenshots.** §27.14 allows an honest process demonstration where approved proof does
   not exist yet, which is what the load card is. Real approved product frames should replace it.
 - **Brand Registry (§14.3).** Legal entity, contacts and social profiles are missing, so the JSON-LD

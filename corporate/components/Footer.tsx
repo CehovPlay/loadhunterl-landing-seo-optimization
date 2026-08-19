@@ -2,12 +2,14 @@ import Link from "next/link"
 import {
   CONTACT,
   COPYRIGHT,
-  CYCLE,
   FOOTER_ACCESS,
   FOOTER_NAV,
   FOOTER_REGION,
   FOOTER_STATEMENT,
+  PRODUCTS,
   TRADEMARK_DISCLAIMER,
+  type StatusEntry,
+  type StatusTerm,
 } from "@/content/home"
 import { NewsletterForm } from "./NewsletterForm"
 import { SocialLinks } from "./SocialLinks"
@@ -29,16 +31,22 @@ import { SocialLinks } from "./SocialLinks"
  * positioning, the first commercial region and the P0 language.
  */
 
-const TONE = {
-  live: "text-live-night before:bg-live-night",
-  preview: "text-preview-night before:bg-preview-night",
-  progress: "text-progress-night before:bg-progress-night",
-} as const
+/* The same three meanings as on paper, re-taken at values that clear AA on
+   #121317. §42.2 still applies down here: one line per scope, never one chip
+   per product. */
+const TONE: Record<StatusTerm, string> = {
+  Live: "text-live-night before:bg-live-night",
+  Beta: "text-preview-night before:bg-preview-night",
+  Preview: "text-preview-night before:bg-preview-night",
+  "In Progress": "text-progress-night before:bg-progress-night",
+  Planned: "text-night-ink-3 before:bg-night-ink-3",
+  Deprecated: "text-night-ink-3 before:bg-night-ink-3",
+}
 
-/** Statuses per product, keyed off the same ledger the cycle reads from. */
+/** Statuses per product, read from the ledger the whole page reads from. */
 const STATUS = Object.fromEntries(
-  CYCLE.map((stop) => [stop.product, stop.status]),
-) as Record<string, { label: string; tone: keyof typeof TONE }>
+  PRODUCTS.map((product) => [product.name, product.statuses]),
+) as Record<string, readonly StatusEntry[]>
 
 const linkCls =
   "text-small text-night-ink-2 transition-colors duration-150 hover:text-night-ink"
@@ -88,22 +96,23 @@ export function Footer() {
                 <h2 className="text-small font-medium text-night-ink">{group.title}</h2>
                 <ul className="mt-4 flex flex-col gap-2.5">
                   {group.links.map((link) => {
-                    const status = STATUS[link.label]
+                    const statuses = STATUS[link.label]
                     return (
                       <li key={link.href + link.label}>
                         <Link href={link.href} className={"group block " + linkCls}>
                           {link.label}
-                          {status ? (
+                          {statuses?.map((status) => (
                             <span
+                              key={status.term + status.scope}
                               className={
                                 "mt-0.5 flex items-start gap-1.5 text-meta " +
                                 "before:mt-[5px] before:block before:size-[5px] before:shrink-0 before:rounded-full " +
-                                TONE[status.tone]
+                                TONE[status.term]
                               }
                             >
-                              {status.label}
+                              {status.scope}: {status.term}
                             </span>
-                          ) : null}
+                          ))}
                         </Link>
                       </li>
                     )

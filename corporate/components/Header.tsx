@@ -114,7 +114,7 @@ export function Header() {
           the strip behind the pill instead of the whole scrolling page. */}
       <div className="pointer-events-none fixed inset-x-0 top-0 z-[100] flex justify-center px-5 md:px-10">
         <div
-          className="relative mt-4 flex max-w-full items-center gap-4 rounded-full py-1.5 pr-2.5 pl-1.5 sm:gap-[60px]"
+          className="relative mt-4 flex max-w-full items-center gap-4 rounded-full py-1.5 pr-2.5 pl-1.5 lg:gap-[60px]"
           style={{
             isolation: "isolate",
             opacity: scrolled ? 1 : 0,
@@ -143,18 +143,32 @@ export function Header() {
           </Link>
 
           <div className="relative flex min-w-0 items-center gap-1.5">
+            {/* Below lg the compact pill carries navigation, not the action:
+                the mobile sticky bar owns the CTA from the first proof on, and
+                two live conversion surfaces at once is the aggressive pattern
+                the homepage spec rules out. */}
             <Link
               href={DEMO_CTA.href}
-              className="hidden h-7 items-center justify-center rounded-full border border-rule bg-paper-2 px-3 text-small leading-4 font-medium whitespace-nowrap text-ink-2 shadow-[var(--shadow-pill)] transition-colors duration-150 hover:text-ink sm:flex"
+              className="hidden h-7 items-center justify-center rounded-full border border-rule bg-paper-2 px-3 text-small leading-4 font-medium whitespace-nowrap text-ink-2 shadow-[var(--shadow-pill)] transition-colors duration-150 hover:text-ink lg:flex"
             >
               {DEMO_CTA.label}
             </Link>
             <Link
-              href={CTA.install.href}
-              className="flex h-7 items-center justify-center rounded-full bg-violet px-3 text-small leading-4 font-medium whitespace-nowrap text-white shadow-[var(--shadow-pill)] transition-colors duration-150 hover:bg-violet-ink"
+              href={CTA.primary.href}
+              className="hidden h-7 items-center justify-center rounded-full bg-violet px-3 text-small leading-4 font-medium whitespace-nowrap text-white shadow-[var(--shadow-pill)] transition-colors duration-150 hover:bg-violet-ink lg:flex"
             >
-              {CTA.install.label}
+              {CTA.primary.label}
             </Link>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="primary-menu"
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full text-ink transition-colors duration-150 hover:bg-paper-3 lg:hidden"
+            >
+              {open ? <X size={18} weight="bold" /> : <List size={18} weight="bold" />}
+              <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -178,11 +192,11 @@ export function Header() {
             ))}
           </ul>
           <Link
-            href={CTA.install.href}
+            href={CTA.primary.href}
             onClick={() => setOpen(false)}
             className="mt-8 inline-flex min-h-[52px] w-full items-center justify-center rounded-full bg-violet px-6 text-body font-medium text-white"
           >
-            {CTA.install.label}
+            {CTA.primary.label}
           </Link>
           <div className="mt-5 flex flex-wrap items-center gap-x-8 gap-y-3">
             <Link

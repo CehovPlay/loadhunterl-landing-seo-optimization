@@ -28,20 +28,30 @@ const geistMono = Geist_Mono({
   display: "swap",
 })
 
-/* TZ §27.17 - approved metadata for the homepage. */
+/**
+ * Metadata, from tab 01's SEO section verbatim. The only edit is the trailing
+ * period on the title, which is the document's own sentence punctuation in
+ * "Title: ... . Description: ..." rather than part of the title.
+ *
+ * Master §27.17 carries a different pair ("Trucking Dispatch & Freight
+ * Operations Software | LoadHunter"). The page tab wins here, like the rest of
+ * this page; the conflict is logged in the TZ README for the owner to settle.
+ */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Trucking Dispatch & Freight Operations Software | LoadHunter",
+  title: "LoadHunter - One Operating System for Freight Operations",
   description:
-    "Find and evaluate loads, manage dispatch, coordinate drivers and documents, and connect invoicing and payments across five LoadHunter products.",
+    "Connect load discovery, dispatch, driver workflows, payments and operational intelligence in one modular freight ecosystem.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: SITE_URL,
     siteName: "LoadHunter",
-    title: "Run your entire freight operation, from load search to payment",
+    /* Same page, not the same sentence: the tab requires title, description and
+       H1 to describe one page without repeating each other word for word. */
+    title: "Run freight as one connected operation",
     description:
-      "Five connected products for load discovery, dispatch, driver workflows, invoicing and operational visibility.",
+      "Five focused products for load discovery, dispatch, driver workflows, invoicing and operational visibility.",
   },
 }
 
@@ -69,7 +79,20 @@ const jsonLd = [
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-US" className={`${inter.variable} ${geistMono.variable}`}>
+    /* The inline script below stamps data-js on this element before React
+       hydrates, which is a deliberate server/client difference. */
+    <html
+      lang="en-US"
+      className={`${inter.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Before first paint, so the staged CTAs start closed for anyone who
+            can actually open them and stay open for anyone who cannot. */}
+        <script
+          dangerouslySetInnerHTML={{ __html: `document.documentElement.dataset.js="on"` }}
+        />
+      </head>
       <body>
         <a
           href="#main"

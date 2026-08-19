@@ -153,6 +153,43 @@
   color: var(--color-ink);
 }
 
+/* The staged CTA gate.
+   Every block opens its CTA after half of it has been seen or after the visitor
+   touches the proof, which the homepage spec asks for under every single block.
+   The closed state is expressed in CSS behind html[data-js="on"], set by an
+   inline script before first paint, so a visitor with JavaScript disabled gets
+   the CTA outright: the acceptance criteria require the full meaning and an
+   available CTA without scripting, and an inline opacity:0 in the server HTML
+   would take it away from exactly the people who cannot open it again. */
+[data-cta-gate] {
+  transition:
+    opacity 0.5s var(--ease-out-quart),
+    transform 0.5s var(--ease-out-quart);
+}
+
+html[data-js="on"] [data-cta-gate="closed"] {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+/* Disclosure inside a proof (the LoadHunter layer, the dispatch detail).
+   Same reasoning as the CTA gate: closed is a JavaScript state, so the server
+   HTML ships it open and a visitor without scripting reads the whole argument
+   instead of half of it. */
+[data-collapse] {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition:
+    grid-template-rows 0.45s var(--ease-out-quart),
+    opacity 0.45s var(--ease-out-quart);
+}
+
+html[data-js="on"] [data-collapse="closed"] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
 /* Tabular figures for every number that is data rather than prose. */
 .figures {
   font-family: var(--font-mono);
