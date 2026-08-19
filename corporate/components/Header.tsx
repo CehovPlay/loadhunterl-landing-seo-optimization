@@ -23,9 +23,9 @@ import { CTA, DEMO_CTA, NAV } from "@/content/home"
  * the homepage's primary action, and the compact pill keeps one sales path
  * beside it rather than a second label for the same intent.
  *
- * Seven top-level destinations do not fit a pill below 1280px, so under xl the
- * bar collapses to a disclosure. Nothing is dropped silently: every entry in
- * §5.1 is a required top-level destination.
+ * Seven top-level destinations stop fitting the pill below 1024px, so under lg
+ * the bar collapses to a disclosure. Nothing is dropped silently: every entry
+ * in §5.1 is a required top-level destination.
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -65,7 +65,7 @@ export function Header() {
             "opacity 0.3s ease, transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}
       >
-        <div className="w-full p-3 md:p-4 xl:w-auto">
+        <div className="w-full p-3 md:p-4 lg:w-auto">
           {/* The landing sits this pill on a dark page, where plain white is enough
               separation. On paper it needs the hairline and the pill shadow to
               still read as a floating object rather than a lighter patch. */}
@@ -81,13 +81,13 @@ export function Header() {
               <img src="/brand/logo-text.svg" alt="LoadHunter" width={97} height={16} className="h-4 w-[97px]" />
             </Link>
 
-            <nav aria-label="Primary" className="hidden xl:block">
+            <nav aria-label="Primary" className="hidden lg:block">
               <ul className="flex items-center gap-0.5 rounded-full">
                 {NAV.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="flex h-7 items-center justify-center rounded-full px-3 text-small leading-4 font-medium text-ink-2 transition-colors duration-150 hover:text-ink"
+                      className="flex h-7 items-center justify-center rounded-full px-2.5 text-small leading-4 font-medium text-ink-2 xl:px-3 transition-colors duration-150 hover:text-ink"
                     >
                       {item.label}
                     </Link>
@@ -101,7 +101,7 @@ export function Header() {
               onClick={() => setOpen((v) => !v)}
               aria-expanded={open}
               aria-controls="primary-menu"
-              className="ml-auto inline-flex size-11 shrink-0 items-center justify-center rounded-full text-ink transition-colors duration-150 hover:bg-paper-3 xl:hidden"
+              className="ml-auto inline-flex size-11 shrink-0 items-center justify-center rounded-full text-ink transition-colors duration-150 hover:bg-paper-3 lg:hidden"
             >
               {open ? <X size={20} weight="bold" /> : <List size={20} weight="bold" />}
               <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
@@ -162,7 +162,7 @@ export function Header() {
       {open ? (
         <div
           id="primary-menu"
-          className="fixed inset-x-0 top-[70px] bottom-0 z-[90] overflow-y-auto border-t border-rule bg-paper px-5 py-8 md:px-10 xl:hidden"
+          className="fixed inset-x-0 top-[70px] bottom-0 z-[90] overflow-y-auto border-t border-rule bg-paper px-5 py-8 md:px-10 lg:hidden"
         >
           <ul className="flex flex-col">
             {NAV.map((item) => (

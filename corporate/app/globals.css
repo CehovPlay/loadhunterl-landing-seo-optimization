@@ -141,6 +141,18 @@
   color: var(--color-ink);
 }
 
+/* The hero headline. It runs bigger than the display scale because the first
+   screen is full height and has nothing else competing for it, and the clamp
+   is tuned so the 62-character H1 holds two lines from 1024px up, which is
+   what TZ §27.2 asks for (one H1, never wrapping into four).                */
+.display-hero {
+  font-size: clamp(2.25rem, 1.0rem + 4.3vw, 5rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
 /* Tabular figures for every number that is data rather than prose. */
 .figures {
   font-family: var(--font-mono);

@@ -50,7 +50,10 @@ export function Rail() {
       aria-hidden="true"
       className="pointer-events-none absolute top-0 bottom-0 left-5 w-px md:left-10"
     >
-      <div className="absolute inset-0 bg-rule" />
+      {/* A tint of ink rather than the flat rule token: the line has to hold
+          on the hero's shader band as well as on paper, and #e8e8e8 vanishes
+          into the band. */}
+      <div className="absolute inset-0 bg-ink/10" />
       <div ref={progress} className="absolute inset-0 origin-top bg-violet/70" />
     </div>
   )

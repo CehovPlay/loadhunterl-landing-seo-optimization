@@ -65,13 +65,41 @@ The load is one object. The card in the hero and the card in stop 01 are the sam
 same figures; stop 01 adds the decision layer to it. §7.2 is explicit that showing two different
 loads lets the visitor credit the product for the load instead of for the analysis.
 
+## The hero band
+
+The first screen is full height and the surface behind it moves: `ShaderBand` + `ShaderStack`, both
+ported from the landing. A white-to-`#f0f0f0` pearl drift goes through `FlutedGlass` and `FilmGrain`,
+with the brand violet fenced to the top of the band by a luminance mask so it can never reach the H1
+or the CTAs. The band dissolves into the page ground before the section ends, so the seam into the
+cycle has no edge.
+
+It is the only moving surface on the site, and that is the rule: everything below the hero is
+figures, statuses and routes, and those need a still ground to be read against.
+
+Three things it must keep doing:
+
+- **Paint in order.** Flat base colour first (identical to the shader's idle background), then the
+  static fallback gradients, then the WebGPU stack at browser idle. The first screen is complete
+  before any of it arrives — §43.1 and §46.3 do not allow otherwise.
+- **Portal to `<body>` at `z-index: -1`.** The canvas has to span the viewport, not the centred 1400
+  column, and it carries the base colour itself so the side gutters are covered. The host section
+  stays transparent.
+- **Go quiet on narrow viewports.** The fluted bands are a fixed count across the canvas, so at 390px
+  each is four times wider than at 1440 and the aberration that reads as soft refraction on desktop
+  reads as holographic rainbow stripes on a phone. `compact` raises the frequency and cuts the
+  aberration to a third.
+
+`?noshader` renders only the base colour and the fallback — for headless screenshots and for
+bisecting jank. `prefers-reduced-motion` takes the same path permanently, and so does anything
+without working WebGPU, which today includes Safari.
+
 ## Motion
 
 GSAP with ScrollTrigger, and Lenis driven from GSAP's ticker so smoothing and every trigger advance
 on the same frame. Lenis is created only for fine-pointer visitors with motion enabled; touch keeps
 native momentum and reduced-motion keeps the plain scrollbar.
 
-Four animations, each with a job:
+Five animations, each with a job:
 
 | What | Job |
 |---|---|
@@ -79,6 +107,7 @@ Four animations, each with a job:
 | Rail progress | State. Shows how far along the route the visitor is. Scrubbed, never eased. |
 | Layer rows in stop 01 | Storytelling. The decision layer arrives on the card in reading order. |
 | Rail segment on row hover | Feedback. Says which stop is under the pointer. |
+| Hero shader drift | Atmosphere. The only autonomous motion on the site, on the only screen with no data on it. |
 
 Entry animations set their from-state in an effect, never in the markup, so §43.1 and §46.3 hold: a
 visitor without JavaScript gets the finished page rather than an empty stage.
