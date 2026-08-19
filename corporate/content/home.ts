@@ -157,9 +157,10 @@ export const CTA = {
 
 /* Hero, verbatim from tab 01, "Hero - точный контент". */
 export const HERO = {
-  /* The first viewport must carry a product/category label. The category
-     sentence is master §1.1's, unchanged. */
-  label: "Freight operations software",
+  /* The tab requires a product/category label in the first viewport but does
+     not write one, so this is the category master §1.1 defines, verbatim,
+     rather than a phrase invented here. */
+  label: "AI-powered Freight Operations Ecosystem",
   h1: "Run freight as one connected operation.",
   sub: "Five focused products. One LoadHunter operating system. Start with the tool you need today and connect the rest when your operation is ready.",
   microcopy: "See current availability before you commit.",
