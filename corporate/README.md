@@ -10,8 +10,21 @@ npm run build      # static prerender of every route
 npm run typecheck
 ```
 
-Screenshot the running app the way the root project does, and use CDP device emulation for mobile
-widths since headless Chrome clamps `--window-size` to about 500px.
+Verification runs over CDP, from `scripts/`:
+
+```bash
+node scripts/shot.mjs "http://localhost:4311/?noshader" 1440 900 out.png   # screenshot
+SCROLL=2000 DSF=1 node scripts/shot.mjs <url> 390 844 m.png                # scrolled, cheap
+node scripts/eval.mjs <url> 390 844 'document.documentElement.scrollWidth' # measure in page
+node scripts/console.mjs <url> 1280 800                                    # console + exceptions
+```
+
+Mobile widths have to come from device emulation: headless Chrome clamps `--window-size` to about
+500px. Long pages are read as a series of viewport shots at `SCROLL` positions, because Chrome caps
+a full-page capture at 7800px. `?noshader` renders base colour and fallback only.
+
+Deeper background - the spec, its conflicts, the copy, the decision log - lives in the Obsidian vault
+`~/Documents/LoadHunter Corporate Base/`.
 
 ## What is built
 
