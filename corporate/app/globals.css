@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/*  LoadHunter corporate site - design tokens                          */
+/*                                                                     */
+/*  Colour, radius and type values are lifted verbatim from the brand   */
+/*  token block in the extension landing (src/index.css @theme, itself  */
+/*  exported from the Figma "Web-platform-design / Full HD 1920" file). */
+/*  What changed here is POLARITY, not the palette: TZ §11.1 makes the  */
+/*  light surface the primary variant and §12.1 keeps dark theme out of */
+/*  P0, so the dark greys become ink and the light greys become ground. */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+
+  /* Ground -------------------------------------------------------- */
+  --color-paper: #fafafa;          /* page ground */
+  --color-paper-2: #ffffff;        /* raised surface */
+  --color-paper-3: #f0f0f0;        /* recessed well */
+  --color-rule: #e8e8e8;           /* hairline */
+  --color-rule-soft: #f0f0f0;      /* quieter hairline */
+
+  /* Ink ----------------------------------------------------------- */
+  --color-ink: #121317;            /* display type */
+  --color-ink-2: #454545;          /* body */
+  --color-ink-3: #686b6f;          /* secondary */
+  --color-ink-4: #a2a2a2;          /* tertiary, metadata */
+
+  /* Brand - the single accent on this page ------------------------ */
+  --color-violet: #6f5197;
+  --color-violet-ink: #5b4180;     /* AA-safe violet on paper */
+  --color-violet-soft: #a186c6;
+  --color-violet-wash: #f2eef8;
+
+  /* Semantic status. TZ §3.6 + §42.2 require the status to sit next
+     to the feature it describes, so these are the only colours on the
+     page besides the accent, and they never decorate. Values are
+     darkened from the brand set to clear WCAG AA on paper.           */
+  --color-live: #0f7a66;
+  --color-preview: #6f5197;
+  --color-progress: #96631a;
+
+  /* Dark band. The footer is the extension landing's footer, so it keeps its
+     surface: the same near-black ground and the same #33353a divider. On a
+     light page it also does the job §26.4 wants of it, which is to close the
+     road rather than continue it.                                    */
+  --color-night: #121317;
+  --color-night-rule: #33353a;
+  --color-night-ink: #ffffff;
+  --color-night-ink-2: rgba(255, 255, 255, 0.55);
+  --color-night-ink-3: rgba(255, 255, 255, 0.45);
+  --color-night-field: rgba(255, 255, 255, 0.06);
+  --color-night-edge: rgba(255, 255, 255, 0.14);
+
+  /* Status tones for the dark band. Same three meanings, re-taken from the
+     brand set at values that clear WCAG AA against #121317 (4.6:1, 10.5:1
+     and 8.8:1) rather than reusing the paper versions, which do not.   */
+  --color-live-night: #028e75;
+  --color-progress-night: #ffb352;
+  --color-preview-night: #c79ffd;
+
+  /* The canonical pill shadow from the landing token set. Every floating
+     control in the header carries it, and nothing else does.          */
+  --shadow-pill: 0px 1px 0px 0px rgba(0, 0, 0, 0.05), 0px 4px 4px 0px rgba(0, 0, 0, 0.05),
+    0px 10px 10px 0px rgba(0, 0, 0, 0.1);
+
+  /* Radius. One system: pill for anything interactive, 12px for
+     surfaces, 6px for inline chips and fields.                       */
+  --radius-chip: 6px;
+  --radius-surface: 12px;
+
+  /* Type scale ---------------------------------------------------- */
+  --text-meta: 12px;      --text-meta--line-height: 16px;
+  --text-small: 14px;     --text-small--line-height: 20px;
+  --text-body: 16px;      --text-body--line-height: 26px;
+  --text-lead: 19px;      --text-lead--line-height: 30px;
+  --text-h3: 24px;        --text-h3--line-height: 32px;
+  --text-h2: clamp(1.75rem, 1.15rem + 1.5vw, 2.5rem);
+  --text-h2--line-height: 1.14;
+
+  /* Motion -------------------------------------------------------- */
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink-2);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    /* The brand sets a uniform -4% tracking; display type tightens further. */
+    letter-spacing: -0.02em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--color-ink);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  button,
+  a {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-violet);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Lenis owns the scroll position; this keeps native anchor jumps from
+     fighting it. TZ §17.2 keeps keyboard scrolling working regardless. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Display type. clamp() keeps the hero to two lines from 360px to 1600px,
+   which TZ §27.2 needs (one H1, no wrapping into four lines).            */
+.display {
+  font-size: clamp(2.25rem, 1.1rem + 2.9vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+/* Tabular figures for every number that is data rather than prose. */
+.figures {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
