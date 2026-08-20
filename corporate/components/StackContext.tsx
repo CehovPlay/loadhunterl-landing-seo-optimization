@@ -1,7 +1,8 @@
 "use client"
 
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react"
-import { PRODUCTS, SELECTOR, type ProductKey } from "@/content/home"
+import { SELECTOR } from "@/content/home"
+import { PRODUCTS_WITH_STATUS, type ProductKey, type ProductWithStatus } from "@/content/registry"
 
 /**
  * The route selector's answers, shared between block 6 and block 8.
@@ -19,7 +20,7 @@ type StackValue = {
   answer: (key: keyof Answers, value: string) => void
   reset: () => void
   complete: boolean
-  recommended: (typeof PRODUCTS)[number] | null
+  recommended: ProductWithStatus | null
   label: (key: keyof Answers) => string | undefined
 }
 
@@ -36,7 +37,7 @@ export function StackProvider({ children }: { children: ReactNode }) {
        because the tab asks for them and because they qualify the lead, not
        because they secretly override the job. */
     const recommended = complete
-      ? (PRODUCTS.find((product) => product.key === (answers.job as ProductKey)) ?? null)
+      ? (PRODUCTS_WITH_STATUS.find((product) => product.key === (answers.job as ProductKey)) ?? null)
       : null
 
     return {

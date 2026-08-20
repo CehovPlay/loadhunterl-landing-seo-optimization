@@ -1,4 +1,4 @@
-import { SOCIALS } from "@/content/home"
+import { BRAND } from "@/content/registry"
 
 /**
  * Footer social icons, carried over from the extension landing.
@@ -35,7 +35,7 @@ const GLYPH: Record<string, { w: number; box: string; d: string }> = {
 export function SocialLinks() {
   return (
     <div className="flex items-center gap-4 text-night-ink-3">
-      {SOCIALS.map((social) => {
+      {BRAND.socials.map((social) => {
         const glyph = GLYPH[social.label]
         if (!glyph) return null
         return (

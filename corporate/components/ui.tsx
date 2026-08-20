@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/dist/ssr"
-import type { StatusEntry, StatusTerm } from "@/content/home"
+import type { ClaimRecord, StatusTerm } from "@/content/registry"
 
 /**
  * Status, printed next to the thing it describes.
@@ -44,7 +44,7 @@ export function StatusList({
   entries,
   className = "",
 }: {
-  entries: readonly StatusEntry[]
+  entries: readonly ClaimRecord[]
   className?: string
 }) {
   return (

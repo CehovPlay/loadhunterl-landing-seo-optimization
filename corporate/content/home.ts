@@ -1,5 +1,9 @@
 /**
- * Approved copy for the corporate homepage.
+ * Approved copy for the corporate homepage - and only this page.
+ *
+ * The registries §14.3 requires used to live here too, which meant a component
+ * that wanted a phone number imported the homepage. They now sit in
+ * `content/registry`, and this file holds what tab 01 alone says.
  *
  * SOURCE OF TRUTH: ~/loadhunter-tz/tabs/01-x.md, the page's own full spec.
  * Every visitor-facing string below that the tab prints as "точный контент" or
@@ -22,123 +26,7 @@
  * paraphrased into marketing prose.
  */
 
-export const SITE_URL = "https://loadhunt.ai"
-
-/* TZ §5.1 - global navigation. Every one of the five products is top level;
-   none is nested under huntTMS. */
-export const NAV = [
-  { label: "Platform", href: "/platform" },
-  { label: "Products", href: "/products" },
-  { label: "Solutions", href: "/carriers" },
-  { label: "Customers", href: "/customers" },
-  { label: "Resources", href: "/resources" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Company", href: "/about" },
-] as const
-
-/* ------------------------------------------------------------------ */
-/*  Status ledger (TZ §3.6)                                            */
-/*                                                                     */
-/*  One entry per claim, never one badge per product: §3.6 and §42.2   */
-/*  both require the status to sit beside the capability it covers.    */
-/*  The vocabulary is closed - Live, Beta, In Progress, Preview,       */
-/*  Planned, Deprecated - which is what FAQ answer 2 asks the page to  */
-/*  render. Source and verifiedAt travel with the record because §3.6  */
-/*  blocks any claim without an owner, a source and a check date.      */
-/* ------------------------------------------------------------------ */
-
-export type StatusTerm = "Live" | "Beta" | "In Progress" | "Preview" | "Planned" | "Deprecated"
-
-export type StatusEntry = { term: StatusTerm; scope: string }
-
-export const STATUS_SOURCE = {
-  source: "LoadHunter status ledger",
-  verifiedAt: "2026-08-19",
-} as const
-
-/* ------------------------------------------------------------------ */
-/*  Products                                                           */
-/*                                                                     */
-/*  job  - the product page H1 (tabs 03-07, "точный контент")          */
-/*  user - the product page audience line (tabs 03-07, page passport)  */
-/*  next - the homepage block CTA for that product (tab 01)            */
-/*  jtbd - the routing sentence from master §2.3                       */
-/* ------------------------------------------------------------------ */
-
-export const PRODUCTS = [
-  {
-    key: "loadhunter",
-    name: "LoadHunter",
-    role: "Opportunity engine",
-    href: "/loadhunter",
-    block: "#the-road-starts-with-the-next-load",
-    job: "Turn load-board noise into your next best move.",
-    user: "Dispatchers, owner-operators and carriers actively searching and evaluating loads.",
-    jtbd: "I need better freight",
-    next: "Explore LoadHunter",
-    statuses: [{ term: "Live", scope: "LoadHunter extension" }] as StatusEntry[],
-  },
-  {
-    key: "hunttms",
-    name: "huntTMS",
-    role: "Execution core",
-    href: "/hunttms",
-    block: "#turn-the-booked-load-into-an-operating-plan",
-    job: "Run the freight day without the spreadsheet handoffs.",
-    user: "Carrier owners, operations leaders and dispatch teams evaluating a TMS.",
-    jtbd: "I need to run loads",
-    next: "See huntTMS",
-    statuses: [{ term: "Live", scope: "huntTMS" }] as StatusEntry[],
-  },
-  {
-    key: "huntdrive",
-    name: "huntDRIVE",
-    role: "Field network",
-    href: "/huntdrive",
-    block: "#keep-the-driver-and-office-on-the-same-mile",
-    job: "Give drivers one clear next action-and dispatch the outcome.",
-    user: "Carrier operations leaders and driver managers; secondary audience drivers.",
-    jtbd: "I need drivers to update me",
-    next: "See huntDRIVE",
-    statuses: [
-      { term: "Live", scope: "Telegram workflow" },
-      { term: "In Progress", scope: "Native app" },
-    ] as StatusEntry[],
-  },
-  {
-    key: "huntpay",
-    name: "huntPAY",
-    role: "Cashflow engine",
-    href: "/huntpay",
-    block: "#close-the-load-without-opening-a-new-process",
-    job: "Carry the load context all the way to payment.",
-    user: "Carrier finance teams, owners and operations leaders responsible for invoicing and payroll.",
-    jtbd: "I need invoices and settlements under control",
-    next: "See huntPAY",
-    statuses: [
-      { term: "Live", scope: "Invoicing and payroll" },
-      { term: "In Progress", scope: "Direct factoring integration" },
-    ] as StatusEntry[],
-  },
-  {
-    key: "huntos",
-    name: "huntOS",
-    role: "Command layer",
-    href: "/huntos",
-    block: "#see-the-exceptions-before-they-become-calls",
-    job: "See the operation through the exceptions that need you.",
-    user: "Owners and operations executives seeking cross-operation visibility.",
-    jtbd: "I need one view of the business",
-    next: "Preview huntOS",
-    statuses: [
-      { term: "Preview", scope: "huntOS" },
-      { term: "Live", scope: "huntTMS dashboard" },
-      { term: "In Progress", scope: "Unified cross-product intelligence" },
-    ] as StatusEntry[],
-  },
-] as const
-
-export type ProductKey = (typeof PRODUCTS)[number]["key"]
+import { CLAIMS, claimProvenance } from "./registry"
 
 /* ------------------------------------------------------------------ */
 /*  CTA registry for this page (tab 01 + cta-registry.md row 01)       */
@@ -201,6 +89,7 @@ export const SAMPLE_NOTE = "Sample data"
 export const BLOCKS = {
   one: {
     n: "01",
+    stop: "Find",
     id: "the-road-starts-with-the-next-load",
     title: "The road starts with the next load",
     h3: "Find stronger options before the market moves.",
@@ -209,6 +98,7 @@ export const BLOCKS = {
   },
   two: {
     n: "02",
+    stop: "Run",
     id: "turn-the-booked-load-into-an-operating-plan",
     title: "Turn the booked load into an operating plan",
     h3: "Dispatch without the spreadsheet handoff.",
@@ -217,6 +107,7 @@ export const BLOCKS = {
   },
   three: {
     n: "03",
+    stop: "Hand off",
     id: "keep-the-driver-and-office-on-the-same-mile",
     title: "Keep the driver and office on the same mile",
     h3: "Updates that move the operation forward.",
@@ -225,6 +116,7 @@ export const BLOCKS = {
   },
   four: {
     n: "04",
+    stop: "Get paid",
     id: "close-the-load-without-opening-a-new-process",
     title: "Close the load without opening a new process",
     h3: "From delivered to ready-to-pay.",
@@ -233,6 +125,7 @@ export const BLOCKS = {
   },
   five: {
     n: "05",
+    stop: "Command",
     id: "see-the-exceptions-before-they-become-calls",
     title: "See the exceptions before they become calls",
     h3: "One command layer across the operation.",
@@ -417,7 +310,7 @@ export const PROOF_ITEMS = [
     kind: "Status matrix",
     title: "What is available right now",
     body: "Availability for every product and connected capability, rendered from the status ledger.",
-    note: `Source: ${STATUS_SOURCE.source}. Verified ${STATUS_SOURCE.verifiedAt}.`,
+    note: claimProvenance(CLAIMS[0]),
     href: CTA.status.href,
     ready: true,
   },
@@ -493,91 +386,6 @@ export const DEMO_CTA = CTA.demo
  * present. The Products column is the one that carries statuses, because §5.4
  * asks for the five products with their current state.
  */
-export const FOOTER_NAV = [
-  {
-    title: "Products",
-    links: [
-      { label: "LoadHunter", href: "/loadhunter" },
-      { label: "huntTMS", href: "/hunttms" },
-      { label: "huntDRIVE", href: "/huntdrive" },
-      { label: "huntPAY", href: "/huntpay" },
-      { label: "huntOS", href: "/huntos" },
-      { label: "All products", href: "/products" },
-    ],
-  },
-  {
-    title: "Solutions",
-    links: [
-      { label: "Carriers", href: "/carriers" },
-      { label: "Owner-operators", href: "/owner-operators" },
-      { label: "Fleets", href: "/fleets" },
-      { label: "Dispatchers", href: "/dispatchers" },
-      { label: "Drivers", href: "/drivers" },
-      { label: "Brokers", href: "/brokers" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Resource center", href: "/resources" },
-      { label: "Blog", href: "/blog" },
-      { label: "Guides", href: "/guides" },
-      { label: "Tools", href: "/tools" },
-      { label: "Integrations", href: "/integrations" },
-      { label: "Customers", href: "/customers" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
-      { label: "Partners", href: "/partners" },
-      { label: "Contact", href: "/contact" },
-      { label: "Support", href: "/support" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy", href: "/privacy" },
-      { label: "Terms", href: "/terms" },
-      { label: "Cookie preferences", href: "/cookies" },
-      { label: "Trust", href: "/trust" },
-      { label: "Accessibility", href: "/accessibility" },
-      { label: "Status", href: "/status" },
-    ],
-  },
-] as const
-
-/**
- * TZ §5.4 - product login destinations, kept away from the marketing CTAs.
- * One destination, because §2.8 makes /login the place where the product is
- * chosen; inventing per-product app URLs here would ship guesses.
- */
-export const FOOTER_ACCESS = {
-  title: "Product access",
-  label: "Log in",
-  href: "/login",
-  note: "Choose your product after signing in.",
-} as const
-
-/* Public contacts, mirroring the ones the extension landing publishes. */
-export const CONTACT = {
-  email: "support@loadhunter.io",
-  phone: "+1 312 878 9795",
-  phoneHref: "+13128789795",
-  region: "United States",
-} as const
-
-/* TZ §26.4 - the category statement plus the market and language line. */
-export const FOOTER_STATEMENT =
-  "One connected system for finding freight, running operations, keeping drivers moving, getting paid and seeing the business clearly."
-
-export const FOOTER_REGION =
-  "Built for trucking and freight operations worldwide. First commercial region: United States. Site language: US English."
-
 export const NEWSLETTER = {
   title: "Get practical freight operations notes",
   body: "Monthly product updates, dispatch workflow guides and new feature notes.",
@@ -591,36 +399,3 @@ export const NEWSLETTER = {
   offline: "Newsletter signup is not connected yet. Email us and we'll add you.",
   consent: "By subscribing you agree to receive product emails. Unsubscribe at any time. ",
 } as const
-
-/** Trademark independence, carried over from the landing. */
-export const TRADEMARK_DISCLAIMER =
-  "LoadHunter is an independent product and is not affiliated with, endorsed by or sponsored by DAT Solutions, Truckstop, TruckSmarter or other third-party load-board providers. Product names and trademarks belong to their respective owners."
-
-export const SOCIALS = [
-  { label: "Telegram", href: "https://t.me/loadhunterextension" },
-  { label: "Instagram", href: "https://www.instagram.com/loadhunter.io/" },
-  { label: "YouTube", href: "https://www.youtube.com/channel/UC5-wNvj8HpG-9fZgFa88SXw" },
-  { label: "X", href: "https://x.com/load_hunt" },
-] as const
-
-/* Brand Registry (§14.3) has no legal entity yet, so the line carries the
-   trading name only and the entity is added the moment the registry exists. */
-export const COPYRIGHT = "© 2026 LoadHunter. All rights reserved."
-
-/**
- * The visible text of FAQ answer 2, assembled from the ledger.
- *
- * The tab's answer to "Which products are available now?" is an instruction -
- * availability must be rendered from the governed status source using only the
- * six allowed terms - so the page renders the ledger instead of printing the
- * instruction at the visitor. This helper produces the same content as a plain
- * string for the FAQPage markup, because §10.3 forbids structured data that
- * says anything the visitor cannot see on the page.
- */
-export function statusAnswerText(): string {
-  return PRODUCTS.map(
-    (product) =>
-      `${product.name}: ` +
-      product.statuses.map((entry) => `${entry.scope} - ${entry.term}`).join("; "),
-  ).join(". ") + `. Source: ${STATUS_SOURCE.source}, verified ${STATUS_SOURCE.verifiedAt}.`
-}

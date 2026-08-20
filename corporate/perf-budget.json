@@ -1,0 +1,52 @@
+{
+  "_": "TZ §17.1 - the JavaScript budget, checked on every build by scripts/budget.mjs. Numbers are kilobytes of JavaScript actually transferred, measured in a real browser, split by interaction: `initial` is what a visitor pays to read the page and is what these limits bind; `on scroll` is what the page costs if you engage with it. Three earlier versions of the check read script tags or walked the chunk graph and were wrong by 2-3x - see the note at the top of scripts/budget.mjs before trusting any historical number in git.",
+  "unit": "KB over the wire",
+  "budgets": {
+    "/": {
+      "max": 310,
+      "note": "Measured 277.3 KB initial on 2026-08-20, after the WebGPU hero shader was removed - it had been fetching 688 KB of TypeGPU at idle on every visit and the page measured 967 KB. The isometric freight route is the page's only extra weight now, at 131 KB, and it loads on scroll rather than up front."
+    },
+    "/loadhunter": {
+      "max": 290,
+      "note": "Product page. Group A skeleton."
+    },
+    "/hunttms": {
+      "max": 290,
+      "note": "Product page."
+    },
+    "/huntdrive": {
+      "max": 290,
+      "note": "Product page."
+    },
+    "/huntpay": {
+      "max": 290,
+      "note": "Product page."
+    },
+    "/huntos": {
+      "max": 290,
+      "note": "Product page."
+    },
+    "/pricing": {
+      "max": 290,
+      "note": "Commercial page. §35 forbids heavy interaction here."
+    },
+    "/demo": {
+      "max": 290,
+      "note": "The single conversion form."
+    },
+    "*": {
+      "max": 290,
+      "note": "Every other route. Measured 277.7 KB on 2026-08-20; 260 without the shader band."
+    }
+  },
+  "launchTarget": {
+    "note": "Where these need to be before the site is public, so LCP on a mid-range Android has room. Not enforced - enforcing it today would fail every build without telling anyone anything new.",
+    "*": 180,
+    "/": 240
+  },
+  "deferred": {
+    "_": "Kept for reference: the check measures the network, not chunks on disk.",
+    "three": "131 KB gzip, isometric route, loads on scroll on /",
+    "typegpu": "688 KB gzip, REMOVED 2026-08-20 with the hero shader - see the note in components/ShaderBand.tsx"
+  }
+}

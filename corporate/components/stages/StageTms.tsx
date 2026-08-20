@@ -1,22 +1,20 @@
 "use client"
 
-import { useState } from "react"
-import { BLOCKS, PRODUCTS } from "@/content/home"
-import { Block } from "../Block"
+import { BLOCKS } from "@/content/home"
+import { PRODUCTS_WITH_STATUS } from "@/content/registry"
+import { RoadStage } from "../scene/RoadStage"
 import { DispatchProof } from "../proofs/DispatchProof"
 
-/** Stage 02. The board needs the page width, so the copy sits above it. */
-export function StageTms() {
-  const [interacted, setInteracted] = useState(false)
+export function StageTms({ active }: { active: boolean }) {
   return (
-    <Block
+    <RoadStage
       block={BLOCKS.two}
+      of="05"
+      active={active}
       product="hunttms"
-      statuses={PRODUCTS[1].statuses}
-      mirror
-      interacted={interacted}
+      statuses={PRODUCTS_WITH_STATUS[1].statuses}
     >
-      <DispatchProof onInteract={() => setInteracted(true)} />
-    </Block>
+      <DispatchProof onInteract={() => {}} />
+    </RoadStage>
   )
 }

@@ -87,7 +87,13 @@ export function Destination() {
       <div className="pl-9 md:pl-20">
         <div className="max-w-[46rem]">
           <p className="figures text-meta text-ink-3">{block.n}</p>
-          <h2 className="mt-4 max-w-[22ch] text-h2 text-balance">{block.title}</h2>
+          {/* Blocks 06-08 are not stops on the road, so they get no display verb -
+              nothing was handed to them and nothing is handed on. They do get
+              the display face for their own heading, because after five 96px
+              verbs a 40px h2 reads as the page running out of energy rather
+              than as the road arriving somewhere. Hierarchy top to bottom:
+              hero 124, stop verb 96, closing heading 64, block heading 40. */}
+          <h2 className="display mt-5 max-w-[18ch] text-balance">{block.title}</h2>
           <h3 className="mt-4 max-w-[34ch] text-lead text-ink-2">{block.h3}</h3>
         </div>
 

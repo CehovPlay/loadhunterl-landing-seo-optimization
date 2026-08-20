@@ -1,16 +1,7 @@
 import Link from "next/link"
-import {
-  CONTACT,
-  COPYRIGHT,
-  FOOTER_ACCESS,
-  FOOTER_NAV,
-  FOOTER_REGION,
-  FOOTER_STATEMENT,
-  PRODUCTS,
-  TRADEMARK_DISCLAIMER,
-  type StatusEntry,
-  type StatusTerm,
-} from "@/content/home"
+import { FOOTER_ACCESS, SITE_INDEX } from "@/content/ia"
+import { BRAND } from "@/content/registry"
+import { CurrentLink } from "./nav/CurrentLink"
 import { NewsletterForm } from "./NewsletterForm"
 import { SocialLinks } from "./SocialLinks"
 
@@ -25,28 +16,21 @@ import { SocialLinks } from "./SocialLinks"
  * the footer to close it rather than carry it further. The rail ends where the
  * paper does.
  *
- * §5.4 and §26.4 set the contents: the five products with their current
- * statuses, role solutions, resources, trust, legal, accessibility and status,
+ * Since the top bar was cut to five entries, this is also the site index:
+ * every one of the 43 routes appears here exactly once, in the section it
+ * belongs to, and `assertIndexCovers` fails the build if one goes missing. A
+ * footer that lists a curated subset is how pages become unreachable.
+ *
+ * The product column is names only. Five products printing seven status lines
+ * between them turned a link column into a ledger, and the reader was scanning
+ * for a page, not auditing scope - §42.2's one line per scope is carried by the
+ * products mega-menu and by each product page, where a status sits next to the
+ * claim it qualifies.
+ *
+ * §5.4 and §26.4 set the contents: the five products, role solutions, resources, trust, legal, accessibility and status,
  * product login kept away from the marketing CTAs, and one line stating global
  * positioning, the first commercial region and the P0 language.
  */
-
-/* The same three meanings as on paper, re-taken at values that clear AA on
-   #121317. §42.2 still applies down here: one line per scope, never one chip
-   per product. */
-const TONE: Record<StatusTerm, string> = {
-  Live: "text-live-night before:bg-live-night",
-  Beta: "text-preview-night before:bg-preview-night",
-  Preview: "text-preview-night before:bg-preview-night",
-  "In Progress": "text-progress-night before:bg-progress-night",
-  Planned: "text-night-ink-3 before:bg-night-ink-3",
-  Deprecated: "text-night-ink-3 before:bg-night-ink-3",
-}
-
-/** Statuses per product, read from the ledger the whole page reads from. */
-const STATUS = Object.fromEntries(
-  PRODUCTS.map((product) => [product.name, product.statuses]),
-) as Record<string, readonly StatusEntry[]>
 
 const linkCls =
   "text-small text-night-ink-2 transition-colors duration-150 hover:text-night-ink"
@@ -55,7 +39,9 @@ export function Footer() {
   return (
     <footer className="bg-night">
       <div className="mx-auto w-full max-w-[1400px] px-5 md:px-10">
-        <div className="flex flex-col gap-14 pt-16 pb-12 md:pt-24 lg:flex-row lg:gap-20">
+        {/* Brand and reach on one line: with the index moved below, a single
+            360px column left two thirds of the row empty. */}
+        <div className="flex flex-col gap-12 pt-16 pb-12 md:pt-24 lg:flex-row lg:items-start lg:justify-between lg:gap-20">
           {/* brand, contacts, newsletter */}
           <div className="lg:w-[360px] lg:shrink-0">
             <Link href="/" className="flex items-center" aria-label="LoadHunter home">
@@ -71,57 +57,46 @@ export function Footer() {
               />
             </Link>
 
-            <p className="mt-6 max-w-[38ch] text-small text-night-ink-2">{FOOTER_STATEMENT}</p>
+            <p className="mt-6 max-w-[38ch] text-small text-night-ink-2">{BRAND.statement}</p>
 
             <address className="mt-6 flex flex-col gap-1.5 not-italic">
-              <a href={`mailto:${CONTACT.email}`} className={linkCls}>
-                {CONTACT.email}
+              <a href={`mailto:${BRAND.contact.email}`} className={linkCls}>
+                {BRAND.contact.email}
               </a>
-              <a href={`tel:${CONTACT.phoneHref}`} className={linkCls}>
-                {CONTACT.phone}
+              <a href={`tel:${BRAND.contact.phoneHref}`} className={linkCls}>
+                {BRAND.contact.phone}
               </a>
-              <span className="text-small text-night-ink-3">{CONTACT.region}</span>
+              <span className="text-small text-night-ink-3">{BRAND.contact.region}</span>
             </address>
 
-            <NewsletterForm className="mt-8" />
           </div>
 
-          {/* link columns */}
-          <nav
-            aria-label="Footer"
-            className="grid flex-1 grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-3 xl:grid-cols-5"
-          >
-            {FOOTER_NAV.map((group) => (
-              <div key={group.title}>
-                <h2 className="text-small font-medium text-night-ink">{group.title}</h2>
-                <ul className="mt-4 flex flex-col gap-2.5">
-                  {group.links.map((link) => {
-                    const statuses = STATUS[link.label]
-                    return (
-                      <li key={link.href + link.label}>
-                        <Link href={link.href} className={"group block " + linkCls}>
-                          {link.label}
-                          {statuses?.map((status) => (
-                            <span
-                              key={status.term + status.scope}
-                              className={
-                                "mt-0.5 flex items-start gap-1.5 text-meta " +
-                                "before:mt-[5px] before:block before:size-[5px] before:shrink-0 before:rounded-full " +
-                                TONE[status.term]
-                              }
-                            >
-                              {status.scope}: {status.term}
-                            </span>
-                          ))}
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            ))}
-          </nav>
+          <NewsletterForm className="lg:w-[360px] lg:shrink-0" />
         </div>
+
+        {/* The index. Everything the bar does not carry, which is most of it. */}
+        <nav
+          aria-label="Site index"
+          className="columns-2 gap-x-6 border-t border-night-rule py-12 sm:columns-3 lg:columns-4 xl:columns-6"
+        >
+          {SITE_INDEX.map((column) => (
+            <div key={column.title} className="mb-10 break-inside-avoid">
+              <h2 className="text-small font-medium text-night-ink">{column.title}</h2>
+              <ul className="mt-4 flex flex-col gap-2.5">
+                {column.entries.map((entry) => (
+                  <li key={entry.href + entry.title}>
+                    <CurrentLink
+                      href={entry.href}
+                      label={entry.title}
+                      className={"group block " + linkCls}
+                      currentClassName="text-night-ink"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
 
         {/* quiet row: product access, deliberately not styled as a CTA */}
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2 pb-7">
@@ -135,15 +110,15 @@ export function Footer() {
           <span className="text-meta text-night-ink-3">{FOOTER_ACCESS.note}</span>
         </div>
 
-        <p className="max-w-[110ch] pb-4 text-meta text-night-ink-3">{TRADEMARK_DISCLAIMER}</p>
-        <p className="max-w-[110ch] pb-8 text-meta text-night-ink-3">{FOOTER_REGION}</p>
+        <p className="max-w-[110ch] pb-4 text-meta text-night-ink-3">{BRAND.trademarkDisclaimer}</p>
+        <p className="max-w-[110ch] pb-8 text-meta text-night-ink-3">{BRAND.region}</p>
       </div>
 
       <div className="h-px w-full bg-night-rule" />
 
       <div className="mx-auto w-full max-w-[1400px] px-5 md:px-10">
         <div className="relative flex flex-col items-start gap-6 pt-7 pb-14 lg:flex-row lg:items-center lg:justify-between">
-          <span className="order-2 text-small text-night-ink-3 lg:order-1">{COPYRIGHT}</span>
+          <span className="order-2 text-small text-night-ink-3 lg:order-1">{BRAND.copyright}</span>
           <div className="order-1 lg:absolute lg:left-1/2 lg:order-2 lg:-translate-x-1/2">
             <SocialLinks />
           </div>

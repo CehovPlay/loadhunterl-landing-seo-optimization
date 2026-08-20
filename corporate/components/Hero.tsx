@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { gsap } from "gsap"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { CTA, HERO, OS_TRAIL, PRODUCTS, SAMPLE_LOAD, SAMPLE_NOTE } from "@/content/home"
+import { CTA, HERO, OS_TRAIL, SAMPLE_LOAD, SAMPLE_NOTE } from "@/content/home"
+import { PRODUCTS_WITH_STATUS } from "@/content/registry"
 import { prefersReducedMotion } from "@/lib/motion"
 import { track } from "@/lib/analytics"
 import { RailNode } from "./Rail"
@@ -66,7 +67,7 @@ export function Hero() {
     return () => ctx.revert()
   }, [])
 
-  const product = PRODUCTS[stage]
+  const product = PRODUCTS_WITH_STATUS[stage]
   const handoff = OS_TRAIL[stage]
 
   return (
@@ -106,7 +107,7 @@ export function Hero() {
           </span>
         </p>
 
-        <h1 data-enter className="display-hero mt-7 max-w-[16ch] text-balance md:mt-9">
+        <h1 data-enter className="display-hero mt-7 max-w-[22ch] text-balance md:mt-9">
           {HERO.h1}
         </h1>
       </div>
@@ -217,7 +218,7 @@ export function Hero() {
                     aria-labelledby="hero-follow"
                     className="mt-3 flex flex-wrap gap-1"
                   >
-                    {PRODUCTS.map((item, index) => (
+                    {PRODUCTS_WITH_STATUS.map((item, index) => (
                       <button
                         key={item.key}
                         type="button"

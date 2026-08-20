@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
-import { BLOCKS, PRODUCTS } from "@/content/home"
-import { Block } from "../Block"
+import { BLOCKS } from "@/content/home"
+import { PRODUCTS_WITH_STATUS } from "@/content/registry"
+import { RoadStage } from "../scene/RoadStage"
 import { BoardProof } from "../proofs/BoardProof"
 
 /**
@@ -10,16 +10,16 @@ import { BoardProof } from "../proofs/BoardProof"
  * "after interaction OR after half the block is seen", and only the proof knows
  * about the interaction half of that.
  */
-export function StageLoadHunter() {
-  const [interacted, setInteracted] = useState(false)
+export function StageLoadHunter({ active }: { active: boolean }) {
   return (
-    <Block
+    <RoadStage
       block={BLOCKS.one}
+      of="05"
+      active={active}
       product="loadhunter"
-      statuses={PRODUCTS[0].statuses}
-      interacted={interacted}
+      statuses={PRODUCTS_WITH_STATUS[0].statuses}
     >
-      <BoardProof onInteract={() => setInteracted(true)} />
-    </Block>
+      <BoardProof onInteract={() => {}} />
+    </RoadStage>
   )
 }

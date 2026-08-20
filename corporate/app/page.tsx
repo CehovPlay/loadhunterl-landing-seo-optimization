@@ -1,4 +1,5 @@
-import { BLOCKS, FAQ, PRODUCTS, SITE_URL, statusAnswerText } from "@/content/home"
+import { BLOCKS, FAQ } from "@/content/home"
+import { PRODUCTS_WITH_STATUS, SITE_URL, statusAnswerText } from "@/content/registry"
 import { Block } from "@/components/Block"
 import { Destination } from "@/components/Destination"
 import { EntryPoint } from "@/components/EntryPoint"
@@ -7,6 +8,7 @@ import { Footer } from "@/components/Footer"
 import { Header } from "@/components/Header"
 import { Hero } from "@/components/Hero"
 import { Rail } from "@/components/Rail"
+import { Road } from "@/components/scene/Road"
 import { StackProvider } from "@/components/StackContext"
 import { StickyCta } from "@/components/StickyCta"
 import { CommandProof } from "@/components/proofs/CommandProof"
@@ -74,7 +76,7 @@ const jsonLd = [
       name: item.q,
       acceptedAnswer: {
         "@type": "Answer",
-        text: item.render === "status-ledger" ? statusAnswerText() : item.a,
+        text: item.render === "status-ledger" ? statusAnswerText(PRODUCTS_WITH_STATUS) : item.a,
       },
     })),
   },
@@ -89,17 +91,10 @@ export default function HomePage() {
         <main id="main">
           <Hero />
 
-          <StageLoadHunter />
-          <StageTms />
-          <StageDrive />
-
-          <Block block={BLOCKS.four} product="huntpay" statuses={PRODUCTS[3].statuses}>
-            <PayProof />
-          </Block>
-
-          <Block block={BLOCKS.five} product="huntos" statuses={PRODUCTS[4].statuses} mirror>
-            <CommandProof />
-          </Block>
+          {/* Stops 01-05. The scene is pinned and the stops ride the scroll
+              through it; without WebGL or with reduced motion the same five
+              render as a document, in order. */}
+          <Road />
 
           <EntryPoint />
 

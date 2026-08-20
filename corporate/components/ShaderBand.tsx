@@ -1,11 +1,10 @@
 "use client"
 
-import { Suspense, lazy, useEffect, useRef, useState, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
-import { prefersReducedMotion } from "@/lib/motion"
 
 /**
- * Full-bleed animated shader band, ported from the extension landing.
+ * Full-bleed decorative band behind the hero.
  *
  * The canvas has to span the whole viewport, not the centred 1400 content
  * column, so this measures the section it is mounted in and portals the band
@@ -13,20 +12,26 @@ import { prefersReducedMotion } from "@/lib/motion"
  * which is what covers the side gutters; the host section stays transparent so
  * the band shows through under the content too.
  *
- * Load order is deliberate, in this order:
+ * IT USED TO RUN A WEBGPU SHADER. Removed 2026-08-20, by the owner's decision,
+ * on a measurement:
  *
- *   1. the flat base colour paints immediately, identical to the shader's idle
- *      background, so there is never a hole where the band will be
- *   2. the static fallback gradients paint over it - cheap, decorative, and
- *      the permanent answer for anything without working WebGPU (Safari today)
- *   3. the WebGPU stack streams in at browser idle and covers both
+ *   - The shader pulled TypeGPU, and TypeGPU is 688 KB gzip. It was fetched at
+ *     browser idle on every single visit to the homepage - no scroll, no
+ *     interaction - which put the page at 967 KB against a §17.1 launch target
+ *     of 240 KB. For a gradient.
+ *   - The engine never ran in Safari or anything without WebGPU, so a large
+ *     part of the audience was already seeing the static fallback below. What
+ *     was removed is the version most visitors never saw.
+ *   - For scale: the isometric freight route, which draws the load's path from
+ *     booking to payment and is the thing §27 actually asks the page to show,
+ *     costs 131 KB and only loads when its section is on screen. The decoration
+ *     was five times the price of the content.
  *
- * TZ §43.1 and §46.3 make that sequence non-negotiable: the first screen has
- * to be complete before any of this arrives, so nothing here is ever load
- * bearing for reading the page. Reduced motion stops at step 2, and so does
- * `?noshader`, which exists for headless screenshots and for bisecting jank.
+ * What is left is what the fallback always was: the base colour, the caller's
+ * static gradients, and the bottom fade that dissolves the band into the page
+ * ground. No JavaScript is needed to see any of it - the effects here only
+ * measure the box the band has to cover.
  */
-const ShaderStack = lazy(() => import("./ShaderStack"))
 
 export function ShaderBand({
   baseColor,
@@ -37,41 +42,16 @@ export function ShaderBand({
   baseColor: string
   /** Extra px the band runs past the host section's bottom edge. */
   extendBottom?: number
-  /** Static stand-in painted UNDER the shader canvas. Keep it cheap. */
+  /** The band's decorative layer, painted over the base colour. */
   fallback?: ReactNode
-  /** CSS background-image painted as the band's TOP layer, above the canvas
-   *  and the fallback. The hero uses it to dissolve the band into the page
-   *  ground across the full viewport width, gutters included, so the band has
-   *  no bottom edge to show against the next section. */
+  /** CSS background-image painted as the band's TOP layer. The hero uses it to
+   *  dissolve the band into the page ground across the full viewport width,
+   *  gutters included, so the band has no bottom edge to show against the next
+   *  section. */
   bottomFade?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [box, setBox] = useState<{ top: number; height: number } | null>(null)
-  const [engineReady, setEngineReady] = useState(false)
-  const [compact, setCompact] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)")
-    const sync = () => setCompact(mq.matches)
-    sync()
-    mq.addEventListener("change", sync)
-    return () => mq.removeEventListener("change", sync)
-  }, [])
-
-  useEffect(() => {
-    if (prefersReducedMotion()) return
-    if (new URLSearchParams(window.location.search).has("noshader")) return
-
-    // Do not even START fetching the chunk until the browser is idle: it must
-    // not compete with the first paint of the hero it sits behind.
-    const start = () => setEngineReady(true)
-    if ("requestIdleCallback" in window) {
-      const id = requestIdleCallback(start, { timeout: 1500 })
-      return () => cancelIdleCallback(id)
-    }
-    const t = setTimeout(start, 350)
-    return () => clearTimeout(t)
-  }, [])
 
   useEffect(() => {
     const el = ref.current
@@ -110,16 +90,6 @@ export function ShaderBand({
               }}
             >
               {fallback}
-              {engineReady ? (
-                // The wrapper is absolute on purpose: the fallback layer is
-                // positioned, and only a positioned sibling later in DOM order
-                // paints above it. An in-flow canvas would paint under.
-                <div className="absolute inset-0">
-                  <Suspense fallback={null}>
-                    <ShaderStack compact={compact} />
-                  </Suspense>
-                </div>
-              ) : null}
               {bottomFade ? (
                 <div className="absolute inset-0" style={{ backgroundImage: bottomFade }} />
               ) : null}

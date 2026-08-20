@@ -5,6 +5,8 @@
 //
 //   node scripts/shot.mjs <url> <width> <height> <out.png> [full]
 //   SCROLL=2000  scroll there first, then wait for scroll-triggered motion
+//   WAIT=800     shoot this many ms after navigate instead of the 4500 default,
+//                which is how the preloader is caught mid-choreography
 //   DSF=1        device scale factor (default 2; use 1 for cheap review shots)
 //
 // Full-page shots are capped at 7800px tall by Chrome, so a long page is read
@@ -70,7 +72,7 @@ async function main() {
     mobile: width < 768,
   })
   await send("Page.navigate", { url })
-  await sleep(4500)
+  await sleep(Number(process.env.WAIT || 4500))
 
   if (process.env.SCROLL) {
     await send("Runtime.evaluate", {

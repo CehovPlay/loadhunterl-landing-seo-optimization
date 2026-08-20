@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { track } from "@/lib/analytics"
-import type { StatusEntry } from "@/content/home"
+import type { ClaimRecord } from "@/content/registry"
 import { RailNode } from "./Rail"
 import { BlockCta, StatusList } from "./ui"
 
@@ -30,28 +30,36 @@ import { BlockCta, StatusList } from "./ui"
  */
 export function Block({
   block,
+  of,
   product,
   statuses,
   interacted = false,
   layout = "split",
   proofFirstOnMobile = false,
   stickProof = false,
-  mirror = false,
   children,
 }: {
-  block: { n: string; id: string; title: string; h3: string; body?: string; cta: { label: string; href: string } }
+  block: {
+    n: string
+    /** The verb §27.7-27.11 gives this stop. Set in display type. */
+    stop?: string
+    id: string
+    title: string
+    h3: string
+    body?: string
+    cta: { label: string; href: string }
+  }
+  /** How many stops the road has, printed beside the number. */
+  of?: string
   /** Product key for the analytics payload, where the block has one. */
   product?: string
-  statuses?: readonly StatusEntry[]
+  statuses?: readonly ClaimRecord[]
   /** Lifted from the proof: any interaction opens the CTA immediately. */
   interacted?: boolean
   layout?: "split" | "wide" | "stack"
   proofFirstOnMobile?: boolean
   /** Pins the proof instead of the copy - block 7's rail is the pinned side. */
   stickProof?: boolean
-  /** Puts the proof on the left from lg up. Alternating sides down the road is
-   *  what keeps five staged blocks from reading as one repeated template. */
-  mirror?: boolean
   children: ReactNode
 }) {
   const root = useRef<HTMLElement>(null)
@@ -95,8 +103,37 @@ export function Block({
   const open = seen || interacted
   const copy = (
     <div className={layout === "split" ? "" : "max-w-[46rem]"}>
-      <p className="figures text-meta text-ink-3">{block.n}</p>
-      <h2 className="mt-4 max-w-[22ch] text-h2 text-balance">{block.title}</h2>
+      <p className="figures text-meta text-ink-3">
+        {block.n}
+        {of ? <span className="text-ink-4"> / {of}</span> : null}
+      </p>
+
+      {/* The stop's verb, in display type.
+          It is one word from the document rather than a headline written here,
+          and it is set in sentence case: the brand's UI rule forbids caps
+          outside abbreviations, and at this size caps would shout the page down
+          anyway. The h2 that follows carries the actual sentence, so the verb
+          is aria-hidden - a screen reader would otherwise hear "Find. The road
+          starts with the next load." and take the verb for a heading of its
+          own. */}
+      {block.stop ? (
+        <p aria-hidden className="mt-5 text-display text-ink">
+          {block.stop}
+        </p>
+      ) : null}
+
+      {/* A stop already has its verb overhead, so its heading stays at h2. A
+          block with no verb is a section in its own right and takes the display
+          face - see the hierarchy note in Destination. */}
+      <h2
+        className={
+          block.stop
+            ? "mt-6 max-w-[22ch] text-h2 text-balance"
+            : "display mt-5 max-w-[18ch] text-balance"
+        }
+      >
+        {block.title}
+      </h2>
       <h3 className="mt-4 max-w-[30ch] text-lead text-ink-2">{block.h3}</h3>
       {block.body ? (
         <p className="mt-5 max-w-[52ch] text-body text-ink-2">{block.body}</p>
@@ -131,17 +168,34 @@ export function Block({
     <section
       ref={root}
       id={block.id}
-      className="relative scroll-mt-28 pb-24 md:pb-32"
+      className="relative scroll-mt-28 pt-14 pb-24 md:pt-20 md:pb-32"
       onFocusCapture={() => setSeen(true)}
     >
       <RailNode className="top-1" />
+
+      {/* A hairline across the whole stop, drawn edge to edge of the container.
+          Five numbered stops with a rule over each is what turns a stack of
+          sections into one numbered sequence, which is the road §25.1 asks for
+          and the mass the page was missing. It is decoration in the strict
+          sense - the heading below already says where the reader is - so it is
+          hidden from the accessibility tree. */}
+      {block.stop ? (
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-rule" />
+      ) : null}
 
       {layout === "split" ? (
         <div className="grid gap-y-12 lg:grid-cols-12 lg:gap-x-10">
           <div
             className={
-              "min-w-0 pl-9 md:pl-20 lg:col-span-5 lg:self-start " +
-              (mirror ? "lg:order-2 lg:col-start-8 " : "") +
+              /* No mirroring. The road's copy column stays on the left for
+                 all five stops: it is what makes the sticky verb read as one
+                 column standing still while the panels scroll past it, and
+                 alternating sides destroys exactly that. */
+              /* The rail lane narrows from lg up: at 4 columns the copy needs
+                 the 80px back more than the drawing needs the clearance.
+                 `@container` is what lets --text-display size the stop verb
+                 against this column rather than against the window. */
+              "@container min-w-0 pl-9 md:pl-20 lg:col-span-5 lg:self-start lg:pl-12 " +
               (proofFirstOnMobile ? "order-2 lg:order-1" : "")
             }
           >
@@ -149,11 +203,7 @@ export function Block({
           </div>
           <div
             className={
-              "min-w-0 pl-9 md:pl-20 lg:col-span-7 " +
-              /* Mirrored, the proof sits in the first column, which is where
-                 the rail runs - it keeps a lane of its own so the drawing and
-                 the panel never touch. */
-              (mirror ? "lg:order-1 lg:col-start-1 lg:row-start-1 lg:pl-10 " : "lg:pl-0 ") +
+              "min-w-0 pl-9 md:pl-20 lg:col-span-7 lg:pl-0 " +
               (proofFirstOnMobile ? "order-1 lg:order-2" : "")
             }
           >

@@ -3,7 +3,8 @@
 import Link from "next/link"
 import { useRef } from "react"
 import { ArrowRight, ArrowCounterClockwise } from "@phosphor-icons/react/dist/ssr"
-import { BLOCKS, PRODUCTS, SELECTOR } from "@/content/home"
+import { BLOCKS, SELECTOR } from "@/content/home"
+import { PRODUCTS_WITH_STATUS } from "@/content/registry"
 import { track } from "@/lib/analytics"
 import { useStack } from "./StackContext"
 import { RailNode } from "./Rail"
@@ -80,7 +81,13 @@ export function EntryPoint() {
       <div className="pl-9 md:pl-20">
         <div className="max-w-[46rem]">
           <p className="figures text-meta text-ink-3">{block.n}</p>
-          <h2 className="mt-4 max-w-[22ch] text-h2 text-balance">{block.title}</h2>
+          {/* Blocks 06-08 are not stops on the road, so they get no display verb -
+              nothing was handed to them and nothing is handed on. They do get
+              the display face for their own heading, because after five 96px
+              verbs a 40px h2 reads as the page running out of energy rather
+              than as the road arriving somewhere. Hierarchy top to bottom:
+              hero 124, stop verb 96, closing heading 64, block heading 40. */}
+          <h2 className="display mt-5 max-w-[18ch] text-balance">{block.title}</h2>
           <h3 className="mt-4 max-w-[34ch] text-lead text-ink-2">{block.h3}</h3>
         </div>
 
@@ -206,7 +213,7 @@ export function EntryPoint() {
 
         {/* The five, always visible. Never hidden by the recommendation. */}
         <ul className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {PRODUCTS.map((product) => {
+          {PRODUCTS_WITH_STATUS.map((product) => {
             const picked = recommended?.key === product.key
             return (
               <li

@@ -1,7 +1,8 @@
 "use client"
 
 import { CaretDown } from "@phosphor-icons/react/dist/ssr"
-import { FAQ, PRODUCTS, STATUS_SOURCE } from "@/content/home"
+import { FAQ } from "@/content/home"
+import { CLAIMS, claimProvenance, PRODUCTS_WITH_STATUS } from "@/content/registry"
 import { track } from "@/lib/analytics"
 import { RailNode } from "./Rail"
 import { Status } from "./ui"
@@ -58,7 +59,7 @@ export function Faq() {
                 {item.render === "status-ledger" ? (
                   <>
                     <ul className="flex max-w-[52rem] flex-col gap-3">
-                      {PRODUCTS.map((product) => (
+                      {PRODUCTS_WITH_STATUS.map((product) => (
                         <li
                           key={product.key}
                           className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-6"
@@ -75,7 +76,7 @@ export function Faq() {
                       ))}
                     </ul>
                     <h5 className="mt-5 text-meta font-normal text-ink-3">
-                      Source: {STATUS_SOURCE.source}. Verified {STATUS_SOURCE.verifiedAt}.
+                      {claimProvenance(CLAIMS[0])}
                     </h5>
                   </>
                 ) : (

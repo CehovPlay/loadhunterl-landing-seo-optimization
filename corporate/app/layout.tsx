@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Inter, Geist_Mono } from "next/font/google"
-import { SITE_URL } from "@/content/home"
+import { BRAND, SITE_URL } from "@/content/registry"
+import { Preloader } from "@/components/Preloader"
 import { SmoothScroll } from "@/components/SmoothScroll"
 import "./globals.css"
 
@@ -52,6 +53,7 @@ export const metadata: Metadata = {
     title: "Run freight as one connected operation",
     description:
       "Five focused products for load discovery, dispatch, driver workflows, invoicing and operational visibility.",
+    images: [{ ...BRAND.socialImage, alt: `${BRAND.name} - ${BRAND.category}` }],
   },
 }
 
@@ -94,6 +96,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        {/* First in the body, so the cover exists in the server HTML rather
+            than appearing after hydration - a preloader that fades in over
+            content the visitor has already seen is worse than none. */}
+        <Preloader />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-small focus:text-white"

@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { List, X } from "@phosphor-icons/react/dist/ssr"
-import { CTA, DEMO_CTA, NAV } from "@/content/home"
+import { CTA, DEMO_CTA } from "@/content/home"
+import { DesktopMenu, MobileMenu } from "./nav/Menus"
 
 /**
  * Global header, in the shape the extension landing already ships (Figma
@@ -81,20 +82,17 @@ export function Header() {
               <img src="/brand/logo-text.svg" alt="LoadHunter" width={97} height={16} className="h-4 w-[97px]" />
             </Link>
 
-            <nav aria-label="Primary" className="hidden lg:block">
-              <ul className="flex items-center gap-0.5 rounded-full">
-                {NAV.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="flex h-7 items-center justify-center rounded-full px-2.5 text-small leading-4 font-medium text-ink-2 xl:px-3 transition-colors duration-150 hover:text-ink"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <DesktopMenu />
+
+            {/* §5.1 lists Log in as a top-level destination and §15.3 keeps it
+                away from the marketing action, so it sits at the pill's end,
+                quiet, rather than beside the install button. */}
+            <Link
+              href={CTA.login.href}
+              className="hidden h-7 shrink-0 items-center justify-center rounded-full px-3 text-small leading-4 font-medium text-ink-3 transition-colors duration-150 hover:text-ink lg:flex"
+            >
+              {CTA.login.label}
+            </Link>
 
             <button
               type="button"
@@ -178,19 +176,7 @@ export function Header() {
           id="primary-menu"
           className="fixed inset-x-0 top-[70px] bottom-0 z-[90] overflow-y-auto border-t border-rule bg-paper px-5 py-8 md:px-10 lg:hidden"
         >
-          <ul className="flex flex-col">
-            {NAV.map((item) => (
-              <li key={item.href} className="border-b border-rule-soft">
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="flex min-h-14 items-center text-lead text-ink"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <MobileMenu onNavigate={() => setOpen(false)} />
           <Link
             href={CTA.primary.href}
             onClick={() => setOpen(false)}

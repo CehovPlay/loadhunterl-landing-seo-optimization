@@ -77,6 +77,20 @@
   --text-body: 16px;      --text-body--line-height: 26px;
   --text-lead: 19px;      --text-lead--line-height: 30px;
   --text-h3: 24px;        --text-h3--line-height: 32px;
+  /* Display. The verb that names each stop on the road, and nothing else.
+     It is deliberately far from --text-h2: a display face only slightly bigger
+     than a heading reads as a mistake rather than a decision.
+
+     Sized from the COLUMN, not the viewport. Sized from the viewport it broke
+     the moment a word got long - "Command" at 142px measured 654px inside a
+     365px column and painted straight over the mockup beside it. `cqi` is a
+     percentage of the container's inline size, so the longest verb sets the
+     size and every stop stays inside its own column whatever the grid does
+     later. The vw clamp stays as the outer bound for narrow viewports, where
+     the column is the whole screen. Sentence case, never caps. */
+  --text-display: min(clamp(3.5rem, 7.4vw, 9.5rem), 20cqi);
+  --text-display--line-height: 0.92;
+  --text-display--letter-spacing: -0.035em;
   --text-h2: clamp(1.75rem, 1.15rem + 1.5vw, 2.5rem);
   --text-h2--line-height: 1.14;
 
@@ -141,13 +155,16 @@
   color: var(--color-ink);
 }
 
-/* The hero headline. It runs bigger than the display scale because the first
-   screen is full height and has nothing else competing for it, and the clamp
-   is tuned so the 62-character H1 holds two lines from 1024px up, which is
-   what TZ §27.2 asks for (one H1, never wrapping into four).                */
+/* The hero headline.
+   Raised on 2026-08-20 with the road's display type: the owner's direction is
+   large typography and mass, and an 80px hero above a 150px stop verb read as
+   the page apologising for its own opening. The clamp is tuned so the
+   40-character H1 still holds two lines from 1024px up - §27.2 wants one H1
+   that never wraps into four - and the 22ch measure is what keeps the break
+   after "one" rather than mid-phrase.                                        */
 .display-hero {
-  font-size: clamp(2.25rem, 1.0rem + 4.3vw, 5rem);
-  line-height: 1.02;
+  font-size: clamp(2.75rem, 0.75rem + 6.4vw, 7.75rem);
+  line-height: 0.94;
   letter-spacing: -0.045em;
   font-weight: 500;
   color: var(--color-ink);
@@ -190,6 +207,149 @@ html[data-js="on"] [data-collapse="closed"] {
   opacity: 0;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Art direction - light adaptation of the cosmoq reference           */
+/*                                                                     */
+/*  The reference is a dark cosmic page: starfield ground, a recurring  */
+/*  gradient sphere, glowing rims, cards that sit as lit objects in     */
+/*  black space. Inverting that is not "swap black for white" - on      */
+/*  paper a glow has nothing to glow against. What survives the         */
+/*  inversion is the STRUCTURE of the light: a single warm-to-cool      */
+/*  gradient axis (amber -> violet), one recurring spherical object,    */
+/*  and surfaces that are lifted by shadow instead of by rim light.     */
+/*                                                                     */
+/*  So: the starfield becomes a dust field of ink at 3% on paper, the   */
+/*  glow becomes a soft aurora wash, and the rim light becomes a        */
+/*  hairline plus a low, wide shadow. The gradient axis keeps the       */
+/*  reference's amber and picks up our violet where it used blue,       */
+/*  which is what makes the palette ours rather than borrowed.          */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  /* The gradient axis. Two stops, always in this order, always warm to
+     cool - the reference never reverses it and neither do we.         */
+  --color-ember: #ffb352;          /* warm pole, from the brand status set */
+  --color-ember-wash: #fff4e4;
+  --color-aurora: #c79ffd;         /* cool pole, brand lavender */
+
+  /* Surfaces that sit on paper. A card is not a lighter rectangle: it is
+     white, hairlined, and lifted by a shadow wide enough to read as
+     distance rather than as a border.                                 */
+  --shadow-lift: 0 1px 2px rgba(18, 19, 23, 0.04), 0 8px 24px -12px rgba(18, 19, 23, 0.12);
+  --shadow-lift-lg: 0 2px 4px rgba(18, 19, 23, 0.03), 0 24px 64px -28px rgba(18, 19, 23, 0.18);
+
+  --radius-card: 20px;
+  --radius-card-lg: 28px;
+}
+
+/* The dust field. The reference's starfield, at the density paper can
+   carry: a 3%-ink dot on a 22px lattice, faded out wherever content sits
+   on top of it. Painted with a gradient rather than an image so it costs
+   nothing and survives any viewport.                                   */
+.dust {
+  background-image: radial-gradient(circle at 1px 1px, rgba(18, 19, 23, 0.05) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+/* The aurora wash. Two soft radial pools on the gradient axis, sized in
+   viewport units so the shape scales with the page instead of tiling.
+   This is the only place either pole appears as a large field; elsewhere
+   they are confined to the orb and to hairlines.                       */
+.aurora {
+  background-image:
+    radial-gradient(60vw 42vw at 12% 0%, rgba(255, 179, 82, 0.14), transparent 62%),
+    radial-gradient(52vw 38vw at 88% 22%, rgba(199, 159, 253, 0.2), transparent 60%);
+}
+
+.aurora-soft {
+  background-image:
+    radial-gradient(46vw 30vw at 80% 8%, rgba(199, 159, 253, 0.14), transparent 62%),
+    radial-gradient(38vw 26vw at 4% 60%, rgba(255, 179, 82, 0.1), transparent 64%);
+}
+
+/* The orb. The reference's one recurring object - a sphere lit from the
+   upper left, warm on one limb and cool on the other. On paper it needs a
+   contact shadow to sit rather than float, and an inset highlight to read
+   as a sphere rather than a disc.                                      */
+.orb {
+  background-image:
+    radial-gradient(circle at 32% 26%, #ffffff 0%, rgba(255, 255, 255, 0) 42%),
+    radial-gradient(circle at 74% 78%, rgba(199, 159, 253, 0.95) 0%, rgba(199, 159, 253, 0) 58%),
+    radial-gradient(circle at 26% 74%, rgba(255, 179, 82, 0.9) 0%, rgba(255, 179, 82, 0) 56%),
+    linear-gradient(148deg, #f4eefe 0%, #efe7fb 46%, #fdf1e2 100%);
+  box-shadow:
+    inset 0 -18px 40px -24px rgba(111, 81, 151, 0.55),
+    inset 0 12px 28px -18px #ffffff,
+    0 32px 60px -34px rgba(111, 81, 151, 0.5);
+}
+
+/* Scroll reveal. The reference brings every card in blurred and settles it
+   into focus; that blur is most of why the page feels expensive. Kept, at
+   a radius small enough not to cost a repaint storm, and expressed in CSS
+   behind data attributes so the server HTML ships in the revealed state -
+   same reasoning as the CTA gate above.                                */
+[data-reveal] {
+  transition:
+    opacity 0.72s var(--ease-out-quart),
+    transform 0.72s var(--ease-out-quart);
+  /* The element ends at identity, and a 3D transform that resolves to identity
+     leaves text on a fractional pixel unless the back face is dropped and the
+     layer is promoted for the duration of the move. */
+  backface-visibility: hidden;
+}
+
+/* The closed state.
+
+   It used to be a rise out of a 6px blur. The blur was the expensive half: a
+   filter forces the element off the compositor and repaints it every frame,
+   and on a 900px-wide proof panel that is a repaint of most of the viewport,
+   seventy times, while the visitor is trying to read. Opacity and transform
+   are the only two properties a browser can animate without touching paint,
+   so the gesture is built from those alone.
+
+   What replaces it is a tip: the block lies back in space and rights itself.
+   The angles are small on purpose - the reference this came from uses 60deg,
+   which is a card flip and reads as a slideshow. Nine degrees reads as weight.
+
+   `--reveal-tilt` lets a caller lean the block sideways as well. It stays at 0
+   by default because a sideways lean on a full-width panel pushes its corner
+   past the viewport, and a transform does enlarge the scrollable area. */
+html[data-js="on"] [data-reveal="hidden"] {
+  opacity: 0;
+  transform: perspective(1200px) translate3d(0, 26px, -70px) rotateX(9deg)
+    rotateY(var(--reveal-tilt, 0deg));
+}
+
+/* Word reveal, from the Vestora reference: a statement resolves word by
+   word as it crosses the viewport, grey to ink. The per-word opacity is
+   driven from script; this only declares the two ends of the ramp.     */
+/* The unresolved state is the scripted one, not the default. A statement that
+   defaults to grey would ship a 2.3:1 headline to anyone without JavaScript,
+   which fails AA and fails the acceptance criteria that the page keep its full
+   meaning unscripted. So ink is the resting colour and the ramp only exists
+   once the page can actually run it. */
+[data-word] {
+  color: var(--word-on, var(--color-ink));
+  transition: color 0.35s linear;
+}
+
+html[data-js="on"] [data-word="off"] {
+  color: var(--word-off, var(--color-ink-4));
+}
+
+/* Dim/active, also from Vestora: at most one item in a list is awake. The
+   sleeping ones stay legible - this is a hierarchy cue, not a disclosure,
+   so 0.38 is the floor rather than something closer to invisible.      */
+[data-wake] {
+  transition:
+    opacity 0.45s var(--ease-out-quart),
+    filter 0.45s var(--ease-out-quart);
+}
+
+html[data-js="on"] [data-wake="asleep"] {
+  opacity: 0.38;
+}
+
 /* Tabular figures for every number that is data rather than prose. */
 .figures {
   font-family: var(--font-mono);
@@ -206,4 +366,206 @@ html[data-js="on"] [data-collapse="closed"] {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Text the specification never translated to US English. The mark is for
+   review, not for production: it is how a reader who does not read Russian can
+   see, at a glance, which strings on a skeleton page are still placeholders.
+   `scripts/sweep.mjs` fails on any Russian text that lacks the attribute. */
+[data-untranslated]:not([data-note]) {
+  text-decoration: underline dotted var(--color-progress);
+  text-underline-offset: 4px;
+}
+
+/* The pinned road.
+
+   Off: the five stops are a document, one after another, in normal flow. That
+   is the state the server renders and the state a visitor without WebGL,
+   without JavaScript, or with reduced motion keeps - §10.4 and §17.3 both
+   require the page to work there, and the fallback is a layout that was
+   already reviewed rather than a degraded one.
+
+   On: the section becomes a runway five screens tall with one sticky screen
+   inside it. Every stop occupies that screen and only the active one is
+   opaque. They are never `display: none` or `visibility: hidden`: the text
+   has to stay in the accessibility tree and in find-in-page for readers who
+   cannot scroll to reveal it. */
+.road-stop {
+  transition:
+    opacity 0.5s var(--ease-out-quart),
+    transform 0.5s var(--ease-out-quart);
+}
+
+[data-scene="on"].road {
+  height: 500vh;
+}
+
+[data-scene="on"] .road-frame {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  /* NO `overflow: hidden`. The frame lives inside the page's 1400px container,
+     so clipping it clipped the canvas back to 1320px however wide the canvas
+     itself was - the scene measured 0..1440 and painted 60..1380. The stops
+     inside are absolutely positioned and cannot overflow on their own, so the
+     clip was only ever protecting against the thing it broke.
+
+     The header floats over the page, so a stop pinned to the top of the frame
+     starts underneath it. The padding moves the CONTENT down; the canvas is
+     absolutely positioned against the padding box and still fills the window. */
+  padding-top: 5.5rem;
+}
+
+/* Full-bleed. The frame lives inside the page's 1400px container, and the
+   scene is not page furniture - it is the ground the page stands on, so it
+   escapes to the width of the window the way the footer band does. */
+[data-scene="on"] .freight-canvas {
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+}
+
+[data-scene="on"] .road-stops {
+  height: 100%;
+}
+
+/* Compact.
+
+   The stop now has the top half of the screen rather than all of it, so both
+   columns are tightened: the display verb comes down a size, the measures
+   narrow, and the proof - drawn for a scrolling page where a panel can be any
+   height - is scaled to the band it has.
+
+   Clipping is not an option: a proof the reader cannot see all of is worse than
+   no proof, and §3.6 will not have a claim shown in part. Scaling is a
+   compositor transform rather than a re-layout, and it takes the whole panel
+   together so nothing inside it drifts out of proportion. */
+[data-scene="on"] .road-stop > div {
+  align-items: start;
+}
+
+/* Compact, and every rule here exists because the stop shares the screen with
+   the scene now instead of owning it. The copy has to end above the band the
+   station is framed into, so the verb comes down a size, the sentence measures
+   narrow, and the vertical rhythm halves. */
+[data-scene="on"] .road-stop .text-display {
+  font-size: min(clamp(2.5rem, 4.4vw, 5rem), 18cqi);
+}
+
+[data-scene="on"] .road-stop h2 {
+  margin-top: 0.75rem;
+  max-width: 20ch;
+}
+
+[data-scene="on"] .road-stop h3 {
+  margin-top: 0.5rem;
+}
+
+[data-scene="on"] .road-stop h3 + p {
+  margin-top: 0.75rem;
+  max-width: 46ch;
+}
+
+[data-scene="on"] .road-stop h4 {
+  margin-top: 1rem;
+}
+
+/* The availability lines run across rather than down: three stacked statuses
+   cost 90px of a band that has about 400. */
+[data-scene="on"] .road-stop h4 + * {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.375rem 1.25rem;
+}
+
+[data-scene="on"] .road-stop [data-cta-gate] {
+  margin-top: 1.25rem;
+}
+
+[data-scene="on"] .road-stop > div > div:last-child {
+  transform: scale(var(--proof-scale, 0.86));
+  transform-origin: top right;
+}
+
+/* The stop sits in the top band, because the camera puts the station in the
+   bottom one. The two halves of the screen have one occupant each and never
+   argue about it. */
+[data-scene="on"] .road-stop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+[data-scene="on"] .road-stop[data-stop="idle"] {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px);
+}
+
+[data-scene="on"] .road-stop[data-stop="active"] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-scene="on"] .road-stop > div {
+  width: 100%;
+}
+
+/* Off, each stop is its own section with the numbered rule the rest of the
+   site uses. */
+[data-scene="off"] .road-stop {
+  display: block;
+  border-top: 1px solid var(--color-rule);
+  padding-top: 3.5rem;
+  padding-bottom: 6rem;
+}
+
+/* The isometric route behind the homepage stops.
+
+   Masked on the left because the copy column sits there and body text over a
+   moving drawing is unreadable however pale the drawing is; masked at the top
+   and bottom so the scene enters and leaves the section instead of being cut
+   by its edge. §17.2 also wants the meaning available without the animation,
+   and a drawing that never competes with the sentence is how that holds. */
+[data-scene="on"].freight-canvas {
+  display: block;
+}
+
+.freight-canvas {
+  opacity: 1;
+  /* A tinted ground under the drawing.
+
+     The scene is pale clay on a near-white page, and pale-on-pale has no
+     silhouette however well it is lit - the first PBR pass disappeared for
+     exactly this reason. The reference this was measured against solves it the
+     same way: its objects are light, but its ground is a distinctly cooler,
+     deeper value, and every form is read against it.
+
+     A plane inside the scene would show its own rectangular edge; a CSS radial
+     under the canvas is shaped by the same mask as the drawing, so it has no
+     edge at all. */
+  background-image:
+    radial-gradient(110% 80% at 55% 78%, rgba(111, 81, 151, 0.07) 0%, rgba(111, 81, 151, 0) 62%),
+    radial-gradient(140% 100% at 50% 82%, rgba(18, 19, 23, 0.055) 0%, rgba(18, 19, 23, 0) 70%);
+  /* The band the scene owns.
+
+     There is no horizontal mask any more. The scene runs the full width of the
+     screen, like the reference it was measured against, and it is the CAMERA
+     that keeps it out of the copy's way - the station is framed into the lower
+     half rather than faded out of the upper one. A mask that hid a third of the
+     picture was solving a composition problem with an eraser.
+
+     What is left is vertical: the top fade so the stop's copy sits on clean
+     paper, and a short bottom fade so the ground has no edge against the next
+     section. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 24%, black 44%, black 94%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, transparent 24%, black 44%, black 94%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Belt and braces: the scene never mounts under reduced motion, but if it
+     somehow does, it does not paint. */
+  .freight-canvas { display: none; }
 }

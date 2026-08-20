@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { PRODUCTS, PROOF_ITEMS, STATUS_SOURCE } from "@/content/home"
+import { PROOF_ITEMS } from "@/content/home"
+import { CLAIMS, claimProvenance, PRODUCTS_WITH_STATUS } from "@/content/registry"
 import { track } from "@/lib/analytics"
 import { Status } from "../ui"
 
@@ -51,10 +52,10 @@ export function ProofRail() {
           {item.kind === "Status matrix" ? (
             <table className="mt-4 w-full border-t border-rule text-left">
               <caption className="sr-only">
-                Product availability from the {STATUS_SOURCE.source}
+                Product availability. {claimProvenance(CLAIMS[0])}
               </caption>
               <tbody>
-                {PRODUCTS.map((product) => (
+                {PRODUCTS_WITH_STATUS.map((product) => (
                   <tr key={product.key} className="border-b border-rule-soft last:border-b-0">
                     <th scope="row" className="py-2.5 pr-4 align-top text-small font-normal text-ink">
                       {product.name}

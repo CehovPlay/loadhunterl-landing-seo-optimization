@@ -6,8 +6,16 @@
   "scripts": {
     "dev": "next dev -p 4311",
     "build": "next build",
+    "postbuild": "node scripts/budget.mjs",
     "start": "next start -p 4311",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && node scripts/links.mjs && node scripts/redirects.mjs && node scripts/sweep.mjs && node scripts/overflow.mjs",
+    "check:links": "node scripts/links.mjs",
+    "check:redirects": "node scripts/redirects.mjs",
+    "check:budget": "node scripts/budget.mjs",
+    "publishable": "tsx scripts/publishable.mts",
+    "scene:build": "blender --background --factory-startup --python scripts/scene/build.py --",
+    "scene:preview": "blender --background --factory-startup --python scripts/scene/build.py -- --preview"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -16,14 +24,16 @@
     "next": "^16.3.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "shaders": "^3.1.455"
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "@types/three": "^0.185.4",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
     "typescript": "^7.0.2"
   }
 }

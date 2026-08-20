@@ -1,4 +1,5 @@
 import type { NextConfig } from "next"
+import { nextRedirects } from "./content/registry/redirects"
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -12,6 +13,11 @@ const nextConfig: NextConfig = {
   agentRules: false,
   // TZ §14.1 and §43.1 require every indexable string to be server-rendered and
   // readable without animation or hydration. Nothing here opts a route out.
+
+  // §10.1 and §14.3 - the Redirect Registry, applied. The rules exist because
+  // §5.2 forbids the nested address shapes every other SaaS site uses, and a
+  // link written from that habit should land on the page rather than on a 404.
+  redirects: async () => nextRedirects(),
 }
 
 export default nextConfig
