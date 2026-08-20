@@ -1,188 +1,192 @@
 # LoadHunter corporate site (loadhunt.ai)
 
-Homepage of the ecosystem site specified in `LoadHunter_TOR_корпоративный_сайт`. This is a separate
-product from the extension landing that lives at the repo root: different domain, different stack,
-47 pages to come. It sits in a subfolder so the two can share the repo without sharing a build.
+The ecosystem site specified in `LoadHunter_TOR_корпоративный_сайт` — 47 spec tabs, 161 built
+routes. A separate product from the extension landing at the repo root: different domain, different
+stack, its own build. It sits in a subfolder so the two share the repo without sharing a build.
 
 ```bash
-npm run dev        # http://localhost:4311
-npm run build      # static prerender of every route
+npm run dev          # http://localhost:4311
+npm run build        # static prerender of every route; postbuild prints the real transfer budget
 npm run typecheck
+npm run check        # typecheck + links + redirects + sweep + overflow
+npm run publishable  # what the owner still has to decide before this can go live
 ```
 
-Verification runs over CDP, from `scripts/`:
+**Desktop only for now.** The owner suspended responsive work; verify at 1280 / 1440 / 1920. The
+mobile paths that already exist still work, they are simply not maintained.
+
+Deeper background — the spec, its conflicts, the copy, the decision log — lives in the Obsidian vault
+`~/Documents/LoadHunter Corporate Base/`, starting at `00 — Индекс (MOC).md`. Developer decisions
+belong there as well as in code; a markdown file in the repo alone does not count as delivered.
+
+## Verification runs over CDP
+
+There is no test suite. "Verifying a change" means driving headless Chrome from `scripts/`:
 
 ```bash
-node scripts/shot.mjs "http://localhost:4311/?noshader" 1440 900 out.png   # screenshot
-SCROLL=2000 DSF=1 node scripts/shot.mjs <url> 390 844 m.png                # scrolled, cheap
-node scripts/eval.mjs <url> 390 844 'document.documentElement.scrollWidth' # measure in page
-node scripts/console.mjs <url> 1280 800                                    # console + exceptions
+node scripts/shot.mjs "http://localhost:4311/" 1440 900 out.png    # screenshot; SCROLL=, DSF=, WAIT=
+node scripts/eval.mjs <url> 1440 900 'document.title'              # measure inside the page
+node scripts/console.mjs <url> 1280 800                            # console + uncaught exceptions
+node scripts/sweep.mjs      # every route: one H1, title, description, no untranslated Russian
+node scripts/links.mjs      # every href and #anchor resolves
+node scripts/redirects.mjs  # the 17 §5.2 redirect rules actually fire
+node scripts/overflow.mjs   # ROUTES=/a,/b to scope
+node scripts/budget.mjs     # real transfer, split by interaction
 ```
 
-Mobile widths have to come from device emulation: headless Chrome clamps `--window-size` to about
-500px. Long pages are read as a series of viewport shots at `SCROLL` positions, because Chrome caps
-a full-page capture at 7800px. `?noshader` renders base colour and fallback only.
+Long pages are read as a series of viewport shots at `SCROLL` positions — Chrome caps a full-page
+capture at 7800 px.
 
-Deeper background - the spec, its conflicts, the copy, the decision log - lives in the Obsidian vault
-`~/Documents/LoadHunter Corporate Base/`.
+## Architecture
 
-## What is built
+**Content is data, not components.** `content/tz/pages.json` holds all 47 tabs as parsed by
+`scripts/parse-tz.mjs`; `PageSkeleton` renders any of them through 13 block archetypes. A page is a
+row of data plus an override where the spec asked for something specific.
 
-The whole homepage, in the order tab 01 specifies: hero, then blocks 1 to 8, then the FAQ, plus the
-global header (§5.3) and footer (§5.4 / §26.4).
+**Six registries, per §14.3, in `content/registry/`.** They replaced a 626-line `content/home.ts`
+that mixed governance with homepage copy. The dependency rule is one-way and load-bearing:
+**registries never import components.**
 
-| Block | Section | Proof |
+| File | Holds | Gate it enforces |
 |---|---|---|
-| Hero | Run freight as one connected operation. | Sample load passport, with the load followed through the five products |
-| 01 | The road starts with the next load | Board result and the same result with the LoadHunter layer |
-| 02 | Turn the booked load into an operating plan | The load arriving on the dispatch board, with owner, next step, timing and exception |
-| 03 | Keep the driver and office on the same mile | Driver action on the phone, consequence on the office panel - the visitor drives it |
-| 04 | Close the load without opening a new process | Proof of delivery becoming an invoice timeline |
-| 05 | See the exceptions before they become calls | Four lanes converging, then what the command layer puts first |
-| 06 | Choose your entry point | Route selector (role, urgent job, team size) and the five cards |
-| 07 | Proof before promise | Pinned proof rail: what is published, what is not, and the status matrix |
-| 08 | The operating system is the destination | The data trail, ending on the CTA the visitor's answers earned |
-| FAQ | Five questions, verbatim | Availability answer rendered from the ledger |
+| `brand.ts` | name, domain, logos, social image, disclaimer | legal entity is `null` until the owner supplies one |
+| `status.ts` | the §3.6 Status Ledger — 9 claims, each with owner/source/verifiedAt | `unpublishable()`; `statusAnswerText()` renders FAQ availability from the ledger itself |
+| `products.ts` | the five products; external destinations are `confirmed` or `pending` | §15.3 — LoadHunter and huntDRIVE have no confirmed URL yet |
+| `commercial.ts` | pricing mode, forbidden patterns, 7 §18.3 approval gates | **no dollar amounts exist anywhere**; tab 19 forbids placeholders |
+| `integrations.ts` | only Telegram and Stripe — the sole vendors the spec names | indexability of filter pages |
+| `schema.ts` | JSON-LD conditions per type | `Offer`/`Product` need an approved price *and* `offerVisible`; `filterGraph` drops the rest loudly |
+| `redirects.ts` | 17 rules for §5.2-forbidden URL shapes | all `verified: true`, proven by `scripts/redirects.mjs` |
 
-Every block obeys the rule the tab repeats under all eight: the CTA opens after the visitor has seen
-half the block or touched its proof, never as a pop-up. Analytics events are emitted for all seven
-names the tab lists (`lib/analytics.ts`), to `dataLayer` and a DOM event; no vendor is wired and no
-PII enters a payload.
+`index.ts` exports `publicationBlockers()`, which returns `{registry, item, reason}[]`. It is a
+**deploy-time check, deliberately not a build error** — the site must stay buildable while the owner
+decides. `npm run publishable` currently lists 22.
 
-## Decisions this branch is standing on
+**`content/ia.ts`** is the single source for navbar, footer and sitemap. `assertIndexCovers` proves
+every spec route appears somewhere. Two subtleties: `hidden?: boolean` marks bar entries that are
+also listed inside a footer group (Home and About), so the duplicate check discounts one occurrence
+per hidden section; and `OFF_SPEC` holds routes that exist in the product but not in the 47 tabs
+(`/trucking-directory`).
 
-**Light, not dark.** §11.1 makes the light surface the primary variant and §12.1 keeps dark theme out
-of P0. The colour, radius and type values are the Figma brand tokens the extension landing already
-ships; what changed is polarity, not palette. The landing's dark greys became ink, its light greys
-became ground.
+**`content/directory/`** is the trucking directory, 115 routes from Figma `zt7S0UIB6gvsBEl7L4xNBt`.
+`source.ts` is the seam — `listCities`, `getCompany`, `searchCompanies`, all async, plus
+`SOURCE.kind`, today `"sample"`. `mock.ts` generates 97 records from a deterministic LCG seeded
+`20260820` so the pages are stable across builds. **Swap `source.ts` when the FMCSA import lands;
+nothing else should need to change.** Every page says out loud that the data is sample data.
 
-**The page tab wins on copy.** Where tab 01 and master §27 disagree, tab 01 is canon for this page,
-and every string it prints as "точный контент" or "Точный текст" is reproduced verbatim. That
-reverses an earlier call and changes the hero (H1, supporting copy, both CTAs, microcopy), the block
-sequence, the CTA labels, the FAQ and the metadata. Nothing is merged between the two: the master's
-variants are still the owner's to choose, and they are logged as conflict 1 in
-`~/loadhunter-tz/README.md`.
+## The homepage: a pinned road
 
-Where a block's exact text is an instruction to the builder rather than visitor copy - blocks 6, 7
-and 8, and FAQ answer 2 - the instruction is carried out with governed material instead of being
-paraphrased into marketing prose. The job line on each product card is that product page's own H1,
-the user line is its audience, the selector's questions offer the page passport's audiences, the JTBD
-sentences from master §2.3 and the priority segments from §2.2, and the availability answer is the
-status ledger itself.
+The current art direction, after four iterations. Do not redesign it without reading
+`03 — Главная/Главная — арт-дирекшн дороги.md` in the vault first.
 
-**Next.js, per §14.1.** App Router, every route static-prerendered, no client-side routing shell. The
-homepage HTML contains all indexable copy with nothing hidden behind hydration.
+The page is one road with five stops, each a verb from §27.7–27.11. The scene is a full-bleed
+isometric three.js stage; the copy sits in the free band beside it; scroll drives everything.
 
-**One accent.** Violet carries every action. The only other colours on the page are the three status
-tones, and they only ever appear next to a capability, which is what §3.6 and §42.2 require.
+- **One number drives it all.** `progress` moves the load along a curve, picks the active stop, and
+  feeds each station's `tick(near, time)`. Stations play their own meaning — a board scanning, four
+  bay doors rolling up, a trailer reversing onto a dock, invoice plates lifting, four lines
+  converging.
+- **Full bleed.** `.freight-canvas` is `left: 50%; width: 100vw; transform: translateX(-50%)`.
+  `.road-frame` must **not** have `overflow: hidden` — it clips the canvas back to the container.
+- **The camera yields to the copy.** `FreightRoute.tsx` measures how much of the frame the active
+  stop's columns occupy and calls `setBand()`; the scene converts that into `camera.setViewOffset`,
+  capped at half the frame so the tallest stop cannot push the station off-screen. Measure the
+  **columns**, not the grid — the grid is `h-full` and never resizes — and re-measure on settle
+  timers, because the load-board proof plays itself open 900 ms after becoming visible.
+- **Anchors live on markers inside the runway**, at `top: i/(n-1)*100%`, not on the stops. Stops are
+  absolutely positioned inside one sticky frame, so an id on a stop resolves to the frame.
+- **Progressive enhancement.** `data-scene="on"` switches the CSS. Without WebGL, or with
+  `prefers-reduced-motion`, all five stops render as an ordinary scrolling document — verified.
 
-**Header and footer come from the extension landing.** Same floating white pill nav with the compact
-scrolled variant, same dark footer band with brand, contacts, newsletter, link columns, disclaimer,
-divider and bottom bar. Three deliberate differences:
+Three.js is plain, no react-three-fiber. `OrthographicCamera` at 35.264°/45°, `RoomEnvironment` +
+`PMREMGenerator` for IBL, clay `MeshStandardMaterial`, ACES tone mapping, `EffectComposer` +
+`GTAOPass`. Tune AO against `?ao=debug`.
 
-- The landing portals the compact pill to `document.body` and re-applies the 1920-canvas scale, because
-  `position: fixed` cannot escape a scaled ancestor there. This site is a flow layout, so the pill is
-  just `fixed` and the portal and scale factor are gone.
-- Both pills gain a hairline and the pill shadow. On the landing's dark page plain white is enough
-  separation; on paper it is not.
-- The newsletter form does not fake success. Without `NEXT_PUBLIC_NEWSLETTER_ENDPOINT` it says it is
-  not connected, rather than telling a visitor they are subscribed when nothing was sent (§42.1).
+Two gotchas that cost real time: `Object3D.position` is read-only and must be mutated, never
+replaced (`Object.assign` onto it throws and silently kills the whole scene — check the console, not
+just `data-scene`); and coplanar faces z-fight into a dashed black speckle that looks exactly like AO
+noise, so give parts 2 cm of air.
 
-The footer keeps its dark surface deliberately. That is not a theme switch: the page is one road
-(§25.1) and the band is where it ends, which is why the rail and the padded container stop above it.
+## Scene geometry is authored in Blender
 
-## The idea the page is built on
+`scripts/scene/` builds station geometry with headless Blender and exports glTF. Full write-up in
+`04 — Код/Сцена — пайплайн Blender.md`.
 
-One rail. A hairline runs the full height of the page at the left edge of the content column, and a
-violet segment grows down it with scroll: that is how far the load has travelled. Sections are stops
-on it, the nodes fill as you reach them, and hovering a product lights that segment. §25.1 asks for
-one road rather than a stack of blocks, and the only way that reads is if the geometry is literally
-continuous, so every section shares the container and the same left edge.
+```bash
+brew install --cask blender     # 5.2.0 LTS
+npm run scene:build -- --station board --out public/scene --preview
+```
 
-The load is one object. Load LH-4471 - Dallas to Atlanta, dry van, $2,180, 762 miles - is the same
-load in the hero, on the board, on the dispatch row, in the driver's hand, on the invoice timeline
-and in the exception list. §7.2 is explicit that showing two different loads lets the visitor credit
-the product for the load instead of for the analysis, and §27.6 wants the handover of context to be
-something you can watch.
+The web scene built every shape from one `BoxGeometry` — 31 boxes, no bevels. It read flat not for
+lack of polygons but for **lack of edges**. Blender is used as a script, not through MCP: the scene
+is procedural and belongs in version control, and a preview PNG gives the same feedback loop as a
+viewport screenshot while staying reproducible.
 
-Nothing on the page fakes a screenshot. Every panel is the real field set of the shipped workflow
-filled with clearly labeled sample data, which is the honest process demonstration §27.14 allows
-while approved customer proof does not exist. Two of the four cards in block 7 say out loud that they
-are not published yet.
+**The naming contract is load-bearing.** The runtime does not re-create geometry; it looks parts up
+by name and drives them exactly as it does now (38 per-frame mutations in `freight-scene.ts`). Export
+a named hierarchy; never merge meshes. Blender is Z-up and three.js is Y-up, so `to_blender()`
+converts and `export_yup=True` unwinds it, letting both files quote the same numbers.
 
-## The hero band
+**Draco is off, and that is a measurement.** One station, 1 944 triangles: 74.6 KB plain → **12.0 KB
+gzipped**, versus 30.8 KB Draco → 8.7 KB. Draco saves 3.3 KB per station while its decoder costs
+286 KB of wasm. It pays off at hundreds of thousands of triangles, not thousands. Ship plain GLB and
+let the CDN compress. Five stations ≈ 60 KB, in the scroll bucket, so the §17.1 initial target is
+unaffected.
 
-The first screen is full height and the surface behind it moves: `ShaderBand` + `ShaderStack`, both
-ported from the landing. A white-to-`#f0f0f0` pearl drift goes through `FlutedGlass` and `FilmGrain`,
-with the brand violet fenced to the top of the band by a luminance mask so it can never reach the H1
-or the CTAs. The band dissolves into the page ground before the section ends, so the seam into the
-cycle has no edge.
+## Performance
 
-It is the only moving surface on the site, and that is the rule: everything below the hero is
-figures, statuses and routes, and those need a still ground to be read against.
+`scripts/budget.mjs` drives headless Chrome, records **real network transfer**, and splits by
+**interaction** — `initial` versus `scrolled` — not by the load event.
 
-Three things it must keep doing:
+It was wrong three times before that, and each failure is worth remembering: reading `<script>` tags
+from prerendered HTML misses chunks imported from other chunks (the homepage measured 300 KB while
+the browser fetched ~1 MB); walking the chunk graph by filename over-counts, billing lazily-imported
+three.js to first load; and splitting on `Page.loadEventFired` is unstable, because a page with more
+DOM fires `load` later. **Measure the network, not the manifest.**
 
-- **Paint in order.** Flat base colour first (identical to the shader's idle background), then the
-  static fallback gradients, then the WebGPU stack at browser idle. The first screen is complete
-  before any of it arrives — §43.1 and §46.3 do not allow otherwise.
-- **Portal to `<body>` at `z-index: -1`.** The canvas has to span the viewport, not the centred 1400
-  column, and it carries the base colour itself so the side gutters are covered. The host section
-  stays transparent.
-- **Go quiet on narrow viewports.** The fluted bands are a fixed count across the canvas, so at 390px
-  each is four times wider than at 1440 and the aberration that reads as soft refraction on desktop
-  reads as holographic rainbow stripes on a phone. `compact` raises the frequency and cuts the
-  aberration to a third.
+That instrument found a decorative WebGPU hero shader pulling **688 KB of TypeGPU** at idle on every
+homepage visit. It was removed; the homepage went 967 → 277 KB.
 
-`?noshader` renders only the base colour and the fallback — for headless screenshots and for
-bisecting jank. `prefers-reduced-motion` takes the same path permanently, and so does anything
-without working WebGPU, which today includes Safari.
+Today: `/` is **278.3 KB initial + 143.3 KB on scroll**. §17.1 wants 240 KB at launch; the remaining
+38 KB is Phosphor, gsap and React, and needs targeted work.
 
-## Motion
+Three.js is fetched lazily inside an `IntersectionObserver` with `rootMargin: "0px"`. It was `"100%
+0px"`, which defeated the lazy import entirely — the road sits directly under the hero.
 
-GSAP with ScrollTrigger, and Lenis driven from GSAP's ticker so smoothing and every trigger advance
-on the same frame. Lenis is created only for fine-pointer visitors with motion enabled; touch keeps
-native momentum and reduced-motion keeps the plain scrollbar.
+## Standing conventions
 
-Five animations, each with a job:
+- **UI text is sentence case.** No caps except genuine abbreviations.
+- **No lossy image recompression.** Vectors or structural optimisations only.
+- **Nothing fakes success.** The newsletter form says it is not connected rather than claiming a
+  subscription; unpublished capabilities say so on the page.
+- **From-states are set in effects, never in markup**, and JS-only states live behind
+  `html[data-js="on"]`, stamped inline before first paint. §43.1 and §46.3 require the full meaning
+  and a working CTA without scripting.
 
-| What | Job |
-|---|---|
-| Hero stagger | Hierarchy. Walks the eye down promise, explanation, action once on arrival. |
-| Rail progress | State. Shows how far along the route the visitor is. Scrubbed, never eased. |
-| The load arriving on the board (02) | Storytelling. The handover is the claim, so it is the thing that moves. |
-| Invoice steps and exception rows (04, 05) | Reading order. The trail runs one way and is finished before the CTA. |
-| Lanes converging (05) | Relationship. Four signal sources, one layer. Opacity, not a dash draw - the viewBox is stretched horizontally and a dash pattern comes out of that unevenly. |
-| Staged CTA reveal | The tab's own rule, made visible: the action arrives once the block has been read. |
-| Hero shader drift | Atmosphere. The only autonomous motion on the site, on the only screen with no figures on it. |
+## Open
 
-The driver lane in block 3 runs no timers at all: it moves only when the visitor moves it, which is
-what a demonstration of "one action at a time" should do anyway, and it means reduced motion needs no
-separate path through it.
+Run `npm run publishable` for the live list. As of this commit, 22 items, all owner decisions:
 
-Entry animations set their from-state in an effect, never in the markup, so §43.1 and §46.3 hold: a
-visitor without JavaScript gets the finished page rather than an empty stage. The same applies to the
-two states that are closed by default - the staged CTAs and the disclosures inside the proofs. Both
-are expressed in CSS behind `html[data-js="on"]`, stamped by an inline script before first paint, so
-the server HTML ships them open: the acceptance criteria require the full meaning and an available
-CTA without scripting, and an inline `opacity: 0` would take exactly that away from the people who
-cannot open it again.
+- Legal entity for the §5.4 copyright line and the Brand Registry.
+- Owners for all 9 Status Ledger claims.
+- Chrome Web Store URL and the huntDRIVE Telegram link (§15.3).
+- The 7 §18.3 approval gates.
+- Data owners for the Telegram and Stripe integrations.
+- **"LoadConnect"** appears in directory FAQ answer 4 and is not in the Product Registry; §10.2
+  requires exactly five products of one system.
 
-## Open, and blocking the rest of the page
+Also open:
 
-- **Analytics contract.** The TZ specifies five incompatible event-parameter schemas. The page emits
-  tab 01's set (template group A) to `dataLayer`; the vendor, the consent gate in front of it and the
-  final schema are still open.
-- **Hero copy conflict.** Tab 01 and master §27.4 carry two different first screens. This branch
-  ships tab 01's. One of them has to be retired.
-- **Product screenshots.** §27.14 allows an honest process demonstration where approved proof does
-  not exist yet, which is what the load card is. Real approved product frames should replace it.
-- **Brand Registry (§14.3).** Legal entity, contacts and social profiles are missing, so the JSON-LD
-  carries only name, URL and logo.
-- **Destinations.** Every `href` here points at a route that does not exist on this branch yet.
-- **Legal entity.** §5.4 wants the copyright line to carry the entity from the Brand Registry. Until
-  that registry exists the line carries the trading name only.
-- **Newsletter endpoint.** Backend-owned. Set `NEXT_PUBLIC_NEWSLETTER_ENDPOINT` to a URL accepting
-  `{ email }` as JSON; double opt-in has to be enforced server side.
-- **Status page host.** The footer links `/status`; §2.7 prefers `status.loadhunt.ai` once real
-  monitoring is connected.
+- **34 blocks across 7 tabs** still carry Russian builder instructions instead of English visitor
+  copy: `/`, `/products`, `/platform`, `/broker-intelligence`, `/accessibility`, `/support`,
+  `/login`.
+- **Directory hub figures** print "Pending the FMCSA import" until the backend lands.
+- **Analytics vendor and consent gate.** Events are emitted to `dataLayer` and a DOM event under tab
+  01's schema (template group A); the spec carries five incompatible schemas and no vendor is wired.
+- **Hero copy conflict.** Tab 01 and master §27.4 carry two different first screens; this branch
+  ships tab 01's. One has to be retired.
+- **Newsletter endpoint.** Set `NEXT_PUBLIC_NEWSLETTER_ENDPOINT` to a URL accepting `{ email }`;
+  double opt-in must be enforced server side.
+- **Real product frames.** §27.14 allows the honest process demonstration currently shipped.
+- **Stations `hall`, `dock`, `office`, `tower`** still to port to Blender; only `board` is done.
+- **Baked AO** — an open call to bake occlusion into vertex colours at build time and drop
+  `GTAOPass` from the runtime.

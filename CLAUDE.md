@@ -217,3 +217,23 @@ competitors, referral program, supported load boards) lives in an Obsidian vault
 there over re-deriving product behavior from scratch — e.g. the pricing calculator's discount tiers
 map to `02 — Фичи/RPM и Profit-калькулятор.md` and `04 — Биллинг/Биллинг, trial и seats.md`. A
 related vault for the TMS product exists at `~/Documents/Hunt TMS Base/`.
+
+Developer decisions belong in the vault as well as in code. A markdown file inside the repo alone
+does not count as delivered.
+
+## The corporate site in `corporate/`
+
+`corporate/` is a **second, separate product** — the loadhunt.ai ecosystem site specified in
+`LoadHunter_TOR_корпоративный_сайт` (47 tabs, 161 built routes). Different domain, different stack
+(Next.js 16 App Router + React 19 + Tailwind 4, port 4311), its own build, its own verification
+scripts. It shares this repo only as a subfolder.
+
+**Read `corporate/README.md` before touching anything in there.** It carries the architecture (six
+§14.3 registries, content-as-data, the trucking directory's data seam), the homepage's pinned-road
+art direction, the Blender geometry pipeline in `corporate/scripts/scene/`, the performance
+instrument and the three ways it was wrong before, and the list of what is still open. Its own vault
+is `~/Documents/LoadHunter Corporate Base/`.
+
+Two constraints that are easy to violate by habit: the corporate site is **desktop-only** for now by
+the owner's decision (verify at 1280 / 1440 / 1920), and its UI text is **sentence case** with no
+caps outside genuine abbreviations.
