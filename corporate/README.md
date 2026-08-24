@@ -124,7 +124,19 @@ viewport screenshot while staying reproducible.
 **The naming contract is load-bearing.** The runtime does not re-create geometry; it looks parts up
 by name and drives them exactly as it does now (38 per-frame mutations in `freight-scene.ts`). Export
 a named hierarchy; never merge meshes. Blender is Z-up and three.js is Y-up, so `to_blender()`
-converts and `export_yup=True` unwinds it, letting both files quote the same numbers.
+converts and `export_yup=True` unwinds it, letting both files quote the same numbers. The animated
+parts, whose name, size and centre must not drift, are listed at the top of `build.py`.
+
+**Previews render the arrived pose, not the resting one.** A station at rest is a trailer parked
+inside a building and doors that never opened, so `POSES` reproduces near=1 for the render only —
+`one()` exports first, then poses. Judge form from these; judge colour from three.js, which is where
+ACES, IBL and GTAO actually live.
+
+All five stations are ported: 78 KB gzipped for the set, 16 600 triangles. Modelling them surfaced
+two things the box version had hidden. The dock's trailer floor sat at y=0.3 while its lip sat at
+1.14, so the lip dropped onto thin air — with boxes for wheels nobody could see it, with round ones
+it is the first thing you notice; the trailer now stands at dock height. And the source scene is
+self-contradictory about which way the trailer arrives (see below).
 
 **Draco is off, and that is a measurement.** One station, 1 944 triangles: 74.6 KB plain → **12.0 KB
 gzipped**, versus 30.8 KB Draco → 8.7 KB. Draco saves 3.3 KB per station while its decoder costs
@@ -187,6 +199,15 @@ Also open:
 - **Newsletter endpoint.** Set `NEXT_PUBLIC_NEWSLETTER_ENDPOINT` to a URL accepting `{ email }`;
   double opt-in must be enforced server side.
 - **Real product frames.** §27.14 allows the honest process demonstration currently shipped.
-- **Stations `hall`, `dock`, `office`, `tower`** still to port to Blender; only `board` is done.
+- **Wiring the GLBs into the runtime.** The stations are authored and exported but
+  `freight-scene.ts` still builds boxes; nothing loads them yet. This is the next real step, and it
+  needs `GLTFLoader` (~30 KB) plus a lookup that replaces each `slab()` with `getObjectByName`.
+- **The dock's approach axis, to be settled at wiring time.** `dock.lip` is modelled on the +z face
+  and `rotation.x` tips its outer edge down, which is correct leveller behaviour only for a trailer
+  arriving from +z — but the runtime lerps `trailer.position.x`. Either the runtime moves the trailer
+  in z, or the lip needs a different axis. Today the trailer is offset to park alongside, clear of
+  the shed, which looks right but is not the sentence the block is making.
+- **The board reads thin.** Its panel carries three rows on a lot of empty face. Composition, not
+  geometry — worth an art-direction pass rather than another blind iteration.
 - **Baked AO** — an open call to bake occlusion into vertex colours at build time and drop
   `GTAOPass` from the runtime.

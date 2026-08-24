@@ -225,3 +225,68 @@ def turn(o: bpy.types.Object, y: float) -> bpy.types.Object:
     """
     o.rotation_euler = (o.rotation_euler[0], o.rotation_euler[1], y)
     return o
+
+
+def cyl(
+    name: str,
+    radius: float,
+    depth: float,
+    loc: tuple[float, float, float],
+    mat: bpy.types.Material,
+    axis: str = "x",
+    verts: int = 20,
+    bevel: float = 0.012,
+    parent: bpy.types.Object | None = None,
+) -> bpy.types.Object:
+    """A cylinder, for the handful of things a box cannot fake.
+
+    Wheels are the obvious one: the web scene used 0.16 x 0.28 x 1.2 boxes, and
+    a rectangular wheel is the single clearest tell that a scene is placeholder
+    geometry. 20 sides is plenty at this camera distance.
+    """
+    bpy.ops.mesh.primitive_cylinder_add(
+        radius=radius, depth=depth, vertices=verts, location=to_blender(*loc)
+    )
+    o = bpy.context.object
+    o.name = name
+    # Cylinders are born along Blender's Z. Lay them down onto the requested
+    # three.js axis.
+    if axis == "x":
+        o.rotation_euler = (0.0, math.radians(90), 0.0)
+    elif axis == "z":
+        o.rotation_euler = (math.radians(90), 0.0, 0.0)
+    bpy.ops.object.transform_apply(location=False, rotation=True, scale=False)
+    if bevel > 0:
+        b = o.modifiers.new("bevel", "BEVEL")
+        b.width, b.segments, b.limit_method = min(bevel, radius * 0.3), 2, "ANGLE"
+        b.angle_limit = math.radians(40)
+        b.harden_normals = True
+    o.data.materials.append(mat)
+    bpy.ops.object.shade_auto_smooth(angle=math.radians(35))
+    if parent is not None:
+        o.parent = parent
+        o.matrix_parent_inverse = parent.matrix_world.inverted()
+    return o
+
+
+def frame_all(pad: float = 1.35) -> tuple[tuple[float, float, float], float]:
+    """Bounding box of everything built, as a three.js centre and an ortho scale.
+
+    Stations differ a lot in size - the tower is 5 m tall, the board 2.8 - so a
+    fixed ortho_scale either crops one or strands the other in white space.
+    """
+    xs, ys, zs = [], [], []
+    for o in bpy.context.scene.objects:
+        if o.type != "MESH":
+            continue
+        for corner in o.bound_box:
+            wx, wy, wz = o.matrix_world @ __import__("mathutils").Vector(corner)
+            xs.append(wx)
+            ys.append(wy)
+            zs.append(wz)
+    if not xs:
+        return (0.0, 0.0, 0.0), 10.0
+    cx, cy, cz = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, (min(zs) + max(zs)) / 2
+    span = max(max(xs) - min(xs), max(ys) - min(ys), max(zs) - min(zs))
+    # Blender (X, Y, Z) back to three.js (x, y, z).
+    return (cx, cz, -cy), span * pad
