@@ -1,0 +1,143 @@
+import { BRAND } from "@/content/registry"
+
+/**
+ * The parting-panels preloader, ported from the extension landing.
+ *
+ * Behaviour is the landing's, frame for frame: two dark halves cover the
+ * viewport, the mark assembles from three pieces, the wordmark wipes in from
+ * the left, the lockup slides to true centre, then the halves part vertically
+ * and the element removes itself.
+ *
+ * Three things had to change in the port, and one number.
+ *
+ *   - It is emitted through `dangerouslySetInnerHTML` into a container React
+ *     does not reconcile. The script removes the node from the DOM when it is
+ *     done; a node React owns cannot be removed from outside React without the
+ *     next render fighting over it.
+ *   - The panels take `--color-night` rather than the landing's #181a1f, and
+ *     the wordmark comes from the Brand Registry, so a brand change lands here
+ *     too. §14.3.
+ *   - MIN drops from 2100ms to 1600ms. The choreography finishes at 1500ms -
+ *     0.95s delay plus the 0.55s wordmark wipe - so the old value held a
+ *     finished animation on screen for 600ms of nothing. Which matters:
+ *     §17.1 budgets LCP at 2.5s for 75% of real visits, and a full-screen cover
+ *     is time the largest contentful paint cannot happen in. Even at 1600ms
+ *     this is the single biggest LCP cost on the site, and it is worth
+ *     measuring against real traffic before launch rather than assuming.
+ *
+ * Without JavaScript the overlay never appears at all - the noscript rule hides
+ * it - so §14.1's "the page must read without hydration" still holds.
+ */
+
+const MARK = `
+<svg class="lh-pl-mark" viewBox="0 0 27.68 26.18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path class="lh-pl-piece lh-pl-piece-l" fill="#e8e8e9" d="M6.87719 14.9489C7.33672 16.6581 8.41343 18.1142 9.8538 19.0636C10.9765 19.8037 11.9235 20.9299 11.9235 22.2747V26.1735C11.668 25.3163 10.9376 24.6382 10.0517 24.3445C6.53241 23.1778 3.74457 20.407 2.55435 16.8985C2.18252 15.8023 1.22117 14.9489 0.0637344 14.9489H6.87719ZM11.9235 6.17837C9.40426 6.85567 7.4348 8.87388 6.82724 11.421H0C1.17234 11.421 2.14133 10.5464 2.50249 9.43101C3.66231 5.84883 6.48064 3.01304 10.0519 1.8292C10.9379 1.53547 11.6681 0.857209 11.9235 0V6.17837Z"/>
+  <path class="lh-pl-piece lh-pl-piece-r" fill="#e8e8e9" d="M20.8024 14.9489C20.3429 16.6581 19.2662 18.1142 17.8258 19.0636C16.7031 19.8037 15.7561 20.9299 15.7561 22.2747V26.1735C16.0116 25.3163 16.742 24.6382 17.628 24.3445C21.1472 23.1778 23.9351 20.407 25.1253 16.8985C25.4971 15.8023 26.4584 14.9489 27.6159 14.9489H20.8024ZM15.7561 6.17837C18.2754 6.85567 20.2448 8.87388 20.8524 11.421H27.6796C26.5073 11.421 25.5383 10.5464 25.1771 9.43101C24.0173 5.84883 21.199 3.01304 17.6278 1.8292C16.7418 1.53547 16.0116 0.857209 15.7561 0V6.17837Z"/>
+  <path class="lh-pl-piece lh-pl-dot" fill="#e8e8e9" d="M16.4586 12.964C16.4586 14.4105 15.2861 15.583 13.8397 15.583C12.3933 15.583 11.2208 14.4105 11.2208 12.964C11.2208 11.5176 12.3933 10.3451 13.8397 10.3451C15.2861 10.3451 16.4586 11.5176 16.4586 12.964Z"/>
+</svg>`
+
+const STYLE = `
+html.lh-pl-lock { overflow: hidden; }
+#lh-preloader { position: fixed; inset: 0; z-index: 9999; }
+.lh-pl-half {
+  position: absolute; left: 0; width: 100%; height: 51%;
+  background: var(--color-night, #121317);
+  transition: transform 1.25s cubic-bezier(0.83, 0, 0.17, 1) 0.2s, box-shadow 0.3s ease 0.2s;
+  will-change: transform;
+}
+.lh-pl-top { top: 0; }
+.lh-pl-bot { bottom: 0; }
+/* The paper behind is nearly the same value, so the parting panels need real
+   edges: a soft cast shadow and a hairline appear as the split starts. */
+.lh-pl-done .lh-pl-top {
+  transform: translateY(-101%);
+  box-shadow: 0 1px 0 rgba(20, 18, 28, 0.08), 0 14px 44px rgba(20, 18, 28, 0.22);
+}
+.lh-pl-done .lh-pl-bot {
+  transform: translateY(101%);
+  box-shadow: 0 -1px 0 rgba(20, 18, 28, 0.08), 0 -14px 44px rgba(20, 18, 28, 0.22);
+}
+.lh-pl-logo {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center; gap: 13px;
+  opacity: 1; transition: opacity 0.28s ease;
+  /* The mark assembles at true screen centre, then slides left in sync with
+     the wordmark wipe. 74px is half the wordmark plus the gap. */
+  transform: translateX(74px);
+  animation: lh-pl-shift 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s forwards;
+}
+@keyframes lh-pl-shift { to { transform: translateX(0); } }
+.lh-pl-done .lh-pl-logo { opacity: 0; }
+.lh-pl-mark { width: 44px; height: 41.6px; overflow: visible; }
+.lh-pl-piece {
+  opacity: 0; transform-origin: 50% 50%; transform-box: fill-box;
+  animation: lh-pl-piece 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.lh-pl-piece-l { transform: translateX(-10px) rotate(-10deg); animation-delay: 0.2s; }
+.lh-pl-piece-r { transform: translateX(10px) rotate(10deg); animation-delay: 0.42s; }
+.lh-pl-dot {
+  transform: scale(0.3);
+  animation-name: lh-pl-dot; animation-duration: 0.42s;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); animation-delay: 0.68s;
+}
+@keyframes lh-pl-piece { to { opacity: 1; transform: none; } }
+@keyframes lh-pl-dot { to { opacity: 1; transform: scale(1); } }
+.lh-pl-wordmark {
+  display: block; clip-path: inset(0 100% 0 0);
+  animation: lh-pl-word 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.95s forwards;
+}
+.lh-pl-wordmark img { display: block; width: 135px; height: 22px; }
+@keyframes lh-pl-word { to { clip-path: inset(0 0 0 0); } }
+/* §17.2 - the animation must not be the only way through. Reduced motion gets
+   the finished lockup and a plain fade, no split and no assembly. */
+@media (prefers-reduced-motion: reduce) {
+  .lh-pl-piece, .lh-pl-wordmark, .lh-pl-logo { animation: none; opacity: 1; transform: none; clip-path: none; }
+  .lh-pl-half { transition: none; }
+  .lh-pl-done .lh-pl-top, .lh-pl-done .lh-pl-bot { transform: none; }
+  #lh-preloader { transition: opacity 0.3s ease; }
+  #lh-preloader.lh-pl-done { opacity: 0; }
+}`
+
+const SCRIPT = `
+;(function () {
+  var el = document.getElementById("lh-preloader")
+  if (!el) return
+  var t0 = Date.now()
+  var MIN = 1600
+  var finished = false
+  document.documentElement.classList.add("lh-pl-lock")
+  function finish() {
+    if (finished) return
+    finished = true
+    el.classList.add("lh-pl-done")
+    setTimeout(function () {
+      document.documentElement.classList.remove("lh-pl-lock")
+      window.dispatchEvent(new Event("lh:preloader-done"))
+      if (el.parentNode) el.parentNode.removeChild(el)
+    }, 1500)
+  }
+  window.__lhPreloaderDone = function () {
+    setTimeout(finish, Math.max(0, MIN - (Date.now() - t0)))
+  }
+  /* Two fallbacks, because neither is reliable alone: the load event can be
+     late behind a slow font, and a failed asset would never fire it. */
+  window.addEventListener("load", function () { setTimeout(window.__lhPreloaderDone, 200) })
+  setTimeout(finish, 8000)
+})()`
+
+export function Preloader() {
+  const html = `
+<style>${STYLE}</style>
+<div id="lh-preloader" aria-hidden="true">
+  <div class="lh-pl-half lh-pl-top"></div>
+  <div class="lh-pl-half lh-pl-bot"></div>
+  <div class="lh-pl-logo">
+    ${MARK}
+    <span class="lh-pl-wordmark"><img src="${BRAND.logos.wordmarkDark.src}" alt="" width="135" height="22" /></span>
+  </div>
+</div>
+<script>${SCRIPT}</script>
+<noscript><style>#lh-preloader { display: none; }</style></noscript>`
+
+  return <div suppressHydrationWarning dangerouslySetInnerHTML={{ __html: html }} />
+}
