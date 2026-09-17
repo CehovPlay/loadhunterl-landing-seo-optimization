@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+  html,body{margin:0;padding:0;background:transparent;width:100px;height:100px;overflow:hidden}
+  #wrap{width:100px;height:100px}
+  svg{display:block;width:100px;height:100px}
+  #mark path{transform-box:fill-box;transform-origin:50% 50%}
+  
+</style></head><body>
+<div id="wrap">
+  <!-- viewBox is centred on the mark's own centre (13.84, 13.09); the mark's
+       circumscribed radius is ~14u, the disc's is 22.72u → mark fills 62% of
+       the disc, and a 360° spin never touches the edge. -->
+  <svg viewBox="-8.88 -9.63 45.44 45.44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bg" x1="13.84" y1="-9.63" x2="13.84" y2="35.81" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#23262d"/><stop offset="1" stop-color="#141519"/>
+      </linearGradient>
+    </defs>
+    <circle cx="13.84" cy="13.09" r="22.5" fill="url(#bg)"/>
+    <g id="mark" fill="#ffffff">
+      
+      <path id="pl" d="M6.87719 14.9489C7.33672 16.6581 8.41343 18.1142 9.8538 19.0636C10.9765 19.8037 11.9235 20.9299 11.9235 22.2747V26.1735C11.668 25.3163 10.9376 24.6382 10.0517 24.3445C6.53241 23.1778 3.74457 20.407 2.55435 16.8985C2.18252 15.8023 1.22117 14.9489 0.0637344 14.9489H6.87719ZM11.9235 6.17837C9.40426 6.85567 7.4348 8.87388 6.82724 11.421H0C1.17234 11.421 2.14133 10.5464 2.50249 9.43101C3.66231 5.84883 6.48064 3.01304 10.0519 1.8292C10.9379 1.53547 11.6681 0.857209 11.9235 0V6.17837Z"/>
+      <path id="pr" d="M20.8024 14.9489C20.3429 16.6581 19.2662 18.1142 17.8258 19.0636C16.7031 19.8037 15.7561 20.9299 15.7561 22.2747V26.1735C16.0116 25.3163 16.742 24.6382 17.628 24.3445C21.1472 23.1778 23.9351 20.407 25.1253 16.8985C25.4971 15.8023 26.4584 14.9489 27.6159 14.9489H20.8024ZM15.7561 6.17837C18.2754 6.85567 20.2448 8.87388 20.8524 11.421H27.6796C26.5073 11.421 25.5383 10.5464 25.1771 9.43101C24.0173 5.84883 21.199 3.01304 17.6278 1.8292C16.7418 1.53547 16.0116 0.857209 15.7561 0V6.17837Z"/>
+      <path id="pd" d="M16.4586 12.964C16.4586 14.4105 15.2861 15.583 13.8397 15.583C12.3933 15.583 11.2208 14.4105 11.2208 12.964C11.2208 11.5176 12.3933 10.3451 13.8397 10.3451C15.2861 10.3451 16.4586 11.5176 16.4586 12.964Z"/>
+    </g>
+  </svg>
+</div>
+<script>
+/* cubic-bezier solver — so the emoji uses the EXACT curves from index.html
+   rather than an approximation of them. */
+function bezier(x1, y1, x2, y2) {
+  var A = function (a, b) { return 1 - 3 * b + 3 * a }
+  var B = function (a, b) { return 3 * b - 6 * a }
+  var C = function (a) { return 3 * a }
+  var calc = function (t, a, b) { return ((A(a, b) * t + B(a, b)) * t + C(a)) * t }
+  var slope = function (t, a, b) { return 3 * A(a, b) * t * t + 2 * B(a, b) * t + C(a) }
+  return function (x) {
+    if (x <= 0) return 0
+    if (x >= 1) return 1
+    var t = x
+    for (var i = 0; i < 8; i++) {          // Newton-Raphson
+      var d = slope(t, x1, x2)
+      if (d === 0) break
+      t -= (calc(t, x1, x2) - x) / d
+    }
+    return calc(t, y1, y2)
+  }
+}
+
+// the three curves used by the preloader in index.html
+var easePiece = bezier(0.16, 1, 0.3, 1)     // .lh-pl-piece   0.5s
+var easeDot = bezier(0.34, 1.56, 0.64, 1)   // .lh-pl-dot     0.42s, overshoots
+var easeFade = bezier(0.25, 0.1, 0.25, 1)   // .lh-pl-logo    0.28s "ease"
+
+var clamp01 = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x }
+var seg = function (t, a, b) { return clamp01((t - a) / (b - a)) }
+
+var DUR = 2000 // ms — one loop (Telegram caps at 3s)
+
+/**
+ * Same choreography as the site preloader, same easings and same relative
+ * delays (index.html: piece 0.5s, L at 0.2s / R at 0.42s, dot 0.42s at 0.68s,
+ * logo fade-out 0.28s). The wordmark is dropped — unreadable at 100px.
+ * The disc never goes away, so the fade-out → re-assembly reads as one
+ * continuous loop instead of a gap: state at DUR is identical to state at 0.
+ */
+function render(t) {
+  var l = easePiece(seg(t, 0, 500))     // left wing  flies in
+  var r = easePiece(seg(t, 220, 720))   // right wing follows
+  var d = easeDot(seg(t, 480, 900))     // centre dot pops with overshoot
+  var out = easeFade(seg(t, 1700, 1940)) // whole mark fades, then it starts over
+
+  pl.style.transform = "translateX(" + -10 * (1 - l) + "px) rotate(" + -10 * (1 - l) + "deg)"
+  pr.style.transform = "translateX(" + 10 * (1 - r) + "px) rotate(" + 10 * (1 - r) + "deg)"
+  pd.style.transform = "scale(" + (0.3 + 0.7 * d) + ")"
+  pl.style.opacity = l * (1 - out)
+  pr.style.opacity = r * (1 - out)
+  pd.style.opacity = d * (1 - out)
+}
+window.__render = render
+render(0)
+</script></body></html>
